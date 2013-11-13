@@ -1,0 +1,1 @@
+web: python manage.py collectstatic --noinput --settings=wegofair.settings; python manage.py run_gunicorn --settings=wegofair.settings -b 0.0.0.0:$PORT

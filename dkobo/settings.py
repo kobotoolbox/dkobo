@@ -45,6 +45,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'dkobo.formbuilder',
     'compressor',
+    'gunicorn',
 )
 
 MIDDLEWARE_CLASSES = (
