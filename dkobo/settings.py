@@ -29,6 +29,13 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+COMPRESS_ENABLED = (not DEBUG)
+
+COMPRESS_PRECOMPILERS = (
+    ('text/coffeescript', 'coffee --compile --stdio'),
+    ('text/less', 'lessc {infile} {outfile}'),
+)
+
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
@@ -37,6 +44,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'dkobo.formbuilder',
+    'compressor',
 )
 
 MIDDLEWARE_CLASSES = (
