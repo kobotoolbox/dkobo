@@ -1,5 +1,5 @@
-# Dkobo
-### "the 'd' is silent"
+# Dkobo.
+## A django project for developing components of the kobotoolkit.
 ------------------------------
 
 This is a django project intended to house django implementations of KoboToolkit work.
