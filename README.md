@@ -1,8 +1,8 @@
 # Dkobo.
-## A django project for developing components of the kobotoolkit.
+## A django project for developing components of the kobotoolbox.
 ------------------------------
 
-This is a django project intended to house django implementations of KoboToolkit work.
+This is a django project intended to house django implementations of KoboToolbox work.
 
 ------------------------------
 
@@ -10,7 +10,7 @@ This is a django project intended to house django implementations of KoboToolkit
 
 1. Clone the project:
 
-    git clone git@github.com/kobotoolkit/dkobo
+    git clone https://github.com/kobotoolbox/dkobo.git
 
 2. Activate a [python virtualenv](https://pypi.python.org/pypi/virtualenv).
 
