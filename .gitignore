@@ -11,6 +11,7 @@ tmp/*
 *orig
 *.swp
 static/CACHE
+CACHE
 staticfiles
 local_settings.py
 /.ropeproject
