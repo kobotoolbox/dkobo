@@ -10,7 +10,7 @@ This is a django project intended to house django implementations of KoboToolkit
 
 1. Clone the project:
 
-    git clone git@github.com/kobotoolkit/dkobo
+    git clone git://github.com/kobotoolkit/dkobo
 
 2. Activate a [python virtualenv](https://pypi.python.org/pypi/virtualenv).
 
