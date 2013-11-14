@@ -111,11 +111,3 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
-
-try:
-    from local_settings import *
-except ImportError, e:
-    print """
-    You probably want to create a local_settings.py file.
-    $ cp dkobo/local_settings_example.py dkobo/local_settings.py
-    """
