@@ -27,7 +27,7 @@ if not SECRET_KEY and not DEBUG:
 elif not SECRET_KEY:
     SECRET_KEY = 'secretShouldBeSetInAnEnvironmentVariable3^*m3xck13'
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = DEBUG
 
 ALLOWED_HOSTS = []
 
@@ -46,10 +46,12 @@ STATICFILES_FINDERS = (
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'dkobo', 'static'),
-    )
-
+if DEBUG:
+    STATICFILES_DIRS = (
+        os.path.join(BASE_DIR, 'dkobo', 'static'),
+        )
+else:
+    STATICFILES_DIRS = ()
 
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
