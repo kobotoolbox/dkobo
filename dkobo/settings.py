@@ -22,12 +22,10 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 # DEBUG is true unless an environment variable is set to something other than 'True'
 DEBUG = (os.environ.get('DJANGO_DEBUG', 'True') == 'True')
 
-if not DEBUG:
-    if not SECRET_KEY:
-        raise ValueError("DJANGO_SECRET_KEY environment variable must be set in production")
-    else:
-        SECRET_KEY = 'secretShouldBeSetInAnEnvironmentVariable3^*m3xck13'
-
+if not SECRET_KEY and not DEBUG:
+    raise ValueError("DJANGO_SECRET_KEY environment variable must be set in production")
+elif not SECRET_KEY:
+    SECRET_KEY = 'secretShouldBeSetInAnEnvironmentVariable3^*m3xck13'
 
 TEMPLATE_DEBUG = True
 
@@ -45,6 +43,8 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'compressor.finders.CompressorFinder',
     )
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'dkobo', 'static'),
