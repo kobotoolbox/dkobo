@@ -7,3 +7,12 @@
         kobo
   #home.container
   	%p kobo
+
+-block foot
+  -load compress
+  -compress js
+    %script{src: "/static/xlform-builder/source/javascripts/src/model_xlform.coffee", charset: 'utf-8', type: 'text/coffeescript'}
+    %script{src: "/static/xlform-builder/source/javascripts/src/view_xlformbuilder.coffee", charset: 'utf-8', type: 'text/coffeescript'}
+    %script{src: "/static/xlform-builder/source/javascripts/src/view_detail_mixins.coffee", charset: 'utf-8', type: 'text/coffeescript'}
+    %script{src: "/static/xlform-builder/source/javascripts/src/demo.coffee", charset: 'utf-8', type: 'text/coffeescript'}
+
