@@ -1,0 +1,3 @@
+[submodule "dkobo/static/bootstrap"]
+	path = dkobo/static/bootstrap
+	url = https://github.com/twitter/bootstrap.git
