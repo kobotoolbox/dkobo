@@ -29,8 +29,6 @@ elif not SECRET_KEY:
 
 TEMPLATE_DEBUG = DEBUG
 
-ALLOWED_HOSTS = []
-
 TEMPLATE_LOADERS = (
     'hamlpy.template.loaders.HamlPyFilesystemLoader',
     'hamlpy.template.loaders.HamlPyAppDirectoriesLoader',
