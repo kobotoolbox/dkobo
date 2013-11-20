@@ -15,3 +15,4 @@ CACHE
 staticfiles
 local_settings.py
 /.ropeproject
+node_modules
