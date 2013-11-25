@@ -1,3 +1,6 @@
 [submodule "dkobo/static/bootstrap"]
 	path = dkobo/static/bootstrap
 	url = https://github.com/twitter/bootstrap.git
+[submodule "dkobo/koboform/static/xlform-builder"]
+	path = dkobo/koboform/static/xlform-builder
+	url = git@github.com:dorey/xlform-builder.git
