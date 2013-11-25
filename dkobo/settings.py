@@ -70,7 +70,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'dkobo.formbuilder',
+    'dkobo.koboform',
     'compressor',
     'gunicorn',
 )
@@ -95,7 +95,7 @@ WSGI_APPLICATION = 'dkobo.wsgi.application'
 import dj_database_url
 
 DATABASES = {
-    'default': dj_database_url.config()
+    'default': dj_database_url.config(default="sqlite:///%s/db.sqlite3" % BASE_DIR)
 }
 
 ALLOWED_HOSTS = ['*']
