@@ -1,0 +1,3 @@
+Thanks for registering!
+
+To activate your account, please visit http://{{ site.domain }}/accounts/activate/{{activation_key}}

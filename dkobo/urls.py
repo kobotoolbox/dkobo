@@ -7,4 +7,6 @@ urlpatterns = patterns('',
     url(r'^$', 'dkobo.formbuilder.views.main', name='fb'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^csv$', 'dkobo.formbuilder.views.csv_to_xform'),
+    url(r'^accounts/', include('registration.backends.default.urls')),
+    url(r'^account/', include('django.contrib.auth.urls')),
 )

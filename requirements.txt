@@ -3,3 +3,5 @@ django-compressor==1.3
 django-toolbelt==0.0.1
 hamlpy==0.82.2
 -e git+https://github.com/modilabs/pyxform.git@e6f788f52faf7626fced7fa1eef32e4b3eee789d#egg=pyxform-dev
+django-registration==1.0
+BeautifulSoup==3.2.1
