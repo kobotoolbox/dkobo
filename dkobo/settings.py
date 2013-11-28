@@ -64,8 +64,11 @@ COMPRESS_PRECOMPILERS = (
 )
 
 INSTALLED_APPS = (
+    'dkobo.formbuilder',
     'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.sites',
+    'registration',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -119,6 +122,18 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'django.kobo@gmail.com'
+EMAIL_HOST_PASSWORD = 'djkobo2013!'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+
+SITE_ID = 2
+
+ACCOUNT_ACTIVATION_DAYS = 3
+LOGIN_REDIRECT_URL = '/'
 
 LOGGING = {
     'version': 1,
