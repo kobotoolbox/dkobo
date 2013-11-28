@@ -17,14 +17,17 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '_3xk1&m-)%xiex+fdb-qg@_c$u$(408w6mv$0-me3^*m3xck13'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG is true unless an environment variable is set to something other than 'True'
+DEBUG = (os.environ.get('DJANGO_DEBUG', 'True') == 'True')
 
-TEMPLATE_DEBUG = True
+if not SECRET_KEY and not DEBUG:
+    raise ValueError("DJANGO_SECRET_KEY environment variable must be set in production")
+elif not SECRET_KEY:
+    SECRET_KEY = 'secretShouldBeSetInAnEnvironmentVariable3^*m3xck13'
 
-ALLOWED_HOSTS = []
+TEMPLATE_DEBUG = DEBUG
 
 TEMPLATE_LOADERS = (
     'hamlpy.template.loaders.HamlPyFilesystemLoader',
@@ -39,10 +42,14 @@ STATICFILES_FINDERS = (
     'compressor.finders.CompressorFinder',
     )
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'dkobo', 'static'),
-    )
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+if DEBUG:
+    STATICFILES_DIRS = (
+        os.path.join(BASE_DIR, 'dkobo', 'static'),
+        )
+else:
+    STATICFILES_DIRS = ()
 
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -63,7 +70,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'dkobo.formbuilder',
+    'dkobo.koboform',
     'compressor',
     'gunicorn',
 )
@@ -112,3 +119,44 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'null': {
+            'level': 'DEBUG',
+            'class': 'django.utils.log.NullHandler',
+        },
+        'console':{
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'filters': [],
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['null'],
+            'propagate': True,
+            'level': 'INFO',
+        },
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+    }
+}
