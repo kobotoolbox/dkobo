@@ -12,20 +12,26 @@ This is a django project intended to house django implementations of KoboToolbox
 
     git clone https://github.com/kobotoolbox/dkobo.git
 
-2. Activate a [python virtualenv](https://pypi.python.org/pypi/virtualenv).
+1. Activate a [python virtualenv](https://pypi.python.org/pypi/virtualenv).
 
-3. Install python requirements:
+1. Install python requirements:
 
     pip install -r requirements.txt
 
-4. Create a "local_settings.py" file:
+1. Load submodules
 
-    cp dkobo/local_settings_example.py local_settings.py
+    git submodule init
+    git submodule update
 
-5. Create a database:
+1. If in production, set the following environment variables: (If in development, you can ignore this step)
+
+	* DJANGO_DEBUG=False
+	* DJANGO_SECRET_KEY=s3cr3tk3y
+
+1. Create a database:
 
     python manage.py syncdb
 
-4. Run the development server:
+1. Run the development server:
 
     python manage.py runserver
