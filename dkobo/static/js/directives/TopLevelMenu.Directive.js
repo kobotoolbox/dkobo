@@ -7,8 +7,8 @@ function TopLevelMenuDirective () {
     },
     link: function (scope, element, attributes) {
         scope.user = {
-            name: 'Chris Nager',
-            avatar: 'chris-nager.jpg'
+            name: 'User Name',
+            avatar: 'example-photo.jpg'
         };
 
         scope.sections = [
