@@ -9,5 +9,7 @@ urlpatterns = patterns('',
     url(r'^csv$', 'dkobo.koboform.views.csv_to_xform'),
     url(r'^accounts/', include('registration.backends.default.urls')),
     url(r'^account/', include('django.contrib.auth.urls')),
-    url(r'^spa/$', 'dkobo.koboform.views.spa')
+    url(r'^spa/$', 'dkobo.koboform.views.spa'),
+    # fallback on koboform app-specific urls:
+    url(r'^koboform/', include('dkobo.koboform.urls')),
 )

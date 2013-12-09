@@ -19,3 +19,30 @@ def csv_to_xform(request):
 @ensure_csrf_cookie
 def spa(request):
     return render_to_response("index.html")
+
+def survey_draft(request):
+	return HttpResponse("OK")
+
+from django.contrib.auth.decorators import login_required
+from models import SurveyDraft
+from django.forms.models import model_to_dict
+import json
+
+@login_required
+def list_survey_drafts(request):
+	ids = [dd['id'] for dd in SurveyDraft.objects.filter(user=request.user).values("id")]
+	return HttpResponse(json.dumps(ids))
+
+@login_required
+def create_survey_draft(request):
+	csv_details = {u'user': request.user, \
+		u'body': request.POST.get("body"), \
+		u'description': request.POST.get("description"), \
+		u'name': request.POST.get("name") }
+	survey_draft = SurveyDraft.objects.create(**csv_details)
+	return HttpResponse(survey_draft.id)
+
+@login_required
+def read_survey_draft(request, sdid):
+	survey_draft = SurveyDraft.objects.get(id=sdid)
+	return HttpResponse(json.dumps(model_to_dict(survey_draft)))
