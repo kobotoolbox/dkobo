@@ -1,0 +1,6 @@
+<form method="POST" action="/csv">
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrfToken }}"/>
+    <label for="txt-csv-import">Paste Form Here</label>
+    <textarea id="txtImport" name="txtImport"></textarea>
+    <input type="submit" value="Import" />
+</form>

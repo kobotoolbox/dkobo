@@ -22,10 +22,12 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.7.0/modernizr.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-route.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-cookies.js"></script>
     
     <script src="{% static 'js/controllers/Header.Controller.js' %}"></script>
     <script src="{% static 'js/controllers/Forms.Controller.js' %}"></script>
     <script src="{% static 'js/controllers/Assets.Controller.js' %}"></script>
+    <script src="{% static 'js/controllers/Import.Controller.js' %}"></script>
     <script src="{% static 'js/directives/TopLevelMenu.Directive.js' %}"></script>
     <script src="{% static 'js/directives/InfoList.Directive.js' %}"></script>
 
@@ -33,6 +35,7 @@
   </head>
 
   <body ng-app="dkobo">
+  {% csrf_token %}
   {%verbatim %}
 
     <section top-level-menu class="top-level-menu" active-tab="activeTab" ng-class="topLevelMenuActive"></section>

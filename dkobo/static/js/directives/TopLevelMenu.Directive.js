@@ -26,6 +26,11 @@ function TopLevelMenuDirective () {
                 'title': 'Admin',
                 'icon': 'fa-cog',
                 'name': 'admin'
+            },
+            {
+                title: 'Import CSV',
+                icon: 'fa-cog',
+                name: 'import/csv'
             }
         ];
 

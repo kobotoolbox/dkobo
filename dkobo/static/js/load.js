@@ -1,5 +1,6 @@
 var kobo = angular.module('dkobo', [
-  'ngRoute'
+  'ngRoute',
+  'ngCookies'
   ]);
 
 kobo.directive('topLevelMenu', TopLevelMenuDirective);
@@ -27,6 +28,11 @@ kobo.config(['$routeProvider',
     $routeProvider.when('/admin', {
       templateUrl: staticFilesUri + 'templates/Admin.Template.html',
       controller: 'AdminController'
+    });
+
+    $routeProvider.when('/import/csv', {
+      templateUrl: staticFilesUri + 'templates/ImportCSV.Template.html',
+      controller: 'ImportController'
     });
 
     $routeProvider.otherwise({
