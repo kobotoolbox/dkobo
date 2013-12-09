@@ -12,3 +12,6 @@ def csv_to_xform(request):
     survey = utils.create_survey_from_csv_text(csv_data)
 
     return HttpResponse(survey.to_xml())
+
+def spa(request):
+    return render_to_response("index.html")

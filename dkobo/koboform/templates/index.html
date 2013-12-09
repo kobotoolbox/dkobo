@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    {% load staticfiles %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Kobo Prototype &middot; Forms</title>
+    
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    
+    <script type="text/javascript" src="{% static 'js/init.js' %}"></script>
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.7.0/modernizr.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-route.js"></script>
+    
+    <script src="{% static 'js/controllers/Header.Controller.js' %}"></script>
+    <script src="{% static 'js/controllers/Forms.Controller.js' %}"></script>
+    <script src="{% static 'js/controllers/Assets.Controller.js' %}"></script>
+    <script src="{% static 'js/directives/TopLevelMenu.Directive.js' %}"></script>
+    <script src="{% static 'js/directives/InfoList.Directive.js' %}"></script>
+
+    <script src="{% static 'js/load.js' %}"></script>
+  </head>
+
+  <body ng-app="dkobo">
+  {%verbatim %}
+
+    <section top-level-menu class="top-level-menu" active-tab="activeTab" ng-class="topLevelMenuActive"></section>
+    <main class="main">
+      <header class="header-bar" ng-controller="HeaderController">
+        <span class="header-bar__top-level-menu-button">
+          <i class="fa  fa-bars  fa-lg  fa-inverse" ng-click="toggleTopMenu()"></i>
+        </span>
+        <span class="header-bar__page-icon-stack  fa-stack  fa-lg">
+          <i class="header-bar__page-icon-circle  fa  fa-circle  fa-stack-2x  icon--{{ pageIconColor }}"></i>
+          <i class="header-bar__page-icon  fa  {{ pageIcon }}  fa-stack-1x  fa-inverse"></i>
+        </span>
+          <h1 class="header-bar__title">{{ activeTab }}</h1>
+          <a href="new-form.html" ng-show="canAddNew" class="btn--header-create-new btn  btn--s  pull-right">Create New</a>
+      </header>
+
+      <section ng-view class="content" ng-class="additionalClasses"></section>
+    </main>
+
+  {% endverbatim %}
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
+  </body>
+</html>
