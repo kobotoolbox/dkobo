@@ -7,8 +7,15 @@ def main(self):
     return render_to_response("main.haml")
 
 def csv_to_xform(request):
-    csv_data = request.POST.get(request.POST.keys()[0])
+    csv_data = request.POST.get('txtImport')
 
     survey = utils.create_survey_from_csv_text(csv_data)
 
-    return HttpResponse(survey.to_xml())
+    response = HttpResponse(survey.to_xml(),mimetype='application/force-download')
+    response['Content-Disposition'] = 'attachment; filename=survey.xml'
+
+    return response
+
+@ensure_csrf_cookie
+def spa(request):
+    return render_to_response("index.html")
