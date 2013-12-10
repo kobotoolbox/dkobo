@@ -7,7 +7,7 @@ function TopLevelMenuDirective () {
     },
     link: function (scope, element, attributes) {
         scope.user = {
-            name: 'User Name',
+            name: 'KoBoForm User',
             avatar: 'example-photo.jpg'
         };
 
