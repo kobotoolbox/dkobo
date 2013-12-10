@@ -5,6 +5,7 @@ var kobo = angular.module('dkobo', [
 
 kobo.directive('topLevelMenu', TopLevelMenuDirective);
 kobo.directive('infoList', InfoListDirective);
+kobo.directive('koboformBuilder', BuilderDirective);
 
 kobo.config(['$routeProvider',
   function ($routeProvider) {
@@ -18,6 +19,11 @@ kobo.config(['$routeProvider',
     $routeProvider.when('/forms', {
       templateUrl: staticFilesUri + 'templates/Forms.Template.html',
       controller: 'FormsController'
+    });
+
+    $routeProvider.when('/editor', {
+      templateUrl: staticFilesUri + 'templates/Builder.Template.html',
+      controller: 'BuilderController'
     });
 
     $routeProvider.when('/assets', {
