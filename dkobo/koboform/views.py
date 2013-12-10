@@ -1,13 +1,16 @@
 from django.shortcuts import render_to_response, HttpResponse
+from django.template import RequestContext
 from django.core.context_processors import csrf
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth.decorators import login_required
 from models import SurveyDraft
 from django.forms.models import model_to_dict
+import hashlib
+import urllib
 import json
 import utils
 
-def main(self):
+def main(request):
     return render_to_response("main.haml")
 
 def csv_to_xform(request):
@@ -22,7 +25,15 @@ def csv_to_xform(request):
 
 @ensure_csrf_cookie
 def spa(request):
-    return render_to_response("index.html")
+    if request.user.is_authenticated():
+        gravatar_url = "http://www.gravatar.com/avatar/"
+        gravatar_url += hashlib.md5(request.user.email.lower()).hexdigest() + "?"
+        gravatar_url += urllib.urlencode({'s':'40'})
+        user_details = {u'name': request.user.email, 'gravatar': gravatar_url}
+    else:
+        user_details = {}
+    return render_to_response("index.html", context_instance=RequestContext(request, { \
+        'user_details': json.dumps(user_details)}))
 
 @login_required
 def list_survey_drafts(request):

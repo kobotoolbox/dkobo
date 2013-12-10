@@ -32,7 +32,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-route.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-cookies.js"></script>
-
+    <script type="text/javascript">
+      window.userDetails = {{user_details|safe}};
+    </script>
     {% compress js %}
       <script src="{% static 'js/controllers/Builder.Controller.js' %}"></script>
       <script src="{% static 'js/controllers/Header.Controller.js' %}"></script>
