@@ -26,19 +26,19 @@ def spa(request):
 
 @login_required
 def list_survey_drafts(request):
-	ids = [dd['id'] for dd in SurveyDraft.objects.filter(user=request.user).values("id")]
-	return HttpResponse(json.dumps(ids))
+    ids = [dd['id'] for dd in SurveyDraft.objects.filter(user=request.user).values("id")]
+    return HttpResponse(json.dumps(ids))
 
 @login_required
 def create_survey_draft(request):
-	csv_details = {u'user': request.user, \
-		u'body': request.POST.get("body"), \
-		u'description': request.POST.get("description"), \
-		u'name': request.POST.get("name") }
-	survey_draft = SurveyDraft.objects.create(**csv_details)
-	return HttpResponse(survey_draft.id)
+    csv_details = {u'user': request.user, \
+        u'body': request.POST.get("body"), \
+        u'description': request.POST.get("description"), \
+        u'name': request.POST.get("name") }
+    survey_draft = SurveyDraft.objects.create(**csv_details)
+    return HttpResponse(survey_draft.id)
 
 @login_required
 def read_survey_draft(request, sdid):
-	survey_draft = SurveyDraft.objects.get(id=sdid)
-	return HttpResponse(json.dumps(model_to_dict(survey_draft)))
+    survey_draft = SurveyDraft.objects.get(id=sdid)
+    return HttpResponse(json.dumps(model_to_dict(survey_draft)))
