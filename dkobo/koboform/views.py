@@ -1,6 +1,10 @@
 from django.shortcuts import render_to_response, HttpResponse
 from django.core.context_processors import csrf
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.contrib.auth.decorators import login_required
+from models import SurveyDraft
+from django.forms.models import model_to_dict
+import json
 import utils
 
 def main(self):
@@ -19,14 +23,6 @@ def csv_to_xform(request):
 @ensure_csrf_cookie
 def spa(request):
     return render_to_response("index.html")
-
-def survey_draft(request):
-	return HttpResponse("OK")
-
-from django.contrib.auth.decorators import login_required
-from models import SurveyDraft
-from django.forms.models import model_to_dict
-import json
 
 @login_required
 def list_survey_drafts(request):
