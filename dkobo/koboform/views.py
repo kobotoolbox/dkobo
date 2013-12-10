@@ -10,15 +10,13 @@ import urllib
 import json
 import utils
 
-def main(request):
-    return render_to_response("main.haml")
 
 def csv_to_xform(request):
     csv_data = request.POST.get('txtImport')
 
     survey = utils.create_survey_from_csv_text(csv_data)
 
-    response = HttpResponse(survey.to_xml(),mimetype='application/force-download')
+    response = HttpResponse(survey.to_xml(), mimetype='application/force-download')
     response['Content-Disposition'] = 'attachment; filename=survey.xml'
 
     return response
@@ -28,11 +26,11 @@ def spa(request):
     if request.user.is_authenticated():
         gravatar_url = "http://www.gravatar.com/avatar/"
         gravatar_url += hashlib.md5(request.user.email.lower()).hexdigest() + "?"
-        gravatar_url += urllib.urlencode({'s':'40'})
+        gravatar_url += urllib.urlencode({'s': '40'})
         user_details = {u'name': request.user.email, 'gravatar': gravatar_url}
     else:
         user_details = {}
-    return render_to_response("index.html", context_instance=RequestContext(request, { \
+    return render_to_response("index.html", context_instance=RequestContext(request, {
         'user_details': json.dumps(user_details)}))
 
 @login_required
@@ -42,10 +40,10 @@ def list_survey_drafts(request):
 
 @login_required
 def create_survey_draft(request):
-    csv_details = {u'user': request.user, \
-        u'body': request.POST.get("body"), \
-        u'description': request.POST.get("description"), \
-        u'name': request.POST.get("name") }
+    csv_details = {u'user': request.user,
+                   u'body': request.POST.get("body"),
+                   u'description': request.POST.get("description"),
+                   u'name': request.POST.get("name")}
     survey_draft = SurveyDraft.objects.create(**csv_details)
     return HttpResponse(survey_draft.id)
 
