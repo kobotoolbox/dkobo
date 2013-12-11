@@ -5,6 +5,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', 'dkobo.koboform.views.main', name='fb'),
+    url(r'^question_library_forms/$', 'dkobo.koboform.views.list_forms_in_library'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^csv$', 'dkobo.koboform.views.csv_to_xform'),
     url(r'^accounts/', include('registration.backends.default.urls')),
