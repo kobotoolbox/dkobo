@@ -1,3 +1,3 @@
 [submodule "dkobo/koboform/static/xlform-builder"]
 	path = dkobo/koboform/static/xlform-builder
-	url = git@github.com:dorey/xlform-builder.git
+	url = https://github.com/dorey/xlform-builder.git
