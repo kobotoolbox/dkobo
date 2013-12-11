@@ -9,7 +9,7 @@ function TopLevelMenuDirective () {
         var userDetails = window.userDetails || {};
         scope.user = {
             name: userDetails.name || 'KoBoForm User',
-            avatar: userDetails.gravatar || (staticFilesUrl + '/img/avatars/example-photo.jpg')
+            avatar: userDetails.gravatar || (staticFilesUri + '/img/avatars/example-photo.jpg')
         };
 
         scope.sections = [
