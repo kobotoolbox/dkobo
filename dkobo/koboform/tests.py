@@ -27,6 +27,6 @@ class CreateSurveyFromCsvTextTests(TestCase):
 class Views_CsvToXformTests(TestCase):
 
     def test_parses_passed_csv_data(self):
-        response = self.client.post('/csv', {'data': text})
+        response = self.client.post('/csv', {'txtImport': text})
 
         etree.fromstring(response.content)

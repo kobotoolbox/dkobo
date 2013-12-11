@@ -64,7 +64,6 @@ COMPRESS_PRECOMPILERS = (
 )
 
 INSTALLED_APPS = (
-    'dkobo.formbuilder',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.sites',
