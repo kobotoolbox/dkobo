@@ -6,9 +6,10 @@ function TopLevelMenuDirective () {
         activeTab: '='
     },
     link: function (scope, element, attributes) {
+        var userDetails = window.userDetails || {};
         scope.user = {
-            name: 'User Name',
-            avatar: 'example-photo.jpg'
+            name: userDetails.name || 'KoBoForm User',
+            avatar: userDetails.gravatar || (staticFilesUri + '/img/avatars/example-photo.jpg')
         };
 
         scope.sections = [
