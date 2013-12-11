@@ -21,7 +21,7 @@ kobo.config(['$routeProvider',
       controller: 'FormsController'
     });
 
-    $routeProvider.when('/editor', {
+    $routeProvider.when('/builder', {
       template: "<section koboform-builder></section>"
     });
 
