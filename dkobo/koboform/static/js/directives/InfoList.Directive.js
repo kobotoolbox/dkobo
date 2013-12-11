@@ -13,10 +13,6 @@ function InfoListDirective($rootScope) {
                 scope.refreshItemList(scope.searchCriteria);
             });
 
-            scope.removeTags = function () {
-                $( '.info-list-item__tag:empty' ).remove();
-            };
-
             $rootScope.canAddNew = scope.canAddNew;
             $rootScope.activeTab = scope.name;
         }

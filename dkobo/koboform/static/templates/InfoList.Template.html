@@ -20,10 +20,9 @@
         <p class="info-list-item__info">{{ item.info }}</p>
       </div>
       <div class="info-list-item__tags">
-        <div class="info-list-item__tag  tag">{{ item.tag1 }}</div>
-        <div class="info-list-item__tag  tag">{{ item.tag2 }}</div>
+        <div class="info-list-item__tag  tag" ng-show="!!item.tag1">{{ item.tag1 }}</div>
+        <div class="info-list-item__tag  tag" ng-show="!!item.tag2">{{ item.tag2 }}</div>
       </div>
     </li>
-    {{ removeTags() }}
   </ul>
 </section>
