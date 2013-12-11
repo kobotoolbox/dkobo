@@ -286,6 +286,21 @@ class XlfRowView extends Backbone.View
     @rowExtrasSummary.toggleClass("hidden")
     @rowExtras.toggleClass("hidden")
 
+class @SurveyTemplateApp extends Backbone.View
+  initialize: (@options)->
+  render: ()->
+    @$el.html("""
+        <button class="btn--start-from-scratch btn">Start From Scratch</button>
+        <span class="or">or</span>
+        <hr>
+        <div class="choose-template">
+            <h3>Choose Template</h3>
+        </div>
+    """)
+    @$(".btn--start-from-scratch").click ()->
+      new SurveyApp(@options)
+    @
+
 class @SurveyApp extends Backbone.View
   className: "formbuilder-wrap container"
   events:

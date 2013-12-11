@@ -1,7 +1,8 @@
 function BuilderDirective($rootScope) {
     return {
+        templateUrl: staticFilesUri + 'templates/Builder.Template.html',
         link: function(scope, element, attrs){
-            new SurveyApp({el: element, survey: scope.xlfSurvey}).render();
+            new SurveyTemplateApp({el: element, survey: scope.xlfSurvey}).render();
         }
     };
 }

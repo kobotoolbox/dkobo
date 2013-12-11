@@ -22,8 +22,7 @@ kobo.config(['$routeProvider',
     });
 
     $routeProvider.when('/editor', {
-      templateUrl: staticFilesUri + 'templates/Builder.Template.html',
-      controller: 'BuilderController'
+      template: "<section koboform-builder></section>"
     });
 
     $routeProvider.when('/assets', {
