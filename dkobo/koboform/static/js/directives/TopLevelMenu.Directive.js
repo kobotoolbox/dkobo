@@ -1,4 +1,4 @@
-function TopLevelMenuDirective () {
+function TopLevelMenuDirective ($userDetails) {
   return {
     restrict:'A',
     templateUrl: staticFilesUri + 'templates/TopLevelMenu.Template.html', 
@@ -6,7 +6,7 @@ function TopLevelMenuDirective () {
         activeTab: '='
     },
     link: function (scope, element, attributes) {
-        var userDetails = window.userDetails || {};
+        var userDetails = $userDetails;
         scope.user = {
             name: userDetails.name || 'KoBoForm User',
             avatar: userDetails.gravatar || (staticFilesUri + '/img/avatars/example-photo.jpg')

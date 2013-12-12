@@ -7,6 +7,8 @@ kobo.directive('topLevelMenu', TopLevelMenuDirective);
 kobo.directive('infoList', InfoListDirective);
 kobo.directive('koboformBuilder', BuilderDirective);
 
+kobo.factory('$userDetails', userDetailsFactory);
+
 kobo.config(['$routeProvider',
   function ($routeProvider) {
     $routeProvider.when('/dashboard', {
