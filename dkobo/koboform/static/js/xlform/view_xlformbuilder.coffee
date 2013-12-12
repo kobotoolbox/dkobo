@@ -286,6 +286,22 @@ class XlfRowView extends Backbone.View
     @rowExtrasSummary.toggleClass("hidden")
     @rowExtras.toggleClass("hidden")
 
+class @SurveyTemplateApp extends Backbone.View
+  initialize: (@options)->
+  render: ()->
+    @$el.addClass("content--centered").addClass("content")
+    @$el.html("""
+        <button class="btn--start-from-scratch btn">Start From Scratch</button>
+        <span class="or">or</span>
+        <hr>
+        <div class="choose-template">
+            <h3>Choose Template</h3>
+        </div>
+    """)
+    @$(".btn--start-from-scratch").click ()=>
+      new SurveyApp(@options).render()
+    @
+
 class @SurveyApp extends Backbone.View
   className: "formbuilder-wrap container"
   events:
@@ -325,7 +341,7 @@ class @SurveyApp extends Backbone.View
       @onEscapeKeydown(evt)  if evt.keyCode is 27
 
   render: ()->
-
+    @$el.removeClass("content--centered").removeClass("content")
     @$el.html """
       <div class="row clearfix">
         <div class="col-md-8">
@@ -356,9 +372,6 @@ class @SurveyApp extends Backbone.View
             </div>
           </li>
         </ul>
-        <!-- <div class="trailing-buttons row-fluid">
-          <div class="row-type-col">&nbsp;</div>
-        </div> -->
       </div>
     """
     @formEditorEl = @$(".-form-editor")
