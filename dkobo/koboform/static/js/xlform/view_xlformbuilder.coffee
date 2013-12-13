@@ -356,6 +356,7 @@ class @SurveyApp extends Backbone.View
           </p>
         </div>
         <div class="col-md-4 buttons">
+          <button id="save" class="btn">Save</button>
         </div>
         <div class="stats row-details clearfix col-md-11" id="additional-options"></div>
       </div>
@@ -422,7 +423,7 @@ class @SurveyApp extends Backbone.View
     @
   validateSurvey: ->
     # TODO. Implement basic validation
-    window.alert "SurveyApp.prototype.validateSurvey needs to be implemented."
+    true
 
   softReset: ->
     fe = @formEditorEl
@@ -492,10 +493,10 @@ class @SurveyApp extends Backbone.View
       evt.target.href = "data:text/csv;charset=utf-8,#{encodeURIComponent(@survey.toCSV())}"
   saveButtonClick: (evt)->
     # Save = store CSV in local storage.
-    @onSave.call(@, arguments)
+    @onSave.apply(@, arguments)
   publishButtonClick: (evt)->
     # Publish = trigger publish action (ie. post to formhub)
-    @onPublish.call(@, arguments)
+    @onPublish.apply(@, arguments)
 
 ###
 This is the view for the survey-wide details that appear at the bottom

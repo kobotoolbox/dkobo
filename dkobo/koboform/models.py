@@ -6,7 +6,7 @@ class SurveyDraft(models.Model):
     SurveyDrafts belong to a user and contain the minimal representation of
     the draft survey of the user and of the question library.
     '''
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, related_name="survey_drafts")
     name = models.CharField(max_length=255, null=False)
     body = models.TextField()
     description = models.CharField(max_length=255, null=True)

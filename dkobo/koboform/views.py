@@ -39,7 +39,7 @@ def create_survey_draft(request):
     csv_details = {u'user': request.user,
                    u'body': request.POST.get("body"),
                    u'description': request.POST.get("description"),
-                   u'name': request.POST.get("name")}
+                   u'name': request.POST.get("title")}
     survey_draft = SurveyDraft.objects.create(**csv_details)
     return HttpResponse(survey_draft.id)
 
@@ -48,9 +48,27 @@ def read_survey_draft(request, sdid):
     survey_draft = SurveyDraft.objects.get(id=sdid)
     return HttpResponse(json.dumps(model_to_dict(survey_draft)))
 
+# unrestful, but works.
+def list_forms_for_user(request):
+    survey_drafts = []
+    if request.user.is_authenticated():
+        for sd in request.user.survey_drafts.all():
+            survey_drafts.append({u'title': sd.name,\
+                    u'info': sd.description,
+                    u'icon': 'fa-file-o',
+                    u'iconBgColor': 'green'})
+    return HttpResponse(json.dumps({u'list': survey_drafts}))
+
 def list_forms_in_library(request):
     '''
     This is a placeholder for the accessor of surveys
     in the question library.
     '''
-    return HttpResponse("[]")
+    library_forms = []
+    for sd in SurveyDraft.objects.filter(in_question_library=True):
+        library_forms.append({u'title': sd.name,
+            u'info': sd.description,
+            u'icon': 'fa-file-text-o',
+            u'iconBgColor': 'teal',
+            u'tags': []})
+    return HttpResponse(json.dumps({u'list': library_forms}))
