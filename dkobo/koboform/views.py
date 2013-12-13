@@ -39,7 +39,7 @@ def create_survey_draft(request):
     csv_details = {u'user': request.user,
                    u'body': request.POST.get("body"),
                    u'description': request.POST.get("description"),
-                   u'name': request.POST.get("name")}
+                   u'name': request.POST.get("title")}
     survey_draft = SurveyDraft.objects.create(**csv_details)
     return HttpResponse(survey_draft.id)
 
