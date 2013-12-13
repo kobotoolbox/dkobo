@@ -15,8 +15,12 @@ function BuilderDirective($rootScope) {
                             "X-CSRFToken": $("meta[name=csrf_token]").prop("content")
                         }
                     }).done(function(response){
-                        console.log("Saved survey- ", response);
-                        console.log("Redirect to '/#/forms'?");
+
+                        (function refactor(dest){
+                            // note: $location.hash(dest) was not working
+                            window.location.hash = dest;
+                        })("/forms");
+
                     });
                 }
             }
