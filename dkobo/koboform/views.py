@@ -23,7 +23,8 @@ def csv_to_xform(request):
 @ensure_csrf_cookie
 def spa(request):
     if request.user.is_authenticated():
-        user_details = {u'name': request.user.email, 'gravatar': utils.gravatar_url(request.user.email)}
+        user_details = {u'name': request.user.email,
+                        u'gravatar': utils.gravatar_url(request.user.email)}
     else:
         user_details = {}
     return render_to_response("index.html", context_instance=RequestContext(request, {
@@ -53,10 +54,10 @@ def list_forms_for_user(request):
     survey_drafts = []
     if request.user.is_authenticated():
         for sd in request.user.survey_drafts.all():
-            survey_drafts.append({u'title': sd.name,\
-                    u'info': sd.description,
-                    u'icon': 'fa-file-o',
-                    u'iconBgColor': 'green'})
+            survey_drafts.append({u'title': sd.name,
+                                  u'info': sd.description,
+                                  u'icon': 'fa-file-o',
+                                  u'iconBgColor': 'green'})
     return HttpResponse(json.dumps({u'list': survey_drafts}))
 
 def list_forms_in_library(request):
@@ -67,8 +68,11 @@ def list_forms_in_library(request):
     library_forms = []
     for sd in SurveyDraft.objects.filter(in_question_library=True):
         library_forms.append({u'title': sd.name,
-            u'info': sd.description,
-            u'icon': 'fa-file-text-o',
-            u'iconBgColor': 'teal',
-            u'tags': []})
+                              u'info': sd.description,
+                              u'icon': 'fa-file-text-o',
+                              u'iconBgColor': 'teal',
+                              u'tags': []})
     return HttpResponse(json.dumps({u'list': library_forms}))
+
+def jasmine_spec(request):
+    return render_to_response("jasmine_spec.html")
