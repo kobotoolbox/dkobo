@@ -7,6 +7,7 @@ from models import SurveyDraft
 from django.forms.models import model_to_dict
 import json
 import utils
+import json
 
 
 def csv_to_xform(request):
@@ -46,3 +47,10 @@ def create_survey_draft(request):
 def read_survey_draft(request, sdid):
     survey_draft = SurveyDraft.objects.get(id=sdid)
     return HttpResponse(json.dumps(model_to_dict(survey_draft)))
+
+def list_forms_in_library(request):
+    '''
+    This is a placeholder for the accessor of surveys
+    in the question library.
+    '''
+    return HttpResponse("[]")
