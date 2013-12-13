@@ -5,8 +5,6 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth.decorators import login_required
 from models import SurveyDraft
 from django.forms.models import model_to_dict
-import hashlib
-import urllib
 import json
 import utils
 
@@ -24,10 +22,7 @@ def csv_to_xform(request):
 @ensure_csrf_cookie
 def spa(request):
     if request.user.is_authenticated():
-        gravatar_url = "http://www.gravatar.com/avatar/"
-        gravatar_url += hashlib.md5(request.user.email.lower()).hexdigest() + "?"
-        gravatar_url += urllib.urlencode({'s': '40'})
-        user_details = {u'name': request.user.email, 'gravatar': gravatar_url}
+        user_details = {u'name': request.user.email, 'gravatar': utils.gravatar_url(request.user.email)}
     else:
         user_details = {}
     return render_to_response("index.html", context_instance=RequestContext(request, {
