@@ -24,7 +24,14 @@
       rowView.rowContent.prepend(@$el)
 
     afterRender: ->
-      @$el.find("blockquote").eq(0).editInPlace
+      @$el.find("blockquote").eq(0).editable({
+        type: 'textarea',
+        success: (uu, ent) =>
+          @model.set("value", ent)
+        });
+
+      """
+      .editInPlace
         save_if_nothing_changed: true
         field_type: "textarea"
         textarea_cols: 50
@@ -32,18 +39,17 @@
         callback: (uu, ent)=>
           @model.set("value", ent)
           if ent is "" then "..." else ent
-
+      """
   VX.hint =
     html: ->
       """
       #{@model.key}: <code>#{@model.get("value")}</code>
       """
     afterRender: ->
-      @$el.find("code").editInPlace
-        save_if_nothing_changed: true
-        callback: (uu, ent)=>
+      @$el.find("code").editable
+        type: 'text',
+        success: (uu, ent)=>
           @model.set("value", ent)
-          if ent is "" then "..." else ent
 
   VX.name =
     html: ->
@@ -51,12 +57,11 @@
       #{@model.key}: <code>#{@model.get("value")}</code>
       """
     afterRender: ->
-      @$el.find("code").editInPlace
-        save_if_nothing_changed: true
-        callback: (uu, ent)=>
+      @$el.find("code").editable
+        type: 'text'
+        success: (uu, ent)=>
           cleanName = XLF.sluggify ent
           @model.set("value", cleanName)
-          if ent is "" then "..." else cleanName
 
   VX.required =
     html: ->

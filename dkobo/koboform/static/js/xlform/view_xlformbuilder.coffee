@@ -409,7 +409,7 @@ class @SurveyApp extends Backbone.View
 
     @formEditorEl.sortable({
         axis: "y"
-        cancel: "button,div.add-row-btn,.well,ul.list-view,li.editor-message"
+        cancel: "button,div.add-row-btn,.well,ul.list-view,li.editor-message, .editableform"
         cursor: "move"
         distance: 5
         items: "> li"
