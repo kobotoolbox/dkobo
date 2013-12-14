@@ -381,17 +381,15 @@ class @SurveyApp extends Backbone.View
       new XlfRowSelector(el: @$el.find(".expanding-spacer-between-rows").get(0), action: "click-add-row", survey: @survey)
 
     # .form-name maps to settings.form_title
-    @$(".form-name").editInPlace
-      callback: (u, ent)=>
+    @$(".form-name").editable
+      success: (u, ent)=>
         val = if ent then XLF.sluggify(ent) else ""
         @survey.settings.set("form_title", val)
-        if val then val else "..."
 
     # .display-title maps to first line of settings.description
-    @$(".display-title").editInPlace
-      callback: (u, ent)=>
+    @$(".display-title").editable
+      success: (u, ent)=>
         @survey.set("displayTitle", ent)
-        if ent then ent else "..."
 
     #.display-description maps to remaining lines of settings.description
     @$(".display-description").editInPlace
