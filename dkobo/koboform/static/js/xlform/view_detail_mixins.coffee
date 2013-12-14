@@ -15,7 +15,7 @@
     html: ->
       """
       <div class="col-md-12">
-        <blockquote>
+        <blockquote style="display: inline-block">
           #{@model.get("value")}
         </blockquote>
       </div>
@@ -24,22 +24,13 @@
       rowView.rowContent.prepend(@$el)
 
     afterRender: ->
-      @$el.find("blockquote").eq(0).editable({
-        type: 'textarea',
+      @$el.find("blockquote").eq(0).editable
+        placement: 'right'
+        mode: 'popup'
+        type: 'textarea'
         success: (uu, ent) =>
           @model.set("value", ent)
-        });
 
-      """
-      .editInPlace
-        save_if_nothing_changed: true
-        field_type: "textarea"
-        textarea_cols: 50
-        textarea_rows: 3
-        callback: (uu, ent)=>
-          @model.set("value", ent)
-          if ent is "" then "..." else ent
-      """
   VX.hint =
     html: ->
       """

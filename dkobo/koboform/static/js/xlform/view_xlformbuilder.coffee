@@ -8,7 +8,8 @@ class XlformError extends Error
     @name = "XlformError"
 
 # $().editInPlace seems to depend on $.browser
-$.browser || $.browser = {}
+# Added reference to jQuery.migrate
+# $.browser || $.browser = {}
 
 class XlfDetailView extends Backbone.View
   ###
