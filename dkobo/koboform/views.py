@@ -36,10 +36,11 @@ def list_survey_drafts(request):
 
 @login_required
 def create_survey_draft(request):
+    name = request.POST.get("title", request.POST.get("name"))
     csv_details = {u'user': request.user,
                    u'body': request.POST.get("body"),
                    u'description': request.POST.get("description"),
-                   u'name': request.POST.get("title")}
+                   u'name': name}
     survey_draft = SurveyDraft.objects.create(**csv_details)
     return HttpResponse(survey_draft.id)
 
