@@ -13,6 +13,7 @@
     
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf_token" content="{{csrf_token}}">
 
     <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
@@ -46,6 +47,8 @@
       <script src="{% static 'js/directives/TopLevelMenu.Directive.js' %}"></script>
       <script src="{% static 'js/directives/InfoList.Directive.js' %}"></script>
       <script src="{% static 'js/factories/UserDetails.Factory.js' %}"></script>
+      <script src="{% static 'js/factories/restApi.Factory.js' %}"></script>
+      <script src="{% static 'js/services/RouteTo.Service.js' %}"></script>
       <script src="{% static 'xlform-builder/source/javascripts/lib/jquery-ui-1.10.3.custom.js' %}"></script>
       <script src="{% static 'xlform-builder/source/javascripts/lib/jquery.editinplace.js' %}"></script>
       <script type="text/coffeescript" src="{% static 'xlform-builder/source/javascripts/lib/csv.coffee' %}"></script>

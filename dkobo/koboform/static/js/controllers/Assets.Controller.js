@@ -2,7 +2,7 @@ function AssetsController($scope, $rootScope, $resource) {
   var assets = $resource('/question_library_forms/');
 
   assets.get(function (result) {
-    $scope.infoListItems = $scope.originalListItems = result;
+    $scope.infoListItems = $scope.originalListItems = result.list;
   });
   $scope.filterList = function(criteria) {
     $scope.infoListItems = _.filter($scope.originalListItems, function (item) {
