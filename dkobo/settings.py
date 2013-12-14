@@ -150,7 +150,7 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'django.utils.log.NullHandler',
         },
-        'console':{
+        'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'simple'
@@ -174,3 +174,7 @@ LOGGING = {
         },
     }
 }
+
+# Djangular
+
+APPEND_SLASH = False

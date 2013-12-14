@@ -48,11 +48,11 @@ class SaveSurveyDrafts(TestCase):
         self.assertEqual(sdcount, 0)
         sdname = "testing survey draft"
         survey_draft_params = {u'name': sdname, u'body': text}
-        resp = self.client.post("/koboform/survey_draft/new", survey_draft_params)
+        resp = self.client.post("/koboform/survey_draft", survey_draft_params)
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(SurveyDraft.objects.count(), sdcount + 1)
         survey_id = SurveyDraft.objects.all()[0].id
-        resp = self.client.get("/koboform/survey_draft/list")
+        resp = self.client.get("/koboform/survey_draft")
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(json.loads(resp.content)[0], survey_id)
         resp = self.client.get("/koboform/survey_draft/%d" % survey_id)
