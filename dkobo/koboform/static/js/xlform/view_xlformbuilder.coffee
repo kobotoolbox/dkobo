@@ -8,7 +8,8 @@ class XlformError extends Error
     @name = "XlformError"
 
 # $().editInPlace seems to depend on $.browser
-$.browser || $.browser = {}
+# Added reference to jQuery.migrate
+# $.browser || $.browser = {}
 
 class XlfDetailView extends Backbone.View
   ###
@@ -410,7 +411,7 @@ class @SurveyApp extends Backbone.View
 
     @formEditorEl.sortable({
         axis: "y"
-        cancel: "button,div.add-row-btn,.well,ul.list-view,li.editor-message"
+        cancel: "button,div.add-row-btn,.well,ul.list-view,li.editor-message, .editableform"
         cursor: "move"
         distance: 5
         items: "> li"
