@@ -26,8 +26,8 @@
     afterRender: ->
       @$el.find("blockquote").eq(0).editable
         placement: 'right'
-        mode: 'popup'
         type: 'textarea'
+        rows: 3
         success: (uu, ent) =>
           @model.set("value", ent)
 

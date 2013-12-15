@@ -111,7 +111,7 @@ class XlfOptionView extends Backbone.View
       @model = new XLF.Option()
       @options.cl.options.add(@model)
       @p.html("Option #{1+@options.i}").addClass("preliminary")
-    @p.editInPlace callback: _.bind @saveValue, @
+    @p.editable success: _.bind @saveValue, @
     @$el.html(@p)
     @
   keyupinput: (evt)->
@@ -130,7 +130,7 @@ class XlfOptionView extends Backbone.View
     else
       @model.set("label", nval, silent: true)
       @model.set("name", XLF.sluggify(nval), silent: true)
-    nval
+    null
 
 class XlfListView extends Backbone.View
   initialize: ({@rowView, @model})->
@@ -352,7 +352,7 @@ class @SurveyApp extends Backbone.View
             </span>
             <span class="hashtag">[<span class="form-name">#{@survey.settings.get("form_title")}</span>]</span>
           </h1>
-          <p class="display-description">
+          <p class="display-description" style="visibility: hidden;">
             #{@survey.get("displayDescription")}
           </p>
         </div>
@@ -392,13 +392,11 @@ class @SurveyApp extends Backbone.View
         @survey.set("displayTitle", ent)
 
     #.display-description maps to remaining lines of settings.description
-    @$(".display-description").editInPlace
-      field_type: "textarea"
-      textarea_cols: 50
-      textarea_rows: 3
-      callback: (u, ent)=>
+    @$(".display-description").editable
+      type: "textarea"
+      rows: 3
+      success: (u, ent)=>
         @survey.set("displayDescription", ent)
-        if ent then ent.replace(/\n/g, "<br>") else "..."
 
     addOpts = @$("#additional-options")
     for detail in @survey.surveyDetails.models
@@ -721,11 +719,11 @@ class XLF.EditListView extends Backbone.View
     nameEl = @$(".name")
     nameEl.text(name)  if (name = @choiceList.get("name"))
     eipOpts =
-      callback: (u, ent)=>
+      success: (u, ent)=>
         cleanName = XLF.sluggify ent
         @choiceList.set("name", cleanName)
-        cleanName
-    nameEl.editInPlace(eipOpts)
+        null
+    nameEl.editable(eipOpts)
 
     optionsEl = @$(".options")
     for c in @collection.models
