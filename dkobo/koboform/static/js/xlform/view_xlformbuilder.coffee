@@ -28,7 +28,7 @@ class XlfDetailView extends Backbone.View
 
   render: ()->
     rendered = @html()
-    unless rendered is @$el or rendered is @el
+    if rendered
       @$el.html rendered
     @
   html: ()->
@@ -382,10 +382,14 @@ class @SurveyApp extends Backbone.View
       new XlfRowSelector(el: @$el.find(".expanding-spacer-between-rows").get(0), action: "click-add-row", survey: @survey)
 
     # .form-name maps to settings.form_title
+    @survey.settings.on 'change:form_title', (model, value) => 
+      model.attributes.form_title = if value then XLF.sluggify(value) else ""
+      @render()
+
     @$(".form-name").editable
       success: (u, ent)=>
-        val = if ent then XLF.sluggify(ent) else ""
-        @survey.settings.set("form_title", val)
+        @survey.settings.set("form_title", ent)
+        null
 
     # .display-title maps to first line of settings.description
     @$(".display-title").editable

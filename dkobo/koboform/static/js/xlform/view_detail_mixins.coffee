@@ -1,65 +1,59 @@
-@DetailViewMixins = do ->
-  VX = {}
+#meant to be bound to a backbone view
 
-  VX.type =
-    html: ->
-      @$el.css width: 40, height: 40
-      tps = @model.get('typeId')
-      @$el.attr("title", "Row Type: #{tps}")
-      @$el.addClass("rt-#{tps}")
-      @$el.addClass("type-icon")
-    insertInDOM: (rowView)->
-      rowView.$(".row-type").append(@$el)
+@DetailViewMixins = {}
 
-  VX.label = VX.hint =
-    html: ->
-      """
-      <div class="col-md-12">
-        <blockquote style="display: inline-block">
-          #{@model.get("value")}
-        </blockquote>
-      </div>
-      """
-    insertInDOM: (rowView)->
-      rowView.rowContent.prepend(@$el)
+DetailViewMixins.type =
+  html: -> false
+  afterRender: ->
+    @$el.css width: 40, height: 40
+    tps = @model.get('typeId')
+    @$el.attr("title", "Row Type: #{tps}")
+    @$el.addClass("rt-#{tps}")
+    @$el.addClass("type-icon")
+  insertInDOM: (rowView)->
+    rowView.$(".row-type").append(@$el)
 
-    afterRender: ->
-      @$el.find("blockquote").eq(0).editable
-        placement: 'right'
-        type: 'textarea'
-        rows: 3
-        success: (uu, ent) =>
-          @model.set("value", ent)
+DetailViewMixins.label = DetailViewMixins.hint =
+  html: ->
+    """
+    <div class="col-md-12">
+      <blockquote style="display: inline-block">
+        #{@model.get("value")}
+      </blockquote>
+    </div>
+    """
+  insertInDOM: (rowView)->
+    rowView.rowContent.prepend(@$el)
 
-  VX.hint =
-    html: ->
-      """
-      #{@model.key}: <code>#{@model.get("value")}</code>
-      """
-    afterRender: ->
-      @$el.find("code").editable
-        type: 'text',
-        success: (uu, ent)=>
-          @model.set("value", ent)
+  afterRender: ->
+    viewUtils.makeEditable @, 'blockquote', 
+      placement: 'right'
+      type: 'textarea'
+      rows: 3
+      
 
-  VX.name =
-    html: ->
-      """
-      #{@model.key}: <code>#{@model.get("value")}</code>
-      """
-    afterRender: ->
-      @$el.find("code").editable
-        type: 'text'
-        success: (uu, ent)=>
-          cleanName = XLF.sluggify ent
-          @model.set("value", cleanName)
+DetailViewMixins.hint =
+  html: ->
+    """
+    #{@model.key}: <code>#{@model.get("value")}</code>
+    """
+  afterRender: ->
+    viewUtils.makeEditable @
 
-  VX.required =
-    html: ->
-      """<label><input type="checkbox"> Required?</label>"""
-    afterRender: ->
-      inp = @$el.find("input")
-      inp.prop("checked", @model.get("value"))
-      inp.change ()=> @model.set("value", inp.prop("checked"))
+DetailViewMixins.name =
+  html: ->
+    """
+    #{@model.key}: <code>#{@model.get("value")}</code>
+    """
+  afterRender: ->
+    @model.on 'change:value', _.bind viewUtils.handleChange('value', XLF.sluggify), @
+    
+    viewUtils.makeEditable @, "code"
 
-  VX
+DetailViewMixins.required =
+  html: ->
+    """<label><input type="checkbox"> Required?</label>"""
+  afterRender: ->
+    inp = @$el.find("input")
+    inp.prop("checked", @model.get("value"))
+    inp.change ()=> @model.set("value", inp.prop("checked"))
