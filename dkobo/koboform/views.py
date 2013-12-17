@@ -33,9 +33,12 @@ def spa(request):
 
 
 @login_required
-def survey_drafts(request):
+def survey_drafts(request, sdid=0):
     if request.method == 'GET':
-        return list_survey_drafts(request)
+        if sdid > 0:
+            return read_survey_draft(request, sdid)
+        else:
+            return list_survey_drafts(request)
     elif request.method == 'POST':
         return create_survey_draft(request)
 
