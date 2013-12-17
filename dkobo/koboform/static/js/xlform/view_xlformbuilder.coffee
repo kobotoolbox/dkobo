@@ -612,12 +612,10 @@ class XLF.EditListView extends Backbone.View
     @$el.html viewTemplates.xlfEditListView @choiceList
     nameEl = @$(".name")
     nameEl.text(name)  if (name = @choiceList.get("name"))
-    eipOpts =
-      success: (u, ent)=>
-        cleanName = XLF.sluggify ent
-        @choiceList.set("name", cleanName)
-        null
-    nameEl.editable(eipOpts)
+    
+    viewUtils.handleChange 'name', XLF.sluggify
+
+    viewUtils.makeEditable @, '.name'
 
     optionsEl = @$(".options")
     for c in @collection.models

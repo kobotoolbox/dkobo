@@ -1,6 +1,6 @@
 @viewUtils = {}
 
-viewUtils.makeEditable = (that, tagName, options) ->
+viewUtils.makeEditable = (that, selector, options) ->
   opts = 
     type: 'text'
     success: _.bind (uu, ent) ->
@@ -8,7 +8,7 @@ viewUtils.makeEditable = (that, tagName, options) ->
         null
       , that
 
-  that.$el.find(tagName).editable _.extend(opts, options)
+  that.$el.find(selector).editable _.extend(opts, options)
 
 viewUtils.handleChange = (property, handler) ->
   do (property, handler) ->
