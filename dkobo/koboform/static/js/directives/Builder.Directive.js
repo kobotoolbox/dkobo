@@ -4,6 +4,7 @@
 function BuilderDirective($rootScope, $restApi, $routeTo) {
     return {
         link: function (scope, element) {
+            /*jshint validthis: true */
             var surveyDraftApi = $restApi.createSurveyDraftApi();
 
             function saveCallback() {
@@ -15,7 +16,19 @@ function BuilderDirective($rootScope, $restApi, $routeTo) {
                         }, $routeTo.forms);
                 }
             }
-            new SurveyTemplateApp({el: element, survey: scope.xlfSurvey, save: saveCallback}).render();
+
+            if (scope.routeParams.id){
+                surveyDraftApi.get({id: scope.routeParams.id}, function builder_get_callback(response) {
+                    scope.xlfSurvey = response;
+                    renderBuilder();
+                });
+            } else {
+                renderBuilder();
+            }
+
+            function renderBuilder() {
+                new SurveyTemplateApp({el: element, survey: scope.xlfSurvey, save: saveCallback}).render();
+            }
         }
     };
 }

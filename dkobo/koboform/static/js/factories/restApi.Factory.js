@@ -4,7 +4,7 @@
 function restApiFactory($resource) {
     return {
         createSurveyDraftApi: function () {
-            return $resource('/koboform/survey_draft/');
+            return $resource('/koboform/survey_draft/:id', { id: 0 });
         }
     };
 }

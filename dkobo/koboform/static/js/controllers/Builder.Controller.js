@@ -1,3 +1,4 @@
-function BuilderController($scope, $rootScope) {
+function BuilderController($scope, $rootScope, $routeParams) {
     $rootScope.activeTab = 'Forms';
+    $scope.routeParams = $routeParams;
 }
