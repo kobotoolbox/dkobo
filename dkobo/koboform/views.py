@@ -19,6 +19,7 @@ def csv_to_xform(request):
     return response
 
 
+@login_required
 @ensure_csrf_cookie
 def spa(request):
     if request.user.is_authenticated():
