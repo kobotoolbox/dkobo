@@ -1,3 +1,7 @@
+/* global angular */
+/* global TopLevelMenuDirective */
+'use strict';
+
 var kobo = angular.module('dkobo', [
   'ngRoute',
   'ngCookies',
@@ -9,9 +13,16 @@ kobo.directive('infoList', InfoListDirective);
 kobo.directive('koboformBuilder', BuilderDirective);
 
 kobo.factory('$userDetails', userDetailsFactory);
+kobo.factory('$restApi', restApiFactory);
+kobo.service('$routeTo', RouteToService);
 
-kobo.config(['$routeProvider',
-  function ($routeProvider) {
+
+kobo.config(function ($routeProvider, $httpProvider) {
+
+    //http://django-angular.readthedocs.org/en/latest/integration.html
+
+    $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
     $routeProvider.when('/dashboard', {
       templateUrl: staticFilesUri + 'templates/Dashboard.Template.html',
       controller: function ($scope) { 
@@ -24,8 +35,9 @@ kobo.config(['$routeProvider',
       controller: 'FormsController'
     });
 
-    $routeProvider.when('/builder', {
-      template: "<section koboform-builder></section>"
+    $routeProvider.when('/builder/:id?', {
+      template: "<section koboform-builder></section>",
+      controller: 'BuilderController'
     });
 
     $routeProvider.when('/assets', {
@@ -46,4 +58,8 @@ kobo.config(['$routeProvider',
     $routeProvider.otherwise({
       redirectTo: '/dashboard'
     });
-  }]);
+  });
+
+kobo.run(function ($http, $cookies) {
+    $http.defaults.headers.post['X-CSRFToken'] = $cookies.csrftoken;
+})

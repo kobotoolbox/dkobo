@@ -16,24 +16,30 @@
     <meta name="csrf_token" content="{{csrf_token}}">
 
     <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/jquery-editable/css/jquery-editable.css" rel="stylesheet"/>
 
     {% compress css %}
       <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
       <link rel="stylesheet" href="{% static 'css/main.css' %}">
     {% endcompress %}
 
-    <script type="text/javascript">
-      window.staticFilesUri = "{% static '' %}";
-    </script>
-
     <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.7.0/modernizr.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="http://code.jquery.com/jquery-migrate-1.2.1.js"></script>
+
+    <script src="//cdn.jsdelivr.net/poshytip/1.1/jquery.poshytip.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/jquery-editable/js/jquery-editable-poshytip.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-route.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-cookies.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-resource.js"></script>
+
+    <script type="text/javascript">
+      window.staticFilesUri = "{% static '' %}";
+      $.fn.editable.defaults.mode = 'inline';
+    </script>
     <script type="text/javascript">
       window.userDetails = {{user_details|safe}};
     </script>
@@ -47,6 +53,8 @@
       <script src="{% static 'js/directives/TopLevelMenu.Directive.js' %}"></script>
       <script src="{% static 'js/directives/InfoList.Directive.js' %}"></script>
       <script src="{% static 'js/factories/UserDetails.Factory.js' %}"></script>
+      <script src="{% static 'js/factories/restApi.Factory.js' %}"></script>
+      <script src="{% static 'js/services/RouteTo.Service.js' %}"></script>
       <script src="{% static 'xlform-builder/source/javascripts/lib/jquery-ui-1.10.3.custom.js' %}"></script>
       <script src="{% static 'xlform-builder/source/javascripts/lib/jquery.editinplace.js' %}"></script>
       <script type="text/coffeescript" src="{% static 'xlform-builder/source/javascripts/lib/csv.coffee' %}"></script>

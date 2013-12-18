@@ -8,7 +8,8 @@ class XlformError extends Error
     @name = "XlformError"
 
 # $().editInPlace seems to depend on $.browser
-$.browser || $.browser = {}
+# Added reference to jQuery.migrate
+# $.browser || $.browser = {}
 
 class XlfDetailView extends Backbone.View
   ###
@@ -110,7 +111,7 @@ class XlfOptionView extends Backbone.View
       @model = new XLF.Option()
       @options.cl.options.add(@model)
       @p.html("Option #{1+@options.i}").addClass("preliminary")
-    @p.editInPlace callback: _.bind @saveValue, @
+    @p.editable success: _.bind @saveValue, @
     @$el.html(@p)
     @
   keyupinput: (evt)->
@@ -129,7 +130,7 @@ class XlfOptionView extends Backbone.View
     else
       @model.set("label", nval, silent: true)
       @model.set("name", XLF.sluggify(nval), silent: true)
-    nval
+    null
 
 class XlfListView extends Backbone.View
   initialize: ({@rowView, @model})->
@@ -351,7 +352,7 @@ class @SurveyApp extends Backbone.View
             </span>
             <span class="hashtag">[<span class="form-name">#{@survey.settings.get("form_title")}</span>]</span>
           </h1>
-          <p class="display-description">
+          <p class="display-description" style="visibility: hidden;">
             #{@survey.get("displayDescription")}
           </p>
         </div>
@@ -381,26 +382,22 @@ class @SurveyApp extends Backbone.View
       new XlfRowSelector(el: @$el.find(".expanding-spacer-between-rows").get(0), action: "click-add-row", survey: @survey)
 
     # .form-name maps to settings.form_title
-    @$(".form-name").editInPlace
-      callback: (u, ent)=>
+    @$(".form-name").editable
+      success: (u, ent)=>
         val = if ent then XLF.sluggify(ent) else ""
         @survey.settings.set("form_title", val)
-        if val then val else "..."
 
     # .display-title maps to first line of settings.description
-    @$(".display-title").editInPlace
-      callback: (u, ent)=>
+    @$(".display-title").editable
+      success: (u, ent)=>
         @survey.set("displayTitle", ent)
-        if ent then ent else "..."
 
     #.display-description maps to remaining lines of settings.description
-    @$(".display-description").editInPlace
-      field_type: "textarea"
-      textarea_cols: 50
-      textarea_rows: 3
-      callback: (u, ent)=>
+    @$(".display-description").editable
+      type: "textarea"
+      rows: 3
+      success: (u, ent)=>
         @survey.set("displayDescription", ent)
-        if ent then ent.replace(/\n/g, "<br>") else "..."
 
     addOpts = @$("#additional-options")
     for detail in @survey.surveyDetails.models
@@ -410,7 +407,7 @@ class @SurveyApp extends Backbone.View
 
     @formEditorEl.sortable({
         axis: "y"
-        cancel: "button,div.add-row-btn,.well,ul.list-view,li.editor-message"
+        cancel: "button,div.add-row-btn,.well,ul.list-view,li.editor-message, .editableform"
         cursor: "move"
         distance: 5
         items: "> li"
@@ -723,11 +720,11 @@ class XLF.EditListView extends Backbone.View
     nameEl = @$(".name")
     nameEl.text(name)  if (name = @choiceList.get("name"))
     eipOpts =
-      callback: (u, ent)=>
+      success: (u, ent)=>
         cleanName = XLF.sluggify ent
         @choiceList.set("name", cleanName)
-        cleanName
-    nameEl.editInPlace(eipOpts)
+        null
+    nameEl.editable(eipOpts)
 
     optionsEl = @$(".options")
     for c in @collection.models
