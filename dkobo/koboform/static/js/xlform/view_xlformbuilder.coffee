@@ -301,8 +301,8 @@ class @SurveyApp extends Backbone.View
 
     # see this page for info on what should be in a form_id
     # http://opendatakit.org/help/form-design/guidelines/
-    viewUtils.makeEditable @, '.form-id', 'form_id' #, XLF.sluggify
-    @.survey.on 'change:form_id', _.bind viewUtils.handleChange('form_id', XLF.sluggify), @
+    viewUtils.makeEditable @, '.form-id', 'form_id', XLF.sluggify
+    # @.survey.on 'change:form_id', _.bind viewUtils.handleChange('form_id', XLF.sluggify), @
 
     addOpts = @$("#additional-options")
     for detail in @survey.surveyDetails.models
