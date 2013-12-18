@@ -63,7 +63,7 @@ class XlfRowSelector extends Backbone.View
       <div class="iwrap">
         <div class="well row-fluid clearfix">
           <button type="button" class="shrink pull-right close" aria-hidden="true">&times;</button>
-          <h4>Please select a type for the new question</h4>
+          <h4>Choose question type</h4>
         </div>
       </div>
       """
@@ -77,7 +77,7 @@ class XlfRowSelector extends Backbone.View
     for mrow in mItems
       menurow = $("<div>", class: "menu-row").appendTo $menu
       for mcell, i in mrow
-        menurow.append """<div class="menu-item menu-item-#{mcell}" data-menu-item="#{mcell}">#{mcell}</div>"""
+        menurow.append """<div class="menu-item menu-item--#{mcell}" data-menu-item="#{mcell}">#{mcell}</div>"""
 
   shrink: ->
     @line.find("div").eq(0).fadeOut 250, =>
@@ -344,32 +344,32 @@ class @SurveyApp extends Backbone.View
   render: ()->
     @$el.removeClass("content--centered").removeClass("content")
     @$el.html """
-      <div class="row clearfix">
-        <div class="col-md-8">
-          <h1 class="title">
-            <span class="display-title">
-              #{@survey.get("displayTitle")}
-            </span>
-            <span class="hashtag">[<span class="form-name">#{@survey.settings.get("form_title")}</span>]</span>
+      <header class="survey-header">
+        <hgroup class="survey-header__inner">
+          <h1 class="survey-header__title  display-title">
+            #{@survey.get("displayTitle")}
           </h1>
-          <p class="display-description" style="visibility: hidden;">
-            #{@survey.get("displayDescription")}
-          </p>
-        </div>
-        <div class="col-md-4 buttons">
+          <h2 class="survey-header__hashtag  form-name">[#{@survey.settings.get("form_title")}]</h2>
+        </hgroup>
+        <p class="survey-header__description  display-description" hidden>
+          #{@survey.get("displayDescription")}
+        </p>
+        <div class="survey-header__options  well  stats  row-details" id="additional-options"></div>
+        <div class="survey-header__actions  buttons">
           <button id="save" class="btn">Save</button>
         </div>
-        <div class="stats row-details clearfix col-md-11" id="additional-options"></div>
-      </div>
-      <div class="form-editor-wrap">
+      </header>
+      <div class="survey-editor  form-editor-wrap">
         <ul class="-form-editor">
           <li class="editor-message empty">
-            <p class="empty-survey-text">
-              <strong>This survey is currently empty.</strong><br>
+            <p class="survey-editor__message  well">
+              <b>This survey is currently empty.</b><br>
               You can add questions, notes, prompts, or other fields by clicking on the "+" sign below.
             </p>
-            <div class="row clearfix expanding-spacer-between-rows">
-              <div class="add-row-btn btn btn-xs btn-default">+</div>
+            <div class="expanding-spacer-between-rows">
+              <div class="add-row-btn  btn">
+                <i class="fa  fa-plus"></i>
+              </div>
               <div class="line">&nbsp;</div>
             </div>
           </li>
@@ -378,7 +378,7 @@ class @SurveyApp extends Backbone.View
     """
     @formEditorEl = @$(".-form-editor")
     @$(".editor-message .expanding-spacer-between-rows .add-row-btn").click (evt)=>
-      @$(".empty-survey-text").slideUp()
+      @$(".survery-editor__message").slideUp()
       new XlfRowSelector(el: @$el.find(".expanding-spacer-between-rows").get(0), action: "click-add-row", survey: @survey)
 
     # .form-name maps to settings.form_title
@@ -500,7 +500,7 @@ This is the view for the survey-wide details that appear at the bottom
 of the survey. Examples: "imei", "start", "end"
 ###
 class XlfSurveyDetailView extends Backbone.View
-  className: "survey-detail"
+  className: "survey-header__option"
   events:
     "change input": "changeChkValue"
   initialize: ({@model})->
@@ -526,7 +526,7 @@ class XlfSurveyDetailView extends Backbone.View
 ###
   # Details that need to be presented for each row:
   # 1. type
-  #   - if (select_one|select_multiple) then list 
+  #   - if (select_one|select_multiple) then list
   # 2. name
   # 3. hint?
   # 4. required?
