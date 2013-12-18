@@ -308,6 +308,20 @@ class @SurveyApp extends Backbone.View
       success: (u, ent)=>
         @survey.set("form_title", ent)
 
+    # # .form-name maps to settings.form_title
+    # @.survey.on 'change:form_title', _.bind viewUtils.handleChange('form_title', XLF.sluggify), @
+    # @.survey.on 'change:displayTitle', _.bind viewUtils.handleChange('displayTitle', XLF.sluggify), @
+
+    # viewUtils.makeEditable @, '.form-name', 'form_title', XLF.sluggify
+
+    # # .display-title maps to first line of settings.description
+    # viewUtils.makeEditable @, '.display-title', 'displayTitle'
+    
+    # #.display-description maps to remaining lines of settings.description
+    # viewUtils.makeEditable @, '.display-description', 'displayDescription', 
+    #   type: "textarea"
+    #   rows: 3
+
     addOpts = @$("#additional-options")
     for detail in @survey.surveyDetails.models
       addOpts.append((new XlfSurveyDetailView(model: detail)).render().el)
@@ -594,7 +608,7 @@ class XLF.EditListView extends Backbone.View
     
     viewUtils.handleChange 'name', XLF.sluggify
 
-    viewUtils.makeEditable @, '.name'
+    viewUtils.makeEditable @, '.name', 'name'
 
     optionsEl = @$(".options")
     for c in @collection.models

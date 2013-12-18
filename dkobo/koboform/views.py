@@ -97,3 +97,6 @@ def list_forms_in_library(request):
                               u'iconBgColor': 'teal',
                               u'tags': []})
     return HttpResponse(json.dumps({u'list': library_forms}))
+
+def jasmine_spec(request):
+    return render_to_response("jasmine_spec.html")
