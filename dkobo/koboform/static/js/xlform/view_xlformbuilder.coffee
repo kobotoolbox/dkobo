@@ -308,27 +308,19 @@ class @SurveyApp extends Backbone.View
       new XlfRowSelector(el: @$el.find(".expanding-spacer-between-rows").get(0), action: "click-add-row", survey: @survey)
 
     # .form-name maps to settings.form_title
-    @survey.settings.on 'change:form_title', (model, value) => 
-      model.attributes.form_title = if value then XLF.sluggify(value) else ""
-      @render()
+    @.survey.on 'change:form_title', _.bind viewUtils.handleChange('form_title', XLF.sluggify), @
+    @.survey.on 'change:displayTitle', _.bind viewUtils.handleChange('displayTitle', XLF.sluggify), @
 
-    @$(".form-name").editable
-      success: (u, ent)=>
-        @survey.settings.set("form_title", ent)
-        null
+    viewUtils.makeEditable @, '.form-name', 'form_title', XLF.sluggify
 
     # .display-title maps to first line of settings.description
-    @$(".display-title").editable
-      success: (u, ent)=>
-        @survey.set("displayTitle", ent)
-
+    viewUtils.makeEditable @, '.display-title', 'displayTitle'
+    
     #.display-description maps to remaining lines of settings.description
-    @$(".display-description").editable
+    viewUtils.makeEditable @, '.display-description', 'displayDescription', 
       type: "textarea"
       rows: 3
-      success: (u, ent)=>
-        @survey.set("displayDescription", ent)
-
+    
     addOpts = @$("#additional-options")
     for detail in @survey.surveyDetails.models
       addOpts.append((new XlfSurveyDetailView(model: detail)).render().el)
@@ -615,7 +607,7 @@ class XLF.EditListView extends Backbone.View
     
     viewUtils.handleChange 'name', XLF.sluggify
 
-    viewUtils.makeEditable @, '.name'
+    viewUtils.makeEditable @, '.name', 'name'
 
     optionsEl = @$(".options")
     for c in @collection.models
