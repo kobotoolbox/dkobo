@@ -20,13 +20,9 @@ function BuilderDirective($rootScope, $restApi, $routeTo) {
             if (scope.routeParams.id){
                 surveyDraftApi.get({id: scope.routeParams.id}, function builder_get_callback(response) {
                     scope.xlfSurvey = response;
-                    renderBuilder();
+                    new SurveyApp({el: element, survey: scope.xlfSurvey, save: saveCallback}).render();
                 });
             } else {
-                renderBuilder();
-            }
-
-            function renderBuilder() {
                 new SurveyTemplateApp({el: element, survey: scope.xlfSurvey, save: saveCallback}).render();
             }
         }
