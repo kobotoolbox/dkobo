@@ -28,6 +28,8 @@ This is a django project intended to house django implementations of KoboToolbox
 	* DJANGO_DEBUG=False
 	* DJANGO_SECRET_KEY=s3cr3tk3y
 
+1. Install sass (ruby) and coffee-script (node/npm)
+
 1. Create a database:
 
     python manage.py syncdb
