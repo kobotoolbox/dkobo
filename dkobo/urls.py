@@ -13,6 +13,6 @@ urlpatterns = patterns('',
     # fallback on koboform app-specific urls:
     url(r'^koboform/', include('dkobo.koboform.urls')),
     # we should re-think a RESTful accessor for the URLs below
-    url(r'^question_library_forms/$', 'dkobo.koboform.views.list_forms_in_library'),
-    url(r'^survey_drafts/$', 'dkobo.koboform.views.list_forms_for_user'),
+    url(r'^question_library_forms$', 'dkobo.koboform.views.list_forms_in_library'),
+    url(r'^survey_drafts$', 'dkobo.koboform.views.list_forms_for_user'),
 )
