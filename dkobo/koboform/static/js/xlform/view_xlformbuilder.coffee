@@ -440,6 +440,7 @@ class XlfSurveyDetailView extends Backbone.View
   # * Media?
 ###
 
+### Removed from UI
 class XLF.ManageListView extends Backbone.View
   initialize: ({@rowView})->
     @row = @rowView.model
@@ -626,6 +627,7 @@ class XLF.EditListView extends Backbone.View
     @collection.add placeholder: "New option"
   deleteRow: ->
     log "Not yet implemented"
+###
 
 ###
 Helper methods:

@@ -113,6 +113,7 @@ viewTemplates.xlfSurveyDetailView = (model) ->
     </label>
     """
 
+###
 viewTemplates.xlfManageListView = (uid) ->
     """
       <div class="form-group">
@@ -159,3 +160,4 @@ viewTemplates.xlfEditListView = (choiceList) ->
       <p class="error" style="display:none"></p>
       <p><button class="list-ok">OK</button><button class="list-cancel">Cancel</button></p>
     """
+###
