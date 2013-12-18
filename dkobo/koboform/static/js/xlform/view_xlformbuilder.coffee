@@ -297,30 +297,12 @@ class @SurveyApp extends Backbone.View
       @$(".empty-survey-text").slideUp()
       new XlfRowSelector(el: @$el.find(".expanding-spacer-between-rows").get(0), action: "click-add-row", survey: @survey)
 
+    viewUtils.makeEditable @, '.form-title', 'form_title'
+
     # see this page for info on what should be in a form_id
     # http://opendatakit.org/help/form-design/guidelines/
-    @$(".form-id").editable
-      success: (u, ent)=>
-        @survey.settings.set("form_id", ent)
-        null
-
-    @$(".form-title").editable
-      success: (u, ent)=>
-        @survey.set("form_title", ent)
-
-    # # .form-name maps to settings.form_title
-    # @.survey.on 'change:form_title', _.bind viewUtils.handleChange('form_title', XLF.sluggify), @
-    # @.survey.on 'change:displayTitle', _.bind viewUtils.handleChange('displayTitle', XLF.sluggify), @
-
-    # viewUtils.makeEditable @, '.form-name', 'form_title', XLF.sluggify
-
-    # # .display-title maps to first line of settings.description
-    # viewUtils.makeEditable @, '.display-title', 'displayTitle'
-    
-    # #.display-description maps to remaining lines of settings.description
-    # viewUtils.makeEditable @, '.display-description', 'displayDescription', 
-    #   type: "textarea"
-    #   rows: 3
+    viewUtils.makeEditable @, '.form-id', 'form_id' #, XLF.sluggify
+    @.survey.on 'change:form_id', _.bind viewUtils.handleChange('form_id', XLF.sluggify), @
 
     addOpts = @$("#additional-options")
     for detail in @survey.surveyDetails.models
