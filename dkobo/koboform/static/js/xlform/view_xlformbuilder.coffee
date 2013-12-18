@@ -278,8 +278,9 @@ class @SurveyApp extends Backbone.View
     @rowViews = new Backbone.Model()
 
     @survey.rows.on "add", @softReset, @
-    # @survey.rows.on "reset", @reset, @
-    # @survey.on "change", @softReset, @
+
+    @survey.on "change:form_title", (s, val)=> s.settings.set("form_title", val)
+    @survey.on "change:form_id", (s, val)=> s.settings.set("form_id", val)
 
     @onPublish = options.publish || $.noop
     @onSave = options.save || $.noop
