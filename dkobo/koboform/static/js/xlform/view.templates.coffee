@@ -78,14 +78,11 @@ viewTemplates.surveyApp = (survey) ->
       <div class="row clearfix">
         <div class="col-md-8">
           <h1 class="title">
-            <span class="display-title">
-              #{survey.get("displayTitle")}
+            <span class="form-title">
+              #{survey.settings.get("form_title")}
             </span>
-            <span class="hashtag">[<span class="form-name">#{survey.settings.get("form_title")}</span>]</span>
+            <span class="hashtag">[<span class="form-id">#{survey.settings.get("form_id")}</span>]</span>
           </h1>
-          <p class="display-description" style="visibility: hidden;">
-            #{survey.get("displayDescription")}
-          </p>
         </div>
         <div class="col-md-4 buttons">
           <button id="save" class="btn">Save</button>

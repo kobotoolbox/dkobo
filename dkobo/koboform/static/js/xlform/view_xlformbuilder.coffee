@@ -276,16 +276,6 @@ class @SurveyApp extends Backbone.View
       @survey = new XLF.Survey(options)
 
     @rowViews = new Backbone.Model()
-    description = @survey.settings.get("description") || ""
-    [_displayTitle, _descrip...] = description.split("\\n")
-    _displayTitle || (_displayTitle = @survey.settings.get("form_title"))
-    _descrip || (_descrip = "")
-    @survey.set("displayTitle", _displayTitle, silent: true)
-    @survey.set("displayDescription", _descrip.join("\n"), silent: true)
-    @survey.set("formName", @survey.settings.get("form_title"), silent: true)
-    @survey.on "change:displayTitle", ()=>
-      lines = [@survey.get("displayTitle"), @survey.get("displayDescription")]
-      @survey.settings.set "description", lines.join("\n")
 
     @survey.rows.on "add", @softReset, @
     # @survey.rows.on "reset", @reset, @
@@ -307,27 +297,16 @@ class @SurveyApp extends Backbone.View
       @$(".empty-survey-text").slideUp()
       new XlfRowSelector(el: @$el.find(".expanding-spacer-between-rows").get(0), action: "click-add-row", survey: @survey)
 
-    # .form-name maps to settings.form_title
-    @survey.settings.on 'change:form_title', (model, value) => 
-      model.attributes.form_title = if value then XLF.sluggify(value) else ""
-      @render()
-
-    @$(".form-name").editable
+    # see this page for info on what should be in a form_id
+    # http://opendatakit.org/help/form-design/guidelines/
+    @$(".form-id").editable
       success: (u, ent)=>
-        @survey.settings.set("form_title", ent)
+        @survey.settings.set("form_id", ent)
         null
 
-    # .display-title maps to first line of settings.description
-    @$(".display-title").editable
+    @$(".form-title").editable
       success: (u, ent)=>
-        @survey.set("displayTitle", ent)
-
-    #.display-description maps to remaining lines of settings.description
-    @$(".display-description").editable
-      type: "textarea"
-      rows: 3
-      success: (u, ent)=>
-        @survey.set("displayDescription", ent)
+        @survey.set("form_title", ent)
 
     addOpts = @$("#additional-options")
     for detail in @survey.surveyDetails.models
