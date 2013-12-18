@@ -1,11 +1,8 @@
 from django.test import TestCase
-from django.core.urlresolvers import reverse
 from lxml import etree
 from django.contrib.auth.models import User
 from django.test.client import Client
 from dkobo.koboform.models import SurveyDraft
-import json
-import pyxform
 import utils
 
 text = """"survey",,,,,
@@ -34,8 +31,7 @@ class SaveSurveyDrafts(TestCase):
             new_user = User(username="user1", email="user1@example.com")
             new_user.set_password("pass")
             new_user.save()
-        self.client = Client()
-        self.client.login(username="user1", password="pass")
+        self.user = User.objects.all()[0]
 
     def test_user_can_create_and_access_survey_draft(self):
         '''
@@ -47,16 +43,7 @@ class SaveSurveyDrafts(TestCase):
         sdcount = SurveyDraft.objects.count()
         self.assertEqual(sdcount, 0)
         sdname = "testing survey draft"
-        survey_draft_params = {u'name': sdname, u'body': text}
-        resp = self.client.post("/koboform/survey_draft", survey_draft_params)
-        self.assertEqual(resp.status_code, 200)
+        SurveyDraft.objects.create(name=sdname, body=text, user=self.user)
         self.assertEqual(SurveyDraft.objects.count(), sdcount + 1)
-        survey_id = SurveyDraft.objects.all()[0].id
-        resp = self.client.get("/koboform/survey_draft")
-        self.assertEqual(resp.status_code, 200)
-        self.assertEqual(json.loads(resp.content)[0], survey_id)
-        resp = self.client.get("/koboform/survey_draft/%d" % survey_id)
-        self.assertEqual(resp.status_code, 200)
-        resp_dict = json.loads(resp.content)
-        self.assertEqual(resp_dict[u'name'], sdname)
-        self.assertEqual(resp_dict[u'body'], text)
+        survey = SurveyDraft.objects.all()[0]
+        self.assertEqual(survey.name, sdname)
