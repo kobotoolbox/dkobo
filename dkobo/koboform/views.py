@@ -33,9 +33,12 @@ def spa(request):
 
 
 @login_required
-def survey_drafts(request):
+def survey_drafts(request, sdid=0):
     if request.method == 'GET':
-        return list_survey_drafts(request)
+        if sdid > 0:
+            return read_survey_draft(request, sdid)
+        else:
+            return list_survey_drafts(request)
     elif request.method == 'POST':
         return create_survey_draft(request)
 
@@ -94,3 +97,6 @@ def list_forms_in_library(request):
                               u'iconBgColor': 'teal',
                               u'tags': []})
     return HttpResponse(json.dumps({u'list': library_forms}))
+
+def jasmine_spec(request):
+    return render_to_response("jasmine_spec.html")
