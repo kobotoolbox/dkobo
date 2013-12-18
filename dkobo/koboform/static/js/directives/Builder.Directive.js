@@ -19,7 +19,9 @@ function BuilderDirective($rootScope, $restApi, $routeTo) {
 
             if (scope.routeParams.id){
                 surveyDraftApi.get({id: scope.routeParams.id}, function builder_get_callback(response) {
-                    scope.xlfSurvey = response;
+                    scope.xlfSurvey = XLF.createSurveyFromCsv(response.body);
+                    // temporarily saving response in __djangoModelDetails
+                    scope.xlfSurvey.__djangoModelDetails = response;
                     new SurveyApp({el: element, survey: scope.xlfSurvey, save: saveCallback}).render();
                 });
             } else {
