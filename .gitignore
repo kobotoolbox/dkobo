@@ -18,3 +18,4 @@ local_settings.py
 node_modules
 dkobo/formbuilder/templates/sandbox.html
 dkobo/formbuilder/templates/sandbox-stub.html
+.sass-cache/

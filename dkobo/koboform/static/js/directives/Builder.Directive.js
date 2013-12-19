@@ -4,7 +4,8 @@
 function BuilderDirective($rootScope, $restApi, $routeTo) {
     return {
         link: function (scope, element) {
-            var surveyDraftApi = $restApi.createSurveyDraftApi();
+            /*jshint validthis: true */
+            var surveyDraftApi = $restApi.createSurveyDraftApi(scope.routeParams.id);
 
             function saveCallback() {
                 if (this.validateSurvey()) {
@@ -15,7 +16,17 @@ function BuilderDirective($rootScope, $restApi, $routeTo) {
                         }, $routeTo.forms);
                 }
             }
-            new SurveyTemplateApp({el: element, survey: scope.xlfSurvey, save: saveCallback}).render();
+
+            if (scope.routeParams.id){
+                surveyDraftApi.get({id: scope.routeParams.id}, function builder_get_callback(response) {
+                    scope.xlfSurvey = XLF.createSurveyFromCsv(response.body);
+                    // temporarily saving response in __djangoModelDetails
+                    scope.xlfSurvey.__djangoModelDetails = response;
+                    new SurveyApp({el: element, survey: scope.xlfSurvey, save: saveCallback}).render();
+                });
+            } else {
+                new SurveyTemplateApp({el: element, survey: scope.xlfSurvey, save: saveCallback}).render();
+            }
         }
     };
 }

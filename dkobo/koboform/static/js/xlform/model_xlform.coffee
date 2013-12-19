@@ -425,7 +425,7 @@ XLF.createSurveyFromCsv = (csv_repr)->
     $choices = if (sht = cobj.sheet "choices") then sht.toObjects() else []
 
     if (settingsSheet = cobj.sheet "settings")
-      importedStgns = settingsSheet.toObjects()[0]
+      $settings = settingsSheet.toObjects()[0]
   else
     $survey   = opts.survey || []
     $choices  = opts.choices || []        # settings: $settings
@@ -453,6 +453,7 @@ class XLF.SurveyDetails extends Backbone.Collection
 class XLF.Settings extends BaseModel
   defaults:
     form_title: "New survey"
+    form_id: "new_survey"
   toCsvJson: ->
     columns = _.keys(@attributes)
     rowObjects = [@toJSON()]
