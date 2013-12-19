@@ -453,6 +453,7 @@ class XLF.SurveyDetails extends Backbone.Collection
 class XLF.Settings extends BaseModel
   defaults:
     form_title: "New survey"
+    form_id: "new_survey"
   toCsvJson: ->
     columns = _.keys(@attributes)
     rowObjects = [@toJSON()]
