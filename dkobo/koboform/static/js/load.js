@@ -25,8 +25,8 @@ kobo.config(function ($routeProvider, $httpProvider) {
 
     $routeProvider.when('/dashboard', {
       templateUrl: staticFilesUri + 'templates/Dashboard.Template.html',
-      controller: function ($scope) { 
-        $scope.additionalClasses = 'content--centered'; 
+      controller: function ($scope) {
+        $scope.additionalClasses = 'content--centered';
       }
     });
 
@@ -36,7 +36,7 @@ kobo.config(function ($routeProvider, $httpProvider) {
     });
 
     $routeProvider.when('/builder/:id?', {
-      template: "<section koboform-builder></section>",
+      template: "<section koboform-builder class='form-builder'></section>",
       controller: 'BuilderController'
     });
 

@@ -190,6 +190,10 @@ textarea {
     padding: 20px;
 }
 
+.content > .content {
+    padding: 0;
+}
+
 .content--centered {
     text-align: center;
 }
@@ -280,7 +284,6 @@ textarea {
     -o-user-select: none;
     user-select: none;
     position: relative;
-    box-shadow: 0 2px 0 #1288b6;
 }
 
 .btn:hover,
@@ -291,7 +294,6 @@ textarea {
 
 .btn:active,
 .btn.is-active {
-    top: 2px;
     outline: 0;
     background-image: none;
     box-shadow: none;
@@ -342,6 +344,35 @@ input[type="button"].btn--block {
 .btn--start-from-scratch {
     margin-top: 20px;
     margin-bottom: 20px;
+}
+
+
+
+
+
+
+/* ==========================================================================
+   Wells
+   ========================================================================== */
+
+.well {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px 14px;
+    background-color: #eee;
+}
+
+
+
+
+
+
+/* ==========================================================================
+   Editable
+   ========================================================================== */
+
+.editable {
+    cursor: pointer;
 }
 
 

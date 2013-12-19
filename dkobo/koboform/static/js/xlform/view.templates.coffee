@@ -13,7 +13,7 @@ viewTemplates.xlfRowSelector.line = () ->
       <div class="iwrap">
         <div class="well row-fluid clearfix">
           <button type="button" class="shrink pull-right close" aria-hidden="true">&times;</button>
-          <h4>Please select a type for the new question</h4>
+          <h4>Choose question type</h4>
         </div>
       </div>
     """
@@ -21,7 +21,7 @@ viewTemplates.xlfRowSelector.line = () ->
 viewTemplates.xlfRowSelector.cell = (mcell) ->
     """
         <div 
-            class="menu-item menu-item-#{mcell}" 
+            class="menu-item menu-item--#{mcell}" 
             data-menu-item="#{mcell}">
                 #{mcell}
         </div>
@@ -75,29 +75,31 @@ viewTemplates.surveyTemplateApp = () ->
 
 viewTemplates.surveyApp = (survey) ->
     """
-      <div class="row clearfix">
-        <div class="col-md-8">
-          <h1 class="title">
-            <span class="form-title">
-              #{survey.settings.get("form_title")}
-            </span>
-            <span class="hashtag">[<span class="form-id">#{survey.settings.get("form_id")}</span>]</span>
+      <header class="survey-header">
+        <p class="survey-header__description" hidden>
+        <hgroup class="survey-header__inner">
+          <h1 class="survey-header__title  form-title">
+            #{survey.settings.get("form_title")}
           </h1>
-        </div>
-        <div class="col-md-4 buttons">
+          <h2 class="survey-header__hashtag  form-id">#{survey.settings.get("form_id")}</h2>
+        </hgroup>
+        </p>
+        <div class="survey-header__options  well  stats  row-details" id="additional-options"></div>
+        <div class="survey-header__actions  buttons">
           <button id="save" class="btn">Save</button>
         </div>
-        <div class="stats row-details clearfix col-md-11" id="additional-options"></div>
-      </div>
-      <div class="form-editor-wrap">
+      </header>
+      <div class="survey-editor  form-editor-wrap">
         <ul class="-form-editor">
           <li class="editor-message empty">
-            <p class="empty-survey-text">
-              <strong>This survey is currently empty.</strong><br>
+            <p class="survey-editor__message  well">
+              <b>This survey is currently empty.</b><br>
               You can add questions, notes, prompts, or other fields by clicking on the "+" sign below.
             </p>
-            <div class="row clearfix expanding-spacer-between-rows">
-              <div class="add-row-btn btn btn-xs btn-default">+</div>
+            <div class="expanding-spacer-between-rows">
+              <div class="add-row-btn  btn">
+                <i class="fa  fa-plus"></i>
+              </div>
               <div class="line">&nbsp;</div>
             </div>
           </li>

@@ -292,7 +292,7 @@ class @SurveyApp extends Backbone.View
 
     @formEditorEl = @$(".-form-editor")
     @$(".editor-message .expanding-spacer-between-rows .add-row-btn").click (evt)=>
-      @$(".empty-survey-text").slideUp()
+      @$(".survery-editor__message").slideUp()
       new XlfRowSelector(el: @$el.find(".expanding-spacer-between-rows").get(0), action: "click-add-row", survey: @survey)
 
     viewUtils.makeEditable @, @survey.settings, '.form-title', property:'form_title'
@@ -403,7 +403,7 @@ This is the view for the survey-wide details that appear at the bottom
 of the survey. Examples: "imei", "start", "end"
 ###
 class XlfSurveyDetailView extends Backbone.View
-  className: "survey-detail"
+  className: "survey-header__option"
   events:
     "change input": "changeChkValue"
   initialize: ({@model})->
@@ -424,7 +424,7 @@ class XlfSurveyDetailView extends Backbone.View
 ###
   # Details that need to be presented for each row:
   # 1. type
-  #   - if (select_one|select_multiple) then list 
+  #   - if (select_one|select_multiple) then list
   # 2. name
   # 3. hint?
   # 4. required?
