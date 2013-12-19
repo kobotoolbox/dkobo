@@ -11,6 +11,8 @@ viewUtils.makeEditable = (that, model, selector, {property, transformFunction, o
     success: _.bind (uu, ent) ->
         ent = transformFunction ent
         model.set(property, ent)
+
+        newValue: ent
       , that
 
   that.$el.find(selector).editable _.extend(opts, options)
