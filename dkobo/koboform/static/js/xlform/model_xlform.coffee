@@ -425,7 +425,7 @@ XLF.createSurveyFromCsv = (csv_repr)->
     $choices = if (sht = cobj.sheet "choices") then sht.toObjects() else []
 
     if (settingsSheet = cobj.sheet "settings")
-      importedStgns = settingsSheet.toObjects()[0]
+      $settings = settingsSheet.toObjects()[0]
   else
     $survey   = opts.survey || []
     $choices  = opts.choices || []        # settings: $settings
