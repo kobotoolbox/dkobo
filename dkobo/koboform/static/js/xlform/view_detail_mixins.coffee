@@ -26,7 +26,7 @@ DetailViewMixins.label = DetailViewMixins.hint =
     rowView.rowContent.prepend(@$el)
 
   afterRender: ->
-    viewUtils.makeEditable @, 'blockquote', 
+    viewUtils.makeEditable @, @model, 'blockquote', options:
       placement: 'right'
       type: 'textarea'
       rows: 3
@@ -38,7 +38,7 @@ DetailViewMixins.hint =
     #{@model.key}: <code>#{@model.get("value")}</code>
     """
   afterRender: ->
-    viewUtils.makeEditable @
+    viewUtils.makeEditable @, @model, 'code'
 
 DetailViewMixins.name =
   html: ->
@@ -48,7 +48,7 @@ DetailViewMixins.name =
   afterRender: ->
     @model.on 'change:value', _.bind viewUtils.handleChange('value', XLF.sluggify), @
     
-    viewUtils.makeEditable @, "code"
+    viewUtils.makeEditable @, @model, "code"
 
 DetailViewMixins.required =
   html: ->

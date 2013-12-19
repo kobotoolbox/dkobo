@@ -298,11 +298,11 @@ class @SurveyApp extends Backbone.View
       @$(".empty-survey-text").slideUp()
       new XlfRowSelector(el: @$el.find(".expanding-spacer-between-rows").get(0), action: "click-add-row", survey: @survey)
 
-    viewUtils.makeEditable @, '.form-title', 'form_title'
+    viewUtils.makeEditable @, @survey.settings, '.form-title', property:'form_title'
 
     # see this page for info on what should be in a form_id
     # http://opendatakit.org/help/form-design/guidelines/
-    viewUtils.makeEditable @, '.form-id', 'form_id', XLF.sluggify
+    viewUtils.makeEditable @, @survey.settings, '.form-id', property:'form_id', transformFunction:XLF.sluggify
     # @.survey.on 'change:form_id', _.bind viewUtils.handleChange('form_id', XLF.sluggify), @
 
     addOpts = @$("#additional-options")
