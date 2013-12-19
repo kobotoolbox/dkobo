@@ -6,12 +6,18 @@ function InfoListDirective($rootScope) {
             items: '=',
             refreshItemList: '&',
             canAddNew: '@',
-            name: '@'
+            name: '@',
+            linkTo: '@'
         },
         link: function (scope, element, attributes) {
             scope.$watch('searchCriteria', function () {
                 scope.refreshItemList(scope.searchCriteria);
             });
+
+            scope.getHashLink = function (item) {
+                var linkTo = scope.linkTo;
+                return linkTo ? '/' + linkTo + '/' + item.id : '';
+            }
 
             $rootScope.canAddNew = scope.canAddNew;
             $rootScope.activeTab = scope.name;
