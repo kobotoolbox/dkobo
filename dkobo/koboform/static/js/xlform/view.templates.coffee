@@ -81,7 +81,7 @@ viewTemplates.surveyApp = (survey) ->
           <h1 class="survey-header__title  form-title">
             #{survey.settings.get("form_title")}
           </h1>
-          <h2 class="survey-header__hashtag  form-id">[#{survey.settings.get("form_id")}]</h2>
+          <h2 class="survey-header__hashtag  form-id">#{survey.settings.get("form_id")}</h2>
         </hgroup>
         </p>
         <div class="survey-header__options  well  stats  row-details" id="additional-options"></div>
