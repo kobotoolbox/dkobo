@@ -3,8 +3,16 @@
  
 function restApiFactory($resource) {
     return {
-        createSurveyDraftApi: function () {
-            return $resource('/koboform/survey_draft/:id', { id: 0 });
+        createSurveyDraftApi: function (id) {
+            var customMethods = {}
+
+            if (id) {
+                customMethods = {
+                    save: { method: 'PUT' }
+                };
+            }
+            
+            return $resource('/koboform/survey_draft/:id', { id: id || 0 }, customMethods);
         }
     };
 }

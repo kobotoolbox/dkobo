@@ -41,6 +41,8 @@ def survey_drafts(request, sdid=0):
             return list_survey_drafts(request)
     elif request.method == 'POST':
         return create_survey_draft(request)
+    elif request.method == 'PUT':
+        return update_survey_draft(request, sdid)
 
 
 @login_required
@@ -65,6 +67,26 @@ def create_survey_draft(request):
     return HttpResponse(json.dumps(model_to_dict(survey_draft)))
 
 
+def update_survey_draft(request, sdid):
+    raw_draft = json.loads(request.body)
+
+    name = raw_draft.get('title', raw_draft.get('name'))
+
+    csv_details = {u'user': request.user,
+                   u'body': raw_draft.get("body"),
+                   u'description': raw_draft.get("description"),
+                   u'name': name}
+    survey_draft = SurveyDraft.objects.get(pk=sdid)
+
+    survey_draft.body = raw_draft.get("body")
+    survey_draft.description = raw_draft.get("description")
+    survey_draft.name = name
+
+    survey_draft.save()
+
+    return HttpResponse(json.dumps(model_to_dict(survey_draft)))
+
+
 @login_required
 def read_survey_draft(request, sdid):
     survey_draft = SurveyDraft.objects.get(id=sdid)
@@ -80,7 +102,8 @@ def list_forms_for_user(request):
             survey_drafts.append({u'title': sd.name,
                                   u'info': sd.description,
                                   u'icon': 'fa-file-o',
-                                  u'iconBgColor': 'green'})
+                                  u'iconBgColor': 'green',
+                                  u'id': sd.id})
     return HttpResponse(json.dumps({u'list': survey_drafts}))
 
 

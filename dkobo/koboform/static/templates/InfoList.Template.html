@@ -16,7 +16,7 @@
         <i class="fa  {{ item.icon }}  fa-stack-1x  fa-inverse"></i>
       </span>
       <div class="info-list-item__details">
-        <h3 class="info-list-item__title"><a href="#/builder/{{item.id}}">{{ item.title }}</a></h3>
+        <h3 class="info-list-item__title"><a href="#{{ getHashLink(item) }}">{{ item.title }}</a></h3>
         <p class="info-list-item__info">{{ item.info }}</p>
       </div>
       <div class="info-list-item__tags">
