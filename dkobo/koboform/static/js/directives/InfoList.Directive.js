@@ -19,7 +19,7 @@ function InfoListDirective($rootScope) {
                 return linkTo ? '/' + linkTo + '/' + item.id : '';
             }
 
-            $rootScope.canAddNew = scope.canAddNew;
+            $rootScope.canAddNew = scope.canAddNew === 'true' ? true : false;
             $rootScope.activeTab = scope.name;
         }
     }

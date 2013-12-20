@@ -12,6 +12,7 @@
 describe ('Directives', function () {
     beforeEach(module('dkobo'));
     beforeEach(module('templates/TopLevelMenu.Template.html'));
+    beforeEach(module('templates/InfoList.Template.html'));
 
     function mockUserDetails(mockObject) {
         return module(function ($provide) {
@@ -23,14 +24,17 @@ describe ('Directives', function () {
         });
     }
 
-    function buildDirective($compile, $rootScope) {
-        var element = '<div top-level-menu></div>';
+    function buildDirective($compile, $rootScope, element) {
         element = $compile(element)($rootScope);
         $rootScope.$apply();
         return element.isolateScope();
     }
 
     describe ('Top level menu Directive', function () {
+        function buildTopLevelMenuDirective($compile, $rootScope) {
+            return buildDirective($compile, $rootScope, '<div top-level-menu></div>');
+        }
+
         describe('Mocked $userDetails', function () {
             beforeEach(mockUserDetails({
                 name: 'test name',
@@ -39,7 +43,7 @@ describe ('Directives', function () {
 
             it('should set $rootScope.user to values passed by $userDetails',
                 inject(function($compile, $rootScope) {
-                    var isolateScope = buildDirective($compile, $rootScope);
+                    var isolateScope = buildTopLevelMenuDirective($compile, $rootScope);
 
                     expect(isolateScope.user.name).toBe('test name');
                     expect(isolateScope.user.avatar).toBe('test avatar');
@@ -51,7 +55,7 @@ describe ('Directives', function () {
             beforeEach(mockUserDetails({}));
             it('should set $rootScope.user to the default values when $userDetails is an empty object',
                 inject(function ($compile, $rootScope) {
-                    var isolateScope = buildDirective($compile, $rootScope);
+                    var isolateScope = buildTopLevelMenuDirective($compile, $rootScope);
 
                     expect(isolateScope.user.name).toBe('KoBoForm User');
                     expect(isolateScope.user.avatar).toBe('/img/avatars/example-photo.jpg');
@@ -76,7 +80,7 @@ describe ('Directives', function () {
             }));
             it('should set $rootScope.user to the default values when $userDetails is null',
                 inject(function ($compile, $rootScope) {
-                    var isolateScope = buildDirective($compile, $rootScope);
+                    var isolateScope = buildTopLevelMenuDirective($compile, $rootScope);
 
                     expect(isolateScope.user.name).toBe('KoBoForm User');
                     expect(isolateScope.user.avatar).toBe('/img/avatars/example-photo.jpg');
@@ -85,13 +89,63 @@ describe ('Directives', function () {
 
             it('should read section information from the config service',
                 inject(function ($compile, $rootScope) {
-                    var isolateScope = buildDirective($compile, $rootScope);
+                    var isolateScope = buildTopLevelMenuDirective($compile, $rootScope);
 
                     expect(isolateScope.sections).toBe(mockConfig);
                 })
             );
         });
 
+    });
+
+    describe('InfoList Directive', function () {
+        function buildInfoListDirective($compile, $rootScope, canAddNew, linkTo) {
+            return buildDirective(
+                $compile, 
+                $rootScope, 
+                '<div info-list items="items" can-add-new="' + canAddNew + '" name="test" link-to="' + linkTo + '"></div>'
+            );
+        }
+
+        it('should initialize the scope correctly', 
+            inject(function ($compile, $rootScope, $httpBackend) {
+                $rootScope.items = [{}];
+
+                var isolateScope = buildInfoListDirective($compile, $rootScope, true);
+
+                expect($rootScope.canAddNew).toBe(true);
+                expect($rootScope.activeTab).toBe('test');
+            })
+        );
+
+        it('should initialize the scope with canAddNew === false when "false" is passed on directives attribute', 
+            inject(function ($compile, $rootScope) {
+                $rootScope.items = [{}];
+
+                var isolateScope = buildInfoListDirective($compile, $rootScope, false);
+
+                expect($rootScope.canAddNew).toBe(false);
+                expect($rootScope.activeTab).toBe('test');
+            })
+        );
+
+        describe('getHashLink', function () {
+            it('should return a URI when linkTo is provided', 
+                inject(function ($compile, $rootScope){
+                    var isolateScope = buildInfoListDirective($compile, $rootScope, false, 'test');
+
+                    expect(isolateScope.getHashLink({id: 1})).toBe('/test/1');
+                })
+            );
+
+            it('should return a URI when linkTo is provided', 
+                inject(function ($compile, $rootScope){
+                    var isolateScope = buildInfoListDirective($compile, $rootScope, false, '');
+
+                    expect(isolateScope.getHashLink({id: 1})).toBe('');
+                })
+            );
+        });
     });
 
 });
