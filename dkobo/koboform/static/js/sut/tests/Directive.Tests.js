@@ -1,67 +1,97 @@
-describe ('Directives', function () {
-    var element;
-    var $scope;
+/*global describe*/
+/*global it */
+/*global expect*/
+/*global inject*/
+/*global beforeEach*/
+/*global module*/
+/*global beforeEach*/
+/*global beforeEach*/
+/*global beforeEach*/
 
-    beforeEach(module('dkobo'))
-    beforeEach(module('templates/TopLevelMenu.Template.html'))
-    beforeEach(module(function ($provide) {
-        $provide.provider('$userDetails', function () { 
-                    this.$get = function () {
-                        return {
-                            name: 'test name', 
-                            gravatar: 'test avatar'
-                        };
-                    }
-                });
-            })
-        );
+'use strict';
+describe ('Directives', function () {
+    beforeEach(module('dkobo'));
+    beforeEach(module('templates/TopLevelMenu.Template.html'));
+
+    function mockUserDetails(mockObject) {
+        return module(function ($provide) {
+            $provide.provider('$userDetails', function () {
+                this.$get = function () {
+                    return mockObject;
+                };
+            });
+        });
+    }
+
+    function buildDirective($compile, $rootScope) {
+        var element = '<div top-level-menu></div>';
+        element = $compile(element)($rootScope);
+        $rootScope.$apply();
+        return element.isolateScope();
+    }
 
     describe ('Top level menu Directive', function () {
-        beforeEach(inject(function ($rootScope) {
-            $scope = $rootScope;
-        }));    
+        describe('Mocked $userDetails', function () {
+            beforeEach(mockUserDetails({
+                name: 'test name',
+                gravatar: 'test avatar'
+            }));
 
-        it('should set $scope.user to values passed by $userDetails', 
-            inject(function($compile) {
+            it('should set $rootScope.user to values passed by $userDetails',
+                inject(function($compile, $rootScope) {
+                    var isolateScope = buildDirective($compile, $rootScope);
 
-
-
-                var element = '<div top-level-menu></div>';
-                element = $compile(element)($scope);
-                $scope.$apply();
-
-                expect(element.isolateScope().user.name).toBe('test name');
-                expect(element.isolateScope().user.avatar).toBe('test avatar');
-            }
-        ));
-
-        /*it('should set $scope.user to the default values when $userDetails is an empty object',
-            function () {
-                TopLevelMenuDirective({}).link($scope, {}, {});
-
-                expect($scope.user.name).toBe('KoBoForm User');
-                expect($scope.user.avatar).toBe('/img/avatars/example-photo.jpg');
+                    expect(isolateScope.user.name).toBe('test name');
+                    expect(isolateScope.user.avatar).toBe('test avatar');
+                }
+            ));
         });
 
-        it('should set $scope.user to the default values when $userDetails is null',
-            function () {
-                TopLevelMenuDirective(null).link($scope, {}, {});
+        describe('empty $userDetails', function() {
+            beforeEach(mockUserDetails({}));
+            it('should set $rootScope.user to the default values when $userDetails is an empty object',
+                inject(function ($compile, $rootScope) {
+                    var isolateScope = buildDirective($compile, $rootScope);
 
-                expect($scope.user.name).toBe('KoBoForm User');
-                expect($scope.user.avatar).toBe('/img/avatars/example-photo.jpg');
+                    expect(isolateScope.user.name).toBe('KoBoForm User');
+                    expect(isolateScope.user.avatar).toBe('/img/avatars/example-photo.jpg');
+                })
+            );
         });
 
-        it('should read section information from the config service',
-            function (){
-                TopLevelMenuDirective(
-                    null, 
-                    {
-                        sections: function () { return 'test sections'; }
-                    })
-                .link($scope, {},{});
+        describe('null $userDetails', function () {
+            var mockConfig = [{
+                'title': 'test title',
+                'icon': 'fa-file-text-o',
+                'name': 'test name'
+            }];
 
-                expect($scope.sections).toBe('test sections');
-            })*/
+            beforeEach(mockUserDetails(null));
+            beforeEach(module(function ($provide) {
+                $provide.provider('$configuration', function () {
+                    this.$get = function () {
+                        return { sections: function () { return mockConfig; } };
+                    };
+                });
+            }));
+            it('should set $rootScope.user to the default values when $userDetails is null',
+                inject(function ($compile, $rootScope) {
+                    var isolateScope = buildDirective($compile, $rootScope);
+
+                    expect(isolateScope.user.name).toBe('KoBoForm User');
+                    expect(isolateScope.user.avatar).toBe('/img/avatars/example-photo.jpg');
+                })
+            );
+
+            it('should read section information from the config service',
+                inject(function ($compile, $rootScope) {
+                    var isolateScope = buildDirective($compile, $rootScope);
+
+                    expect(isolateScope.sections).toBe(mockConfig);
+                })
+            );
+        });
+
     });
- 
+
 });
