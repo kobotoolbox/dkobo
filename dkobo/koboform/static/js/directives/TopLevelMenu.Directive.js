@@ -1,43 +1,33 @@
-function TopLevelMenuDirective ($userDetails) {
-  return {
-    restrict:'A',
-    templateUrl: staticFilesUri + 'templates/TopLevelMenu.Template.html', 
-    scope: {
-        activeTab: '='
-    },
-    link: function (scope, element, attributes) {
-        var userDetails = $userDetails;
-        scope.user = {
-            name: userDetails.name || 'KoBoForm User',
-            avatar: userDetails.gravatar || (staticFilesUri + '/img/avatars/example-photo.jpg')
-        };
+/* exported TopLevelMenuDirective */
+/* global staticFilesUri */
+'use strict';
 
-        scope.sections = [
-            {
-                'title': 'Forms',
-                'icon': 'fa-file-text-o',
-                'name': 'forms'
-            },
-            {
-                'title': 'Assets',
-                'icon': 'fa-folder',
-                'name': 'assets'
-            },
-            {
-                'title': 'Admin',
-                'icon': 'fa-cog',
-                'name': 'admin'
-            },
-            {
-                title: 'Import CSV',
-                icon: 'fa-cog',
-                name: 'import/csv'
+function TopLevelMenuDirective ($userDetails, $configuration) {
+    return {
+        restrict:'A',
+        templateUrl: staticFilesUri + 'templates/TopLevelMenu.Template.html',
+        scope: {
+            activeTab: '='
+        },
+        link: function (scope) {
+            var userDetails = $userDetails;
+            if ($userDetails) {
+                scope.user = {
+                    name: userDetails.name ? userDetails.name : 'KoBoForm User',
+                    avatar: userDetails.gravatar ? userDetails.gravatar: (staticFilesUri + '/img/avatars/example-photo.jpg')
+                };
+            } else {
+                scope.user = {
+                    name: 'KoBoForm User',
+                    avatar: staticFilesUri + '/img/avatars/example-photo.jpg'
+                };
             }
-        ];
 
-        scope.isActive = function (name) {
-            return name === scope.activeTab ? 'is-active' : '';
+            scope.sections = $configuration.sections();
+
+            scope.isActive = function (name) {
+                return name === scope.activeTab ? 'is-active' : '';
+            };
         }
-    }
-  }
+    };
 }

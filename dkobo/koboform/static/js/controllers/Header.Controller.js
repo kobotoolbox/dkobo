@@ -1,3 +1,6 @@
+/*exported HeaderController*/
+'use strict';
+
 function HeaderController($scope, $rootScope) {
     $scope.pageIconColor = 'teal';
     $scope.pageTitle = 'Forms';
@@ -8,5 +11,5 @@ function HeaderController($scope, $rootScope) {
 
     $scope.toggleTopMenu = function () {
         $rootScope.topLevelMenuActive = !!$rootScope.topLevelMenuActive ? '' : 'is-active';
-    }
+    };
 }
