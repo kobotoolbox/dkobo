@@ -104,7 +104,7 @@ def list_forms_for_user(request):
                                   u'icon': 'fa-file-o',
                                   u'iconBgColor': 'green',
                                   u'id': sd.id})
-    return HttpResponse(json.dumps({u'list': survey_drafts}))
+    return HttpResponse(json.dumps(survey_drafts))
 
 
 def list_forms_in_library(request):
@@ -119,7 +119,8 @@ def list_forms_in_library(request):
                               u'icon': 'fa-file-text-o',
                               u'iconBgColor': 'teal',
                               u'tags': []})
-    return HttpResponse(json.dumps({u'list': library_forms}))
+    return HttpResponse(json.dumps(library_forms))
+
 
 def jasmine_spec(request):
     return render_to_response("jasmine_spec.html")

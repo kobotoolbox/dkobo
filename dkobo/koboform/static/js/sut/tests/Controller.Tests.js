@@ -8,7 +8,7 @@ describe ('Controllers', function () {
         $rs, $scope,
         $resource = function () {
                         return {
-                            get: function() { return hello; }
+                            query: function() { return hello; }
                         };
                     };
 
