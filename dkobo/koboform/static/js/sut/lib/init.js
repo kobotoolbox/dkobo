@@ -1,0 +1,2 @@
+/*exported staticFilesUri*/
+var staticFilesUri = '';

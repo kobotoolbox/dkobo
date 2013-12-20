@@ -4,11 +4,8 @@
 /*global inject*/
 /*global beforeEach*/
 /*global module*/
-/*global beforeEach*/
-/*global beforeEach*/
-/*global beforeEach*/
-
 'use strict';
+
 describe ('Directives', function () {
     beforeEach(module('dkobo'));
     beforeEach(module('templates/TopLevelMenu.Template.html'));
@@ -101,28 +98,28 @@ describe ('Directives', function () {
     describe('InfoList Directive', function () {
         function buildInfoListDirective($compile, $rootScope, canAddNew, linkTo) {
             return buildDirective(
-                $compile, 
-                $rootScope, 
+                $compile,
+                $rootScope,
                 '<div info-list items="items" can-add-new="' + canAddNew + '" name="test" link-to="' + linkTo + '"></div>'
             );
         }
 
-        it('should initialize the scope correctly', 
-            inject(function ($compile, $rootScope, $httpBackend) {
+        it('should initialize the scope correctly',
+            inject(function ($compile, $rootScope) {
                 $rootScope.items = [{}];
 
-                var isolateScope = buildInfoListDirective($compile, $rootScope, true);
+                buildInfoListDirective($compile, $rootScope, true);
 
                 expect($rootScope.canAddNew).toBe(true);
                 expect($rootScope.activeTab).toBe('test');
             })
         );
 
-        it('should initialize the scope with canAddNew === false when "false" is passed on directives attribute', 
+        it('should initialize the scope with canAddNew === false when "false" is passed on directives attribute',
             inject(function ($compile, $rootScope) {
                 $rootScope.items = [{}];
 
-                var isolateScope = buildInfoListDirective($compile, $rootScope, false);
+                buildInfoListDirective($compile, $rootScope, false);
 
                 expect($rootScope.canAddNew).toBe(false);
                 expect($rootScope.activeTab).toBe('test');
@@ -130,7 +127,7 @@ describe ('Directives', function () {
         );
 
         describe('getHashLink', function () {
-            it('should return a URI when linkTo is provided', 
+            it('should return a URI when linkTo is provided',
                 inject(function ($compile, $rootScope){
                     var isolateScope = buildInfoListDirective($compile, $rootScope, false, 'test');
 
@@ -138,7 +135,7 @@ describe ('Directives', function () {
                 })
             );
 
-            it('should return a URI when linkTo is provided', 
+            it('should return a URI when linkTo is provided',
                 inject(function ($compile, $rootScope){
                     var isolateScope = buildInfoListDirective($compile, $rootScope, false, '');
 

@@ -1,3 +1,10 @@
+/*global describe*/
+/*global it */
+/*global expect*/
+/*global RouteToService*/
+/*global sinon*/
+'use strict';
+
 describe('RouteTo Service', function () {
     describe('forms method', function () {
         it('should redirect to "/forms" page', function () {
@@ -5,7 +12,7 @@ describe('RouteTo Service', function () {
                 path: sinon.spy()
             };
 
-            router = new RouteToService(location);
+            var router = new RouteToService(location);
             router.forms();
 
             expect(location.path).toHaveBeenCalledOn(location);

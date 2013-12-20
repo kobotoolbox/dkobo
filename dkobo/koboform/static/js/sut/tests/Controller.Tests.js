@@ -3,6 +3,7 @@
 /*global expect*/
 /*global inject*/
 'use strict';
+
 describe ('Controllers', function () {
     var hello = {hello: 'world'},
         $rs, $scope,

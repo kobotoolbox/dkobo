@@ -1,3 +1,6 @@
+/* exported ConfigurationService */
+'use strict';
+
 function ConfigurationService() {
     this.sections = function () {
         return [
@@ -22,5 +25,5 @@ function ConfigurationService() {
                 'name': 'import/csv'
             }
         ];
-    }
+    };
 }

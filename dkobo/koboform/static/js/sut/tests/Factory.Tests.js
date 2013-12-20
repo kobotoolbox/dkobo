@@ -1,6 +1,13 @@
+/*global describe*/
+/*global it */
+/*global expect*/
+/*global userDetailsFactory*/
+/*global sinon*/
+/*global restApiFactory*/
+'use strict';
+
 describe('userDetails Factory', function () {
     it ('should return the value of window.userDetails', function () {
-        window = window || {};
         window.userDetails = {};
         expect(userDetailsFactory()).toBe(window.userDetails);
     });

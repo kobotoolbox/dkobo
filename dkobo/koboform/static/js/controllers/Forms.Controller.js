@@ -1,5 +1,4 @@
 /* exported FormsController */
-/* global _ */
 'use strict';
 
 function FormsController ($scope, $rootScope, $resource) {

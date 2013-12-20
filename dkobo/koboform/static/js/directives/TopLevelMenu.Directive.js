@@ -1,11 +1,15 @@
+/* exported TopLevelMenuDirective */
+/* global staticFilesUri */
+'use strict';
+
 function TopLevelMenuDirective ($userDetails, $configuration) {
     return {
         restrict:'A',
-        templateUrl: staticFilesUri + 'templates/TopLevelMenu.Template.html', 
+        templateUrl: staticFilesUri + 'templates/TopLevelMenu.Template.html',
         scope: {
             activeTab: '='
         },
-        link: function (scope, element, attributes) {
+        link: function (scope) {
             var userDetails = $userDetails;
             if ($userDetails) {
                 scope.user = {
@@ -16,14 +20,14 @@ function TopLevelMenuDirective ($userDetails, $configuration) {
                 scope.user = {
                     name: 'KoBoForm User',
                     avatar: staticFilesUri + '/img/avatars/example-photo.jpg'
-                }
+                };
             }
 
             scope.sections = $configuration.sections();
 
             scope.isActive = function (name) {
                 return name === scope.activeTab ? 'is-active' : '';
-            }
+            };
         }
-    }
+    };
 }

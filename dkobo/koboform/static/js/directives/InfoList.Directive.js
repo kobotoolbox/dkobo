@@ -1,3 +1,7 @@
+/* exported InfoListDirective */
+/* global staticFilesUri */
+'use strict';
+
 function InfoListDirective($rootScope) {
     return {
         restrict: 'A',
@@ -9,7 +13,7 @@ function InfoListDirective($rootScope) {
             name: '@',
             linkTo: '@'
         },
-        link: function (scope, element, attributes) {
+        link: function (scope) {
             scope.$watch('searchCriteria', function () {
                 scope.refreshItemList(scope.searchCriteria);
             });
@@ -17,10 +21,10 @@ function InfoListDirective($rootScope) {
             scope.getHashLink = function (item) {
                 var linkTo = scope.linkTo;
                 return linkTo ? '/' + linkTo + '/' + item.id : '';
-            }
+            };
 
             $rootScope.canAddNew = scope.canAddNew === 'true' ? true : false;
             $rootScope.activeTab = scope.name;
         }
-    }
+    };
 }

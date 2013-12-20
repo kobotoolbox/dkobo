@@ -4,7 +4,7 @@
 function restApiFactory($resource) {
     return {
         createSurveyDraftApi: function (id) {
-            var customMethods = {}
+            var customMethods = {};
 
             if (id) {
                 customMethods = {
