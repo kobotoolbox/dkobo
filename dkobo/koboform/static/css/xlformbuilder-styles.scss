@@ -4,8 +4,36 @@
 
 .form-builder {
     max-width: 640px;
+    margin-top: 60px;
     margin-right: auto;
     margin-left: auto;
+}
+
+
+
+
+
+
+// ==========================================================================
+   $module: "sub-header-bar";
+// ==========================================================================
+
+.#{$module} {
+    width: 100%;
+    height: 60px;
+    border-bottom: 1px solid #e2e2e2;
+    padding: 10px 5px;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    z-index: 1;
+    background-color: #f4f4f4;
+    transition: left 300ms;
+
+    & > .btn {
+        margin-right: 5px;
+        margin-left: 5px;
+    }
 }
 
 
@@ -64,14 +92,74 @@
 
 
 // ==========================================================================
+   $module: "menu-row";
+// ==========================================================================
+
+.#{$module} {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+
+    &:last-child {
+        border-bottom: 0;
+    }
+}
+
+
+
+
+
+
+// ==========================================================================
    $module: "menu-item";
 // ==========================================================================
 
-.menu-item {
+.#{$module} {
+    margin-right: 5px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 7px 11px;
     display: inline-block;
+    cursor: pointer;
+    background: white;
+
+    &:hover {
+        border-color: #bbb;
+        background-color: #f8f8f8;
+    }
+
+    &:before {
+        content: "";
+        width: 1.2857142857142858em;
+        display: inline-block;
+        font-family: FontAwesome;
+        font-style: normal;
+        font-weight: normal;
+        line-height: 1;
+        text-align: center;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        color: #1daee3;
+    }
 }
 
-.menu-item--geopoint {}
+.#{$module}--geopoint:before {content: "\f041"; }
+.#{$module}--image:before {content: "\f030"; }
+.#{$module}--audio:before {content: "\f025"; }
+.#{$module}--video:before {content: "\f03d"; }
+.#{$module}--barcode:before {content: "\f02a"; }
+.#{$module}--date:before {content: "\f073"; }
+.#{$module}--datetime:before {content: "\f133"; }
+.#{$module}--text:before {content: "\f15c"; }
+.#{$module}--integer:before {content: "\f033"; }
+.#{$module}--decimal:before {content: "\f0d6"; }
+.#{$module}--note:before {content: "\f0c5"; }
+.#{$module}--select_one:before {content: "\f0ca"; }
+.#{$module}--select_multiple:before {content: "\f022"; }
+
+
+
+
 
 
 

@@ -20,8 +20,8 @@ viewTemplates.xlfRowSelector.line = () ->
 
 viewTemplates.xlfRowSelector.cell = (mcell) ->
     """
-        <div 
-            class="menu-item menu-item--#{mcell}" 
+        <div
+            class="menu-item menu-item--#{mcell}"
             data-menu-item="#{mcell}">
                 #{mcell}
         </div>
@@ -75,6 +75,13 @@ viewTemplates.surveyTemplateApp = () ->
 
 viewTemplates.surveyApp = (survey) ->
     """
+      <div class="sub-header-bar">
+        <button class="btn  btn--utility">Export and clone</button>
+        <button class="btn  btn--utility">Save</button>
+        <button class="btn  btn--utility">Preview</button>
+        <button class="btn  btn--utility  pull-right">Group questions</button>
+        <button class="btn  btn--utility  pull-right">Repeat questions</button>
+      </div>
       <header class="survey-header">
         <p class="survey-header__description" hidden>
         <hgroup class="survey-header__inner">
@@ -140,7 +147,7 @@ viewTemplates.xlfManageListView = (uid) ->
 
 viewTemplates.xlfManageListView.buttons = () ->
     """
-        <button class="rename-list">rename list</button> 
+        <button class="rename-list">rename list</button>
         <button class="cl-save">save</button>
         <button class="cl-cancel">cancel</button>
     """
