@@ -19,6 +19,10 @@ function InfoListDirective($rootScope) {
                 return linkTo ? '/' + linkTo + '/' + item.id : '';
             }
 
+            scope.getLink = function (item) {
+                return scope.name.toLowerCase() + '/' + item.id;
+            }
+
             $rootScope.canAddNew = scope.canAddNew;
             $rootScope.activeTab = scope.name;
         }
