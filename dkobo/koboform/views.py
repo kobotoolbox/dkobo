@@ -7,6 +7,7 @@ from django.forms.models import model_to_dict
 import json
 import utils
 
+
 def csv_to_xform(request):
     csv_data = request.POST.get('txtImport')
 
@@ -14,6 +15,17 @@ def csv_to_xform(request):
 
     response = HttpResponse(survey.to_xml(),
                             mimetype='application/force-download')
+    response['Content-Disposition'] = 'attachment; filename=survey.xml'
+
+    return response
+
+
+def export_form_to_xform(request, id):
+    survey = utils.create_survey_from_csv_text(SurveyDraft.objects.get(pk=id).body)
+
+    response = HttpResponse(survey.to_xml(),
+                            mimetype='application/force-download')
+
     response['Content-Disposition'] = 'attachment; filename=survey.xml'
 
     return response
@@ -72,10 +84,6 @@ def update_survey_draft(request, sdid):
 
     name = raw_draft.get('title', raw_draft.get('name'))
 
-    csv_details = {u'user': request.user,
-                   u'body': raw_draft.get("body"),
-                   u'description': raw_draft.get("description"),
-                   u'name': name}
     survey_draft = SurveyDraft.objects.get(pk=sdid)
 
     survey_draft.body = raw_draft.get("body")

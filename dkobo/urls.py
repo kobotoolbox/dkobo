@@ -3,7 +3,8 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = patterns(
+    '',
     url(r'^$', 'dkobo.koboform.views.spa', name='spa'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^csv$', 'dkobo.koboform.views.csv_to_xform'),
@@ -15,4 +16,5 @@ urlpatterns = patterns('',
     # we should re-think a RESTful accessor for the URLs below
     url(r'^question_library_forms$', 'dkobo.koboform.views.list_forms_in_library'),
     url(r'^survey_drafts$', 'dkobo.koboform.views.list_forms_for_user'),
+    url(r'^forms/(\d+)', 'dkobo.koboform.views.export_form_to_xform'),
 )
