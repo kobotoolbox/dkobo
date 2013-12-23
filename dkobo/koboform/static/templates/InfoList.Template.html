@@ -12,12 +12,12 @@
     <li class="info-list__item" ng-repeat="item in items">
       <input type="checkbox" class="info-list-item__checkbox">
       <span class="info-list-item__icon  fa-stack  fa-lg">
-        <i class="fa  fa-circle  fa-stack-2x  icon--{{ item.iconBgColor }}"></i>
-        <i class="fa  {{ item.icon }}  fa-stack-1x  fa-inverse"></i>
+        <i class="fa  fa-circle  fa-stack-2x  icon--green"></i>
+        <i class="fa  fa-file-o  fa-stack-1x  fa-inverse"></i>
       </span>
       <div class="info-list-item__details">
-        <h3 class="info-list-item__title"><a href="#{{ getHashLink(item) }}">{{ item.title }}</a></h3>
-        <p class="info-list-item__info">{{ item.info }}</p>
+        <h3 class="info-list-item__title"><a href="#{{ getHashLink(item) }}">{{ item.name }}</a></h3>
+        <p class="info-list-item__info">{{ item.description }}</p>
       </div>
       <div class="info-list-item__tags">
         <div class="info-list-item__tag  tag" ng-show="!!item.tag1">{{ item.tag1 }}</div>
