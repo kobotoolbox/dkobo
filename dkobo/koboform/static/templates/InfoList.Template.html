@@ -1,34 +1,28 @@
 <section class="content">
-    <div class="filters">
-        <select class="filters__filter">
-            <option>Filter</option>
-        </select>
-        <select class="filters__filter">
-            <option>Sort</option>
-        </select>
-        <input placeholder="Search" class="filters__filter" ng-model="searchCriteria">
-    </div>
-    <ul class="info-list">
-        <li class="info-list__item" ng-repeat="item in items">
-            <input type="checkbox" class="info-list-item__checkbox">
-            <span class="info-list-item__icon  fa-stack  fa-lg">
-                <i class="fa  fa-circle  fa-stack-2x  icon--{{ item.iconBgColor }}"></i>
-                <i class="fa  {{ item.icon }}  fa-stack-1x  fa-inverse"></i>
-            </span>
-            <div class="info-list-item__details">
-                <h3 class="info-list-item__title">
-                    <a href="#{{ getHashLink(item) }}">{{ item.title }}</a>
-                    <a href="{{ getLink(item) }}" class="fa-stack  fa-lg">
-                      <i class="header-bar__page-icon-circle  fa  fa-circle  fa-stack-2x  icon--{{ pageIconColor }}"></i>
-                      <i class="header-bar__page-icon  fa  fa-code  fa-stack-1x  fa-inverse"></i>
-                    </a>
-                </h3>
-                <p class="info-list-item__info">{{ item.info }}</p>
-            </div>
-            <div class="info-list-item__tags">
-                <div class="info-list-item__tag  tag" ng-show="!!item.tag1">{{ item.tag1 }}</div>
-                <div class="info-list-item__tag  tag" ng-show="!!item.tag2">{{ item.tag2 }}</div>
-            </div>
-        </li>
-    </ul>
+  <div class="filters">
+    <select class="filters__filter">
+      <option>Filter</option>
+    </select>
+    <select class="filters__filter">
+      <option>Sort</option>
+    </select>
+    <input placeholder="Search" class="filters__filter" ng-model="searchCriteria">
+  </div>
+  <ul class="info-list">
+    <li class="info-list__item" ng-repeat="item in items">
+      <input type="checkbox" class="info-list-item__checkbox">
+      <span class="info-list-item__icon  fa-stack  fa-lg">
+        <i class="fa  fa-circle  fa-stack-2x  icon--green"></i>
+        <i class="fa  fa-file-o  fa-stack-1x  fa-inverse"></i>
+      </span>
+      <div class="info-list-item__details">
+        <h3 class="info-list-item__title"><a href="#{{ getHashLink(item) }}">{{ item.name }}</a></h3>
+        <p class="info-list-item__info">{{ item.description }}</p>
+      </div>
+      <div class="info-list-item__tags">
+        <div class="info-list-item__tag  tag" ng-show="!!item.tag1">{{ item.tag1 }}</div>
+        <div class="info-list-item__tag  tag" ng-show="!!item.tag2">{{ item.tag2 }}</div>
+      </div>
+    </li>
+  </ul>
 </section>

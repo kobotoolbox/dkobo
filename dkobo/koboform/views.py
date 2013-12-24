@@ -4,6 +4,8 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth.decorators import login_required
 from models import SurveyDraft
 from django.forms.models import model_to_dict
+from rest_framework import viewsets
+from serializers import SurveyDraftSerializer
 import json
 import utils
 
@@ -132,3 +134,13 @@ def list_forms_in_library(request):
 
 def jasmine_spec(request):
     return render_to_response("jasmine_spec.html")
+
+
+class SurveyDraftViewSet(viewsets.ModelViewSet):
+    model = SurveyDraft
+
+    def get_queryset(self):
+        user = self.request.user
+        return SurveyDraft.objects.filter(user=user)
+
+    serializer_class = SurveyDraftSerializer
