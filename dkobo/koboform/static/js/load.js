@@ -14,7 +14,9 @@ kobo.directive('koboformBuilder', BuilderDirective);
 
 kobo.factory('$userDetails', userDetailsFactory);
 kobo.factory('$restApi', restApiFactory);
+
 kobo.service('$routeTo', RouteToService);
+kobo.service('$configuration', ConfigurationService);
 
 
 kobo.config(function ($routeProvider, $httpProvider) {
