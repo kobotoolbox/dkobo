@@ -38,7 +38,7 @@ DetailViewMixins.hint =
     #{@model.key}: <code>#{@model.get("value")}</code>
     """
   afterRender: ->
-    viewUtils.makeEditable @, @model, 'code'
+    viewUtils.makeEditable @, @model, 'code', {}
 
 DetailViewMixins.name =
   html: ->
@@ -46,9 +46,7 @@ DetailViewMixins.name =
     #{@model.key}: <code>#{@model.get("value")}</code>
     """
   afterRender: ->
-    @model.on 'change:value', _.bind viewUtils.handleChange('value', XLF.sluggify), @
-    
-    viewUtils.makeEditable @, @model, "code"
+    viewUtils.makeEditable @, @model, "code", transformFunction: XLF.sluggify
 
 DetailViewMixins.required =
   html: ->
