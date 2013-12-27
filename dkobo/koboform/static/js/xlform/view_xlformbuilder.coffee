@@ -280,6 +280,7 @@ class @SurveyApp extends Backbone.View
     @rowViews = new Backbone.Model()
 
     @survey.rows.on "add", @softReset, @
+    @survey.rows.on "remove", @softReset, @
 
     @onPublish = options.publish || $.noop
     @onSave = options.save || $.noop
@@ -294,8 +295,9 @@ class @SurveyApp extends Backbone.View
 
     @formEditorEl = @$(".-form-editor")
     @$(".editor-message .expanding-spacer-between-rows .add-row-btn").click (evt)=>
-      @$(".survery-editor__message").slideUp()
-      new XlfRowSelector(el: @$el.find(".expanding-spacer-between-rows").get(0), action: "click-add-row", survey: @survey)
+      if !@emptySurveyXlfRowSelector
+        @emptySurveyXlfRowSelector = new XlfRowSelector(el: @$el.find(".expanding-spacer-between-rows").get(0), survey: @survey)
+      @emptySurveyXlfRowSelector.expand()
 
     viewUtils.makeEditable @, @survey.settings, '.form-title', property:'form_title'
 
@@ -339,14 +341,9 @@ class @SurveyApp extends Backbone.View
       $el = xlfrv.render().$el
       if $el.parents(@$el).length is 0
         @formEditorEl.append($el)
-      # if row._slideDown
-      #   row._slideDown = false
-      #   fe.append($el.hide())
-      #   $el.slideDown 175
-      # else
-      #   fe.append($el)
-    unless isEmpty
-      @formEditorEl.find(".empty").remove()
+
+    @formEditorEl.find(".empty").css("display", if isEmpty then "" else "none")
+    ``
 
   reset: ->
     fe = @formEditorEl.empty()
@@ -364,14 +361,19 @@ class @SurveyApp extends Backbone.View
     evt.preventDefault()
     if confirm("Are you sure you want to delete this question? This action cannot be undone.")
       $et = $(evt.target)
-      rowId = $et.data("rowCid")
+      rowId = $et.parents("li").data("rowId")
       rowEl = $et.parents("li").eq(0)
+
       matchingRow = @survey.rows.find (row)-> row.cid is rowId
-      if matchingRow
-        @survey.rows.remove matchingRow
+
+      if !matchingRow
+        throw new Error("Matching row was not found.")
+
+      @survey.rows.remove matchingRow
       # this slideUp is for add/remove row animation
       rowEl.slideUp 175, "swing", ()=>
         @survey.rows.trigger "reset"
+
   ensureAllRowsDrawn: ->
     prev = false
     @survey.forEachRow (row)=>
