@@ -196,7 +196,9 @@ class XlfRowView extends Backbone.View
       $(".xlf-selected").trigger("xlf-blur")
       @$el.addClass("xlf-selected")
   expandRowSelector: ->
-    new XlfRowSelector(el: @$el.find(".expanding-spacer-between-rows").get(0), action: "click-add-row", spawnedFromView: @)
+    if !@xlfRowSelector
+      @xlfRowSelector = new XlfRowSelector(el: @$el.find(".expanding-spacer-between-rows").get(0), spawnedFromView: @)
+    @xlfRowSelector.expand()
   render: ->
     @$el.html viewTemplates.xlfRowView()
 
