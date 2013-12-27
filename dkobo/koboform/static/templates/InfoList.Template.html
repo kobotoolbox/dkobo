@@ -16,7 +16,15 @@
         <i class="fa  fa-file-o  fa-stack-1x  fa-inverse"></i>
       </span>
       <div class="info-list-item__details">
-        <h3 class="info-list-item__title"><a href="#{{ getHashLink(item) }}">{{ item.name }}</a></h3>
+        <h3 class="info-list-item__title">
+          <a href="#{{ getHashLink(item) }}">{{ item.name }}</a>
+          <a href="{{ getLink(item) }}" class="fa-stack  fa-lg">
+
+            <i class="header-bar__page-icon-circle  fa  fa-circle  fa-stack-2x  icon--{{ pageIconColor }}"></i>
+
+            <i class="header-bar__page-icon  fa  fa-code  fa-stack-1x  fa-inverse"></i>
+          </a>
+        </h3>
         <p class="info-list-item__info">{{ item.description }}</p>
       </div>
       <div class="info-list-item__tags">
