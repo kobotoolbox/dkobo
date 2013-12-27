@@ -13,7 +13,7 @@ DetailViewMixins.type =
   insertInDOM: (rowView)->
     rowView.$(".row-type").append(@$el)
 
-DetailViewMixins.label = DetailViewMixins.hint =
+DetailViewMixins.label =
   html: ->
     """
     <div class="col-md-12">
@@ -30,12 +30,20 @@ DetailViewMixins.label = DetailViewMixins.hint =
       placement: 'right'
       type: 'textarea'
       rows: 3
-      
 
 DetailViewMixins.hint =
   html: ->
     """
     #{@model.key}: <code>#{@model.get("value")}</code>
+    """
+  afterRender: ->
+    viewUtils.makeEditable @, @model, 'code', {}
+
+DetailViewMixins.relevant =
+  html: ->
+    """
+      Skip logic (i.e. <span style='font-family:monospace'>relevant</span>):
+      <code>#{@model.get("value")}</code>
     """
   afterRender: ->
     viewUtils.makeEditable @, @model, 'code', {}

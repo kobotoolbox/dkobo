@@ -142,6 +142,11 @@
         color: #1daee3;
     }
 }
+.glyphicon.glyphicon-cog {
+    &:after {
+        content: "[Advanced options]";
+    }
+}
 
 .#{$module}--geopoint:before {content: "\f041"; }
 .#{$module}--image:before {content: "\f030"; }
