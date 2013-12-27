@@ -24,4 +24,5 @@ urlpatterns = patterns(
     url(r'^question_library_forms$', 'dkobo.koboform.views.list_forms_in_library'),
     url(r'^survey_drafts$', 'dkobo.koboform.views.list_forms_for_user'),
     # url(r'^survey_drafts$', 'dkobo.koboform.views.list_forms_for_user'),
+    url(r'^forms/(\d+)', 'dkobo.koboform.views.export_form_to_xform'),
 )
