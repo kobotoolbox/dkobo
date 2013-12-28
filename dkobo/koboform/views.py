@@ -124,10 +124,8 @@ def list_forms_in_library(request):
     '''
     library_forms = []
     for sd in SurveyDraft.objects.filter(in_question_library=True):
-        library_forms.append({u'title': sd.name,
-                              u'info': sd.description,
-                              u'icon': 'fa-file-text-o',
-                              u'iconBgColor': 'teal',
+        library_forms.append({u'name': sd.name,
+                              u'description': sd.description,
                               u'tags': []})
     return HttpResponse(json.dumps(library_forms))
 
