@@ -11,13 +11,11 @@ function InfoListDirective($rootScope) {
             refreshItemList: '&',
             canAddNew: '@',
             name: '@',
-            linkTo: '@'
+            linkTo: '@',
+            deleteItem: '&',
+            canDelete: '@'
         },
         link: function (scope) {
-            scope.$watch('searchCriteria', function () {
-                scope.refreshItemList(scope.searchCriteria);
-            });
-
             scope.getHashLink = function (item) {
                 var linkTo = scope.linkTo;
                 return linkTo ? '/' + linkTo + '/' + item.id : '';
@@ -27,7 +25,9 @@ function InfoListDirective($rootScope) {
                 return scope.name.toLowerCase() + '/' + item.id;
             }
 
+            scope.canDelete = scope.canDelete === 'true';
             $rootScope.canAddNew = scope.canAddNew === 'true';
+
             $rootScope.activeTab = scope.name;
         }
     };
