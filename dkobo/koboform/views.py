@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from models import SurveyDraft
 from django.forms.models import model_to_dict
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from serializers import SurveyDraftSerializer
 import json
 import utils
@@ -144,3 +145,8 @@ class SurveyDraftViewSet(viewsets.ModelViewSet):
         return SurveyDraft.objects.filter(user=user)
 
     serializer_class = SurveyDraftSerializer
+
+    @action(methods=['DELETE'])
+    def delete_survey_draft(self, request, pk=None):
+        draft = self.get_object()
+        draft.delete()
