@@ -35,6 +35,7 @@ Get rid of XLF.SurveyDetails ( maybe ?)
 Add "popover text" (or something similar) to XLF.defaultsForType
 ###
 
+_.extend Backbone.Model.prototype, Backbone.Validation.mixin
 ###
 @XLF holds much of the models/collections of the XL(s)Form survey
 representation in the browser.
@@ -463,7 +464,7 @@ class XLF.Settings extends BaseModel
     form_id: "new_survey"
   toCsvJson: ->
     columns = _.keys(@attributes)
-    rowObjects = [@toJSON()]
+    rowObjects = [@toJSON()] 
 
     columns: columns
     rowObjects: rowObjects

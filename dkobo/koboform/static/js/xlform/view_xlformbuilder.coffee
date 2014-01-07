@@ -292,7 +292,11 @@ class @SurveyApp extends Backbone.View
   render: ()->
     @$el.removeClass("content--centered").removeClass("content")
     @$el.html viewTemplates.surveyApp @survey
-
+    
+    @survey.settings.on 'validated:invalid', (model, validations) ->
+      for key, value of validations
+          break
+    
     @formEditorEl = @$(".-form-editor")
     @$(".editor-message .expanding-spacer-between-rows .add-row-btn").click (evt)=>
       if !@emptySurveyXlfRowSelector
