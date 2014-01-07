@@ -43,7 +43,7 @@ kobo.config(function ($routeProvider, $httpProvider) {
     });
 
     $routeProvider.when('/assets', {
-      templateUrl: staticFilesUri + 'templates/Forms.Template.html',
+      templateUrl: staticFilesUri + 'templates/Assets.Template.html',
       controller: 'AssetsController'
     });
 
