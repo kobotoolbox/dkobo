@@ -451,6 +451,13 @@ class XLF.SurveyDetails extends Backbone.Collection
   model: XLF.SurveyDetail
 
 class XLF.Settings extends BaseModel
+  validation:
+    form_title:
+      required: true
+      invalidChars: '`'
+    form_id:
+      required: true
+      invalidChars: '`'
   defaults:
     form_title: "New survey"
     form_id: "new_survey"
