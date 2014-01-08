@@ -91,8 +91,31 @@ describe ('Directives', function () {
                     expect(isolateScope.sections).toBe(mockConfig);
                 })
             );
-        });
 
+            describe('scope.isActive', function () {
+                it('should return "is-active" when passed name equals the active tab',
+                    inject(function ($compile, $rootScope) {
+                        var isolateScope = buildTopLevelMenuDirective($compile, $rootScope);
+
+                        isolateScope.activeTab = 'test tab';
+                        expect(isolateScope.isActive('test tab')).toBe('is-active');
+                    })
+                );
+
+                it('should return an empty string when passed name is different from the active tab',
+                    inject(function ($compile, $rootScope) {
+                        var isolateScope = buildTopLevelMenuDirective($compile, $rootScope);
+
+                        isolateScope.activeTab = 'test tab 2';
+                        expect(isolateScope.isActive('test tab')).toBe('');
+                    })
+                );
+            });
+        });
+    });
+
+    describe('BuilderDirective', function() {
+        it('')
     });
 
     describe('InfoList Directive', function () {
@@ -146,3 +169,20 @@ describe ('Directives', function () {
     });
 
 });
+
+// this is the correct way to mock the method. Sadly, the resulting element.html() calls returns ''
+// TODO: get this working before test volume makes this kind of calls expensive
+// (remember this is expensive because loading the entire template causes 
+// the directive to process it and run all contained logic)
+
+/*                it('should use mocked data provided by backend as template',
+                    inject(function ($httpBackend, $compile, $rootScope) {
+                        $httpBackend.whenGET('templates/TopLevelMenu.Template.html').respond('mock template');
+
+                        var element = '<div top-level-menu></div>';
+                        element = $compile(element)($rootScope);
+                        $rootScope.$digest();
+
+                        expect(element.html()).toBe('mock template');
+                    })
+                );*/

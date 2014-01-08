@@ -55,6 +55,13 @@ class BaseModel extends Backbone.Model
       @_parent = arg._parent
       delete arg._parent
     super arg
+  getSurvey: ->
+    parent = @_parent
+    while parent
+      if parent._parent
+        parent = parent._parent
+      else
+        return parent
 
 class SurveyFragment extends BaseModel
   forEachRow: (cb, ctx={})->
@@ -209,7 +216,7 @@ XLF.columnOrder = do ->
   warned = []
   warn = (key)->
     unless key in warned
-      warend.push(key)
+      warned.push(key)
       console?.error("Order not set for key: #{key}")
   (key)->
     ki = XLF.columns.indexOf key
@@ -261,8 +268,11 @@ class XLF.Row extends BaseModel
           newVals[vk] = if ("function" is typeof vv) then vv() else vv
         @set key, newVals
 
-    @isValid()
 
+    for key, val of @attributes
+      unless val instanceof XLF.RowDetail
+        @set key, new XLF.RowDetail(key, val, @), {silent: true}
+    
     typeDetail = @get("type")
     tpVal = typeDetail.get("value")
     processType = (rd, newType, ctxt)=>
@@ -313,12 +323,6 @@ class XLF.Row extends BaseModel
     throw new Error("List not found: #{list}")  unless listToSet
     @get("type").set("list", listToSet)
 
-  validate: ->
-    for key, val of @attributes
-      unless val instanceof XLF.RowDetail
-        @set key, new XLF.RowDetail(key, val, @), {silent: true}
-    ``
-
   attributesArray: ()->
     arr = ([k, v] for k, v of @attributes)
     arr.sort (a,b)-> if a[1]._order < b[1]._order then -1 else 1
@@ -341,7 +345,17 @@ class XLF.Rows extends Backbone.Collection
       new XLF.Row(obj)
 
 class XLF.RowDetail extends BaseModel
+  validation: () =>
+    if @key == 'name'
+      return value:
+        unique: true
+        required: true
+    else if @key == 'label'
+      return value:
+        required: true
+    {}
   idAttribute: "name"
+
   constructor: (@key, valOrObj={}, @parentRow)->
     super()
     vals2set = {}
@@ -353,6 +367,8 @@ class XLF.RowDetail extends BaseModel
       vals2set.value = valOrObj
     @set(vals2set)
     @_order = XLF.columnOrder(@key)
+  
+  getSurvey: ()-> @parentRow.getSurvey()
 
   initialize: ()->
     if @get("_hideUnlessChanged")

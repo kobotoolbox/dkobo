@@ -7,7 +7,7 @@
 function BuilderDirective($rootScope, $restApi, $routeTo) {
     return {
         link: function (scope, element) {
-            /*jshint validthis: true */
+/*jshint validthis: true */
             var surveyDraftApi = $restApi.createSurveyDraftApi(scope.routeParams.id);
 
             function saveCallback() {
