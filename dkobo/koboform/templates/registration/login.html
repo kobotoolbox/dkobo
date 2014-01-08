@@ -1,14 +1,16 @@
 {% extends "registration.html" %}
 
 {% block content %}
-  <form method="post" action=".">
-    {% csrf_token %}
-    {{ form.as_p }}
+  <form method="post" action="." class="registration">
+    <div>
+      {% csrf_token %}
+      {{ form.as_p }}
 
-    <input type="submit" value="Log in" />
-    <input type="hidden" name="next" value="{{ next }}" />
+      <input type="submit" value="Log in" />
+      <input type="hidden" name="next" value="{{ next }}" />
+
+      <a href="{% url 'auth_password_reset' %}" class="clear">reset password</a>
+      <a href="{% url 'registration_register' %}" class="align-right">register</a>
+    </div>
   </form>
-
-  <a href="{% url 'auth_password_reset' %}">reset password</a>
-  <a href="{% url 'registration_register' %}">register</a>
 {% endblock %}
