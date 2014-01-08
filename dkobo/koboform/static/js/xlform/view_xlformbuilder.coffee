@@ -94,16 +94,27 @@ class XlfOptionView extends Backbone.View
     "keyup input": "keyupinput"
   initialize: (@options)->
   render: ->
-    @p = $("<p>")
+    @p = $("<span>")
+    @c = $("<code> [<span>Automatic</span>]</code>")
+    @d = $('<div>')
     if @model
       @p.html @model.get("label")
       @$el.attr("data-option-id", @model.cid)
+      $('span', @c).html @model.get("name")
     else
       @model = new XLF.Option()
       @options.cl.options.add(@model)
       @p.html("Option #{1+@options.i}").addClass("preliminary")
+
     @p.editable success: _.bind @saveValue, @
-    @$el.html(@p)
+    $('span', @c).editable success: (ev, val) =>
+      val = XLF.sluggify val
+      @model.set('name', val)
+      @model.set('setManually', true)
+      newValue: val
+    @d.append(@p)
+    @d.append(@c)
+    @$el.html(@d)
     @
   keyupinput: (evt)->
     ifield = @$("input.inplace_field")
@@ -120,8 +131,9 @@ class XlfOptionView extends Backbone.View
       @model.destroy()
     else
       @model.set("label", nval, silent: true)
-      @model.set("name", XLF.sluggify(nval), silent: true)
-    null
+      if !@model.get('setManually')
+        @model.set("name", XLF.sluggify(nval), silent: true)
+    ``
 
 class XlfListView extends Backbone.View
   initialize: ({@rowView, @model})->

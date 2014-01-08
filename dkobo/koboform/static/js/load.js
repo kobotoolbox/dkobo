@@ -43,7 +43,7 @@ kobo.config(function ($routeProvider, $httpProvider) {
     });
 
     $routeProvider.when('/assets', {
-      templateUrl: staticFilesUri + 'templates/Forms.Template.html',
+      templateUrl: staticFilesUri + 'templates/Assets.Template.html',
       controller: 'AssetsController'
     });
 
@@ -63,5 +63,5 @@ kobo.config(function ($routeProvider, $httpProvider) {
   });
 
 kobo.run(function ($http, $cookies) {
-    $http.defaults.headers.post['X-CSRFToken'] = $cookies.csrftoken;
+    $http.defaults.headers.common['X-CSRFToken'] = $cookies.csrftoken;
 });

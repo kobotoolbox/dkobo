@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from models import SurveyDraft
 from django.forms.models import model_to_dict
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from serializers import SurveyDraftSerializer
 import json
 import utils
@@ -124,11 +125,11 @@ def list_forms_in_library(request):
     '''
     library_forms = []
     for sd in SurveyDraft.objects.filter(in_question_library=True):
-        library_forms.append({u'title': sd.name,
-                              u'info': sd.description,
-                              u'icon': 'fa-file-text-o',
-                              u'iconBgColor': 'teal',
-                              u'tags': []})
+        library_forms.append({u'name': sd.name,
+                              u'description': sd.description,
+                              u'tags': [],
+                              u'id': sd.id,
+                              })
     return HttpResponse(json.dumps(library_forms))
 
 
@@ -144,3 +145,8 @@ class SurveyDraftViewSet(viewsets.ModelViewSet):
         return SurveyDraft.objects.filter(user=user)
 
     serializer_class = SurveyDraftSerializer
+
+    @action(methods=['DELETE'])
+    def delete_survey_draft(self, request, pk=None):
+        draft = self.get_object()
+        draft.delete()
