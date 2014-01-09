@@ -144,7 +144,10 @@
 }
 .glyphicon.glyphicon-cog {
     &:after {
-        content: "[Advanced options]";
+        content: "*";
+        font-size: 20px;
+        margin-left: -0.5em;
+        cursor: pointer;
     }
 }
 
@@ -173,6 +176,29 @@
     top: 5px;
 }
 
+
+// Quick fixes for KF-96. (Consider chainging HTML and CSS for BEM)
+.row-type-col {
+  float: left;
+  width: 20%;
+}
+.row-content {
+  float: left;
+  width: 75%;
+  blockquote {
+    margin: 0;
+    line-height: 1em;
+  }
+}
+.row-extras, .row-extras-summary {
+  width: 75%;
+  padding-left: 20px;
+  float: left;
+}
+.row-extras {
+  border: 1px solid #ccc;
+  background-color: #eee;
+}
 
 
 
