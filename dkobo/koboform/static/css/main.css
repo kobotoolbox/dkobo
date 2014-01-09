@@ -697,12 +697,7 @@ input[type="button"].btn--block {
    Registration Forms
    ========================================================================== */
 form.registration {
-    margin: auto;
-    width: 500px;
-    padding-top: 10%;
-}
-
-form.registration > div {
+    margin: 18% auto 0;
     width: 500px;
     height: 320px;
     padding: 20px;
@@ -711,19 +706,19 @@ form.registration > div {
     background-color: #f0f0f0;
 }
 
-form.registration > div * {
+form.registration * {
     float: left;
 }
 
-form.registration > div .clear {
+form.registration .clear {
     clear: left;
 }
 
-form.registration > div .align-right {
+form.registration .align-right {
     float: right;
 }
 
-form.registration > div a {
+form.registration a {
     margin: 80px 0 0 0;
 }
 

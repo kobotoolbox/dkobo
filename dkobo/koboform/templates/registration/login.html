@@ -2,7 +2,6 @@
 
 {% block content %}
   <form method="post" action="." class="registration">
-    <div>
       {% csrf_token %}
       {{ form.as_p }}
 
@@ -11,6 +10,5 @@
 
       <a href="{% url 'auth_password_reset' %}" class="clear">reset password</a>
       <a href="{% url 'registration_register' %}" class="align-right">register</a>
-    </div>
   </form>
 {% endblock %}
