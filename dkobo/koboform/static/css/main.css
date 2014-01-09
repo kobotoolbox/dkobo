@@ -499,6 +499,90 @@ input[type="button"].btn--block {
 
 
 /* ==========================================================================
+   Registration Forms
+   ========================================================================== */
+
+.registration {
+    max-width: 440px;
+    margin-top: 100px;
+    margin-right: auto;
+    margin-left: auto;
+    padding: 35px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.registration__row {
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+
+.registration__row:last-of-type {
+    margin-bottom: 35px;
+}
+
+.registration__label,
+.registration__input {
+    width: 100%;
+    display: block;
+}
+
+.registration__label {
+    margin-bottom: 4px;
+    font-size: 14px;
+}
+
+.registration__input {
+    border: 1px solid #bbb;
+    border-radius: 3px;
+    padding: 0.5em;
+}
+
+.registration__input:focus {
+    border-color: #1daee3;
+}
+
+.registration--login .registration__action {
+    margin-bottom: 35px;
+}
+
+.registration__footer {
+    border-top: 1px solid #eee;
+    padding-top: 30px;
+}
+
+.registration__footer-link {
+    display: inline-block;
+    font-size: 14px;
+}
+
+.registration__footer-link:hover,
+.registration__footer-link:focus {
+    text-decoration: underline;
+}
+
+.registration__footer-link--last {
+    float: right;
+}
+
+.registration .errorlist { /* Rename this class with BEM */
+    margin-bottom: 12px;
+    border: 1px solid;
+    border-radius: 3px;
+    padding: 12px;
+    font-size: 14px;
+    color: red;
+    background-color: rgba(255, 0, 0, 0.075);
+}
+
+
+
+
+
+
+/* ==========================================================================
    Filters
    ========================================================================== */
 
@@ -692,37 +776,3 @@ input[type="button"].btn--block {
        (-o-min-device-pixel-ratio: 5/4),
        (-webkit-min-device-pixel-ratio: 1.25),
        (min-resolution: 120dpi) {}
-
-/* ==========================================================================
-   Registration Forms
-   ========================================================================== */
-.registration {
-    margin: 18% auto 0;
-    width: 500px;
-    height: 320px;
-    padding: 20px;
-    border: 1px solid #7b7b7b;
-    border-radius: 15px;
-    background-color: #f0f0f0;
-}
-
-.registration * {
-    float: left;
-}
-
-.registration .clear {
-    clear: left;
-}
-
-.registration .align-right {
-    float: right;
-}
-
-.registration__link {
-    margin: 80px 0 0 0;
-}
-
-.registration__action {
-    margin-top: 20px;
-    clear: left;
-}

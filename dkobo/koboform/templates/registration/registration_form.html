@@ -1,9 +1,9 @@
 {% extends "registration.html" %}
 
 {% block content %}
-  <form action="." method="post" class="registration">{% csrf_token%}
+  <form action="." method="post" class="registration  registration--register">{% csrf_token%}
     {{ form.as_p }}
-    <input type="submit" value="Register" class="registration__action" />
+    <input type="submit" value="Register" class="registration__action  btn" />
   </form>
   <script>
   // dailyWTF
@@ -11,6 +11,7 @@
   $(function () {
     $('form.registration > p').addClass('registration__row');
     $('form.registration > p > label').addClass('registration__label');
+    $('form.registration > p > input').addClass('registration__input');
   });
   </script>
 {% endblock %}
