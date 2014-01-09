@@ -49,6 +49,8 @@ viewTemplates.xlfRowView = () ->
         <div class="row-type-col">&nbsp;</div>
         <p class="col-xs-11 row-extras-summary">
           <span class="glyphicon glyphicon-cog"></span> &nbsp;
+          <span class="adv-details-txt">Advanced question details</span>
+          <br>
           <span class="summary-details"></span>
         </p>
         <div class="col-xs-11 row-extras hidden row-fluid">

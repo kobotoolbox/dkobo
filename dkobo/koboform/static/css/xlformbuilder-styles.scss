@@ -79,7 +79,9 @@
    $module: "survey-editor";
 // ==========================================================================
 
-.#{$module} {}
+.#{$module} {
+  padding-bottom: 36px;
+}
 
     .#{$module}__message {
         text-align: center;
@@ -142,14 +144,6 @@
         color: #1daee3;
     }
 }
-.glyphicon.glyphicon-cog {
-    &:after {
-        content: "*";
-        font-size: 20px;
-        margin-left: -0.5em;
-        cursor: pointer;
-    }
-}
 
 .#{$module}--geopoint:before {content: "\f041"; }
 .#{$module}--image:before {content: "\f030"; }
@@ -178,6 +172,15 @@
 
 
 // Quick fixes for KF-96. (Consider chainging HTML and CSS for BEM)
+
+.xlf-row-view {
+  border-left: 2px dashed #ddd;
+  position: relative;
+  margin-top: 56px;
+  &:first-child {
+    margin-top: 0;
+  }
+}
 .row-type-col {
   float: left;
   width: 20%;
@@ -191,20 +194,37 @@
   }
 }
 .row-extras, .row-extras-summary {
+  margin: 0;
   width: 75%;
   padding-left: 20px;
   float: left;
-}
-.row-extras {
   border: 1px solid #ccc;
+  border-radius: 3px;
   background-color: #eee;
+
+  .glyphicon.glyphicon-cog {
+    &:after {
+      content: "*";
+      font-size: 30px;
+      margin-left: -0.5em;
+      color: #666;
+      cursor: pointer;
+    }
+  }
+  .adv-details-txt {
+    font-size: 15px;
+    color: #999;
+  }
 }
+
 .add-row-btn {
+  position: absolute;
+  bottom: -42px;
   padding: 0;
-  width: 400px;
+  width: 500px;
   line-height: 18px;
   height: 18;
-  margin-left: 20%;
+  margin-left: 70px;
   height: 18px;
   opacity: 0.8;
   &:hover {
