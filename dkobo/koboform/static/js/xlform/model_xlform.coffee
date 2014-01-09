@@ -338,6 +338,7 @@ class XLF.Rows extends Backbone.Collection
       new XLF.Group(obj)
     else
       new XLF.Row(obj)
+  comparator: (m)-> m.ordinal
 
 class XLF.RowDetail extends BaseModel
   idAttribute: "name"

@@ -191,6 +191,7 @@ class XlfRowView extends Backbone.View
    "click .edit-list": "editListForRow"
    "click": "select"
    "click .add-row-btn": "expandRowSelector"
+   "drop": "drop"
    "click .row-extras-summary": "expandCog"
    "click .glyphicon-cog": "expandCog"
   initialize: (opts)->
@@ -203,6 +204,8 @@ class XlfRowView extends Backbone.View
     @surveyView = @options.surveyView
     @$el.on "xlf-blur", =>
       @$el.removeClass("xlf-selected")
+  drop: (evt, index)->
+    @$el.trigger("update-sort", [@model, index])
   select: ->
     unless @$el.hasClass("xlf-selected")
       $(".xlf-selected").trigger("xlf-blur")
@@ -282,6 +285,7 @@ class @SurveyApp extends Backbone.View
     "click #download": "downloadButtonClick"
     "click #save": "saveButtonClick"
     "click #publish": "publishButtonClick"
+    "update-sort": "updateSort"
 
   initialize: (options)->
     if options.survey and (options.survey instanceof XLF.Survey)
@@ -300,6 +304,14 @@ class @SurveyApp extends Backbone.View
 
     $(window).on "keydown", (evt)=>
       @onEscapeKeydown(evt)  if evt.keyCode is 27
+  updateSort: ()->
+    # inspired by this:
+    # http://stackoverflow.com/questions/10147969/saving-jquery-ui-sortables-order-to-backbone-js-collection
+    @survey.rows.remove(model)
+    @survey.rows.each (m, index)->
+      m.ordinal = if index >= position then (index + 1) else index
+    model.ordinal = position
+    @survey.rows.add(model, at: position)
 
   render: ()->
     @$el.removeClass("content--centered").removeClass("content")
