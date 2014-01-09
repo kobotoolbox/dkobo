@@ -3,7 +3,7 @@
 {% block content %}
   <form action="." method="post" class="registration">{% csrf_token%}
     {{ form.as_p }}
-    <input type="submit" value="Register" />
+    <input type="submit" value="Register" class="registration__action" />
   </form>
   <script>
   // dailyWTF

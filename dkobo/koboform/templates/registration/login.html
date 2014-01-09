@@ -5,11 +5,11 @@
       {% csrf_token %}
       {{ form.as_p }}
 
-      <input type="submit" value="Log in" />
+      <input type="submit" value="Log in" class="registration__action" />
       <input type="hidden" name="next" value="{{ next }}" />
 
-      <a href="{% url 'auth_password_reset' %}" class="clear">reset password</a>
-      <a href="{% url 'registration_register' %}" class="align-right">register</a>
+      <a href="{% url 'auth_password_reset' %}" class="registration__link clear">reset password</a>
+      <a href="{% url 'registration_register' %}" class="registration__link align-right">register</a>
   </form>
   <script>
   // dailyWTF

@@ -696,7 +696,7 @@ input[type="button"].btn--block {
 /* ==========================================================================
    Registration Forms
    ========================================================================== */
-form.registration {
+.registration {
     margin: 18% auto 0;
     width: 500px;
     height: 320px;
@@ -706,23 +706,23 @@ form.registration {
     background-color: #f0f0f0;
 }
 
-form.registration * {
+.registration * {
     float: left;
 }
 
-form.registration .clear {
+.registration .clear {
     clear: left;
 }
 
-form.registration .align-right {
+.registration .align-right {
     float: right;
 }
 
-form.registration a {
+.registration__link {
     margin: 80px 0 0 0;
 }
 
-input[type=submit] {
+.registration__action {
     margin-top: 20px;
     clear: left;
 }
