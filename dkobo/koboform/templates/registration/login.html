@@ -11,4 +11,12 @@
       <a href="{% url 'auth_password_reset' %}" class="clear">reset password</a>
       <a href="{% url 'registration_register' %}" class="align-right">register</a>
   </form>
+  <script>
+  // dailyWTF
+
+  $(function () {
+    $('form.registration > p').addClass('registration__row');
+    $('form.registration > p > label').addClass('registration__label');
+  });
+  </script>
 {% endblock %}

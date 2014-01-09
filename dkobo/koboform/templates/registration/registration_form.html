@@ -5,4 +5,12 @@
     {{ form.as_p }}
     <input type="submit" value="Register" />
   </form>
+  <script>
+  // dailyWTF
+
+  $(function () {
+    $('form.registration > p').addClass('registration__row');
+    $('form.registration > p > label').addClass('registration__label');
+  });
+  </script>
 {% endblock %}
