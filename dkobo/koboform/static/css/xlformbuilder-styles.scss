@@ -199,8 +199,18 @@
   border: 1px solid #ccc;
   background-color: #eee;
 }
-
-
+.add-row-btn {
+  padding: 0;
+  width: 400px;
+  line-height: 18px;
+  height: 18;
+  margin-left: 20%;
+  height: 18px;
+  opacity: 0.8;
+  &:hover {
+    opacity: 1;
+  }
+}
 
 // .formbuilder-wrap {
 //   h1 {
