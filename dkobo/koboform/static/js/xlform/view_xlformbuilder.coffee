@@ -316,7 +316,11 @@ class @SurveyApp extends Backbone.View
   render: ()->
     @$el.removeClass("content--centered").removeClass("content")
     @$el.html viewTemplates.surveyApp @survey
-
+    
+    @survey.settings.on 'validated:invalid', (model, validations) ->
+      for key, value of validations
+          break
+    
     @formEditorEl = @$(".-form-editor")
     @$(".editor-message .expanding-spacer-between-rows .add-row-btn").click (evt)=>
       if !@emptySurveyXlfRowSelector
@@ -352,6 +356,9 @@ class @SurveyApp extends Backbone.View
   validateSurvey: ->
     # TODO. Implement basic validation
     true
+
+  showValidationMessages: ->
+
 
   softReset: ->
     fe = @formEditorEl
@@ -449,215 +456,6 @@ class XlfSurveyDetailView extends Backbone.View
       @$el.removeClass("active")
       @model.set("value", false)
 
-###
-  # Details that need to be presented for each row:
-  # 1. type
-  #   - if (select_one|select_multiple) then list
-  # 2. name
-  # 3. hint?
-  # 4. required?
-
-  # For future development:
-  # -----------------------
-  # * Make group?
-  # * Constraint?
-  # * Calculation
-  # * Media?
-###
-
-### Removed from UI
-class XLF.ManageListView extends Backbone.View
-  initialize: ({@rowView})->
-    @row = @rowView.model
-    @survey = @row._parent
-    ``
-  className: "manage-list-view col-md-4"
-  events:
-    "click .expand-list": "expandList"
-  expandList: (evt)->
-    evt.preventDefault()
-    row = @row
-    summ = @$(".bc-wrap.summarized")
-    dims = width: summ.find("select").width()
-    exp = @$(".bc-wrap.expanded")
-
-    list = row.getList()
-    taVals = []
-    for opt in list.options.models
-      taVals.push opt.get("label")
-    placeHolderText = """Enter 1 option per line"""
-    # exp.html("""
-    #   <div class="iwrap">
-    #     <div class="cf">
-    #       <h4 class="list-name">#{list.get("name")}</h4>
-    #       <p class="buttons"><button class="cl-save">Save</button><button class="cl-cancel">Cancel</button></p>
-    #     </div>
-    #     <textarea style="height:#{19 * taVals.length}px" placeholder="#{placeHolderText}">#{taVals.join("\n")}</textarea>
-    #   </div>
-    #   """)
-    # exp.find("h4").eq(0).css(dims)
-    hideCl = ->
-      exp.hide()
-      summ.show()
-
-    summH = summ.find(".selected-list-summary").height()
-    exp.html summ.html()
-    exp.find(".n-lists-available").html viewTemplates.xlfManageListView.buttons()
-    saveButt = exp.find(".cl-save").bind "click", hideCl
-    exp.find(".cl-cancel").bind "click", hideCl
-    taLineH = 19
-    ta = $("<textarea>").html(taVals.join("\n")).css("height", summH)
-    summ2 = exp.find(".selected-list-summary")
-    summ2.html(ta)
-    resizeTa = (evt)->
-      lineCt = ta.data("line-count")
-      valLines = ta.val().split("\n").length
-      if lineCt isnt valLines and valLines >= 2
-        ta.css("height", valLines * taLineH)
-        ta.data("line-count", valLines)
-
-    @rowView.surveyView.onEscapeKeydown = (evt)=>
-      hideCl()
-
-    ta.on "keyup", resizeTa
-    ta.on "blur", ->
-      taVals = for line in ta.val().split("\n") when line.match(/\w+/)
-        name: XLF.sluggify(line), label: line
-      opts = new XLF.Options(taVals)
-      saveButt.unbind("click")
-      saveButt.bind "click", ->
-        list.options = opts
-        hideCl()
-        row.trigger("change")
-    h2 = taVals.length * taLineH
-    ta.animate({height: h2}, 275)
-
-  render: ->
-    numChoices = @survey.choices.models.length
-    list = @row.getList()
-    listName = @row.get("type").get("listName")
-    editMode = @rowView.$el.find(".edit-list-view").length isnt 0
-
-    uid = _.uniqueId("list-select-")
-
-    @$el.append viewTemplates.xlfManageListView uid
-
-    select = @$el.find("select")
-
-    # bc_wrap = $("<div>", class: "bc-wrap cf summarized").appendTo @$el
-    # bc_wrap_hidden = $("<div>", class: "bc-wrap cf expanded").hide().appendTo @$el
-    # a_selectBox = $("<div>", class: "select-list-box").appendTo bc_wrap
-
-    # c_nListsAvailable = $("<div>", class: "n-lists-available").appendTo bc_wrap
-    # b_selectedListSummary = $("<div>", class: "selected-list-summary").appendTo bc_wrap
-
-    # c_nListsAvailable.text "#{numChoices} list#{if numChoices is 1 then '' else 's'} available "
-
-
-    if list
-      table = $ viewTemplates.xlfManageListView.table list
-      for opt, n in list.options.models
-        tr = $("<tr>").appendTo(table)
-        $("<td>").text(n+".").appendTo(tr)
-        $("<td>").text(opt.get("name")).appendTo(tr)
-      table.appendTo @$el
-      opts = (opt.get("name")  for opt in list.options.models)
-      optsStr = "#{opts.join(',')}"
-      maxChars = 30
-      if optsStr.length > maxChars
-        optsStr = optsStr.slice(0,maxChars) + "..."
-      # b_selectedListSummary.html "<a href='#' class='expand-list'>[ #{optsStr} ]</a>"
-    else
-      # b_selectedListSummary.html "<em>No list selected</em>"
-
-    if numChoices is 0
-      sel = $("<select>", {disabled: 'disabled'}).html($("<option>", text: "No lists available"))
-      # a_selectBox.html sel
-    else
-      sel = $("<select>")
-      unless list
-        placeholder = $("<option>", value: "", selected: "selected").html("Select a list...")
-        sel.append(placeholder)
-        sel.addClass("placeholding")
-        sel.focus (evt)-> sel.removeClass("placeholding")
-        sel.change (evt)-> placeholder.remove()
-
-      for choiceList in @survey.choices.models
-        clName = choiceList.get("name")
-        if list and clName is list.get("name")
-          opt = $("<option>", value: clName, selected: "selected")
-        else
-          opt = $("<option>", value: clName)
-        opt.html(clName).appendTo(sel)
-      sel.change (evt)=>
-        nextList = @survey.choices.get $(evt.target).val()
-        @row.get("type").set("list", nextList)
-      # a_selectBox.html sel
-    # c_nListsAvailable.append """<button class='create-new-list2'>(+) Create new list</button>"""
-    @
-
-class XLF.EditListView extends Backbone.View
-  initialize: ({@survey, @rowView, @choiceList})->
-    @collection = @choiceList.options
-    if @collection.models.length is 0
-      @collection.add placeholder: "Option 1"
-      @collection.add placeholder: "Option 2"
-    @collection.bind "change reset add remove", ()=> @render()
-
-  className: "edit-list-view"
-  events:
-    "click .list-ok": "saveList"
-    "click .list-cancel": "closeList"
-    "click .list-add-row": "addRow"
-    "click .list-delete-row": "deleteRow"
-  render: ->
-    @$el.html viewTemplates.xlfEditListView @choiceList
-    nameEl = @$(".name")
-    nameEl.text(name)  if (name = @choiceList.get("name"))
-    
-    viewUtils.handleChange 'name', XLF.sluggify
-
-    viewUtils.makeEditable @, '.name', 'name'
-
-    optionsEl = @$(".options")
-    for c in @collection.models
-      do (option=c)->
-        inp = $("<input>", placeholder: option.get("placeholder"))
-        if (label = option.get("label"))
-          inp.val(label)
-        inp.change (evt)->
-          val = $(evt.target).val()
-          cleanedVal = XLF.sluggify val
-          option.set "label", val
-          option.set "name", cleanedVal
-          ``
-        optionsEl.append $("<p>").html(inp)
-    @
-  saveList: ->
-    if @choiceList.isValid()
-      @survey.choices.add @choiceList
-      if @rowView
-        @rowView.model.get("type").set("list", @choiceList)
-      @_remove =>
-        @survey.trigger "change"
-    else
-      @$(".error").text("Error saving: ").show()
-  closeList: ->
-    @_remove()
-  _remove: (cb)->
-    @$el.slideUp 175, "swing", =>
-      @$el.remove()
-      cb()
-  addRow: ->
-    @collection.add placeholder: "New option"
-  deleteRow: ->
-    log "Not yet implemented"
-###
-
-###
-Helper methods:
-  sluggify
-###
 XLF.sluggify = (str)->
   # Convert text to a slug/xml friendly format.
   str.toLowerCase().replace(/\s/g, '_').replace(/\W/g, '').replace(/[_]+/g, "_")
