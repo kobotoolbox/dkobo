@@ -1,14 +1,25 @@
 {% extends "registration.html" %}
 
 {% block content %}
-  <form method="post" action=".">
-    {% csrf_token %}
-    {{ form.as_p }}
+  <form method="post" action="." class="registration  registration--login">
+      {% csrf_token %}
+      {{ form.as_p }}
 
-    <input type="submit" value="Log in" />
-    <input type="hidden" name="next" value="{{ next }}" />
+      <input type="submit" value="Log in" class="registration__action  btn" />
+      <input type="hidden" name="next" value="{{ next }}" />
+
+      <div class="registration__footer">
+        <a href="{% url 'auth_password_reset' %}" class="registration__footer-link">Reset password</a>
+        <a href="{% url 'registration_register' %}" class="registration__footer-link  registration__footer-link--last">Register</a>
+      </div>
   </form>
+  <script>
+  // dailyWTF
 
-  <a href="{% url 'auth_password_reset' %}">reset password</a>
-  <a href="{% url 'registration_register' %}">register</a>
+  $(function () {
+    $('form.registration > p').addClass('registration__row');
+    $('form.registration > p > label').addClass('registration__label');
+    $('form.registration > p > input').addClass('registration__input');
+  });
+  </script>
 {% endblock %}
