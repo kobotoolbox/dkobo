@@ -14,6 +14,9 @@ This is a django project intended to house django implementations of KoboToolbox
 
 1. Activate a [python virtualenv](https://pypi.python.org/pypi/virtualenv).
 
+    # It's suggested that you use virtualenv wrapper, which provides the "mkvirtualenv" and "workon" commands
+    mkvirtualenv kobo
+
 1. Install python requirements:
 
     pip install -r requirements.txt
@@ -30,10 +33,24 @@ This is a django project intended to house django implementations of KoboToolbox
 
 1. Install sass (ruby) and coffee-script (node/npm)
 
-1. Create a database:
+1. Continue with "launching the server" (optionally skipping any repeated steps)
+
+## Launching the server
+
+1. Ensure the latest code is pulled
+
+    git pull origin master
+
+1. Activate the virtualenvironment
+
+    # example
+    workon kobo
+
+1. Install any requirements that have not been installed
+
+    pip install -r requirements.txt
+
+1. Create and update the database
 
     python manage.py syncdb
 
-1. Run the development server:
-
-    python manage.py runserver
