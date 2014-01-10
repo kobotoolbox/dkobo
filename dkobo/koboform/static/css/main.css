@@ -687,7 +687,7 @@ input[type="button"].btn--block {
    ========================================================================== */
 
 .pull-left {
-    float: right;
+    float: left;
 }
 
 .pull-right {
