@@ -92,6 +92,11 @@ describe ('Controllers', function () {
     });
 
     describe('Builder Controller', function () {
+        beforeEach(function () {
+            window.$ = sinon.stub();
+            $.withArgs(window).returns({bind: sinon.stub()});
+        });
+        
         it('should initialize $scope and $rootScope correctly', inject(function ($controller, $rootScope) {
             initializeController($controller, 'Builder', $rootScope);
 
