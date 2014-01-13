@@ -2,6 +2,7 @@
 /*global it */
 /*global expect*/
 /*global inject*/
+/*global sinon*/
 'use strict';
 
 describe ('Controllers', function () {
@@ -11,19 +12,24 @@ describe ('Controllers', function () {
                         return {
                             query: function() { return hello; }
                         };
-                    };
+                    },
+        miscServiceStub = function () {};
 
 
-    function initializeController($controller, name) {
-        $rs = {};
-        $scope = {};
+    function initializeController($controller, name, $rootScope) {
+        if (typeof $rootScope === 'undefined') {
+            $rootScope = {};
+        }
+        $rs = $rootScope;
+        $scope = $rootScope;
 
         $controller(name + 'Controller', {
             $rootScope: $rs,
             $scope: $scope,
             $resource: $resource,
             $routeParams: hello,
-            $cookies: {csrftoken: 'test token'}
+            $cookies: {csrftoken: 'test token'},
+            $miscUtils: new miscServiceStub()
         });
     }
 
@@ -86,12 +92,56 @@ describe ('Controllers', function () {
     });
 
     describe('Builder Controller', function () {
-        it('should initialize $scope and $rootScope correctly', inject(function ($controller) {
-            initializeController($controller, 'Builder');
+        it('should initialize $scope and $rootScope correctly', inject(function ($controller, $rootScope) {
+            initializeController($controller, 'Builder', $rootScope);
 
             expect($rs.activeTab).toBe('Forms');
             expect($scope.routeParams).toBe(hello);
         }));
+
+        describe('Location Change Confirmation', function () {
+            it('Should change location when user accepts confirmation', inject(function ($controller, $rootScope) {
+                var confirmStub = sinon.stub();
+
+                miscServiceStub = function () {
+                    this.confirm = confirmStub;
+                };
+                confirmStub.returns(true);
+
+                initializeController($controller, 'Builder', $rootScope);
+                $rootScope.deregisterLocationChangeStart = sinon.spy();
+                
+                $rs.$broadcast('$locationChangeStart');
+                expect(confirmStub).toHaveBeenCalledOnce();
+                expect(confirmStub).toHaveBeenCalledWith('Are you sure you want to leave? you will loose any unsaved changes.');
+                expect($rootScope.deregisterLocationChangeStart).toHaveBeenCalledOnce();
+
+                miscServiceStub = function (){};
+            }));
+
+            it('Should keep location when user rejects confirmation', inject(function ($controller, $rootScope) {
+                var confirmStub = sinon.stub(),
+                    preventDefaultSpy = sinon.spy();
+
+                miscServiceStub = function () {
+                    this.confirm = confirmStub;
+                    this.preventDefault = preventDefaultSpy;
+                };
+
+                confirmStub.returns(false);
+
+                initializeController($controller, 'Builder', $rootScope);
+
+                $rs.$broadcast('$locationChangeStart');
+
+                expect(confirmStub).toHaveBeenCalledOnce();
+                expect(confirmStub).toHaveBeenCalledWith('Are you sure you want to leave? you will loose any unsaved changes.');
+                expect(preventDefaultSpy).toHaveBeenCalledOnce();
+
+                miscServiceStub = function () {};
+            }));
+
+        });
     });
 
     describe('Import Controller', function () {
