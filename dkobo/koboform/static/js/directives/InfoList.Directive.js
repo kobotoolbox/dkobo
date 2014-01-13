@@ -23,7 +23,7 @@ function InfoListDirective($rootScope) {
 
             scope.getLink = function (item) {
                 return scope.name.toLowerCase() + '/' + item.id;
-            }
+            };
 
             scope.canDelete = scope.canDelete === 'true';
             $rootScope.canAddNew = scope.canAddNew === 'true';
