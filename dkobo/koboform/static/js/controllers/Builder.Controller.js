@@ -8,7 +8,7 @@ function BuilderController($scope, $rootScope, $routeParams, $miscUtils) {
         if ($miscUtils.confirm('Are you sure you want to leave? you will loose any unsaved changes.')){
             $rootScope.deregisterLocationChangeStart();
         } else {
-            event.preventDefault();
+            $miscUtils.preventDefault(event);
         }
     });
 }

@@ -121,23 +121,22 @@ describe ('Controllers', function () {
 
             it('Should keep location when user rejects confirmation', inject(function ($controller, $rootScope) {
                 var confirmStub = sinon.stub(),
-                    eventStub = {
-                        preventDefault: sinon.spy()
-                    };
+                    preventDefaultSpy = sinon.spy();
 
                 miscServiceStub = function () {
                     this.confirm = confirmStub;
+                    this.preventDefault = preventDefaultSpy;
                 };
 
                 confirmStub.returns(false);
 
                 initializeController($controller, 'Builder', $rootScope);
 
-                $rs.$broadcast('$locationChangeStart', eventStub);
+                $rs.$broadcast('$locationChangeStart');
 
                 expect(confirmStub).toHaveBeenCalledOnce();
                 expect(confirmStub).toHaveBeenCalledWith('Are you sure you want to leave? you will loose any unsaved changes.');
-                expect(eventStub.preventDefault).toHaveBeenCalledOnce();
+                expect(preventDefaultSpy).toHaveBeenCalledOnce();
 
                 miscServiceStub = function () {};
             }));
