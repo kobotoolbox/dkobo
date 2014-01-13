@@ -17,6 +17,7 @@ kobo.factory('$restApi', restApiFactory);
 
 kobo.service('$routeTo', RouteToService);
 kobo.service('$configuration', ConfigurationService);
+kobo.service('$miscUtils', MiscUtilsService);
 
 
 kobo.config(function ($routeProvider, $httpProvider) {

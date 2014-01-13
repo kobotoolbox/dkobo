@@ -16,7 +16,10 @@ function BuilderDirective($rootScope, $restApi, $routeTo) {
                             body: this.survey.toCSV(),
                             description: this.survey.get('description'),
                             title: this.survey.settings.get('form_title')
-                        }, $routeTo.forms);
+                        }, function () {
+                            $rootScope.deregisterLocationChangeStart && $rootScope.deregisterLocationChangeStart()
+                            $routeTo.forms()
+                        });
                 }
             }
 
