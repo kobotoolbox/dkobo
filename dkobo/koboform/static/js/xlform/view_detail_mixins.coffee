@@ -28,7 +28,6 @@ DetailViewMixins.label =
   afterRender: ->
     viewUtils.makeEditable @, @model, 'blockquote', options:
       placement: 'right'
-      type: 'textarea'
       rows: 3
 
 DetailViewMixins.hint =
