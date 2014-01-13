@@ -115,7 +115,7 @@ describe ('Directives', function () {
     });
 
     describe('BuilderDirective', function() {
-        it('')
+        it('');
     });
 
     describe('InfoList Directive', function () {
