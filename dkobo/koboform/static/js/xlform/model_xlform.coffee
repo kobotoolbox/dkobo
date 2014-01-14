@@ -337,7 +337,11 @@ class XLF.Row extends BaseModel
 class XLF.Rows extends Backbone.Collection
   model: (obj, ctxt)->
     type = obj?.type
-    if type in ["start", "end"]
+    formSettingsTypes = do ->
+      for key, val of XLF.defaultSurveyDetails
+        val.asJson.type
+
+    if type in formSettingsTypes
       new XLF.SurveyDetail(obj)
     else if type is "group"
       new XLF.Group(obj)
