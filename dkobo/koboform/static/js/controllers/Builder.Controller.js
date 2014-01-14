@@ -8,6 +8,7 @@ function BuilderController($scope, $rootScope, $routeParams, $miscUtils) {
     function handleUnload(event) {
         if ($miscUtils.confirm('Are you sure you want to leave? you will loose any unsaved changes.')){
             $rootScope.deregisterLocationChangeStart();
+            $(window).unbind('beforeunload');
         } else {
             $miscUtils.preventDefault(event);
         }
