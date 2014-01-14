@@ -3,6 +3,8 @@
 /*global expect*/
 /*global inject*/
 /*global sinon*/
+/*global beforeEach*/
+/*global $*/
 'use strict';
 
 describe ('Controllers', function () {
@@ -42,6 +44,42 @@ describe ('Controllers', function () {
 
             expect($scope.infoListItems).toBe(hello);
         }));
+
+        describe('$scope.deleteSurvey', function () {
+            it('should delete survey when user confirms deletion', inject(function ($controller) {
+                var confirmStub = sinon.stub(),
+                    deleteSpy = sinon.spy();
+
+                miscServiceStub = function () {
+                    this.confirm = confirmStub;
+                };
+                confirmStub.returns(true);
+
+                initializeController($controller, 'Forms');
+
+                $scope.deleteSurvey({ id:0, $delete: deleteSpy });
+
+                expect(confirmStub).toHaveBeenCalledOnce();
+                expect(deleteSpy).toHaveBeenCalledOnce();
+            }));
+
+            it('should not delete survey when user cancels deletion', inject(function ($controller) {
+                var confirmStub = sinon.stub(),
+                    deleteSpy = sinon.spy();
+
+                miscServiceStub = function () {
+                    this.confirm = confirmStub;
+                };
+                confirmStub.returns(false);
+
+                initializeController($controller, 'Forms');
+
+                $scope.deleteSurvey({ id:0, $delete: deleteSpy });
+
+                expect(confirmStub).toHaveBeenCalledOnce();
+                expect(deleteSpy).not.toHaveBeenCalled();
+            }));
+        });
     });
 
     describe('Assets Controller', function () {
@@ -140,7 +178,7 @@ describe ('Controllers', function () {
                 $rs.$broadcast('$locationChangeStart');
 
                 expect(confirmStub).toHaveBeenCalledOnce();
-                expect(confirmStub).toHaveBeenCalledWith('Are you sure you want to leave? you will loose any unsaved changes.');
+                expect(confirmStub).toHaveBeenCalledWith('Are you sure you want to leave? you will lose any unsaved changes.');
                 expect(preventDefaultSpy).toHaveBeenCalledOnce();
 
                 miscServiceStub = function () {};
