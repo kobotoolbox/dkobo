@@ -1,4 +1,5 @@
 from django.shortcuts import render_to_response, HttpResponse
+from django.http import HttpResponseServerError
 from django.template import RequestContext
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth.decorators import login_required
@@ -24,13 +25,17 @@ def csv_to_xform(request):
 
 
 def export_form_to_xform(request, id):
-    survey = utils.create_survey_from_csv_text(SurveyDraft.objects.get(pk=id).body)
+    try:
+        survey = utils.create_survey_from_csv_text(SurveyDraft.objects.get(pk=id).body)
 
-    response = HttpResponse(survey.to_xml(),
-                            mimetype='application/force-download')
+        response = HttpResponse(survey.to_xml(),
+                                mimetype='application/force-download')
 
-    response['Content-Disposition'] = 'attachment; filename=survey.xml'
-
+        response['Content-Disposition'] = 'attachment; filename=survey.xml'
+    except Exception, e:
+        response = HttpResponseServerError(json.dumps({
+            u'error': e.message
+        }))
     return response
 
 
