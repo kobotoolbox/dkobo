@@ -18,6 +18,7 @@ function BuilderDirective($rootScope, $restApi, $routeTo) {
                             title: this.survey.settings.get('form_title')
                         }, function () {
                             $rootScope.deregisterLocationChangeStart && $rootScope.deregisterLocationChangeStart()
+                            $(window).unbind('beforeunload');
                             $routeTo.forms()
                         });
                 }
