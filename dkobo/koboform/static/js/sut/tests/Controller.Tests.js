@@ -118,7 +118,7 @@ describe ('Controllers', function () {
                 
                 $rs.$broadcast('$locationChangeStart');
                 expect(confirmStub).toHaveBeenCalledOnce();
-                expect(confirmStub).toHaveBeenCalledWith('Are you sure you want to leave? you will loose any unsaved changes.');
+                expect(confirmStub).toHaveBeenCalledWith('Are you sure you want to leave? you will lose any unsaved changes.');
                 expect($rootScope.deregisterLocationChangeStart).toHaveBeenCalledOnce();
 
                 miscServiceStub = function (){};
