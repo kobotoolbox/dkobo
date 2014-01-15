@@ -38,13 +38,67 @@ DetailViewMixins.hint =
   afterRender: ->
     viewUtils.makeEditable @, @model, 'code', {}
 
+class XLF.SkipLogicView extends Backbone.View
+  initialize: (opts) ->
+    @relevantDetailView = opts.relevantDetailView
+    #@model = @relevantDetailView.model
+  render: () ->
+    @$el.html('<select></select> was <input placeholder="response value" type="text" />')
+    select = @$el.find('select')
+    input = @$el.find('input')
+    survey = @model.parent.getSurvey()
+    surveyNames = survey.getNames()
+
+    $("<option>", {value: '-1', html: 'Question...'}).appendTo(select)
+    
+    for name in surveyNames
+      $("<option>", {value: name, html: name, disabled: name is @model.parent.parentRow.get('name').get('value')}).appendTo(select)
+
+    wireUpInput(select, @model, 'questionName')
+
+    wireUpInput(input, @model, 'criterion')
+
+    disableDefaultOption = () -> 
+      $('option[value=-1]', select).prop('disabled', true)
+      select.off('change', disableDefaultOption)
+    
+    select.on('change', disableDefaultOption)
+    
+    @
+
+wireUpInput = ($input, model, name) =>
+  if model.get(name)
+      $input.val(model.get(name))
+
+  $input.on('change', () => model.set(name, $input.val()))
+  ``
+
+class XLF.SkipLogicClause extends Backbone.Model
+  serialize: () ->
+    if (@isValid())
+      return "${" + @get('questionName') + "} = " + @get('criterion')
+
 DetailViewMixins.relevant = 
   html: ->
     """
       Skip logic (i.e. <span style='font-family:monospace'>relevant</span>):
       <code>#{@model.get("value")}</code>
     """
+
+    """
+      <button>Skip Logic</button>
+    """
+
   afterRender: ->
+    button = @$el.find("button")
+    button.click () =>
+      @skipLogicClause = new XLF.SkipLogicClause()
+      @skipLogicClause.parent = @model
+      @model.parentRow.skipLogicClause = @skipLogicClause
+
+      new XLF.SkipLogicView(relevantDetailView: @, model: @skipLogicClause).render().$el.appendTo(@$el)
+      button.off('click')
+
     viewUtils.makeEditable @, @model, 'code', {}
 
 DetailViewMixins.constraint = 

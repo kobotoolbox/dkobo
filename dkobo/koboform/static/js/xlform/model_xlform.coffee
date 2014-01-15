@@ -77,6 +77,14 @@ class SurveyFragment extends BaseModel
         ``
       else
         cb(r)
+
+  getNames: () ->
+    names = []
+    @forEachRow (row) ->
+      name = row.get("name")?.get("value")
+      names.push(name)  if name
+    names
+
   addRow: (r)->
     r._parent = @
     @rows.add r
@@ -117,7 +125,6 @@ class XLF.Survey extends SurveyFragment
         r._parent = @
         r
       @rows.add surveyRows, collection: @rows, silent: true
-
 
   toCsvJson: ()->
     # build an object that can be easily passed to the "csv" library
@@ -325,6 +332,9 @@ class XLF.Row extends BaseModel
 
   attributesArray: ()->
     arr = ([k, v] for k, v of @attributes)
+    if(@skipLogicClause)
+      arr.push(['relevant', @skipLogicClause.serialize()])
+
     arr.sort (a,b)-> if a[1]._order < b[1]._order then -1 else 1
     arr
 
