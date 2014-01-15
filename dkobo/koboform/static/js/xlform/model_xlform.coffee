@@ -401,6 +401,17 @@ class XLF.RowDetail extends BaseModel
       @on "change:list", (rd, val, ctxt)=>
         @parentRow.trigger "change", @key, val, ctxt
 
+class XLF.SkipLogicClause extends Backbone.Model
+  questionNamePattern: /\${(\w+)}/
+  serialize: () ->
+    if (@isValid())
+      return "${" + @get('questionName') + "} = " + @get('criterion')
+  parse: (value) ->
+    value = value.split('=')
+    if value.length == 2
+      @set('questionName', @questionNamePattern.exec(value[0])[1])
+      @set('criterion', value[1].substring(1))
+
 ###
 XLF...
   "Option",

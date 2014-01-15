@@ -185,6 +185,47 @@ class XlfListView extends Backbone.View
     @model.options.sort()
     @hasReordered = false
 
+class XLF.SkipLogicView extends Backbone.View
+  alreadyRendered: false
+  initialize: (opts) ->
+    @relevantDetailView = opts.relevantDetailView
+
+  render: ($outerEl) ->
+    if !@alreadyRendered
+      @$el.html('<select></select> was <input placeholder="response value" type="text" />')
+      select = @$el.find('select')
+      input = @$el.find('input')
+      survey = @model.parent.getSurvey()
+      surveyNames = survey.getNames()
+
+      $("<option>", {value: '-1', html: 'Question...'}).appendTo(select)
+      
+      for name in surveyNames
+        $("<option>", {value: name, html: name, disabled: name is @model.parent.parentRow.get('name').get('value')}).appendTo(select)
+
+      wireUpInput(select, @model, 'questionName')
+
+      wireUpInput(input, @model, 'criterion')
+
+      disableDefaultOption = () -> 
+        $('option[value=-1]', select).prop('disabled', true)
+        select.off('change', disableDefaultOption)
+      
+      select.on('change', disableDefaultOption)
+      $outerEl.append(@el)
+      @alreadyRendered = true
+    else
+      @$el.toggle()
+    @
+
+wireUpInput = ($input, model, name) =>
+  if model.get(name)
+      $input.val(model.get(name))
+
+  $input.on('change', () => model.set(name, $input.val()))
+  ``
+
+
 class XlfRowView extends Backbone.View
   tagName: "li"
   className: "xlf-row-view"
