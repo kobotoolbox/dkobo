@@ -332,8 +332,11 @@ class XLF.Row extends BaseModel
 
   attributesArray: ()->
     arr = ([k, v] for k, v of @attributes)
-    if(@skipLogicClause)
-      arr.push(['relevant', @skipLogicClause.serialize()])
+    if(@skipLogicClause && @skipLogicClause.get('questionName'))
+      for item in arr
+        if item[0] == 'relevant'
+          item[1].set('value', @skipLogicClause.serialize())
+          break
 
     arr.sort (a,b)-> if a[1]._order < b[1]._order then -1 else 1
     arr
