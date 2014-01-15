@@ -574,7 +574,7 @@ XLF.defaultSurveyDetails =
 XLF.columns is used to determine the order that the elements
 are added into the page and the final CSV.
 ###
-XLF.columns = ["type", "name", "label", "hint", "required", "relevant"]
+XLF.columns = ["type", "name", "label", "hint", "required", "relevant", "constraint"]
 
 ###
 XLF.newRowDetails are the default values that are assigned to a new
@@ -591,11 +591,14 @@ XLF.newRowDetails =
   hint:
     value: ""
     _hideUnlessChanged: true
+  required:
+    value: false
+    _hideUnlessChanged: true
   relevant:
     value: ""
     _hideUnlessChanged: true
-  required:
-    value: false
+  constraint:
+    value: ""
     _hideUnlessChanged: true
 
 XLF.defaultsForType =

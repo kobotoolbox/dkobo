@@ -38,10 +38,19 @@ DetailViewMixins.hint =
   afterRender: ->
     viewUtils.makeEditable @, @model, 'code', {}
 
-DetailViewMixins.relevant =
+DetailViewMixins.relevant = 
   html: ->
     """
       Skip logic (i.e. <span style='font-family:monospace'>relevant</span>):
+      <code>#{@model.get("value")}</code>
+    """
+  afterRender: ->
+    viewUtils.makeEditable @, @model, 'code', {}
+
+DetailViewMixins.constraint = 
+  html: ->
+    """
+      Validation logic (i.e. <span style='font-family:monospace'>constraint</span>):
       <code>#{@model.get("value")}</code>
     """
   afterRender: ->
