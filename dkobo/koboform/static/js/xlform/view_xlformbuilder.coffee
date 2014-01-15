@@ -286,6 +286,7 @@ class @SurveyApp extends Backbone.View
     "click #preview": "previewButtonClick"
     "click #download": "downloadButtonClick"
     "click #save": "saveButtonClick"
+    "click #btn-save": "saveButtonClick"
     "click #publish": "publishButtonClick"
     "update-sort": "updateSort"
 
