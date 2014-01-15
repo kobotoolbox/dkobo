@@ -38,29 +38,20 @@ DetailViewMixins.hint =
   afterRender: ->
     viewUtils.makeEditable @, @model, 'code', {}
 
-DetailViewMixins.relevant = 
+DetailViewMixins.relevant =
   html: ->
     """
       <button>Skip Logic</button>
+      <div class="relevant__editor"></div>
     """
 
   afterRender: ->
-    viewCreated = false
-    view = undefined
-    button = @$el.find("button")
+    button = @$el.find("button").eq(0)
     button.click () =>
-      @skipLogicClause = new XLF.SkipLogicClause()
-      @skipLogicClause.parent = @model
-      @skipLogicClause.parse(@model.get('value'))
-      @model.parentRow.skipLogicClause = @skipLogicClause
-
-      if (!viewCreated)
-        view = new XLF.SkipLogicView(relevantDetailView: @, model: @skipLogicClause)
-        viewCreated = true
-
-      view.render(@$el)
-
-    viewUtils.makeEditable @, @model, 'code', {}
+      if @skipLogicEditor
+        @skipLogicEditor.$el.toggle()
+      else
+        @skipLogicEditor = new XLF.SkipLogicEditor(el: @$el.find(".relevant__editor"), model: @model).render()
 
 DetailViewMixins.constraint = 
   html: ->
