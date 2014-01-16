@@ -40,11 +40,17 @@ DetailViewMixins.hint =
 DetailViewMixins.relevant =
   html: ->
     """
-      Skip logic (i.e. <span style='font-family:monospace'>relevant</span>):
-      <code>#{@model.get("value")}</code>
+      <button>Skip Logic</button>
+      <div class="relevant__editor"></div>
     """
+
   afterRender: ->
-    viewUtils.makeEditable @, @model, 'code', {}
+    button = @$el.find("button").eq(0)
+    button.click () =>
+      if @skipLogicEditor
+        @skipLogicEditor.toggle()
+      else
+        @skipLogicEditor = new XLF.SkipLogicEditor(el: @$el.find(".relevant__editor"), model: @model).render()
 
 DetailViewMixins.constraint =
   html: ->

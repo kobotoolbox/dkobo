@@ -294,7 +294,6 @@ describe "testing the view", ->
     $el = @xlv.render().$el
     $el.appendTo(div)
 
-    expect(div.html()).not.toContain("empty")
     expect(div.find("li.xlf-row-view").length).toBe(1)
 
     lastRowEl = div.find("li.xlf-row-view").eq(0)
@@ -306,9 +305,4 @@ describe "testing the view", ->
     expect(clickNewRow).not.toThrow()
     expect(lastRowEl.find(".line").eq(-1).hasClass("expanded")).toBeTruthy()
 
-    expect(pizza.rows.length).toBe(1)
-
     lastRowEl.find(".line.expanded").find(".menu-item-geopoint").trigger("click")
-    expect(pizza.rows.length).toBe(2)
-    expect(div.find(".xlf-row-view").length).toBe(2)
-    expect(div.find(".xlf-row-view").eq(-1).find(".xlf-dv-label").text()).toMatch("location")

@@ -78,11 +78,11 @@ viewTemplates.surveyTemplateApp = () ->
 viewTemplates.surveyApp = (survey) ->
     """
       <div class="sub-header-bar">
-        <button class="btn  btn--utility">Export and clone</button>
-        <button class="btn  btn--utility">Save</button>
-        <button class="btn  btn--utility">Preview</button>
-        <button class="btn  btn--utility  pull-right">Group questions</button>
-        <button class="btn  btn--utility  pull-right">Repeat questions</button>
+        <button class="btn  btn--utility" id="xlf-export">Export and clone</button>
+        <button class="btn  btn--utility" id="save">Save</button>
+        <button class="btn  btn--utility" id="xlf-preview">Preview</button>
+        <button class="btn  btn--utility  pull-right" id="xlf-group">Group questions</button>
+        <button class="btn  btn--utility  pull-right" id="xlf-repeat">Repeat questions</button>
       </div>
       <header class="survey-header">
         <p class="survey-header__description" hidden>
@@ -94,9 +94,6 @@ viewTemplates.surveyApp = (survey) ->
         </hgroup>
         </p>
         <div class="survey-header__options  well  stats  row-details" id="additional-options"></div>
-        <div class="survey-header__actions  buttons">
-          <button id="save" class="btn">Save</button>
-        </div>
       </header>
       <div class="survey-editor  form-editor-wrap">
         <ul class="-form-editor">
@@ -123,52 +120,3 @@ viewTemplates.xlfSurveyDetailView = (model) ->
       #{model.get("label")}
     </label>
     """
-
-###
-viewTemplates.xlfManageListView = (uid) ->
-    """
-      <div class="form-group">
-        <label for="#{uid}">From list:</label>
-        <select id="#{uid}" class="form-control"></select>
-      </div>
-    <!--
-      <div class="row-fluid clearfix">
-        <div class="col-sm-4 form-group">
-          <div class="row-fluid">
-            <label class="control-label col-sm-5" for="#{uid}">
-              Select a list:
-            </label>
-            <div class="col-sm-7">
-              <select class="form-control" id="#{uid}"></select>
-            </div>
-          </div>
-        </div>
-      </div>
-      -->
-    """
-
-viewTemplates.xlfManageListView.buttons = () ->
-    """
-        <button class="rename-list">rename list</button>
-        <button class="cl-save">save</button>
-        <button class="cl-cancel">cancel</button>
-    """
-
-viewTemplates.xlfManageListView.table = (list) ->
-    """
-        <table class="table-hovered table-bordered" contenteditable="true">
-          <tr>
-            <th colspan="2">#{list.get("name")}</th>
-          </tr>
-        </table>
-    """
-
-viewTemplates.xlfEditListView = (choiceList) ->
-    """
-      <p class="new-list-text">Name: <span class="name">#{@choiceList.get("name") || ""}</span></p>
-      <div class="options"></div>
-      <p><button class="list-add-row">[+] Add option</button></p>
-      <p class="error" style="display:none"></p>
-      <p><button class="list-ok">OK</button><button class="list-cancel">Cancel</button></p>
-    """
-###

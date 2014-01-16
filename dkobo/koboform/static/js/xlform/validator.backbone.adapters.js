@@ -1,15 +1,23 @@
+/* global _ */
+/* global Backbone */
+/* global viewUtils */
+'use strict';
+
 _.extend(Backbone.Validation.validators, {
-    invalidChars: function (value, attr, customValue, model) {
+    invalidChars: function (value, attr, customValue) {
         if(viewUtils.Validator.__validators.invalidChars(value, customValue)){
             return;
         }
         return value + 'contains invalid characters';
     },
     unique: function (value, attr, customValue, model) {
+        var rows = model.getSurvey().rows.pluck(model.key);
+        rows.pop();
+        rows.pop();
         var values = _.map(
-            model.getSurvey().rows.pluck(model.key), 
-            function (rd) { 
-                return rd.get('value'); 
+            rows,
+            function (rd) {
+                return rd.get('value');
             });
 
 

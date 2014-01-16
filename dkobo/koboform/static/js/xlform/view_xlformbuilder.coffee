@@ -43,6 +43,48 @@ class XlfDetailView extends Backbone.View
     @insertInDOM(rowView)
     @
 
+class XLF.SkipLogicEditor extends Backbone.View
+  render: ()->
+    @$el.html('<select></select> was <input placeholder="response value" type="text" />')
+    select = @$el.find('select')
+    input = @$el.find('input')
+    survey = @model.getSurvey()
+    surveyNames = survey.getNames()
+    question = @model.get("question")
+
+    $("<option>", {value: '-1', html: 'Question...', disabled: !!question}).appendTo(select)
+
+    for name in surveyNames
+      isCurrentName = name is @model.parentRow.getValue('name')
+      $("<option>", {value: name, html: name, disabled: isCurrentName}).appendTo(select)
+
+    if (!!question)
+      questionName = question.getValue("name")
+      select.val(questionName)
+
+    select.on "change", ()=>
+      questionName = select.val()
+      question = survey.findRowByName(questionName)
+      @model.set("question", question)
+
+    wireUpInput(input, @model, 'criterion', 'keyup')
+
+    disableDefaultOption = () ->
+      $('option[value=-1]', select).prop('disabled', true)
+      select.off('change', disableDefaultOption)
+
+    select.on('change', disableDefaultOption)
+    @
+  toggle: ->
+    @$el.toggle()
+
+wireUpInput = ($input, model, name, event='change') =>
+  if model.get(name)
+    $input.val(model.get(name))
+  $input.on(event, () => model.set(name, $input.val()))
+  ``
+
+
 class XlfRowSelector extends Backbone.View
   events:
     "click .shrink": "shrink"
@@ -320,11 +362,11 @@ class @SurveyApp extends Backbone.View
   render: ()->
     @$el.removeClass("content--centered").removeClass("content")
     @$el.html viewTemplates.surveyApp @survey
-    
+
     @survey.settings.on 'validated:invalid', (model, validations) ->
       for key, value of validations
           break
-    
+
     @formEditorEl = @$(".-form-editor")
     @$(".editor-message .expanding-spacer-between-rows .add-row-btn").click (evt)=>
       if !@emptySurveyXlfRowSelector
@@ -346,7 +388,7 @@ class @SurveyApp extends Backbone.View
 
     @formEditorEl.sortable({
         axis: "y"
-        cancel: "button,div.add-row-btn,.well,ul.list-view,li.editor-message, .editableform"
+        cancel: "button,div.add-row-btn,.well,ul.list-view,li.editor-message, .editableform, .row-extras"
         cursor: "move"
         distance: 5
         items: "> li"
