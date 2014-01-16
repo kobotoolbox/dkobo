@@ -139,6 +139,7 @@ class XLF.Survey extends SurveyFragment
         r._parent = @
         r
       @rows.add surveyRows, collection: @rows, silent: true
+    @rows.invoke('parse')
 
   toCsvJson: ()->
     # build an object that can be easily passed to the "csv" library
@@ -340,6 +341,9 @@ class XLF.Row extends BaseModel
       listToSet = @_parent.choices.get(list)
     throw new Error("List not found: #{list}")  unless listToSet
     @get("type").set("list", listToSet)
+  parse: ->
+    for key, val of @attributes
+      val.parse()
 
   attributesArray: ()->
     arr = ([k, v] for k, v of @attributes)
@@ -379,8 +383,11 @@ class XLF.RowDetail extends BaseModel
         required: true
     {}
   idAttribute: "name"
+  parse: () ->
 
   constructor: (@key, valOrObj={}, @parentRow)->
+    if @key of XLF.RowDetailMixins
+      _.extend(@, XLF.RowDetailMixins[@key])
     super()
     vals2set = {}
     if _.isString(valOrObj)
@@ -390,8 +397,6 @@ class XLF.RowDetail extends BaseModel
     else
       vals2set.value = valOrObj
     @set(vals2set)
-    if @key of XLF.RowDetailMixins
-      _.extend(@, XLF.RowDetailMixins[@key])
     @_order = XLF.columnOrder(@key)
 
   getSurvey: ()-> @parentRow.getSurvey()
@@ -404,6 +409,7 @@ class XLF.RowDetail extends BaseModel
         @hidden = @get("value") is @_oValue
 
     @on "change:value", (rd, val, ctxt)=>
+      @parse()
       @parentRow.trigger "change", @key, val, ctxt
     if @key is "type"
       @on "change:list", (rd, val, ctxt)=>
@@ -429,13 +435,14 @@ SkipLogicDetailMixin =
       @hidden = true
       ``
 
-  parse: (value) ->
-    value = value.split('=')
+  parse: () ->
+    value = (@get('value') || '').split('=')
     if value.length == 2
       try
         questionName = @questionNamePattern.exec(value[0])[1]
         question = @parentRow.getSurvey().findRowByName(questionName)
         criterion = value[1].substring(1)
+        criterion = criterion.substring(0, criterion.length - 1)
       catch e
         console?.error("Error parsing skiplogic: #{e.message}", e)
       if question
