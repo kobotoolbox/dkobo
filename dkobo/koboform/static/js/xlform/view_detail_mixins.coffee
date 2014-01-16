@@ -8,8 +8,7 @@ DetailViewMixins.type =
     @$el.css width: 40, height: 40
     tps = @model.get('typeId')
     @$el.attr("title", "Row Type: #{tps}")
-    @$el.addClass("rt-#{tps}")
-    @$el.addClass("type-icon")
+    @$el.addClass("rt-#{tps} type-icon menu-item menu-item--#{tps}")
   insertInDOM: (rowView)->
     rowView.$(".row-type").append(@$el)
 
@@ -38,7 +37,7 @@ DetailViewMixins.hint =
   afterRender: ->
     viewUtils.makeEditable @, @model, 'code', {}
 
-DetailViewMixins.relevant = 
+DetailViewMixins.relevant =
   html: ->
     """
       Skip logic (i.e. <span style='font-family:monospace'>relevant</span>):
@@ -47,7 +46,7 @@ DetailViewMixins.relevant =
   afterRender: ->
     viewUtils.makeEditable @, @model, 'code', {}
 
-DetailViewMixins.constraint = 
+DetailViewMixins.constraint =
   html: ->
     """
       Validation logic (i.e. <span style='font-family:monospace'>constraint</span>):
