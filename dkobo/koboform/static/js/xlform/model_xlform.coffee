@@ -427,7 +427,7 @@ SkipLogicDetailMixin =
     @hidden = false
     if (question = @get("question"))
       questionName = question.getValue("name")
-    wrappedCriterion = "'" + @get('criterion') + "'"
+    wrappedCriterion = "'" + (@get('criterion') || '') + "'"
 
     if wrappedCriterion and question
       "${" + questionName + "}=" + wrappedCriterion
