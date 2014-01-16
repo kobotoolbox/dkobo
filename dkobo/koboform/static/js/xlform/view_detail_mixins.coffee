@@ -49,11 +49,11 @@ DetailViewMixins.relevant =
     button = @$el.find("button").eq(0)
     button.click () =>
       if @skipLogicEditor
-        @skipLogicEditor.$el.toggle()
+        @skipLogicEditor.toggle()
       else
         @skipLogicEditor = new XLF.SkipLogicEditor(el: @$el.find(".relevant__editor"), model: @model).render()
 
-DetailViewMixins.constraint = 
+DetailViewMixins.constraint =
   html: ->
     """
       Validation logic (i.e. <span style='font-family:monospace'>constraint</span>):

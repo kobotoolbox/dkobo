@@ -45,40 +45,38 @@ class XlfDetailView extends Backbone.View
 
 class XLF.SkipLogicEditor extends Backbone.View
   render: ()->
-    @$el.hide()
-    if !@alreadyRendered
-      @$el.html('<select></select> was <input placeholder="response value" type="text" />')
-      select = @$el.find('select')
-      input = @$el.find('input')
-      survey = @model.getSurvey()
-      surveyNames = survey.getNames()
+    @$el.html('<select></select> was <input placeholder="response value" type="text" />')
+    select = @$el.find('select')
+    input = @$el.find('input')
+    survey = @model.getSurvey()
+    surveyNames = survey.getNames()
+    question = @model.get("question")
 
-      $("<option>", {value: '-1', html: 'Question...'}).appendTo(select)
+    $("<option>", {value: '-1', html: 'Question...', disabled: !!question}).appendTo(select)
 
-      for name in surveyNames
-        isCurrentName = name is @model.parentRow.getValue('name')
-        $("<option>", {value: name, html: name, disabled: isCurrentName}).appendTo(select)
+    for name in surveyNames
+      isCurrentName = name is @model.parentRow.getValue('name')
+      $("<option>", {value: name, html: name, disabled: isCurrentName}).appendTo(select)
 
-      if (question = @model.get("question"))
-        questionName = question.getValue("name")
-        select.val(questionName)
+    if (!!question)
+      questionName = question.getValue("name")
+      select.val(questionName)
 
-      select.on "change", ()=>
-        questionName = select.val()
-        question = survey.findRowByName(questionName)
-        @model.set("question", question)
+    select.on "change", ()=>
+      questionName = select.val()
+      question = survey.findRowByName(questionName)
+      @model.set("question", question)
 
-      wireUpInput(input, @model, 'criterion', 'keyup')
+    wireUpInput(input, @model, 'criterion', 'keyup')
 
-      disableDefaultOption = () ->
-        $('option[value=-1]', select).prop('disabled', true)
-        select.off('change', disableDefaultOption)
+    disableDefaultOption = () ->
+      $('option[value=-1]', select).prop('disabled', true)
+      select.off('change', disableDefaultOption)
 
-      select.on('change', disableDefaultOption)
-
-      @alreadyRendered = true
-    @$el.show()
+    select.on('change', disableDefaultOption)
     @
+  toggle: ->
+    @$el.toggle()
 
 wireUpInput = ($input, model, name, event='change') =>
   if model.get(name)
