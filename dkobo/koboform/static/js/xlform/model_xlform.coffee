@@ -55,6 +55,10 @@ class BaseModel extends Backbone.Model
       @_parent = arg._parent
       delete arg._parent
     super arg
+
+  getValue: (what)->
+    if what then @get(what).getValue() else @get("value")
+
   getSurvey: ->
     parent = @_parent
     while parent
@@ -77,6 +81,24 @@ class SurveyFragment extends BaseModel
         ``
       else
         cb(r)
+
+  getNames: () ->
+    names = []
+    @forEachRow (row) ->
+      name = row.getValue("name")
+      names.push(name)  if name
+    names
+
+  findRowByName: (name)->
+    match = false
+    @forEachRow (row)->
+      if row.getValue("name") is name
+        match = row
+      # maybe implement a way to bust out
+      # of this loop with false response.
+      !match
+    match
+
   addRow: (r)->
     r._parent = @
     @rows.add r
@@ -117,7 +139,6 @@ class XLF.Survey extends SurveyFragment
         r._parent = @
         r
       @rows.add surveyRows, collection: @rows, silent: true
-
 
   toCsvJson: ()->
     # build an object that can be easily passed to the "csv" library
@@ -309,9 +330,6 @@ class XLF.Row extends BaseModel
           cl.set("name", clname, silent: true)
         @set("value", "#{@get('typeId')} #{clname}")
 
-  getValue: (what)->
-    @get(what).get("value")
-
   getList: ->
     @get("type")?.get("list")
 
@@ -330,8 +348,9 @@ class XLF.Row extends BaseModel
 
   toJSON: ->
     outObj = {}
-    for [key, val] in @attributesArray() when !val.hidden
-      outObj[key] = @getValue(key)
+    for [key, val] in @attributesArray()
+      result = @getValue(key)
+      outObj[key] = result  unless @hidden
     outObj
 
 class XLF.Rows extends Backbone.Collection
@@ -371,6 +390,8 @@ class XLF.RowDetail extends BaseModel
     else
       vals2set.value = valOrObj
     @set(vals2set)
+    if @key of XLF.RowDetailMixins
+      _.extend(@, XLF.RowDetailMixins[@key])
     @_order = XLF.columnOrder(@key)
   
   getSurvey: ()-> @parentRow.getSurvey()
@@ -387,6 +408,42 @@ class XLF.RowDetail extends BaseModel
     if @key is "type"
       @on "change:list", (rd, val, ctxt)=>
         @parentRow.trigger "change", @key, val, ctxt
+
+
+# To be extended ontop of a RowDetail when the key matches
+# the attribute in XLF.RowDetailMixin
+SkipLogicDetailMixin =
+  questionNamePattern: /\${(\w+)}/
+  getValue: ()->
+    @serialize()
+
+  serialize: ()->
+    @hidden = false
+    if (question = @get("question"))
+      questionName = question.getValue("name")
+    wrappedCriterion = JSON.stringify(@get('criterion'))
+
+    if wrappedCriterion and question
+      "${" + questionName + "}=" + wrappedCriterion
+    else
+      @hidden = true
+      ``
+
+  parse: (value) ->
+    value = value.split('=')
+    if value.length == 2
+      try
+        questionName = @questionNamePattern.exec(value[0])[1]
+        question = @parentRow.getSurvey().findRowByName(questionName)
+        criterion = value[1].substring(1)
+      catch e
+        console?.error("Error parsing skiplogic: #{e.message}", e)
+      if question
+        @set('question', question)
+        @set('criterion', criterion)
+
+@XLF.RowDetailMixins =
+  relevant: SkipLogicDetailMixin
 
 ###
 XLF...

@@ -78,11 +78,11 @@ viewTemplates.surveyTemplateApp = () ->
 viewTemplates.surveyApp = (survey) ->
     """
       <div class="sub-header-bar">
-        <button class="btn  btn--utility">Export and clone</button>
-        <button class="btn  btn--utility">Save</button>
-        <button class="btn  btn--utility">Preview</button>
-        <button class="btn  btn--utility  pull-right">Group questions</button>
-        <button class="btn  btn--utility  pull-right">Repeat questions</button>
+        <button class="btn  btn--utility" id="xlf-export">Export and clone</button>
+        <button class="btn  btn--utility" id="xlf-save">Save</button>
+        <button class="btn  btn--utility" id="xlf-preview">Preview</button>
+        <button class="btn  btn--utility  pull-right" id="xlf-group">Group questions</button>
+        <button class="btn  btn--utility  pull-right" id="xlf-repeat">Repeat questions</button>
       </div>
       <header class="survey-header">
         <p class="survey-header__description" hidden>
@@ -94,9 +94,6 @@ viewTemplates.surveyApp = (survey) ->
         </hgroup>
         </p>
         <div class="survey-header__options  well  stats  row-details" id="additional-options"></div>
-        <div class="survey-header__actions  buttons">
-          <button id="save" class="btn">Save</button>
-        </div>
       </header>
       <div class="survey-editor  form-editor-wrap">
         <ul class="-form-editor">

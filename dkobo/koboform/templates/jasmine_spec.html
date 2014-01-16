@@ -2,48 +2,27 @@
 {% block title %}Jasmine Spec{% endblock %}
 {% load staticfiles %}
 {% block head %}
-  <link rel="stylesheet" href="{% static 'js/jasmine-1.3/jasmine.css' %}" />
-  <script type="text/javascript" src="{% static 'js/jasmine-1.3/jasmine.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/jasmine-1.3/jasmine-html.js' %}"></script>
+  <link rel="stylesheet" href="{% static 'js/sut/jasmine/jasmine.css' %}" />
+  <script type="text/javascript" src="{% static 'js/sut/jasmine/jasmine.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/sut/jasmine/jasmine-html.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/sut/jasmine/boot.js' %}"></script>
 
 {% endblock %}
 {% block foot %}
+  <script src="http://code.jquery.com/jquery-migrate-1.2.1.js"></script>
+  <script src="//cdn.jsdelivr.net/poshytip/1.1/jquery.poshytip.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/jquery-editable/js/jquery-editable-poshytip.min.js"></script>
+
   {% load compress %}
   {% compress js %}
+  <script src="{% static 'js/Backbone.Validation.js' %}"></script>
   <script type="text/coffeescript" src="{% static 'js/xlform/model_xlform.coffee' %}"></script>
   <script type="text/coffeescript" src="{% static 'js/xlform/view_xlformbuilder.coffee' %}"></script>
   <script type="text/coffeescript" src="{% static 'js/xlform/view_detail_mixins.coffee' %}"></script>
+  <script type="text/coffeescript" src="{% static 'js/xlform/view.templates.coffee' %}"></script>
+  <script type="text/coffeescript" src="{% static 'js/xlform/view.utils.coffee' %}"></script>
+  <script src="{% static 'js/xlform/validator.js' %}"></script>
+  <script src="{% static 'js/xlform/validator.backbone.adapters.js' %}"></script>
   <script type="text/coffeescript" src="{% static 'js/xlform/spec_xlform.coffee' %}"></script>
   {% endcompress %}
-{% endblock %}
-
-{% block content %}
-<script type="text/javascript">
-  (function() {
-    var jasmineEnv = jasmine.getEnv();
-    jasmineEnv.updateInterval = 1000;
-
-    var htmlReporter = new jasmine.HtmlReporter();
-
-    jasmineEnv.addReporter(htmlReporter);
-
-    jasmineEnv.specFilter = function(spec) {
-      return htmlReporter.specFilter(spec);
-    };
-
-    var currentWindowOnload = window.onload;
-
-    window.onload = function() {
-      if (currentWindowOnload) {
-        currentWindowOnload();
-      }
-      execJasmine();
-    };
-
-    function execJasmine() {
-      jasmineEnv.execute();
-    }
-
-  })();
-</script>
 {% endblock %}
