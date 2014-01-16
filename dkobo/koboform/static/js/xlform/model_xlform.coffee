@@ -293,7 +293,7 @@ class XLF.Row extends BaseModel
     for key, val of @attributes
       unless val instanceof XLF.RowDetail
         @set key, new XLF.RowDetail(key, val, @), {silent: true}
-    
+
     typeDetail = @get("type")
     tpVal = typeDetail.get("value")
     processType = (rd, newType, ctxt)=>
@@ -393,7 +393,7 @@ class XLF.RowDetail extends BaseModel
     if @key of XLF.RowDetailMixins
       _.extend(@, XLF.RowDetailMixins[@key])
     @_order = XLF.columnOrder(@key)
-  
+
   getSurvey: ()-> @parentRow.getSurvey()
 
   initialize: ()->
@@ -421,7 +421,7 @@ SkipLogicDetailMixin =
     @hidden = false
     if (question = @get("question"))
       questionName = question.getValue("name")
-    wrappedCriterion = JSON.stringify(@get('criterion'))
+    wrappedCriterion = "'" + @get('criterion') + "'"
 
     if wrappedCriterion and question
       "${" + questionName + "}=" + wrappedCriterion
@@ -542,7 +542,7 @@ class XLF.Settings extends BaseModel
     form_id: "new_survey"
   toCsvJson: ->
     columns = _.keys(@attributes)
-    rowObjects = [@toJSON()] 
+    rowObjects = [@toJSON()]
 
     columns: columns
     rowObjects: rowObjects
