@@ -25,17 +25,12 @@ def csv_to_xform(request):
 
 
 def export_form_to_xform(request, id):
-    try:
-        survey = utils.create_survey_from_csv_text(SurveyDraft.objects.get(pk=id).body)
+    survey = utils.create_survey_from_csv_text(SurveyDraft.objects.get(pk=id).body)
 
-        response = HttpResponse(survey.to_xml(),
-                                mimetype='application/force-download')
+    response = HttpResponse(survey.to_xml(),
+                            mimetype='application/force-download')
 
-        response['Content-Disposition'] = 'attachment; filename=survey.xml'
-    except Exception, e:
-        response = HttpResponseServerError(json.dumps({
-            u'error': e.message
-        }))
+    response['Content-Disposition'] = 'attachment; filename=survey.xml'
     return response
 
 
