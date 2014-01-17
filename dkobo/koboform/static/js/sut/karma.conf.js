@@ -25,9 +25,9 @@ module.exports = function(config) {
             '../services/*.js',
             'lib/*.js',
             '../*.js',
-            'tests/*.js',
             '../xlform/*.js',
-            '../../templates/*.html'
+            '../../templates/*.html',
+            'tests/*.js'
         ],
 
 
