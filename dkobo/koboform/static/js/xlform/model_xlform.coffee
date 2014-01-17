@@ -138,6 +138,9 @@ class XLF.Survey extends SurveyFragment
       surveyRows = for r in options.survey
         r._parent = @
         r
+      # We need to implement a skipParse parameter
+      # or make the code resilient to allow parse to be called
+      # muiltiple times
       @rows.add surveyRows, collection: @rows, silent: true
     @rows.invoke('parse')
 
@@ -471,16 +474,20 @@ class XLF.SkipLogicCollection extends Backbone.Collection
     @meta = new XLF.SkipLogicCollectionMeta()
     super(items, options)
 
+  empty: ->
+    @each (item)=> @remove(item)
+    @
   serialize: ->
-    joiners = {any: " | ", all: " & "}
+    joiners = {any: "|", all: "&"}
     items = @map((item)=> item.serialize())
     items = _.filter(items, (item) -> !!item)
     items.join(joiners[@meta.get("delimSelect")])
   importString: (skipLogicString) ->
     # Note: we can throw an error if something doesn't import
     # and it should go to the "hand code" input.
-    for item in skipLogicString.split(/\&|\|/)
-      @add(new XLF.SkipLogicCriterion(value: item, parentRow: @parentRow))
+    for item in skipLogicString.split(/\&|\|/) when item
+      @add(value: item, parentRow: @parentRow)
+    ``
 
 # To be extended ontop of a RowDetail when the key matches
 # the attribute in XLF.RowDetailMixin
@@ -498,7 +505,7 @@ SkipLogicDetailMixin =
     @skipLogicCollection.serialize()
 
   parse: ()->
-    @skipLogicCollection.importString(@get('value') || '')
+    @skipLogicCollection.empty().importString(@get('value') || '')
 
 @XLF.RowDetailMixins =
   relevant: SkipLogicDetailMixin
