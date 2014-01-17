@@ -482,9 +482,6 @@ class XLF.SkipLogicCollection extends Backbone.Collection
     for item in skipLogicString.split(/\&|\|/)
       @add(new XLF.SkipLogicCriterion(value: item, parentRow: @parentRow))
 
-  cleanup: () -> #for some reason the collection arrives at the render function with two empty models. This is a temporary patch for that problem
-    @each( (item) => if !item.get('value') then @remove(item))
-
 # To be extended ontop of a RowDetail when the key matches
 # the attribute in XLF.RowDetailMixin
 SkipLogicDetailMixin =
