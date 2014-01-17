@@ -409,7 +409,8 @@ class XLF.RowDetail extends BaseModel
         @hidden = @get("value") is @_oValue
 
     @on "change:value", (rd, val, ctxt)=>
-      @parse()
+      # why did i add this?
+      # @parse()
       @parentRow.trigger "change", @key, val, ctxt
     if @key is "type"
       @on "change:list", (rd, val, ctxt)=>
