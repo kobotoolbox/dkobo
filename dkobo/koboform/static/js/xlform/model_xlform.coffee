@@ -138,6 +138,9 @@ class XLF.Survey extends SurveyFragment
       surveyRows = for r in options.survey
         r._parent = @
         r
+      # We need to implement a skipParse parameter
+      # or make the code resilient to allow parse to be called
+      # muiltiple times
       @rows.add surveyRows, collection: @rows, silent: true
     @rows.invoke('parse')
 
@@ -398,9 +401,11 @@ class XLF.RowDetail extends BaseModel
       vals2set.value = valOrObj
     @set(vals2set)
     @_order = XLF.columnOrder(@key)
+    @postInitialize()
 
   getSurvey: ()-> @parentRow.getSurvey()
 
+  postInitialize: ()->
   initialize: ()->
     if @get("_hideUnlessChanged")
       @hidden = true
@@ -409,38 +414,36 @@ class XLF.RowDetail extends BaseModel
         @hidden = @get("value") is @_oValue
 
     @on "change:value", (rd, val, ctxt)=>
-      @parse()
       @parentRow.trigger "change", @key, val, ctxt
     if @key is "type"
       @on "change:list", (rd, val, ctxt)=>
         @parentRow.trigger "change", @key, val, ctxt
 
-
-# To be extended ontop of a RowDetail when the key matches
-# the attribute in XLF.RowDetailMixin
-SkipLogicDetailMixin =
+class XLF.SkipLogicCriterion extends Backbone.Model
+  @expressionValues:
+    # key: ["expressionString", "Descriptive Label", additionalValueRequired]
+    resp_equals:    ["=", "was", true]
+    resp_notequals: ["!=", "was not", true]
+    ans_notnull:    ["!=NULL", "was answered", false]
+    ans_null:       ["=NULL", "was not answered", false]
   questionNamePattern: /\${(\w+)}/
-  getValue: ()->
-    @serialize()
-
-  serialize: ()->
-    @hidden = false
-    if (question = @get("question"))
-      questionName = question.getValue("name")
-    wrappedCriterion = "'" + (@get('criterion') || '') + "'"
-
-    if wrappedCriterion and question
-      "${" + questionName + "}=" + wrappedCriterion
-    else
-      @hidden = true
-      ``
-
-  parse: () ->
+  defaults:
+    "expressionCode": "resp_equals"
+  initialize: ()->
+    ###
+    This criterion holds 3 attributes:
+    1. The other question
+    2. The expression
+    3. (optional) The response text
+    ###
+    if @get("value")
+      @parse()
+  parse: ->
     value = (@get('value') || '').split('=')
     if value.length == 2
       try
         questionName = @questionNamePattern.exec(value[0])[1]
-        question = @parentRow.getSurvey().findRowByName(questionName)
+        question = @get("parentRow").getSurvey().findRowByName(questionName)
         criterion = value[1].substring(1)
         criterion = criterion.substring(0, criterion.length - 1)
       catch e
@@ -448,6 +451,61 @@ SkipLogicDetailMixin =
       if question
         @set('question', question)
         @set('criterion', criterion)
+  serialize: ->
+    if (question = @get("question"))
+      questionName = question.getValue("name")
+      if !questionName then return null
+    else
+      return null
+
+    [exprStr, descLabel, addlReqs] = @constructor.expressionValues[@get("expressionCode")]
+    wrappedCriterion = if addlReqs then ("'" + (@get('criterion') || '') + "'") else ""
+    "${" + questionName + "}" + exprStr + wrappedCriterion
+
+class XLF.SkipLogicCollectionMeta extends Backbone.Model
+  defaults:
+    "delimSelect": "all"
+
+class XLF.SkipLogicCollection extends Backbone.Collection
+  model: XLF.SkipLogicCriterion
+  constructor: (items, options={})->
+    @rowDetail = options.rowDetail
+    @parentRow = @rowDetail.parentRow
+    @meta = new XLF.SkipLogicCollectionMeta()
+    super(items, options)
+
+  empty: ->
+    @each (item)=> @remove(item)
+    @
+  serialize: ->
+    joiners = {any: "OR", all: "AND"}
+    items = @map((item)=> item.serialize())
+    items = _.filter(items, (item) -> !!item)
+    items.join(joiners[@meta.get("delimSelect")])
+  importString: (skipLogicString) ->
+    # Note: we can throw an error if something doesn't import
+    # and it should go to the "hand code" input.
+    for item in skipLogicString.split(/AND|OR/) when item
+      @add(value: item, parentRow: @parentRow)
+    ``
+
+# To be extended ontop of a RowDetail when the key matches
+# the attribute in XLF.RowDetailMixin
+SkipLogicDetailMixin =
+  getValue: ()->
+    @serialize()
+
+  postInitialize: ()->
+    @skipLogicCollection = new XLF.SkipLogicCollection([], rowDetail: @)
+    @parse()
+
+  serialize: ()->
+    # @hidden = false
+    # note: reimplement "hidden" if response is invalid
+    @skipLogicCollection.serialize()
+
+  parse: ()->
+    @skipLogicCollection.empty().importString(@get('value') || '')
 
 @XLF.RowDetailMixins =
   relevant: SkipLogicDetailMixin
