@@ -501,12 +501,8 @@ SkipLogicDetailMixin =
     ###
     unless @skipLogicCollection
       @skipLogicCollection = new XLF.SkipLogicCollection([], rowDetail: @)
-
-    try
       @skipLogicCollection.importString(@get('value') || '')
-    catch e
-      @skipLogicCollection.meta.set("rawValue", @get('value'))
-      # cannot parse skip logic
+
 @XLF.RowDetailMixins =
   relevant: SkipLogicDetailMixin
 
