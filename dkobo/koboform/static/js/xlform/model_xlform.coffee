@@ -478,14 +478,14 @@ class XLF.SkipLogicCollection extends Backbone.Collection
     @each (item)=> @remove(item)
     @
   serialize: ->
-    joiners = {any: "|", all: "&"}
+    joiners = {any: "OR", all: "AND"}
     items = @map((item)=> item.serialize())
     items = _.filter(items, (item) -> !!item)
     items.join(joiners[@meta.get("delimSelect")])
   importString: (skipLogicString) ->
     # Note: we can throw an error if something doesn't import
     # and it should go to the "hand code" input.
-    for item in skipLogicString.split(/\&|\|/) when item
+    for item in skipLogicString.split(/AND|OR/) when item
       @add(value: item, parentRow: @parentRow)
     ``
 
