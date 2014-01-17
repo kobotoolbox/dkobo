@@ -398,9 +398,11 @@ class XLF.RowDetail extends BaseModel
       vals2set.value = valOrObj
     @set(vals2set)
     @_order = XLF.columnOrder(@key)
+    @postInitialize()
 
   getSurvey: ()-> @parentRow.getSurvey()
 
+  postInitialize: ()->
   initialize: ()->
     if @get("_hideUnlessChanged")
       @hidden = true
@@ -409,8 +411,6 @@ class XLF.RowDetail extends BaseModel
         @hidden = @get("value") is @_oValue
 
     @on "change:value", (rd, val, ctxt)=>
-      # why did i add this?
-      # @parse()
       @parentRow.trigger "change", @key, val, ctxt
     if @key is "type"
       @on "change:list", (rd, val, ctxt)=>
@@ -491,18 +491,17 @@ SkipLogicDetailMixin =
   getValue: ()->
     @serialize()
 
+  postInitialize: ()->
+    @skipLogicCollection = new XLF.SkipLogicCollection([], rowDetail: @)
+    @parse()
+
   serialize: ()->
     # @hidden = false
     # note: reimplement "hidden" if response is invalid
     @skipLogicCollection.serialize()
 
   parse: ()->
-    ###
-    Ideally this could go somewhere else that's called after initialize
-    ###
-    unless @skipLogicCollection
-      @skipLogicCollection = new XLF.SkipLogicCollection([], rowDetail: @)
-      @skipLogicCollection.importString(@get('value') || '')
+    @skipLogicCollection.importString(@get('value') || '')
 
 @XLF.RowDetailMixins =
   relevant: SkipLogicDetailMixin
