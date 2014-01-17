@@ -43,24 +43,58 @@ class XlfDetailView extends Backbone.View
     @insertInDOM(rowView)
     @
 
-class XLF.SkipLogicEditor extends Backbone.View
+class XLF.SkipLogicCriterionView extends Backbone.View
+  initialize: ()->
+    @model.on("change:expressionCode", _.bind(@render,@))
+  lookupExpression: (expr)->
+    for key, vals of XLF.SkipLogicCriterion.expressionValues when key is expr
+      return vals
+    throw new Error("Expression not found: #{str}")
   render: ()->
-    @$el.html('<select></select> was <input placeholder="response value" type="text" />')
-    select = @$el.find('select')
+    @$el.html("""
+      <select></select>
+      <select class="skiplogic__expressionselect">
+        <option value="resp_equals">was</option>
+        <option value="resp_notequals">was not</option>
+        <option value="ans_notnull">was answered</option>
+        <option value="ans_null">was not answered</option>
+      </select>
+      <input placeholder="response value" class="skiplogic__responseval" type="text" />
+      <button class="skiplogic__deletecriterion" data-criterion-id="#{@model.cid}">&times;</button>
+    """)
+    # @$el.html('<select></select> was <input placeholder="response value" type="text" />')
+    select = @$el.find('select').eq(0)
+    expressionSelect = @$el.find('select.skiplogic__expressionselect')
+    for key, vals in XLF.SkipLogicCriterion.expressionValues
+      $("<option>", value: key, text: vals[1]).appendTo(expressionSelect)
+    responseValBox = @$(".skiplogic__responseval")
+    expressionCode = @model.get("expressionCode")
+    expressionSelect.val(expressionCode)
+    do ->
+      [exprStr, descLabel, addlReqs] =
+        XLF.SkipLogicCriterion.expressionValues[expressionCode]
+      if !addlReqs
+        responseValBox.css("visibility", "hidden")
+
     input = @$el.find('input')
-    survey = @model.getSurvey()
+    parentRow = @model.get("parentRow")
+    survey = parentRow.getSurvey()
     surveyNames = survey.getNames()
     question = @model.get("question")
 
     $("<option>", {value: '-1', html: 'Question...', disabled: !!question}).appendTo(select)
 
     for name in surveyNames
-      isCurrentName = name is @model.parentRow.getValue('name')
+      isCurrentName = name is parentRow.getValue('name')
       $("<option>", {value: name, html: name, disabled: isCurrentName}).appendTo(select)
 
     if (!!question)
       questionName = question.getValue("name")
       select.val(questionName)
+
+    expressionSelect.on "change", (evt)=>
+      expStr = @lookupExpression(evt.target.value)[0]
+      @model.set("expressionCode", evt.target.value)
 
     select.on "change", ()=>
       questionName = select.val()
@@ -75,8 +109,6 @@ class XLF.SkipLogicEditor extends Backbone.View
 
     select.on('change', disableDefaultOption)
     @
-  toggle: ->
-    @$el.toggle()
 
 wireUpInput = ($input, model, name, event='change') =>
   if model.get(name)
@@ -84,6 +116,60 @@ wireUpInput = ($input, model, name, event='change') =>
   $input.on(event, () => model.set(name, $input.val()))
   ``
 
+class XLF.SkipLogicCollectionView extends Backbone.View
+  events:
+    "click .skiplogic__deletecriterion": "deleteCriterion"
+    "click .skiplogic__addcriterion": "addCriterion"
+    "click .skiplogic__delimselectcb": "markChangedDelimSelector"
+  initialize: ()->
+    @collection.on("add", _.bind(@render,@))
+    @collection.on("remove", _.bind(@render,@))
+  render: ()->
+    tempId = _.uniqueId("skiplogic_expr")
+    @$el.html("""
+    <div class="skiplogic__criterialist">
+    </div>
+    <p class="skiplogic__delimselect">
+      Match all or any of these criteria?
+      <br>
+      <label>
+        <input type="radio" class="skiplogic__delimselectcb" name="#{tempId}" value="all" />
+        All
+      </label>
+      <label>
+        <input type="radio" class="skiplogic__delimselectcb" name="#{tempId}" value="any" />
+        Any
+      </label>
+    </p>
+    <p class="skiplogic__addnew">
+      Add new
+      <button class="skiplogic__addcriterion">+</button>
+    </p>
+    <p class="skiplogic__extras">
+      <button class="skiplogic__handcode">Hand code</button>
+    </p>
+    """)
+    @$list = @$(".skiplogic__criterialist")
+
+    delimSelect = @$(".skiplogic__delimselect")
+    delimSelect[if @collection.length < 2 then "hide" else "show"]()
+    delimSelectValue = @collection.meta.get("delimSelect")
+    for checkbox in delimSelect.find("input") when checkbox.value is delimSelectValue
+      checkbox.checked = "checked"
+    @collection.each (model)=>
+      @$list.append(new XLF.SkipLogicCriterionView(model: model).render().$el)
+    @
+  markChangedDelimSelector: (evt)->
+    @collection.meta.set("delimSelect", evt.target.value)
+  toggle: ->
+    @$el.toggle()
+  addCriterion: (evt)->
+    @collection.add(parentRow: @collection.parentRow)
+  deleteCriterion: (evt)->
+    $target = $(evt.target)
+    modelId = $target.data("criterionId")
+    criterion = @collection.get(modelId)
+    @collection.remove(criterion)
 
 class XlfRowSelector extends Backbone.View
   events:

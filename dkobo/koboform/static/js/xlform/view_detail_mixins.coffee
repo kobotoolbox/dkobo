@@ -50,7 +50,10 @@ DetailViewMixins.relevant =
       if @skipLogicEditor
         @skipLogicEditor.toggle()
       else
-        @skipLogicEditor = new XLF.SkipLogicEditor(el: @$el.find(".relevant__editor"), model: @model).render()
+        if !@model.skipLogicCollection
+          throw new Error("Skip Logic Colleciton not found for RowDetail model.")
+
+        @skipLogicEditor = new XLF.SkipLogicCollectionView(el: @$el.find(".relevant__editor"), collection: @model.skipLogicCollection).render()
 
 DetailViewMixins.constraint =
   html: ->
