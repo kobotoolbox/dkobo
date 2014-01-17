@@ -277,7 +277,7 @@ class XlfListView extends Backbone.View
       for option, i in @model.options.models
         new XlfOptionView(model: option, cl: @model).render().$el.appendTo @ul
       while i < 2
-        emptyOpt = new XLF.Option(label: "Option #{i+1}")
+        emptyOpt = new XLF.Option(name: "option_#{i+1}", label: "Option #{i+1}")
         @model.options.add(emptyOpt)
         new XlfOptionView(model: emptyOpt, cl: @model).render().$el.appendTo @ul
         i++
