@@ -450,6 +450,10 @@ class XLF.SkipLogicCriterion extends Backbone.Model
   serialize: ->
     if (question = @get("question"))
       questionName = question.getValue("name")
+      if !questionName then return null
+    else
+      return null
+
     [exprStr, descLabel, addlReqs] = @constructor.expressionValues[@get("expressionCode")]
     wrappedCriterion = if addlReqs then ("'" + (@get('criterion') || '') + "'") else ""
     "${" + questionName + "}" + exprStr + wrappedCriterion
@@ -468,12 +472,17 @@ class XLF.SkipLogicCollection extends Backbone.Collection
 
   serialize: ->
     joiners = {any: " | ", all: " & "}
-    @map((item)=> item.serialize()).join(joiners[@meta.get("delimSelect")])
+    items = @map((item)=> item.serialize())
+    items = _.filter(items, (item) -> !!item)
+    items.join(joiners[@meta.get("delimSelect")])
   importString: (skipLogicString) ->
     # Note: we can throw an error if something doesn't import
     # and it should go to the "hand code" input.
     for item in skipLogicString.split(/\&|\|/)
       @add(new XLF.SkipLogicCriterion(value: item, parentRow: @parentRow))
+
+  cleanup: () -> #for some reason the collection arrives at the render function with two empty models. This is a temporary patch for that problem
+    @each( (item) => if !item.get('value') then @remove(item))
 
 # To be extended ontop of a RowDetail when the key matches
 # the attribute in XLF.RowDetailMixin
@@ -498,7 +507,6 @@ SkipLogicDetailMixin =
     catch e
       @skipLogicCollection.meta.set("rawValue", @get('value'))
       # cannot parse skip logic
-
 @XLF.RowDetailMixins =
   relevant: SkipLogicDetailMixin
 

@@ -156,6 +156,10 @@ class XLF.SkipLogicCollectionView extends Backbone.View
     delimSelectValue = @collection.meta.get("delimSelect")
     for checkbox in delimSelect.find("input") when checkbox.value is delimSelectValue
       checkbox.checked = "checked"
+    @collection.cleanup()
+
+    #if @collection.length == 0 then @collection.add(new XLF.SkipLogicCriterion(parentRow: @parentRow))
+
     @collection.each (model)=>
       @$list.append(new XLF.SkipLogicCriterionView(model: model).render().$el)
     @
