@@ -56,6 +56,9 @@ class BaseModel extends Backbone.Model
       delete arg._parent
     super arg
 
+  parse: ->
+  linkUp: ->
+
   getValue: (what)->
     if what then @get(what).getValue() else @get("value")
 
@@ -142,7 +145,7 @@ class XLF.Survey extends SurveyFragment
       # or make the code resilient to allow parse to be called
       # muiltiple times
       @rows.add surveyRows, collection: @rows, silent: true
-    @rows.invoke('parse')
+    @rows.invoke('linkUp')
 
   toCsvJson: ()->
     # build an object that can be easily passed to the "csv" library
@@ -345,8 +348,10 @@ class XLF.Row extends BaseModel
     throw new Error("List not found: #{list}")  unless listToSet
     @get("type").set("list", listToSet)
   parse: ->
-    for key, val of @attributes
-      val.parse()
+    val.parse()  for key, val of @attributes
+
+  linkUp: ->
+    val.linkUp()  for key, val of @attributes
 
   attributesArray: ()->
     arr = ([k, v] for k, v of @attributes)
@@ -386,7 +391,6 @@ class XLF.RowDetail extends BaseModel
         required: true
     {}
   idAttribute: "name"
-  parse: () ->
 
   constructor: (@key, valOrObj={}, @parentRow)->
     if @key of XLF.RowDetailMixins
@@ -437,8 +441,9 @@ class XLF.SkipLogicCriterion extends Backbone.Model
     3. (optional) The response text
     ###
     unless opts.silent
-      @parse()
-  parse: ()->
+      @linkUp()
+
+  linkUp: ()->
     survey = @get("parentRow").getSurvey()
     name = @get("name")
     if name
@@ -512,6 +517,9 @@ SkipLogicDetailMixin =
       ``
     catch e
       @skipLogicCollection.parseable = false
+
+  linkUp: ->
+    @skipLogicCollection.each (i)-> i.linkUp()
 
 @XLF.RowDetailMixins =
   relevant: SkipLogicDetailMixin
