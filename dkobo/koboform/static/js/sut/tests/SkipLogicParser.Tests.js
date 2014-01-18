@@ -112,4 +112,8 @@ describe('XLF.skipLogicParser', function () {
             operator: "OR"
         });
     });
+
+    it('throws an error when the passed clause is invalid', function () {
+        expect(function() { XLF.skipLogicParser("invalid clause");}).toThrow(new Error('criterion not recognized'));
+    });
 });

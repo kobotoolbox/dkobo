@@ -40,6 +40,10 @@ XLF.skipLogicParser = (function () {
     function parseMultiselectCriterion(text) {
         matches = text.match(/selected\(\'(\w+)\',\s*\'(\w+)\'\)/)
 
+        if (!matches) {
+            throw new Error('criterion not recognized');
+        }
+
         return {
             name: matches[1],
             operator: 'multiplechoice_selected',
