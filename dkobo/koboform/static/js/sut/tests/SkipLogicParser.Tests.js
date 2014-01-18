@@ -29,7 +29,7 @@ describe('XLF.skipLogicParser', function () {
         expect(XLF.skipLogicParser("${question_name}   !=   NULL")).toEqual({
             criteria: [{
                 name: "question_name",
-                operator: "resp_answered"
+                operator: "ans_notnull"
             }]
         });
     });
@@ -38,7 +38,7 @@ describe('XLF.skipLogicParser', function () {
         expect(XLF.skipLogicParser("${question_name}   =   NULL")).toEqual({
             criteria: [{
                 name: "question_name",
-                operator: "resp_unanswered"
+                operator: "ans_null"
             }]
         });
     });
@@ -54,7 +54,7 @@ describe('XLF.skipLogicParser', function () {
 
                 {
                     name: "question_name",
-                    operator: "resp_answered"
+                    operator: "ans_notnull"
                 }
             ],
             operator: 'AND'
@@ -72,7 +72,7 @@ describe('XLF.skipLogicParser', function () {
 
                 {
                     name: "question_name",
-                    operator: "resp_answered"
+                    operator: "ans_notnull"
                 }
             ],
             operator: 'OR'
