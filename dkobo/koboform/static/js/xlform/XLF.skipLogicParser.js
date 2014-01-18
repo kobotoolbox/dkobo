@@ -21,8 +21,8 @@ XLF.skipLogicParser = (function () {
         var equalityMapper = {
             '=': 'resp_equals',
             '!=': 'resp_notequals',
-            '!=NULL': 'resp_answered',
-            '=NULL': 'resp_unanswered'
+            '!=NULL': 'ans_notnull',
+            '=NULL': 'ans_null'
         };
 
         var res = {
