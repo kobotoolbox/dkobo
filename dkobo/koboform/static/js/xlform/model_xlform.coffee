@@ -478,7 +478,7 @@ class XLF.SkipLogicCollection extends Backbone.Collection
     @each (item)=> @remove(item)
     @
   serialize: ->
-    joiners = {any: "OR", all: "AND"}
+    joiners = {any: " OR ", all: " AND "}
     items = @map((item)=> item.serialize())
     items = _.filter(items, (item) -> !!item)
     items.join(joiners[@meta.get("delimSelect")])
