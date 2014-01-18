@@ -1,24 +1,72 @@
 /*global XLF*/
+/*global _*/
 'use strict';
-XLF.skipLogicParser = function (text) {
-    var matches = text.match(/\${(\w+)}\s+(?:(=|!=)\s+\'(\w+)\'|(=\s*null))/i);
-    var equalityMapper = {
-        '=': 'resp_equals',
-        '!=': 'resp_notequals'
-    };
+XLF.skipLogicParser = (function () {
+    var equalityCriterionPattern = /\${(\w+)}\s+(=|!=)\s+\'(\w+)\'/,
+        existenceCriterionPattern = /\${(\w+)}\s+((?:=|!=)\s*NULL)/i,
+        criteriaJoinPattern = /and|or/gi;
 
-    matches[2] = matches[2].replace(/\s+/, '');
+    function parseCriterion(text) {
+        var matches = text.match(equalityCriterionPattern);
+        if (matches === null) {
+            matches = text.match(existenceCriterionPattern);
+        }
 
-    res = {
-        criteria: [{
-            name: matches[1],
-            operator: equalityMapper[matches[2]],
-        }]
-    };
+        if(!!matches) {
+            matches[2] = matches[2].replace(/\s+/, '').replace(/null/i, 'NULL');
+        } else {
+            return parseMultiselectCriterion(text);
+        }
 
-    if (matches[3]) {
-        res.criteria[0].response_value= matches[3];
+        var equalityMapper = {
+            '=': 'resp_equals',
+            '!=': 'resp_notequals',
+            '!=NULL': 'resp_answered',
+            '=NULL': 'resp_unanswered'
+        };
+
+        var res = {
+                name: matches[1],
+                operator: equalityMapper[matches[2]],
+            };
+
+        if (matches[3]) {
+            res.response_value = matches[3];
+        }
+
+        return res;
     }
 
-    return res
-};
+    function parseMultiselectCriterion(text) {
+        matches = text.match(/selected\(\'(\w+)\',\s*\'(\w+)\'\)/)
+
+        return {
+            name: matches[1],
+            operator: 'multiplechoice_selected',
+            response_value: matches[2]
+        }
+    }
+
+    return function (text) {
+        var criteria = text.split(criteriaJoinPattern),
+            criteriaLength = criteria.length,
+            joinOperators = text.match(criteriaJoinPattern);
+
+        if(!!joinOperators && _.uniq(joinOperators).length > 1) {
+            throw new Error('multiple criteria join operators are not supported at the moment');
+        }
+
+        if (criteriaLength === 1) {
+            return {
+                criteria: [parseCriterion(text)]
+            };
+        } else {
+            return {
+                criteria: _.map(criteria, function (criterion) {
+                    return parseCriterion(criterion);
+                }),
+                operator: joinOperators[0].toUpperCase()
+            };
+        }
+    };
+} ());
