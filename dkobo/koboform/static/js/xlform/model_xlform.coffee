@@ -542,6 +542,10 @@ class XLF.Option extends BaseModel
   destroy: ->
     log "destroy me", @
   list: -> @collection
+  toJSON: ()->
+    label = @get("label")
+    name = @get("name") || XLF.sluggify(label)
+    {name: name, label: label}
 
 class XLF.Options extends Backbone.Collection
   model: XLF.Option
@@ -556,7 +560,7 @@ class XLF.ChoiceList extends BaseModel
   summaryObj: ->
     name: @get("name")
     options: do =>
-      opt.attributes for opt in @options.models
+      @options.models.map("toJSON")
 
 class XLF.ChoiceLists extends Backbone.Collection
   model: XLF.ChoiceList
