@@ -71,8 +71,10 @@ class XLF.SkipLogicCriterionView extends Backbone.View
     expressionCode = @model.get("expressionCode")
     expressionSelect.val(expressionCode)
     do ->
-      [exprStr, descLabel, addlReqs] =
-        XLF.SkipLogicCriterion.expressionValues[expressionCode]
+      EXVALS = XLF.SkipLogicCriterion.expressionValues
+      unless expressionCode of EXVALS
+        throw new Error("ExpressionCode not recognized: #{expressionCode}")
+      [exprStr, descLabel, addlReqs] = EXVALS[expressionCode]
       if !addlReqs
         responseValBox.css("visibility", "hidden")
 
@@ -133,11 +135,11 @@ class XLF.SkipLogicCollectionView extends Backbone.View
       Match all or any of these criteria?
       <br>
       <label>
-        <input type="radio" class="skiplogic__delimselectcb" name="#{tempId}" value="all" />
+        <input type="radio" class="skiplogic__delimselectcb" name="#{tempId}" value="and" />
         All
       </label>
       <label>
-        <input type="radio" class="skiplogic__delimselectcb" name="#{tempId}" value="any" />
+        <input type="radio" class="skiplogic__delimselectcb" name="#{tempId}" value="or" />
         Any
       </label>
     </p>
