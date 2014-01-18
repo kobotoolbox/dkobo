@@ -459,13 +459,16 @@ class XLF.SkipLogicCriterion extends Backbone.Model
     else
       return null
 
-    [exprStr, descLabel, addlReqs] = @constructor.expressionValues[@get("expressionCode")]
+    exCode = @get("expressionCode")
+    unless exCode of @constructor.expressionValues
+      throw new Error("ExpressionCode not recognized: #{exCode}")
+    [exprStr, descLabel, addlReqs] = @constructor.expressionValues[exCode]
     wrappedCriterion = if addlReqs then ("'" + (@get('criterion') || '') + "'") else ""
     "${" + questionName + "} " + exprStr + " " + wrappedCriterion
 
 class XLF.SkipLogicCollectionMeta extends Backbone.Model
   defaults:
-    "delimSelect": "all"
+    "delimSelect": "and"
 
 class XLF.SkipLogicCollection extends Backbone.Collection
   model: XLF.SkipLogicCriterion
@@ -480,8 +483,9 @@ class XLF.SkipLogicCollection extends Backbone.Collection
     @
   serialize: ->
     joiners = {'or': " or ", 'and': " and "}
-    delim = joiners[@meta.get("delimSelect")]
-    _.compact(@map((item)=> item.serialize())).join(delim)
+    joiner = @meta.get("delimSelect")
+    throw new Error("Joiner not recognized: #{joiner}")  unless joiner of joiners
+    _.compact(@map((item)=> item.serialize())).join(joiners[joiner])
 
 # To be extended ontop of a RowDetail when the key matches
 # the attribute in XLF.RowDetailMixin

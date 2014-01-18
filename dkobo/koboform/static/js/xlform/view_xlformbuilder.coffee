@@ -71,8 +71,10 @@ class XLF.SkipLogicCriterionView extends Backbone.View
     expressionCode = @model.get("expressionCode")
     expressionSelect.val(expressionCode)
     do ->
-      [exprStr, descLabel, addlReqs] =
-        XLF.SkipLogicCriterion.expressionValues[expressionCode]
+      EXVALS = XLF.SkipLogicCriterion.expressionValues
+      unless expressionCode of EXVALS
+        throw new Error("ExpressionCode not recognized: #{expressionCode}")
+      [exprStr, descLabel, addlReqs] = EXVALS[expressionCode]
       if !addlReqs
         responseValBox.css("visibility", "hidden")
 
