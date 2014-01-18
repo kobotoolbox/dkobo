@@ -559,8 +559,7 @@ class XLF.ChoiceList extends BaseModel
     @options.parentList = @
   summaryObj: ->
     name: @get("name")
-    options: do =>
-      @options.models.map("toJSON")
+    options: @options.models.map("toJSON")
 
 class XLF.ChoiceLists extends Backbone.Collection
   model: XLF.ChoiceList
