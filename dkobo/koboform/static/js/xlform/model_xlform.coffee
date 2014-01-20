@@ -92,6 +92,16 @@ class SurveyFragment extends BaseModel
       names.push(name)  if name
     names
 
+  getRowDescriptors: () ->
+    descriptors = []
+    @forEachRow (row) ->
+      descriptor =
+        label: row.getValue('label')
+        name: row.getValue('name')
+      descriptors.push(descriptor)
+
+    descriptors
+
   findRowByName: (name)->
     match = false
     @forEachRow (row)->

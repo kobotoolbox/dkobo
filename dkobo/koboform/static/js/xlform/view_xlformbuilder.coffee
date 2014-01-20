@@ -81,14 +81,14 @@ class XLF.SkipLogicCriterionView extends Backbone.View
     input = @$el.find('input')
     parentRow = @model.get("parentRow")
     survey = parentRow.getSurvey()
-    surveyNames = survey.getNames()
+    surveyDescriptors = survey.getRowDescriptors()
     question = @model.get("question")
 
     $("<option>", {value: '-1', html: 'Question...', disabled: !!question}).appendTo(select)
 
-    for name in surveyNames
-      isCurrentName = name is parentRow.getValue('name')
-      $("<option>", {value: name, html: name, disabled: isCurrentName}).appendTo(select)
+    for descriptor in surveyDescriptors
+      isCurrentName = descriptor.name is parentRow.getValue('name')
+      $("<option>", {value: descriptor.name, html: descriptor.label, disabled: isCurrentName}).appendTo(select)
 
     if (!!question)
       questionName = question.getValue("name")
