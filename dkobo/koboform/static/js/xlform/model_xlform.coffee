@@ -429,7 +429,7 @@ class XLF.SkipLogicCriterion extends Backbone.Model
     resp_equals:    ["=", "was", true]
     resp_notequals: ["!=", "was not", true]
     ans_notnull:    ["!= NULL", "was answered", false]
-    ans_null:       ["= NULL", "was not answered", false]
+    ans_null:       ["= ''", "was not answered", false]
 
   defaults:
     "expressionCode": "resp_equals"
