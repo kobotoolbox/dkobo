@@ -66,3 +66,19 @@ kobo.config(function ($routeProvider, $httpProvider) {
 kobo.run(function ($http, $cookies) {
     $http.defaults.headers.common['X-CSRFToken'] = $cookies.csrftoken;
 });
+
+// jQuery.fileupload for importing forms to the user's form list.
+$(function(){
+    $('.btn--header-import').eq(0).fileupload({
+        headers: {
+            "X-CSRFToken": $('meta[name="csrf-token"]').attr('content')
+        },
+        add: function (e, data) {
+            // maybe display some feedback saying the upload is starting...
+            log(data.files[0].name + " is uploading...")
+            data.submit().success(function(result){
+                window.importedSurveyDraft = JSON.parse(result);
+            })
+        }
+    });
+})

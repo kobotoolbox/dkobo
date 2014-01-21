@@ -136,6 +136,27 @@ def list_forms_in_library(request):
 def jasmine_spec(request):
     return render_to_response("jasmine_spec.html")
 
+@login_required
+def import_survey_draft(request):
+    output = {}
+    posted_file = request.FILES.get(u'files')
+    if posted_file:
+        import pyxform_utils
+        # if posted_file.content_type == "application/vnd.ms-excel":
+        # or ... application/vnd.openxmlformats-officedocument.spreadsheetml.sheet ???
+        if posted_file.name.endswith(".xls"):
+            csv = pyxform_utils.convert_xls_to_csv_string(posted_file)
+        elif posted_file.content_type == "text/csv":
+            csv = posted_file.read()
+        new_survey_draft = SurveyDraft.objects.create(**{
+            u'body': csv,
+            u'name': posted_file.name,
+            u'user': request.user
+        })
+        output[u'survey_draft_id'] = new_survey_draft.id
+    else:
+        output[u'error'] = "No file posted"
+    return HttpResponse(json.dumps(output))
 
 class SurveyDraftViewSet(viewsets.ModelViewSet):
     model = SurveyDraft
