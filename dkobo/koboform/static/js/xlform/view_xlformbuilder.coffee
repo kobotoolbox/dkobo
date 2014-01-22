@@ -32,7 +32,7 @@ class XlfDetailView extends Backbone.View
       @$el.html rendered
     @
   html: ()->
-    viewTemplate.xlfDetailView @
+    viewTemplates.xlfDetailView @
 
   insertInDOM: (rowView)->
     rowView.rowExtras.append(@el)
