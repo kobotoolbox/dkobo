@@ -241,15 +241,10 @@ XLF.lookupRowType = do->
   exp
 
 XLF.columnOrder = do ->
-  warned = []
-  warn = (key)->
-    unless key in warned
-      warned.push(key)
-      console?.error("Order not set for key: #{key}")
   (key)->
-    ki = XLF.columns.indexOf key
-    warn(key)  if ki is -1
-    if ki is -1 then 100 else ki
+    if -1 is XLF.columns.indexOf key
+      XLF.columns.push(key)
+    XLF.columns.indexOf key
 
 class XLF.Group extends SurveyFragment
   initialize: ()->
