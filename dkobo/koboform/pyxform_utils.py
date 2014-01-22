@@ -83,5 +83,5 @@ def convert_xls_to_csv_string(xls_file_object, strip_empty_rows=True):
     for sheet in workbook.sheets():
         writer.writerow([sheet.name])
         for row in _sheet_to_lists(sheet):
-            writer.writerow([None] + row)
+            writer.writerow([s.encode("utf-8") for s in ([""] + row)])
     return csvout.getvalue()
