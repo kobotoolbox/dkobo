@@ -75,6 +75,8 @@ class SurveyFragment extends BaseModel
     @rows.each (r, index, list)->
       if r instanceof XLF.SurveyDetail
         ``
+      else if r instanceof XLF.RowError
+        ``
       else if r instanceof XLF.Group
         context = {}
 
@@ -102,12 +104,10 @@ class SurveyFragment extends BaseModel
       !match
     match
 
-  addRow: (r)->
+  addRowAtIndex: (r, index)-> @addRow(r, at: index)
+  addRow: (r, opts={})->
     r._parent = @
-    @rows.add r
-  addRowAtIndex: (r, index)->
-    r._parent = @
-    @rows.add r, at: index
+    @rows.add r, opts
 
 ###
 XLF...
@@ -313,7 +313,7 @@ class XLF.Row extends BaseModel
       if (rtp = XLF.lookupRowType(tpid))
         typeDetail.set("rowType", rtp, silent: true)
       else
-        throw new Error "Type not found: #{tpid}"
+        throw new Error "type `#{tpid}` not found"
     processType(typeDetail, tpVal, {})
     typeDetail.on "change:value", processType
     typeDetail.on "change:listName", (rd, listName, ctx)->
@@ -367,13 +367,21 @@ class XLF.Rows extends Backbone.Collection
       for key, val of XLF.defaultSurveyDetails
         val.asJson.type
 
-    if type in formSettingsTypes
-      new XLF.SurveyDetail(obj)
-    else if type is "group"
-      new XLF.Group(obj)
-    else
-      new XLF.Row(obj)
+    try
+      if type in formSettingsTypes
+        new XLF.SurveyDetail(obj)
+      else if type is "group"
+        new XLF.Group(obj)
+      else
+        new XLF.Row(obj)
+    catch e
+      new XLF.RowError(obj, error: e)
   comparator: (m)-> m.ordinal
+
+class XLF.RowError extends BaseModel
+  constructor: (obj, options)->
+    console?.error("Error creating row: [#{options.error}]", obj)
+    super(obj, options)
 
 class XLF.RowDetail extends BaseModel
   validation: () =>
