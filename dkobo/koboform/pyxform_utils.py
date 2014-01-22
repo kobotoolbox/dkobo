@@ -1,4 +1,4 @@
-from pyxform import xls2json, xls2json_backends, builder
+from pyxform import xls2json, xls2json_backends, builder, create_survey_from_xls
 import StringIO
 import xlrd
 import csv
@@ -8,6 +8,13 @@ def create_survey_from_csv_text(csv_text, default_name='KoBoFormSurvey', default
     dict_repr = xls2json.workbook_to_json(workbook_dict, default_name, default_language, warnings)
     dict_repr[u'name'] = dict_repr[u'id_string']
     return builder.create_survey_element_from_dict(dict_repr)
+
+def convert_xls_to_xform(xls_file):
+    """
+    This receives an XLS file object and runs it through
+    pyxform to create and validate the survey.
+    """
+    return create_survey_from_xls(xls_file).to_xml(validate=True)
 
 def convert_xls_to_csv_string(xls_file_object):
     """
