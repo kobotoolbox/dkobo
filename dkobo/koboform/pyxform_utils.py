@@ -16,7 +16,7 @@ def convert_xls_to_xform(xls_file):
     """
     return create_survey_from_xls(xls_file).to_xml(validate=True)
 
-def convert_xls_to_csv_string(xls_file_object):
+def convert_xls_to_csv_string(xls_file_object, strip_empty_rows=True):
     """
     The goal: Convert an XLS file object to a CSV string.
 
@@ -62,14 +62,18 @@ def convert_xls_to_csv_string(xls_file_object):
         result = []
         for row in range(0, sheet.nrows):
             row_results = []
+            row_empty = True
             for col in range(0, sheet.ncols):
                 value = sheet.cell_value(row, col)
                 if isinstance(value, basestring):
                     value = value.strip()
                 if (value is not None) and (not _iswhitespace(value)):
                     value = xls_value_to_unicode(value, sheet.cell_type(row, col))
+                if value != "":
+                    row_empty = False
                 row_results.append(value)
-            result.append(row_results)
+            if not strip_empty_rows or not row_empty:
+                result.append(row_results)
         return result
 
     workbook = xlrd.open_workbook(file_contents=xls_file_object.read())
