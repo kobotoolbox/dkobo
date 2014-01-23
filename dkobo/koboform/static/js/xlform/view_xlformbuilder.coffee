@@ -348,7 +348,7 @@ class XlfRowView extends Backbone.View
     @xlfRowSelector.expand()
   render: ->
     @$el.html viewTemplates.xlfRowView()
-
+    @$el.data("row-index", @model._parent.rows.indexOf @model)
     unless (cl = @model.getList())
       cl = new XLF.ChoiceList()
       @model.setList(cl)
@@ -510,6 +510,7 @@ class @SurveyApp extends Backbone.View
         @formEditorEl.append($el)
 
     @formEditorEl.find(".empty").css("display", if isEmpty then "" else "none")
+    viewUtils.reorderElemsByData(".xlf-row-view", @$el, "row-index")
     ``
 
   reset: ->
