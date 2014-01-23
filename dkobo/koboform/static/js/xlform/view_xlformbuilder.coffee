@@ -413,6 +413,7 @@ class @SurveyApp extends Backbone.View
   events:
     "click .delete-row": "clickRemoveRow"
     "click #preview": "previewButtonClick"
+    "click #csv-preview": "previewCsv"
     "click #download": "downloadButtonClick"
     "click #save": "saveButtonClick"
     "click #publish": "publishButtonClick"
@@ -488,12 +489,12 @@ class @SurveyApp extends Backbone.View
           ui.item.removeClass("sortable-active")
       })
     @
-  validateSurvey: ->
-    # TODO. Implement basic validation
-    true
 
-  showValidationMessages: ->
-
+  previewCsv: ->
+    scsv = @survey.toCSV()
+    console?.clear()
+    log scsv
+    ``
 
   softReset: ->
     fe = @formEditorEl
