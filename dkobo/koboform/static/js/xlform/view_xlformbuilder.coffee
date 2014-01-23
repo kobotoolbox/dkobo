@@ -191,31 +191,10 @@ class XlfRowSelector extends Backbone.View
     @line.css "height", "inherit"
     @line.html viewTemplates.xlfRowSelector.line()
     $menu = @line.find(".well")
-    mItemLabels =
-      image: "Upload photo"
-      audio: "Record audio"
-      video: "Record video"
-      barcode: "Scan barcode"
-      text: "Text"
-      integer: "Integer"
-      decimal: "Decimal"
-      note: "Read a note"
-      select_one: "Select one"
-      select_multiple: "Select many"
-      date: "Date"
-      datetime: "Date + time"
-      geopoint: "GPS Location"
-      calculation: "Calculate value"
-
-    mItems = [
-      ["image", "audio", "video", "barcode"],
-      ["text", "integer", "decimal", "note"],
-      ["select_one", "select_multiple", "date", "datetime"],
-      ["geopoint", "calculation"]]
-    for mrow in mItems
+    for mrow in XLF.icons.grouped()
       menurow = $("<div>", class: "menu-row").appendTo $menu
-      for mcell, i in mrow
-        menurow.append viewTemplates.xlfRowSelector.cell id: mcell, label: mItemLabels[mcell] or mcell
+      for mitem, i in mrow
+        menurow.append viewTemplates.xlfRowSelector.cell mitem.attributes
 
   shrink: ->
     $(".-form-editor .empty .survey-editor__message").css("display", "")
