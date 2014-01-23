@@ -348,7 +348,7 @@ class XlfRowView extends Backbone.View
     @xlfRowSelector.expand()
   render: ->
     @$el.html viewTemplates.xlfRowView()
-
+    @$el.data("row-index", @model._parent.rows.indexOf @model)
     unless (cl = @model.getList())
       cl = new XLF.ChoiceList()
       @model.setList(cl)
@@ -413,6 +413,7 @@ class @SurveyApp extends Backbone.View
   events:
     "click .delete-row": "clickRemoveRow"
     "click #preview": "previewButtonClick"
+    "click #csv-preview": "previewCsv"
     "click #download": "downloadButtonClick"
     "click #save": "saveButtonClick"
     "click #publish": "publishButtonClick"
@@ -488,12 +489,12 @@ class @SurveyApp extends Backbone.View
           ui.item.removeClass("sortable-active")
       })
     @
-  validateSurvey: ->
-    # TODO. Implement basic validation
-    true
 
-  showValidationMessages: ->
-
+  previewCsv: ->
+    scsv = @survey.toCSV()
+    console?.clear()
+    log scsv
+    ``
 
   softReset: ->
     fe = @formEditorEl
@@ -509,6 +510,7 @@ class @SurveyApp extends Backbone.View
         @formEditorEl.append($el)
 
     @formEditorEl.find(".empty").css("display", if isEmpty then "" else "none")
+    viewUtils.reorderElemsByData(".xlf-row-view", @$el, "row-index")
     ``
 
   reset: ->

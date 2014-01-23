@@ -46,15 +46,33 @@ representation in the browser.
 @log = (args...)-> console?.log?.apply console, args
 
 ###
+BaseCollection
+###
+class BaseCollection extends Backbone.Collection
+  constructor: (arg, opts)->
+    if "object" is typeof arg and "_parent" of arg
+      @_parent = arg._parent
+      delete arg._parent
+    super(arg, opts)
+
+  getSurvey: ->
+    parent = @_parent
+    while parent
+      if parent._parent
+        parent = parent._parent
+      else
+        return parent
+
+###
 XLF.Survey and associated Backbone Model
 and Collection definitions
 ###
 class BaseModel extends Backbone.Model
-  constructor: (arg)->
+  constructor: (arg, opts)->
     if "object" is typeof arg and "_parent" of arg
       @_parent = arg._parent
       delete arg._parent
-    super arg
+    super arg, opts
 
   parse: ->
   linkUp: ->
@@ -122,7 +140,7 @@ class XLF.Survey extends SurveyFragment
       @set("name", sname)
     @newRowDetails = options.newRowDetails || XLF.newRowDetails
     @defaultsForType = options.defaultsForType || XLF.defaultsForType
-    @surveyDetails = new XLF.SurveyDetails(_.values(XLF.defaultSurveyDetails))
+    @surveyDetails = new XLF.SurveyDetails().loadSchema(options.surveyDetailsSchema || XLF.surveyDetailSchema)
     passedChoices = options.choices || []
     @choices = do ->
       choices = new XLF.ChoiceLists()
@@ -138,13 +156,16 @@ class XLF.Survey extends SurveyFragment
         choices.add(name: cn, options: tmp[cn])
       choices
     if options.survey
-      surveyRows = for r in options.survey
+      for r in options.survey
         r._parent = @
-        r
-      # We need to implement a skipParse parameter
-      # or make the code resilient to allow parse to be called
-      # muiltiple times
-      @rows.add surveyRows, collection: @rows, silent: true
+        if r.type in XLF.surveyDetailSchema.typeList()
+          @surveyDetails.importDetail(r)
+        else if r.type in ["begin group", "begin repeat", "end group", "end repeat"]
+          #noop, for now.
+        else
+          @rows.add r, collection: @rows, silent: true
+    else
+      @surveyDetails.importDefaults()
     @rows.invoke('linkUp')
 
   toCsvJson: ()->
@@ -218,7 +239,7 @@ XLF.lookupRowType = do->
     ["datetime", "Date and Time"], #e.g. (2012-Jan-4 3:04PM)
     ["audio", "Audio", isMedia: true], # Can use phone microphone to record audio
     ["video", "Video", isMedia: true], # Can use phone camera to record video
-    # ["calculate", "Calculate"],
+    ["calculate", "Calculate"],
     ["select_one", "Select", orOtherOption: true, specifyChoice: true],
     ["select_multiple", "Multiple choice", orOtherOption: true, specifyChoice: true]
   ]
@@ -365,16 +386,10 @@ class XLF.Row extends BaseModel
       outObj[key] = result  unless @hidden
     outObj
 
-class XLF.Rows extends Backbone.Collection
+class XLF.Rows extends BaseCollection
   model: (obj, ctxt)->
     type = obj?.type
-    formSettingsTypes = do ->
-      for key, val of XLF.defaultSurveyDetails
-        val.asJson.type
-
-    if type in formSettingsTypes
-      new XLF.SurveyDetail(obj)
-    else if type is "group"
+    if type is "group"
       new XLF.Group(obj)
     else
       new XLF.Row(obj)
@@ -470,7 +485,7 @@ class XLF.SkipLogicCollectionMeta extends Backbone.Model
   defaults:
     "delimSelect": "and"
 
-class XLF.SkipLogicCollection extends Backbone.Collection
+class XLF.SkipLogicCollection extends BaseCollection
   model: XLF.SkipLogicCriterion
   constructor: (items, options={})->
     @rowDetail = options.rowDetail
@@ -547,7 +562,7 @@ class XLF.Option extends BaseModel
     name = @get("name") || XLF.sluggify(label)
     {name: name, label: label}
 
-class XLF.Options extends Backbone.Collection
+class XLF.Options extends BaseCollection
   model: XLF.Option
 
 class XLF.ChoiceList extends BaseModel
@@ -561,7 +576,7 @@ class XLF.ChoiceList extends BaseModel
     name: @get("name")
     options: @options.models.map("toJSON")
 
-class XLF.ChoiceLists extends Backbone.Collection
+class XLF.ChoiceLists extends BaseCollection
   model: XLF.ChoiceList
   summaryObj: ()->
     out = {}
@@ -606,14 +621,36 @@ XLF...
 ###
 class XLF.SurveyDetail extends BaseModel
   idAttribute: "name"
-  initialize: ()->
-    @set("value", !!@get("default"))
-    @unset("default")
-    if jsonVal = @get("asJson")
-      @toJSON = ()-> jsonVal
+  toJSON: ()->
+    if @get("value")
+      nameSlashType = @get("name")
+      name: nameSlashType
+      type: nameSlashType
+    else
+      false
 
-class XLF.SurveyDetails extends Backbone.Collection
+class XLF.SurveyDetails extends BaseCollection
   model: XLF.SurveyDetail
+  loadSchema: (schema)->
+    throw new Error("Schema must be a Backbone.Collection")  unless schema instanceof Backbone.Collection
+    for item in schema.models
+      @add(new XLF.SurveyDetail(item._forSurvey()))
+    @_schema = schema
+
+    # we could prevent future changes to the schema...
+    @add = @loadSchema = ()-> throw new Error("New survey details must be added to the schema")
+    @
+  importDefaults: ()->
+    for item in @_schema.models
+      relevantDetail = @get(item.get("name"))
+      relevantDetail.set("value", item.get("default"))
+    ``
+  importDetail: (detail)->
+    # For now, every detail which is presented is given a boolean value set to true
+    if (dtobj = @get(detail.type))
+      dtobj.set("value", true)
+    else
+      throw new Error("SurveyDetail `#{key}` not loaded from schema. [Aliases have not been implemented]")
 
 class XLF.Settings extends BaseModel
   validation:
@@ -657,61 +694,6 @@ txtid = ()->
     else if c is 'n'
       Math.floor(r*10)
   o.toLowerCase()
-
-###
-defaultSurveyDetails
---------------------
-These values will be populated in the form builder and the user
-will have the option to turn them on or off.
-
-When exported, if the checkbox was selected, the "asJson" value
-gets passed to the CSV builder and appended to the end of the
-survey.
-
-Details pulled from ODK documents / google docs. Notably this one:
-  https://docs.google.com/spreadsheet/ccc?key=0AgpC5gsTSm_4dDRVOEprRkVuSFZUWTlvclJ6UFRvdFE#gid=0
-###
-XLF.defaultSurveyDetails =
-  start_time:
-    name: "start"
-    label: "Start time"
-    description: "Records when the survey was begun"
-    default: true
-    asJson:
-      type: "start"
-      name: "start"
-  end_time:
-    name: "end"
-    label: "End time"
-    description: "Records when the survey was marked as completed"
-    default: true
-    asJson:
-      type: "end"
-      name: "end"
-  today:
-    name: "today"
-    label: "Today"
-    description: "Includes todays date"
-    default: false
-    asJson:
-      type: "today"
-      name: "today"
-  imei:
-    name: "imei"
-    label: "Device ID number"
-    description: "Records the internal device ID number (works on Android phones)"
-    default: false
-    asJson:
-      type: "imei"
-      name: "imei"
-  phoneNumber:
-    name: "phonenumber"
-    label: "Phone number"
-    description: "Records the device's phone number, when available"
-    default: false
-    asJson:
-      type: "phonenumber"
-      name: "phonenumber"
 
 ###
 XLF.columns is used to determine the order that the elements

@@ -306,3 +306,14 @@ describe "testing the view", ->
     expect(lastRowEl.find(".line").eq(-1).hasClass("expanded")).toBeTruthy()
 
     lastRowEl.find(".line.expanded").find(".menu-item-geopoint").trigger("click")
+
+describe "reorder items by id", ->
+  it "works as it should", ->
+    wrap = $("<div>")
+    vals = [0..10]
+    vals.sort -> return 0.5 - Math.random()
+    for val in vals
+      $("<p>", text: "P").attr("data-sort-by-value", val).appendTo(wrap)
+    viewUtils.reorderElemsByData "p", wrap, "sort-by-value"
+    reorderedVals = ($(p).data("sort-by-value") for p in wrap.find("p"))
+    expect(reorderedVals).toEqual([0..10])

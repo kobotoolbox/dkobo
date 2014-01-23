@@ -65,7 +65,7 @@ XLF.iconDetails = [
     label: "Calculate value"
     faClass: "superscript"
     grouping: "misc"
-    id: "calculation"
+    id: "calculate"
   ]
 
 class QtypeIcon extends Backbone.Model
