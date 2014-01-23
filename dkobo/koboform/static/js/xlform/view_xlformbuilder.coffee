@@ -192,9 +192,20 @@ class XlfRowSelector extends Backbone.View
     @line.html viewTemplates.xlfRowSelector.line()
     $menu = @line.find(".well")
     mItemLabels =
-      image: "Take a photo"
+      image: "Upload photo"
+      audio: "Record audio"
+      video: "Record video"
+      barcode: "Scan barcode"
+      text: "Text"
+      integer: "Integer"
+      decimal: "Decimal"
+      note: "Read a note"
       select_one: "Select one"
-      select_multiple: "Select multiple"
+      select_multiple: "Select many"
+      date: "Date"
+      datetime: "Date + time"
+      geopoint: "GPS Location"
+      calculation: "Calculate value"
 
     mItems = [
       ["image", "audio", "video", "barcode"],
