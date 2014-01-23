@@ -17,4 +17,9 @@ viewUtils.makeEditable = (that, model, selector, {property, transformFunction, o
         newValue: ent
       , that
 
-  that.$el.find(selector).editable _.extend(opts, options)
+  editableOpts = _.extend(opts, options)
+
+  if selector instanceof jQuery
+    selector.editable editableOpts
+  else
+    that.$el.find(selector).editable editableOpts
