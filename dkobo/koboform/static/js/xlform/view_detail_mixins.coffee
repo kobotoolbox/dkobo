@@ -10,7 +10,7 @@ DetailViewMixins.type =
     @$el.attr("title", "Row Type: #{tps}")
     @$el.addClass("rt-#{tps} type-icon menu-item menu-item--#{tps}")
   insertInDOM: (rowView)->
-    rowView.$(".row-type").append(@$el)
+    rowView.$(".rt-selector-icon").html(@$el)
 
 DetailViewMixins.label =
   html: ->

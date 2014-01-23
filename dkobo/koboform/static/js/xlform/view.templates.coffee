@@ -34,9 +34,10 @@ viewTemplates.xlfListView.addOptionButton = () ->
 
 viewTemplates.xlfRowView = () ->
     """
+    <div class="menu-item">
+      <div class="rt-selector-icon"></div>
+
       <div class="row clearfix">
-        <div class="row-type-col row-type">
-        </div>
         <div class="col-xs-9 col-sm-10 row-content"></div>
         <div class="col-xs-1 col-sm-1 row-r-buttons">
           <button type="button" class="close delete-row" aria-hidden="true">&times;</button>
@@ -59,10 +60,11 @@ viewTemplates.xlfRowView = () ->
           </p>
         </div>
       </div>
-      <div class="row clearfix expanding-spacer-between-rows">
-        <div class="add-row-btn  btn  btn--block  btn-xs  btn-default"><i class="fa  fa-plus"></i></div>
-        <div class="line">&nbsp;</div>
-      </div>
+    </div>
+    <div class="row clearfix expanding-spacer-between-rows">
+      <div class="add-row-btn  btn  btn--block  btn-xs  btn-default"><i class="fa  fa-plus"></i></div>
+      <div class="line">&nbsp;</div>
+    </div>
     """
 
 viewTemplates.surveyTemplateApp = () ->
