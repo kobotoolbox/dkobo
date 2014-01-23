@@ -101,6 +101,8 @@
     padding-top: 10px;
     padding-bottom: 10px;
     border-bottom: 1px solid #ddd;
+    float: left;
+    width: 25%;
 
     &:last-child {
         border-bottom: 0;
@@ -121,7 +123,7 @@
     border: 1px solid #ddd;
     border-radius: 3px;
     padding: 7px 11px;
-    display: inline-block;
+    display: block;
     cursor: pointer;
     background: white;
 
@@ -153,11 +155,12 @@
 .#{$module}--date:before {content: "\f073"; }
 .#{$module}--datetime:before {content: "\f133"; }
 .#{$module}--text:before {content: "\f15c"; }
-.#{$module}--integer:before {content: "\f033"; }
+.#{$module}--integer:before {content: "\f162"; }
 .#{$module}--decimal:before {content: "\f0d6"; }
 .#{$module}--note:before {content: "\f0c5"; }
 .#{$module}--select_one:before {content: "\f0ca"; }
 .#{$module}--select_multiple:before {content: "\f022"; }
+.#{$module}--calculation:before {content: "\f12b"; }
 
 
 

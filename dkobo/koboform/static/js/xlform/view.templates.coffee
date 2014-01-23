@@ -18,12 +18,12 @@ viewTemplates.xlfRowSelector.line = () ->
       </div>
     """
 
-viewTemplates.xlfRowSelector.cell = (mcell) ->
+viewTemplates.xlfRowSelector.cell = ({id, label}) ->
     """
         <div
-            class="menu-item menu-item--#{mcell}"
-            data-menu-item="#{mcell}">
-                #{mcell}
+            class="menu-item menu-item--#{id}"
+            data-menu-item="#{id}">
+                #{label}
         </div>
     """
 
