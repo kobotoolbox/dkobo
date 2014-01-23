@@ -120,10 +120,12 @@
 
 .#{$module} {
     margin-right: 5px;
+    margin-bottom: 5px;
     border: 1px solid #ddd;
     border-radius: 3px;
     padding: 7px 11px;
     display: block;
+    font-size: 14px;
     cursor: pointer;
     background: white;
 
@@ -224,18 +226,18 @@
 }
 
 .add-row-btn {
-  position: absolute;
-  bottom: -42px;
-  padding: 0;
-  width: 500px;
-  line-height: 18px;
-  height: 18;
-  margin-left: 70px;
-  height: 18px;
-  opacity: 0.8;
-  &:hover {
-    opacity: 1;
-  }
+  // position: absolute;
+  // bottom: -42px;
+  // padding: 0;
+  // width: 500px;
+  // line-height: 18px;
+  // height: 18;
+  // margin-left: 70px;
+  // height: 18px;
+  // opacity: 0.8;
+  // &:hover {
+  //   opacity: 1;
+  // }
 }
 
 // .formbuilder-wrap {

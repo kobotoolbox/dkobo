@@ -60,7 +60,7 @@ viewTemplates.xlfRowView = () ->
         </div>
       </div>
       <div class="row clearfix expanding-spacer-between-rows">
-        <div class="add-row-btn btn btn-xs btn-default">+</div>
+        <div class="add-row-btn  btn  btn--block  btn-xs  btn-default"><i class="fa  fa-plus"></i></div>
         <div class="line">&nbsp;</div>
       </div>
     """
@@ -103,7 +103,7 @@ viewTemplates.surveyApp = (survey) ->
               You can add questions, notes, prompts, or other fields by clicking on the "+" sign below.
             </p>
             <div class="expanding-spacer-between-rows">
-              <div class="add-row-btn  btn">
+              <div class="add-row-btn  btn  btn--block">
                 <i class="fa  fa-plus"></i>
               </div>
               <div class="line">&nbsp;</div>
