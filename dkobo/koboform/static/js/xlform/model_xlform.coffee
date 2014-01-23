@@ -93,6 +93,8 @@ class SurveyFragment extends BaseModel
     @rows.each (r, index, list)->
       if r instanceof XLF.SurveyDetail
         ``
+      else if r instanceof XLF.RowError
+        ``
       else if r instanceof XLF.Group
         context = {}
 
@@ -120,12 +122,10 @@ class SurveyFragment extends BaseModel
       !match
     match
 
-  addRow: (r)->
+  addRowAtIndex: (r, index)-> @addRow(r, at: index)
+  addRow: (r, opts={})->
     r._parent = @
-    @rows.add r
-  addRowAtIndex: (r, index)->
-    r._parent = @
-    @rows.add r, at: index
+    @rows.add r, opts
 
 ###
 XLF...
@@ -262,15 +262,10 @@ XLF.lookupRowType = do->
   exp
 
 XLF.columnOrder = do ->
-  warned = []
-  warn = (key)->
-    unless key in warned
-      warned.push(key)
-      console?.error("Order not set for key: #{key}")
   (key)->
-    ki = XLF.columns.indexOf key
-    warn(key)  if ki is -1
-    if ki is -1 then 100 else ki
+    if -1 is XLF.columns.indexOf key
+      XLF.columns.push(key)
+    XLF.columns.indexOf key
 
 class XLF.Group extends SurveyFragment
   initialize: ()->
@@ -339,7 +334,7 @@ class XLF.Row extends BaseModel
       if (rtp = XLF.lookupRowType(tpid))
         typeDetail.set("rowType", rtp, silent: true)
       else
-        throw new Error "Type not found: #{tpid}"
+        throw new Error "type `#{tpid}` not found"
     processType(typeDetail, tpVal, {})
     typeDetail.on "change:value", processType
     typeDetail.on "change:listName", (rd, listName, ctx)->
@@ -389,11 +384,24 @@ class XLF.Row extends BaseModel
 class XLF.Rows extends BaseCollection
   model: (obj, ctxt)->
     type = obj?.type
-    if type is "group"
-      new XLF.Group(obj)
-    else
-      new XLF.Row(obj)
+    formSettingsTypes = do ->
+      for key, val of XLF.defaultSurveyDetails
+        val.asJson.type
+    try
+      if type in formSettingsTypes
+        new XLF.SurveyDetail(obj)
+      else if type is "group"
+        new XLF.Group(obj)
+      else
+        new XLF.Row(obj)
+    catch e
+      new XLF.RowError(obj, error: e)
   comparator: (m)-> m.ordinal
+
+class XLF.RowError extends BaseModel
+  constructor: (obj, options)->
+    console?.error("Error creating row: [#{options.error}]", obj)
+    super(obj, options)
 
 class XLF.RowDetail extends BaseModel
   validation: () =>

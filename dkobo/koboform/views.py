@@ -136,6 +136,45 @@ def list_forms_in_library(request):
 def jasmine_spec(request):
     return render_to_response("jasmine_spec.html")
 
+XLS_CONTENT_TYPES = ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"]
+
+@login_required
+def import_survey_draft(request):
+    """
+    Imports an XLS or CSV file into the user's SurveyDraft list.
+    Returns an error in JSON if the survey was not valid.
+    """
+    output = {}
+    posted_file = request.FILES.get(u'files')
+    response_code = 200
+    if posted_file:
+        import pyxform_utils
+        try:
+            # create and validate the xform but ignore the resultss
+            pyxform_utils.convert_xls_to_xform(posted_file)
+            output[u'xlsform_valid'] = True
+
+            posted_file.seek(0)
+            if posted_file.content_type in XLS_CONTENT_TYPES:
+                csv = pyxform_utils.convert_xls_to_csv_string(posted_file)
+            elif posted_file.content_type == "text/csv":
+                csv = posted_file.read()
+            else:
+                raise Exception("Content-type not recognized: '%s'" % posted_file.content_type)
+
+            new_survey_draft = SurveyDraft.objects.create(**{
+                u'body': csv,
+                u'name': posted_file.name,
+                u'user': request.user
+            })
+            output[u'survey_draft_id'] = new_survey_draft.id
+        except Exception, err:
+            response_code = 500
+            output[u'error'] = err
+    else:
+        response_code = 204 #Error 204: No input
+        output[u'error'] = "No file posted"
+    return HttpResponse(json.dumps(output), content_type="application/json", status=response_code)
 
 class SurveyDraftViewSet(viewsets.ModelViewSet):
     model = SurveyDraft
