@@ -346,8 +346,7 @@ class XlfRowView extends Backbone.View
    "click": "select"
    "click .add-row-btn": "expandRowSelector"
    "drop": "drop"
-   "click .row-extras-summary": "expandCog"
-   "click .glyphicon-cog": "expandCog"
+   "click .js-advanced-toggle": "expandCog"
   initialize: (opts)->
     @options = opts
     typeDetail = @model.get("type")
@@ -375,7 +374,6 @@ class XlfRowView extends Backbone.View
       cl = new XLF.ChoiceList()
       @model.setList(cl)
     @listView = new XlfListView(el: @$(".list-view"), model: cl, rowView: @).render()
-    @rowContent = @$(".row-content")
     @rowExtras = @$(".row-extras")
     @rowExtrasSummary = @$(".row-extras-summary")
     for [key, val] in @model.attributesArray()
@@ -503,8 +501,12 @@ class @SurveyApp extends Backbone.View
         placeholder: "placeholder"
         opacity: 0.9
         scroll: false
-        activate: (evt, ui)-> ui.item.addClass("sortable-active")
-        deactivate: (evt,ui)-> ui.item.removeClass("sortable-active")
+        activate: (evt, ui)=>
+          @formEditorEl.addClass("insort")
+          ui.item.addClass("sortable-active")
+        deactivate: (evt,ui)=>
+          @formEditorEl.removeClass("insort")
+          ui.item.removeClass("sortable-active")
       })
     @
   validateSurvey: ->
