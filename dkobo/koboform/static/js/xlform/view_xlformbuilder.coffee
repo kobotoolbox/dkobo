@@ -490,6 +490,9 @@ class @SurveyApp extends Backbone.View
       })
     @
 
+  validateSurvey: ()->
+    true
+
   previewCsv: ->
     scsv = @survey.toCSV()
     console?.clear()
