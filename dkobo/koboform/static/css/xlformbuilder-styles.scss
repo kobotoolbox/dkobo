@@ -255,6 +255,28 @@
 
 
 // ==========================================================================
+// Edit buttons
+// ==========================================================================
+
+.editable-buttons button,
+.advanced-details button {
+    height: 28px;
+    margin: 3px 0;
+    border: 1px solid;
+    border-radius: 4px;
+    padding: 0 10px;
+    -webkit-appearance: none;
+    text-transform: capitalize;
+    color: #333;
+    background-color: #f8f8f8;
+}
+
+
+
+
+
+
+// ==========================================================================
 // Advanced details
 // ==========================================================================
 
@@ -293,6 +315,14 @@
     color: #999;
 }
 
+.expanding-spacer-between-rows {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.expanding-spacer-between-rows > .line {
+    height: 0;
+}
 
 
 
@@ -303,7 +333,9 @@
 // ==========================================================================
 
 .add-row-btn {
-    width: 540px;
+    width: 100px;
+    height: 20px;
+    line-height: 20px;
     margin-right: auto;
     margin-left: auto;
     // transition: opacity .25s ease-in-out;
