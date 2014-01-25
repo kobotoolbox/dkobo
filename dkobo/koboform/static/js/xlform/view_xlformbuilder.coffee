@@ -216,7 +216,7 @@ class XlfRowSelector extends Backbone.View
 
 class XlfOptionView extends Backbone.View
   tagName: "li"
-  className: "xlf-option-view"
+  className: "xlf-option-view well"
   events:
     "keyup input": "keyupinput"
   initialize: (@options)->

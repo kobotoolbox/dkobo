@@ -12,8 +12,8 @@ viewTemplates.xlfRowSelector.line = () ->
     """
       <div class="iwrap">
         <div class="well row-fluid clearfix">
-          <button type="button" class="shrink pull-right close" aria-hidden="true">&times;</button>
-          <h4>Choose question type</h4>
+          <button type="button" class="close-button shrink pull-right close" aria-hidden="true">&times;</button>
+          <h4 class="menu-title">Choose question type</h4>
         </div>
       </div>
     """
@@ -38,7 +38,7 @@ viewTemplates.xlfRowView = () ->
         <i class="fa fa-fw card__header-icon"></i>
         <span class="card__header-title">Label goes here</span>
       </h4>
-      <button type="button" class="close delete-row card__close-button js-delete-row" aria-hidden="true">&times;</button>
+      <button type="button" class="close delete-row close-button js-delete-row" aria-hidden="true">&times;</button>
       <div class="row list-view hidden">
         <ul></ul>
       </div>
@@ -82,10 +82,12 @@ viewTemplates.surveyApp = (survey) ->
       <header class="survey-header">
         <p class="survey-header__description" hidden>
         <hgroup class="survey-header__inner">
-          <h1 class="survey-header__title  form-title">
-            #{survey.settings.get("form_title")}
+          <h1 class="survey-header__title">
+            <span class="form-title">#{survey.settings.get("form_title")}</span>
           </h1>
-          <h2 class="survey-header__hashtag  form-id">#{survey.settings.get("form_id")}</h2>
+          <h2 class="survey-header__hashtag">
+            <span class="form-id">#{survey.settings.get("form_id")}</span>
+          </h2>
         </hgroup>
         </p>
         <div class="survey-header__options  well  stats  row-details" id="additional-options"></div>

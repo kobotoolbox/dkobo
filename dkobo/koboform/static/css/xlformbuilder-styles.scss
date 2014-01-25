@@ -94,25 +94,24 @@
 
 
 // ==========================================================================
-   $module: "menu-row";
+// menu-row
 // ==========================================================================
 
-.#{$module} {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #ddd;
-    float: left;
-    width: 25%;
+.menu-title {
+    margin: 10px 5px 20px;
+}
 
-    &:last-child {
-        border-bottom: 0;
-    }
+.menu-row {
+    width: 25%;
+    padding-right: 5px;
+    padding-left: 5px;
+    float: left;
 }
 
 
 
 // ==========================================================================
-//   module "card"
+//   Card
 // ==========================================================================
 
 .card {
@@ -129,39 +128,86 @@
 }
 
 
+
+
+
+
 // ==========================================================================
-//   module "formerly-menu-item"
+// Single/multiple select questions
 // ==========================================================================
 
-.formerly-menu-item {
+.list-view {
+    padding-bottom: 20px;
+}
+
+.xlf-option-view {
+    margin-bottom: 10px;
+    cursor: move;
+}
+
+.editable:hover,
+.editable:focus {
+    border-bottom-style: solid
+}
+
+.option-placeholder {
+    height: 41px;
+    margin-bottom: 10px;
+    border: 2px dashed #ccc;
+    border-radius: 4px;
+}
+
+
+
+
+
+
+// ==========================================================================
+//   Menu item
+// ==========================================================================
+
+.menu-item {
+    margin-bottom: 10px;
+
     &:hover {
         border-color: #bbb;
         background-color: #f8f8f8;
     }
 
-    &:before {
-        content: "";
-        width: 1.2857142857142858em;
-        display: inline-block;
-        font-family: FontAwesome;
-        font-style: normal;
-        font-weight: normal;
-        line-height: 1;
-        text-align: center;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
+    > i {
         color: #1daee3;
     }
+
+    // &:before {
+    //     content: "";
+    //     width: 1.2857142857142858em;
+    //     display: inline-block;
+    //     font-family: FontAwesome;
+    //     font-style: normal;
+    //     font-weight: normal;
+    //     line-height: 1;
+    //     text-align: center;
+    //     -webkit-font-smoothing: antialiased;
+    //     -moz-osx-font-smoothing: grayscale;
+    //     color: #1daee3;
+    // }
 }
 
-.card__close-button {
+.close-button {
     position: absolute;
     top: 5px;
     right: 5px;
     background-color: transparent;
     border: 0 none;
+    opacity: 0.6;
     color: #444;
+
+    &:hover,
+    &:focus {
+        opacity: 1;
+    }
 }
+
 .delete-row {
     position: absolute;
     right: 5px;
@@ -173,11 +219,20 @@
 
 .xlf-row-view {
   position: relative;
-  margin-top: 56px;
+  cursor: move;
+
   &:first-child {
     margin-top: 0;
   }
 }
+
+.placeholder {
+    height: 100px;
+    margin-bottom: 10px;
+    border: 2px dashed #ccc;
+    border-radius: 4px;
+}
+
 .editor-message {
   position: relative;
 }
@@ -193,11 +248,26 @@
     line-height: 1em;
   }
 }
+
+
+
+
+
+
+// ==========================================================================
+// Advanced details
+// ==========================================================================
+
 .advanced-details {
     position: relative;
     border: 1px solid #E8E1E1;
     border-radius: 3px;
 }
+
+.advanced-details .dt-view {
+    margin-bottom: 10px;
+}
+
 .row-extras, .row-extras-summary {
   margin: 0;
   padding: 5px;
@@ -207,29 +277,56 @@
     color: #999;
   }
 }
+
 .row-extras {
     padding-left: 28px;
 }
+
 .row-extras__cog {
     position: absolute;
     top: 10px;
     left: 5px;
     color: #444;
 }
+
 .row-extras__cog-faded {
     color: #999;
 }
 
+
+
+
+
+
+// ==========================================================================
+// Add row button
+// ==========================================================================
+
 .add-row-btn {
-    transition: opacity .25s ease-in-out;
-    -moz-transition: opacity .25s ease-in-out;
-    -webkit-transition: opacity .25s ease-in-out;
+    width: 540px;
+    margin-right: auto;
+    margin-left: auto;
+    // transition: opacity .25s ease-in-out;
+    // -moz-transition: opacity .25s ease-in-out;
+    // -webkit-transition: opacity .25s ease-in-out;
 }
 .insort {
     .add-row-btn {
         opacity: 0;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // .formbuilder-wrap {
