@@ -77,7 +77,8 @@ INSTALLED_APPS = (
     'dkobo.koboform',
     'compressor',
     'gunicorn',
-    'rest_framework'
+    'south',
+    'rest_framework',
 )
 
 MIDDLEWARE_CLASSES = (
