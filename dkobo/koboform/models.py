@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from pyxform_utils import create_survey_from_csv_text
+import md5
 
 class SurveyDraft(models.Model):
     '''
@@ -13,3 +15,27 @@ class SurveyDraft(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
     in_question_library = models.BooleanField(default=False)
+
+    def generate_preview(self):
+        return SurveyPreview.objects.create(survey_draft=self)
+
+
+class SurveyPreview(models.Model):
+    unique_string = models.CharField(max_length=64, null=False, unique=True)
+    survey_draft = models.ForeignKey(SurveyDraft, null=False, related_name="previews")
+    csv = models.TextField()
+    xml = models.TextField()
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    def _generate_unique_string(self):
+        return md5.new("user=%d&csv=%s" % (self.survey_draft.user.id, self.survey_draft.body)).hexdigest()
+
+    def save(self, *args, **kwargs):
+        sd = self.survey_draft
+        self.unique_string = self._generate_unique_string()
+        try:
+            return SurveyPreview.objects.get(unique_string=self.unique_string)
+        except SurveyPreview.DoesNotExist, e:
+            self.csv = sd.body
+            self.xml = create_survey_from_csv_text(sd.body, default_name=sd.name).to_xml()
+            super(SurveyPreview, self).save(*args, **kwargs)
