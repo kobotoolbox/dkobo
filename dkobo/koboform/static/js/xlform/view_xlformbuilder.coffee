@@ -52,7 +52,7 @@ class XLF.SkipLogicCriterionView extends Backbone.View
     throw new Error("Expression not found: #{str}")
   render: ()->
     @$el.html("""
-      <select></select>
+      <select class="skiplogic__rowselect"></select>
       <select class="skiplogic__expressionselect">
         <option value="resp_equals">was</option>
         <option value="resp_notequals">was not</option>
@@ -63,7 +63,7 @@ class XLF.SkipLogicCriterionView extends Backbone.View
       <button class="skiplogic__deletecriterion" data-criterion-id="#{@model.cid}">&times;</button>
     """)
     # @$el.html('<select></select> was <input placeholder="response value" type="text" />')
-    select = @$el.find('select').eq(0)
+    skiplogic__rowselect = $('.skiplogic__rowselect', @$el).eq(0)
     expressionSelect = @$el.find('select.skiplogic__expressionselect')
     for key, vals in XLF.SkipLogicCriterion.expressionValues
       $("<option>", value: key, text: vals[1]).appendTo(expressionSelect)
@@ -84,32 +84,39 @@ class XLF.SkipLogicCriterionView extends Backbone.View
     surveyNames = survey.getNames()
     question = @model.get("question")
 
-    $("<option>", {value: '-1', html: 'Question...', disabled: !!question}).appendTo(select)
+    populate_skiplogic__rowselect = ()->
+      $("<option>", {value: '-1', html: 'Question...', disabled: !!question}).appendTo(skiplogic__rowselect)
 
-    for name in surveyNames
-      isCurrentName = name is parentRow.getValue('name')
-      $("<option>", {value: name, html: name, disabled: isCurrentName}).appendTo(select)
+      for name in surveyNames
+        isCurrentName = name is parentRow.getValue('name')
+        $("<option>", {value: name, html: name, disabled: isCurrentName}).appendTo(skiplogic__rowselect)
 
-    if (!!question)
-      questionName = question.getValue("name")
-      select.val(questionName)
+      if question
+        questionName = question.getValue("name")
+        skiplogic__rowselect.val(questionName)
+
+      skiplogic__rowselect.on "change", ()=>
+        questionName = skiplogic__rowselect.val()
+        question = survey.findRowByName(questionName)
+        if question
+          @model.set("question", question)
+        else
+          throw new Error("Question `#{questionName}` not found")
+
+      disableDefaultOption = () ->
+        $('option[value=-1]', skiplogic__rowselect).prop('disabled', true)
+        skiplogic__rowselect.off('change', disableDefaultOption)
+      skiplogic__rowselect.on('change', disableDefaultOption)
+
+    populate_skiplogic__rowselect()
+
 
     expressionSelect.on "change", (evt)=>
       expStr = @lookupExpression(evt.target.value)[0]
       @model.set("expressionCode", evt.target.value)
 
-    select.on "change", ()=>
-      questionName = select.val()
-      question = survey.findRowByName(questionName)
-      @model.set("question", question)
 
     wireUpInput(input, @model, 'criterion', 'keyup')
-
-    disableDefaultOption = () ->
-      $('option[value=-1]', select).prop('disabled', true)
-      select.off('change', disableDefaultOption)
-
-    select.on('change', disableDefaultOption)
     @
 
 wireUpInput = ($input, model, name, event='change') =>

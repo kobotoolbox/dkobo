@@ -442,6 +442,7 @@ class XLF.RowDetail extends BaseModel
 
     @on "change:value", (rd, val, ctxt)=>
       @parentRow.trigger "change", @key, val, ctxt
+      @parentRow.trigger "detail-change", @key, val, ctxt
     if @key is "type"
       @on "change:list", (rd, val, ctxt)=>
         @parentRow.trigger "change", @key, val, ctxt
