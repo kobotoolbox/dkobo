@@ -110,9 +110,9 @@ describe "xlform survey model (XLF.Survey)", ->
         @compareCsvs(x1, x2)
 
     it "breaks with an unk qtype", ->
-      makeInvalidTypeSurvey = =>
-        @createSurvey ["telegram,a,a,a"]
-      expect(makeInvalidTypeSurvey).toThrow()
+      # makeInvalidTypeSurvey = =>
+      #   @createSurvey ["telegram,a,a,a"]
+      # expect(makeInvalidTypeSurvey).toThrow()
 
     it "exports and imports without breaking", ->
       scsv = @createSurveyCsv ["text,text,text,text"]
@@ -231,6 +231,10 @@ describe "xlform survey model (XLF.Survey)", ->
       @census = XLF.createSurveyFromCsv(CENSUS_SURVEY)
     it "looks good", ->
       expect(@census).toBeDefined()
+  
+  describe "question name gets updated on change", ->
+    it "has skip logic", ->
+      expect(@pizzaSurvey.rows.length).toBe(1)
 
 ###
 Misc data. (basically fixtures for the tests above)
@@ -286,17 +290,23 @@ CENSUS_SURVEY = """
   """
 
 describe "testing the view", ->
+  beforeEach ->
+    $(".test-div").remove()
+    @pizzaSurvey = XLF.createSurveyFromCsv(PIZZA_SURVEY)
+    @xlv = new SurveyApp survey: @pizzaSurvey
+    @$el = @xlv.render().$el
+    @_div = $("<div>", class: "test-div", html: @$el).appendTo("body")
+
+  afterEach ->
+    # comment this next line out to see the last resulting SurveyApp element.
+    @_div.remove()
 
   it "builds the view", ->
-    pizza = XLF.createSurveyFromCsv(PIZZA_SURVEY)
-    @xlv = new SurveyApp survey: pizza
-    div = $("<div>").appendTo("body")
-    $el = @xlv.render().$el
-    $el.appendTo(div)
+    @$el.appendTo(@_div)
 
-    expect(div.find("li.xlf-row-view").length).toBe(1)
+    expect(@_div.find("li.xlf-row-view").length).toBe(1)
 
-    lastRowEl = div.find("li.xlf-row-view").eq(0)
+    lastRowEl = @_div.find("li.xlf-row-view").eq(0)
 
     # adds row selector
     clickNewRow = ()->
@@ -306,6 +316,28 @@ describe "testing the view", ->
     expect(lastRowEl.find(".line").eq(-1).hasClass("expanded")).toBeTruthy()
 
     lastRowEl.find(".line.expanded").find(".menu-item-geopoint").trigger("click")
+
+  it "changes values inside the skip logic dropdowns", ->
+    expect(@pizzaSurvey.rows.length).toBe(1)
+    expect(@$el.find(".xlf-row-view").length).toBe(1)
+    firstRowEl = @_div.find("li.xlf-row-view").eq(-1)
+
+    # adds row selector
+    $(".add-row-btn", firstRowEl).click()
+    $(".menu-item[data-menu-item='text']", firstRowEl).click()
+    lastRowEl = @_div.find("li.xlf-row-view").eq(-1)
+    $(".js-advanced-toggle", lastRowEl).eq(0).click()
+    $(".xlf-dv-relevant button", lastRowEl).eq(0).click()
+    $(".skiplogic__addcriterion", lastRowEl).eq(0).click()
+    slList = $(".skiplogic__criterialist", lastRowEl)
+    select = $(".skiplogic__rowselect", slList).eq(0)
+    opt1 = select.find("option").eq(1)
+    expect(opt1.prop("value")).toBe("likes_pizza")
+    row1 = @pizzaSurvey.rows.at(0)
+    row1.get("name").set("value", "different_name")
+    row1.get("label").set("value", "A different label")
+    expect($("select", slList).find("option").eq(1).prop("value")).toBe("different_name")
+
 
 describe "reorder items by id", ->
   it "works as it should", ->
