@@ -440,19 +440,24 @@ class @SurveyTemplateApp extends Backbone.View
     @
 
 enketoIframe = do ->
-  css =
-    top: "3%"
-    left: "3%"
-    width: "94%"
-    height: "94%"
-    position: "fixed"
-    'z-index': 999
 
   buildUrl = (previewUrl)->
     fullPreviewUrl = "#{window.location.origin}#{previewUrl}"
     """https://enketo.org/webform/preview?form=#{fullPreviewUrl}"""
 
-  (previewUrl)-> $("<iframe>", src: buildUrl(previewUrl), css: css)
+  clickCloserBackground = ->
+    $("<div>", class: "js-click-remove-iframe")
+
+  launch = (previewUrl)->
+    wrap = $("<div>", class: "js-click-remove-iframe iframe-bg-shade")
+    $("<iframe>", src: buildUrl(previewUrl)).appendTo(wrap)
+    wrap.click ()-> wrap.remove()
+    wrap
+
+  launch.close = ()->
+    $(".iframe-bg-shade").remove()
+
+  launch
 
 class @SurveyApp extends Backbone.View
   className: "formbuilder-wrap container"
@@ -628,6 +633,7 @@ class @SurveyApp extends Backbone.View
         success: (survey_preview, status, jqhr)=>
           if survey_preview.unique_string
             preview_url = "/koboform/survey_preview/#{survey_preview.unique_string}"
+            @onEscapeKeydown = enketoIframe.close
             enketoIframe(preview_url).appendTo("body")
 
   downloadButtonClick: (evt)->
