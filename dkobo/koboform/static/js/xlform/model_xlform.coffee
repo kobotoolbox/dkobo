@@ -112,6 +112,16 @@ class SurveyFragment extends BaseModel
       names.push(name)  if name
     names
 
+  getRowDescriptors: () ->
+    descriptors = []
+    @forEachRow (row) ->
+      descriptor =
+        label: row.getValue('label')
+        name: row.getValue('name')
+      descriptors.push(descriptor)
+
+    descriptors
+
   findRowByName: (name)->
     match = false
     @forEachRow (row)->
@@ -442,6 +452,8 @@ class XLF.RowDetail extends BaseModel
 
     @on "change:value", (rd, val, ctxt)=>
       @parentRow.trigger "change", @key, val, ctxt
+      @parentRow.trigger "detail-change", @key, val, ctxt
+      @getSurvey().trigger "row-detail-change", @parentRow, @key, val, ctxt
     if @key is "type"
       @on "change:list", (rd, val, ctxt)=>
         @parentRow.trigger "change", @key, val, ctxt
@@ -452,7 +464,7 @@ class XLF.SkipLogicCriterion extends Backbone.Model
     resp_equals:    ["=", "was", true]
     resp_notequals: ["!=", "was not", true]
     ans_notnull:    ["!= NULL", "was answered", false]
-    ans_null:       ["= NULL", "was not answered", false]
+    ans_null:       ["= ''", "was not answered", false]
 
   defaults:
     "expressionCode": "resp_equals"

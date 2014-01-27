@@ -35,7 +35,7 @@ describe('XLF.skipLogicParser', function () {
     });
 
     it('parses a single not-answered clause', function () {
-        expect(XLF.skipLogicParser("${question_name}   =   NULL")).toEqual({
+        expect(XLF.skipLogicParser("${question_name}   =   ''")).toEqual({
             criteria: [{
                 name: "question_name",
                 operator: "ans_null"
@@ -114,6 +114,6 @@ describe('XLF.skipLogicParser', function () {
     });
 
     it('throws an error when the passed clause is invalid', function () {
-        expect(function() { XLF.skipLogicParser("invalid clause");}).toThrow(new Error('criterion not recognized'));
+        expect(function() { XLF.skipLogicParser("invalid clause");}).toThrow(new Error('criterion not recognized: "invalid clause"'));
     });
 });
