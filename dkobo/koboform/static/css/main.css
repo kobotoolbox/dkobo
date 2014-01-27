@@ -666,7 +666,6 @@ input[type="button"].btn--block {
 }
 
 .info-list-item__details {
-    width: 300px;
     display: inline-block;
     vertical-align: middle;
 }
