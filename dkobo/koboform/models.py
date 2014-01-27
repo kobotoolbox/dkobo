@@ -16,12 +16,14 @@ class SurveyDraft(models.Model):
     date_modified = models.DateTimeField(auto_now=True)
     in_question_library = models.BooleanField(default=False)
 
-    def generate_preview(self):
+    def generate_preview(self, csv=False):
+        if not csv:
+            csv = self.body
         try:
-            unique_string = SurveyPreview._generate_unique_string(self.user, self.body)
+            unique_string = SurveyPreview._generate_unique_string(self.user, csv)
             return SurveyPreview.objects.get(unique_string=unique_string)
         except SurveyPreview.DoesNotExist, e:
-            return SurveyPreview.objects.create(survey_draft=self)
+            return SurveyPreview.objects.create(survey_draft=self, csv=csv)
 
 
 class SurveyPreview(models.Model):
@@ -37,7 +39,8 @@ class SurveyPreview(models.Model):
 
     def save(self, *args, **kwargs):
         sd = self.survey_draft
-        self.unique_string = super(self)._generate_unique_string(sd.user, sd.body)
-        self.csv = sd.body
-        self.xml = create_survey_from_csv_text(sd.body, default_name=sd.name).to_xml()
+        if not self.csv:
+            self.csv = sd.body
+        self.unique_string = SurveyPreview._generate_unique_string(sd.user, self.csv)
+        self.xml = create_survey_from_csv_text(self.csv, default_name=sd.name).to_xml()
         super(SurveyPreview, self).save(*args, **kwargs)

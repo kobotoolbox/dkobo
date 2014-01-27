@@ -483,6 +483,11 @@ class @SurveyApp extends Backbone.View
     @$el.removeClass("content--centered").removeClass("content")
     @$el.html viewTemplates.surveyApp @survey
 
+    if @survey.__djangoModelDetails?.id
+      @djModelId = @survey.__djangoModelDetails.id
+    else
+      @$el.find("#xlf-preview").hide()
+
     @survey.settings.on 'validated:invalid', (model, validations) ->
       for key, value of validations
           break
