@@ -17,7 +17,11 @@ class SurveyDraft(models.Model):
     in_question_library = models.BooleanField(default=False)
 
     def generate_preview(self):
-        return SurveyPreview.objects.create(survey_draft=self)
+        try:
+            unique_string = SurveyPreview._generate_unique_string(self.user, self.body)
+            return SurveyPreview.objects.get(unique_string=unique_string)
+        except SurveyPreview.DoesNotExist, e:
+            return SurveyPreview.objects.create(survey_draft=self)
 
 
 class SurveyPreview(models.Model):
@@ -27,15 +31,13 @@ class SurveyPreview(models.Model):
     xml = models.TextField()
     date_created = models.DateTimeField(auto_now_add=True)
 
-    def _generate_unique_string(self):
-        return md5.new("user=%d&csv=%s" % (self.survey_draft.user.id, self.survey_draft.body)).hexdigest()
+    @classmethod
+    def _generate_unique_string(kls, user, csv):
+        return md5.new("user=%d&csv=%s" % (user.id, csv)).hexdigest()
 
     def save(self, *args, **kwargs):
         sd = self.survey_draft
-        self.unique_string = self._generate_unique_string()
-        try:
-            return SurveyPreview.objects.get(unique_string=self.unique_string)
-        except SurveyPreview.DoesNotExist, e:
-            self.csv = sd.body
-            self.xml = create_survey_from_csv_text(sd.body, default_name=sd.name).to_xml()
-            super(SurveyPreview, self).save(*args, **kwargs)
+        self.unique_string = super(self)._generate_unique_string(sd.user, sd.body)
+        self.csv = sd.body
+        self.xml = create_survey_from_csv_text(sd.body, default_name=sd.name).to_xml()
+        super(SurveyPreview, self).save(*args, **kwargs)
