@@ -439,6 +439,21 @@ class @SurveyTemplateApp extends Backbone.View
       new SurveyApp(@options).render()
     @
 
+enketoIframe = do ->
+  css =
+    top: "3%"
+    left: "3%"
+    width: "94%"
+    height: "94%"
+    position: "fixed"
+    'z-index': 999
+
+  buildUrl = (previewUrl)->
+    fullPreviewUrl = "#{window.location.origin}#{previewUrl}"
+    """https://enketo.org/webform/preview?form=#{fullPreviewUrl}"""
+
+  (previewUrl)-> $("<iframe>", src: buildUrl(previewUrl), css: css)
+
 class @SurveyApp extends Backbone.View
   className: "formbuilder-wrap container"
   events:
@@ -610,6 +625,11 @@ class @SurveyApp extends Backbone.View
         data: data
         headers:
           "X-CSRFToken": $('meta[name="csrf-token"]').attr('content')
+        success: (survey_preview, status, jqhr)=>
+          if survey_preview.unique_string
+            preview_url = "/koboform/survey_preview/#{survey_preview.unique_string}"
+            enketoIframe(preview_url).appendTo("body")
+
   downloadButtonClick: (evt)->
     # Download = save a CSV file to the disk
     surveyCsv = @survey.toCSV()
