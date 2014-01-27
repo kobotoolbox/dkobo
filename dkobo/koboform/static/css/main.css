@@ -87,7 +87,7 @@ textarea {
 
 .top-level-menu {
     width: 230px;
-    position: absolute;
+    position: fixed;
     top: 0;
     bottom: 0;
     left: -230px;
