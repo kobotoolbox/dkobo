@@ -443,7 +443,7 @@ class @SurveyApp extends Backbone.View
   className: "formbuilder-wrap container"
   events:
     "click .delete-row": "clickRemoveRow"
-    "click #preview": "previewButtonClick"
+    "click #xlf-preview": "previewButtonClick"
     "click #csv-preview": "previewCsv"
     "click #download": "downloadButtonClick"
     "click #save": "saveButtonClick"
@@ -594,7 +594,17 @@ class @SurveyApp extends Backbone.View
 
   onEscapeKeydown: -> #noop. to be overridden
   previewButtonClick: (evt)->
-    @onPreview.call(@, arguments)
+    if @djModelId
+      data = JSON.stringify(
+        body: @survey.toCSV()
+        survey_draft_id: @djModelId
+      )
+      $.ajax
+        url: "/koboform/survey_preview/"
+        method: "CREATE"
+        data: data
+        headers:
+          "X-CSRFToken": $('meta[name="csrf-token"]').attr('content')
   downloadButtonClick: (evt)->
     # Download = save a CSV file to the disk
     surveyCsv = @survey.toCSV()
