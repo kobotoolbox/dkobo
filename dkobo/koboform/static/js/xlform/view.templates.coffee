@@ -18,51 +18,46 @@ viewTemplates.xlfRowSelector.line = () ->
       </div>
     """
 
-viewTemplates.xlfRowSelector.cell = (mcell) ->
+viewTemplates.xlfRowSelector.cell = (atts) ->
     """
-        <div
-            class="menu-item menu-item--#{mcell}"
-            data-menu-item="#{mcell}">
-                #{mcell}
-        </div>
+      <div class="card menu-item" data-menu-item="#{atts.id}">
+        <i class="fa fa-#{atts.faClass} fa-fw"></i>
+        #{atts.label}
+      </div>
     """
 
 viewTemplates.xlfListView = {}
 
 viewTemplates.xlfListView.addOptionButton = () ->
-    """<button class="btn btn-xs btn-default col-md-3 col-md-offset-1">Add option</button>"""
+    """<button class="btn btn-xs btn-default">Add option</button>"""
 
 viewTemplates.xlfRowView = () ->
     """
-      <div class="row clearfix">
-        <div class="row-type-col row-type">
-        </div>
-        <div class="col-xs-9 col-sm-10 row-content"></div>
-        <div class="col-xs-1 col-sm-1 row-r-buttons">
-          <button type="button" class="close delete-row" aria-hidden="true">&times;</button>
-        </div>
-      </div>
+    <div class="card">
+      <h4 class="card__header">
+        <i class="fa fa-fw card__header-icon"></i>
+        <span class="card__header-title">Label goes here</span>
+      </h4>
+      <button type="button" class="close delete-row card__close-button js-delete-row" aria-hidden="true">&times;</button>
       <div class="row list-view hidden">
-        <ul class="col-md-offset-1 col-md-8"></ul>
+        <ul></ul>
       </div>
-      <div class="row-fluid clearfix">
-        <div class="row-type-col">&nbsp;</div>
-        <p class="col-xs-11 row-extras-summary">
-          <span class="glyphicon glyphicon-cog"></span> &nbsp;
-          <span class="adv-details-txt">Advanced question details</span>
-          <br>
-          <span class="summary-details"></span>
-        </p>
-        <div class="col-xs-11 row-extras hidden row-fluid">
+      <div class="row-fluid clearfix advanced-details">
+        <div class="row-extras advanced-details__content hidden row-fluid">
           <p class="pull-left">
-            <span class="glyphicon glyphicon-cog"></span>
+            <span class="fa fa-cog fa-fw row-extras__cog js-advanced-toggle"></span>
           </p>
         </div>
+        <div class="row-extras-summary advanced-details__content-summary js-advanced-toggle">
+          <span class="fa fa-cog fa-fw row-extras__cog-faded"></span>
+          <span class="adv-details-txt">Advanced question details</span>
+        </div>
       </div>
-      <div class="row clearfix expanding-spacer-between-rows">
-        <div class="add-row-btn btn btn-xs btn-default">+</div>
-        <div class="line">&nbsp;</div>
-      </div>
+    </div>
+    <div class="row clearfix expanding-spacer-between-rows">
+      <div class="add-row-btn  btn  btn--block  btn-xs  btn-default"><i class="fa  fa-plus"></i></div>
+      <div class="line">&nbsp;</div>
+    </div>
     """
 
 viewTemplates.surveyTemplateApp = () ->
@@ -103,7 +98,7 @@ viewTemplates.surveyApp = (survey) ->
               You can add questions, notes, prompts, or other fields by clicking on the "+" sign below.
             </p>
             <div class="expanding-spacer-between-rows">
-              <div class="add-row-btn  btn">
+              <div class="add-row-btn  btn  btn--block">
                 <i class="fa  fa-plus"></i>
               </div>
               <div class="line">&nbsp;</div>

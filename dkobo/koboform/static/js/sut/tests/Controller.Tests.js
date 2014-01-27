@@ -11,11 +11,10 @@ describe ('Controllers', function () {
     var hello = {hello: 'world'},
         $rs, $scope,
         $resource = function () {
-                        return {
-                            query: function() { return hello; }
-                        };
+                        return resourceStub;
                     },
-        miscServiceStub = function () {};
+        miscServiceStub = function () {},
+        resourceStub;
 
 
     function initializeController($controller, name, $rootScope) {
@@ -36,8 +35,13 @@ describe ('Controllers', function () {
     }
 
     describe ('Forms Controller', function () {
-        it('should initialize $rootScope and $scope correctly', inject(function($controller) {
-            initializeController($controller, 'Forms');
+        beforeEach(function () {
+            resourceStub = {
+                            query: sinon.stub().returns(hello)
+                        };
+        });
+        it('should initialize $rootScope and $scope correctly', inject(function ($controller, $rootScope) {
+            initializeController($controller, 'Forms', $rootScope);
 
             expect($rs.canAddNew).toBe(true);
             expect($rs.activeTab).toBe('Forms');
@@ -46,7 +50,7 @@ describe ('Controllers', function () {
         }));
 
         describe('$scope.deleteSurvey', function () {
-            it('should delete survey when user confirms deletion', inject(function ($controller) {
+            it('should delete survey when user confirms deletion', inject(function ($controller, $rootScope) {
                 var confirmStub = sinon.stub(),
                     deleteSpy = sinon.spy();
 
@@ -55,7 +59,7 @@ describe ('Controllers', function () {
                 };
                 confirmStub.returns(true);
 
-                initializeController($controller, 'Forms');
+                initializeController($controller, 'Forms', $rootScope);
 
                 $scope.deleteSurvey({ id:0, $delete: deleteSpy });
 
@@ -63,7 +67,7 @@ describe ('Controllers', function () {
                 expect(deleteSpy).toHaveBeenCalledOnce();
             }));
 
-            it('should not delete survey when user cancels deletion', inject(function ($controller) {
+            it('should not delete survey when user cancels deletion', inject(function ($controller, $rootScope) {
                 var confirmStub = sinon.stub(),
                     deleteSpy = sinon.spy();
 
@@ -72,7 +76,7 @@ describe ('Controllers', function () {
                 };
                 confirmStub.returns(false);
 
-                initializeController($controller, 'Forms');
+                initializeController($controller, 'Forms', $rootScope);
 
                 $scope.deleteSurvey({ id:0, $delete: deleteSpy });
 
@@ -80,6 +84,17 @@ describe ('Controllers', function () {
                 expect(deleteSpy).not.toHaveBeenCalled();
             }));
         });
+
+        describe('$scope.updateFormList', function () {
+            it('should update forms list when changed to true', inject(function ($controller, $rootScope) {
+                initializeController($controller, 'Forms', $rootScope);
+
+                $rs.updateFormList = true;
+                $rs.$apply();
+
+                expect(resourceStub.query).toHaveBeenCalledTwice();
+            }));
+        })
     });
 
     describe('Assets Controller', function () {
@@ -94,9 +109,15 @@ describe ('Controllers', function () {
     });
 
     describe('Header Controller', function () {
+        beforeEach(function () {
+            miscServiceStub = function () {
+                this.bootstrapFileUploader = function () {};
+            };
+        });
+
         it('should initialize $scope and $rootScope correctly', inject(function ($controller) {
             initializeController($controller, 'Header');
-            
+
             expect($scope.pageIconColor).toBe('teal');
             expect($scope.pageTitle).toBe('Forms');
             expect($scope.pageIcon).toBe('fa-file-text-o');
@@ -134,7 +155,7 @@ describe ('Controllers', function () {
             window.$ = sinon.stub();
             $.withArgs(window).returns({bind: sinon.stub(), unbind: sinon.stub()});
         });
-        
+
         it('should initialize $scope and $rootScope correctly', inject(function ($controller, $rootScope) {
             initializeController($controller, 'Builder', $rootScope);
 
@@ -153,7 +174,7 @@ describe ('Controllers', function () {
 
                 initializeController($controller, 'Builder', $rootScope);
                 $rootScope.deregisterLocationChangeStart = sinon.spy();
-                
+
                 $rs.$broadcast('$locationChangeStart');
                 expect(confirmStub).toHaveBeenCalledOnce();
                 expect(confirmStub).toHaveBeenCalledWith('Are you sure you want to leave? you will lose any unsaved changes.');
@@ -190,7 +211,7 @@ describe ('Controllers', function () {
     describe('Import Controller', function () {
         it('should initialize $scope and $rootScope correctly', inject(function ($controller) {
             initializeController($controller, 'Import');
-            
+
             expect($scope.csrfToken).toBe('test token');
             expect($rs.canAddNew).toBe(false);
             expect($rs.activeTab).toBe('Import CSV');

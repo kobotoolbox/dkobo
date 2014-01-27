@@ -101,6 +101,8 @@
     padding-top: 10px;
     padding-bottom: 10px;
     border-bottom: 1px solid #ddd;
+    float: left;
+    width: 25%;
 
     &:last-child {
         border-bottom: 0;
@@ -109,22 +111,29 @@
 
 
 
-
-
-
 // ==========================================================================
-   $module: "menu-item";
+//   module "card"
 // ==========================================================================
 
-.#{$module} {
-    margin-right: 5px;
+.card {
     border: 1px solid #ddd;
     border-radius: 3px;
-    padding: 7px 11px;
-    display: inline-block;
+    padding: 10px;
+    display: block;
+    font-size: 14px;
     cursor: pointer;
     background: white;
+}
+.card__header {
+    margin-top: 0;
+}
 
+
+// ==========================================================================
+//   module "formerly-menu-item"
+// ==========================================================================
+
+.formerly-menu-item {
     &:hover {
         border-color: #bbb;
         background-color: #f8f8f8;
@@ -145,24 +154,13 @@
     }
 }
 
-.#{$module}--geopoint:before {content: "\f041"; }
-.#{$module}--image:before {content: "\f030"; }
-.#{$module}--audio:before {content: "\f025"; }
-.#{$module}--video:before {content: "\f03d"; }
-.#{$module}--barcode:before {content: "\f02a"; }
-.#{$module}--date:before {content: "\f073"; }
-.#{$module}--datetime:before {content: "\f133"; }
-.#{$module}--text:before {content: "\f15c"; }
-.#{$module}--integer:before {content: "\f033"; }
-.#{$module}--decimal:before {content: "\f0d6"; }
-.#{$module}--note:before {content: "\f0c5"; }
-.#{$module}--select_one:before {content: "\f0ca"; }
-.#{$module}--select_multiple:before {content: "\f022"; }
-
-
-
-.xlf-row-view {
-    position: relative;
+.card__close-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: transparent;
+    border: 0 none;
+    color: #444;
 }
 .delete-row {
     position: absolute;
@@ -174,7 +172,6 @@
 // Quick fixes for KF-96. (Consider chainging HTML and CSS for BEM)
 
 .xlf-row-view {
-  border-left: 2px dashed #ddd;
   position: relative;
   margin-top: 56px;
   &:first-child {
@@ -196,44 +193,44 @@
     line-height: 1em;
   }
 }
+.advanced-details {
+    position: relative;
+    border: 1px solid #E8E1E1;
+    border-radius: 3px;
+}
 .row-extras, .row-extras-summary {
   margin: 0;
-  width: 75%;
-  padding-left: 20px;
-  float: left;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  background-color: #eee;
+  padding: 5px;
 
-  .glyphicon.glyphicon-cog {
-    &:after {
-      content: "*";
-      font-size: 30px;
-      margin-left: -0.5em;
-      color: #666;
-      cursor: pointer;
-    }
-  }
   .adv-details-txt {
     font-size: 15px;
     color: #999;
   }
 }
+.row-extras {
+    padding-left: 28px;
+}
+.row-extras__cog {
+    position: absolute;
+    top: 10px;
+    left: 5px;
+    color: #444;
+}
+.row-extras__cog-faded {
+    color: #999;
+}
 
 .add-row-btn {
-  position: absolute;
-  bottom: -42px;
-  padding: 0;
-  width: 500px;
-  line-height: 18px;
-  height: 18;
-  margin-left: 70px;
-  height: 18px;
-  opacity: 0.8;
-  &:hover {
-    opacity: 1;
-  }
+    transition: opacity .25s ease-in-out;
+    -moz-transition: opacity .25s ease-in-out;
+    -webkit-transition: opacity .25s ease-in-out;
 }
+.insort {
+    .add-row-btn {
+        opacity: 0;
+    }
+}
+
 
 // .formbuilder-wrap {
 //   h1 {
@@ -409,7 +406,6 @@
 //   }
 // }
 // .xlf-row-view {
-
 // }
 // .expanding-spacer-between-rows {
 //   position: relative;
