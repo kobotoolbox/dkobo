@@ -156,8 +156,6 @@ class XLF.SkipLogicCollectionView extends Backbone.View
   render: ()->
     tempId = _.uniqueId("skiplogic_expr")
     @$el.html("""
-    <div class="skiplogic__criterialist">
-    </div>
     <p class="skiplogic__delimselect">
       Match all or any of these criteria?
       <br>
@@ -174,6 +172,7 @@ class XLF.SkipLogicCollectionView extends Backbone.View
       Add new
       <button class="skiplogic__addcriterion">+</button>
     </p>
+    <div class="skiplogic__criterialist"></div>
     <p class="skiplogic__extras">
       <button class="skiplogic__handcode">Hand code</button>
     </p>

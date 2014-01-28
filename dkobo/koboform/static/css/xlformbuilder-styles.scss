@@ -219,7 +219,6 @@
 
 .xlf-row-view {
   position: relative;
-  cursor: move;
 
   &:first-child {
     margin-top: 0;
@@ -269,6 +268,13 @@
     text-transform: capitalize;
     color: #333;
     background-color: #f8f8f8;
+}
+
+.editable-buttons button:hover,
+.editable-buttons button:focus,
+.advanced-details button:hover,
+.advanced-details button:focus {
+    background-color: #f0f0f0;
 }
 
 
