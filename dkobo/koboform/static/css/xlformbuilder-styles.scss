@@ -268,13 +268,11 @@
     text-transform: capitalize;
     color: #333;
     background-color: #f8f8f8;
-}
 
-.editable-buttons button:hover,
-.editable-buttons button:focus,
-.advanced-details button:hover,
-.advanced-details button:focus {
-    background-color: #f0f0f0;
+    &:hover,
+    &:focus {
+        background-color: #f0f0f0;
+    }
 }
 
 
@@ -294,31 +292,46 @@
 
 .advanced-details .dt-view {
     margin-bottom: 10px;
+    // .card
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 10px;
+    display: block;
+    font-size: 14px;
+    cursor: pointer;
+    background: white;
 }
 
 .row-extras, .row-extras-summary {
-  margin: 0;
-  padding: 5px;
+    margin: 0;
+    padding: 10px;
+    color: #777;
+    background-color: #f8f8f8;
 
-  .adv-details-txt {
-    font-size: 15px;
-    color: #999;
-  }
+    .adv-details-txt {
+        font-size: 14px;
+    }
+
+    &:hover > *,
+    &:focus > * {
+        color: #222;
+    }
+
 }
 
 .row-extras {
-    padding-left: 28px;
+    padding-left: 36px;
 }
 
 .row-extras__cog {
     position: absolute;
-    top: 10px;
-    left: 5px;
-    color: #444;
+    top: 12px;
+    left: 10px;
+    color: #222;
 }
 
 .row-extras__cog-faded {
-    color: #999;
+    color: #777;
 }
 
 .expanding-spacer-between-rows {
@@ -329,6 +342,55 @@
 .expanding-spacer-between-rows > .line {
     height: 0;
     position: relative;
+}
+
+.editable-input > input {
+    width: 180px;
+}
+
+
+
+
+
+
+// ==========================================================================
+// Skip logic
+// ==========================================================================
+
+.skiplogic__criterialist > div {
+    // .well
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px 14px;
+    position: relative;
+    background-color: #eee;
+}
+
+button.skiplogic__deletecriterion {
+    height: auto;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    position: absolute;
+    top: 2px;
+    right: 7px;
+    opacity: 0.6;
+    -webkit-appearance: none;
+    text-transform: none;
+    color: #333;
+    background-color: transparent;
+
+    &:hover,
+    &:focus {
+        opacity: 1;
+    }
+}
+
+.skiplogic__responseval {
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 

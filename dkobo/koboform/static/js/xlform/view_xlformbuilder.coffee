@@ -136,7 +136,7 @@ class XLF.SkipLogicCriterionView extends Backbone.View
       throw new Error("ExpressionCode not recognized: #{expressionCode}")
     [exprStr, descLabel, addlReqs] = EXVALS[expressionCode]
     unless addlReqs
-      @$(".skiplogic__responseval").css("visibility", "hidden")
+      @$(".skiplogic__responseval").css("display", "none")
     ``
 
 wireUpInput = ($input, model, name, event='change') =>
@@ -156,6 +156,9 @@ class XLF.SkipLogicCollectionView extends Backbone.View
   render: ()->
     tempId = _.uniqueId("skiplogic_expr")
     @$el.html("""
+    <p class="skiplogic__addnew">
+      <button class="skiplogic__addcriterion">Add new</button>
+    </p>
     <p class="skiplogic__delimselect">
       Match all or any of these criteria?
       <br>
@@ -167,10 +170,6 @@ class XLF.SkipLogicCollectionView extends Backbone.View
         <input type="radio" class="skiplogic__delimselectcb" name="#{tempId}" value="or" />
         Any
       </label>
-    </p>
-    <p class="skiplogic__addnew">
-      Add new
-      <button class="skiplogic__addcriterion">+</button>
     </p>
     <div class="skiplogic__criterialist"></div>
     <p class="skiplogic__extras">
