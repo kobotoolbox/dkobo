@@ -77,8 +77,13 @@ INSTALLED_APPS = (
     'dkobo.koboform',
     'compressor',
     'gunicorn',
-    'rest_framework'
+    'south',
+    'rest_framework',
 )
+
+# The number of hours to keep a kobo survey preview (generated for enketo)
+# around before purging it.
+KOBO_SURVEY_PREVIEW_EXPIRATION = 24
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',

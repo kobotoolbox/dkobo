@@ -1,9 +1,9 @@
 from django.shortcuts import render_to_response, HttpResponse
 from django.http import HttpResponseServerError
 from django.template import RequestContext
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.contrib.auth.decorators import login_required
-from models import SurveyDraft
+from models import SurveyDraft, SurveyPreview
 from django.forms.models import model_to_dict
 from rest_framework import viewsets
 from rest_framework.decorators import action
@@ -59,6 +59,20 @@ def survey_drafts(request, sdid=0):
     elif request.method == 'PUT':
         return update_survey_draft(request, sdid)
 
+@login_required
+def survey_previews(request):
+    contents = json.loads(request.body)
+    survey_draft_id = contents.get(u'survey_draft_id')
+    survey_draft = request.user.survey_drafts.get(id=survey_draft_id)
+    if contents.get(u'body'):
+        preview = survey_draft.generate_preview(csv=contents.get(u'body'))
+    else:
+        preview = survey_draft.generate_preview()
+    return HttpResponse(json.dumps(model_to_dict(preview)), content_type="application/json")
+
+@csrf_exempt
+def get_survey_preview(request, unique_string):
+    return HttpResponse(SurveyPreview.objects.get(unique_string=unique_string).xml, content_type="application/xml")
 
 @login_required
 def list_survey_drafts(request):
