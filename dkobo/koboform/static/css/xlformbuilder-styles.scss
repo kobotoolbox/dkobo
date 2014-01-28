@@ -1,5 +1,5 @@
 // ==========================================================================
-   $module: "form-builder";
+// Form builder
 // ==========================================================================
 
 .form-builder {
@@ -15,10 +15,10 @@
 
 
 // ==========================================================================
-   $module: "sub-header-bar";
+// Sub header bar
 // ==========================================================================
 
-.#{$module} {
+.sub-header-bar {
     width: 100%;
     height: 60px;
     border-bottom: 1px solid #e2e2e2;
@@ -42,29 +42,29 @@
 
 
 // ==========================================================================
-   $module: "survey-header";
+// Survey header
 // ==========================================================================
 
-.#{$module} {
+.survey-header {
     margin-bottom: 40px;
 }
 
-    .#{$module}__title,
-    .#{$module}__hashtag {
+    .survey-header__title,
+    .survey-header__hashtag {
         margin-top: 0;
     }
 
-    .#{$module}__hashtag {
+    .survey-header__hashtag {
         font-size: 14px;
         color: #aaa;
     }
 
-    .#{$module}__options {
+    .survey-header__options {
         margin-top: 10px;
         margin-bottom: 10px;
     }
 
-    .#{$module}__option {
+    .survey-header__option {
         margin-right: 20px;
         display: inline-block;
         font-size: 13px;
@@ -76,14 +76,14 @@
 
 
 // ==========================================================================
-   $module: "survey-editor";
+// Survey editor
 // ==========================================================================
 
-.#{$module} {
+.survey-editor {
   padding-bottom: 36px;
 }
 
-    .#{$module}__message {
+    .survey-editor__message {
         text-align: center;
         color: #888;
     }
@@ -94,7 +94,7 @@
 
 
 // ==========================================================================
-// menu-row
+// Menu row
 // ==========================================================================
 
 .menu-title {
@@ -111,7 +111,7 @@
 
 
 // ==========================================================================
-//   Card
+// Card
 // ==========================================================================
 
 .card {
@@ -219,7 +219,6 @@
 
 .xlf-row-view {
   position: relative;
-  cursor: move;
 
   &:first-child {
     margin-top: 0;
@@ -255,6 +254,33 @@
 
 
 // ==========================================================================
+// Edit buttons
+// ==========================================================================
+
+.editable-buttons button,
+.advanced-details button {
+    height: 28px;
+    margin: 3px 0;
+    border: 1px solid;
+    border-radius: 4px;
+    padding: 0 10px;
+    -webkit-appearance: none;
+    text-transform: capitalize;
+    color: #333;
+    background-color: #f8f8f8;
+
+    &:hover,
+    &:focus {
+        background-color: #f0f0f0;
+    }
+}
+
+
+
+
+
+
+// ==========================================================================
 // Advanced details
 // ==========================================================================
 
@@ -266,33 +292,116 @@
 
 .advanced-details .dt-view {
     margin-bottom: 10px;
+    // .card
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 10px;
+    display: block;
+    font-size: 14px;
+    cursor: pointer;
+    background: white;
 }
 
 .row-extras, .row-extras-summary {
-  margin: 0;
-  padding: 5px;
+    margin: 0;
+    padding: 10px;
+    color: #777;
+    background-color: #f8f8f8;
 
-  .adv-details-txt {
-    font-size: 15px;
-    color: #999;
-  }
+    .adv-details-txt {
+        font-size: 14px;
+    }
+
+    &:hover > *,
+    &:focus > * {
+        color: #222;
+    }
+
 }
 
 .row-extras {
-    padding-left: 28px;
+    padding-left: 36px;
 }
 
 .row-extras__cog {
     position: absolute;
-    top: 10px;
-    left: 5px;
-    color: #444;
+    top: 12px;
+    left: 10px;
+    color: #222;
 }
 
 .row-extras__cog-faded {
-    color: #999;
+    color: #777;
 }
 
+.expanding-spacer-between-rows {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.expanding-spacer-between-rows > .line {
+    height: 0;
+    position: relative;
+}
+
+.editable-input > input {
+    width: 180px;
+}
+
+.xlf-dv-name,
+.xlf-dv-hint {
+    text-transform: capitalize;
+}
+
+.xlf-dv-name > code,
+.xlf-dv-hint > code {
+    text-transform: none;
+}
+
+
+
+
+
+
+// ==========================================================================
+// Skip logic
+// ==========================================================================
+
+.skiplogic__criterialist > div {
+    // .well
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px 14px;
+    position: relative;
+    background-color: #eee;
+}
+
+button.skiplogic__deletecriterion {
+    height: auto;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    position: absolute;
+    top: 2px;
+    right: 7px;
+    opacity: 0.6;
+    -webkit-appearance: none;
+    text-transform: none;
+    color: #333;
+    background-color: transparent;
+
+    &:hover,
+    &:focus {
+        opacity: 1;
+    }
+}
+
+.skiplogic__responseval {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
 
 
 
@@ -303,7 +412,9 @@
 // ==========================================================================
 
 .add-row-btn {
-    width: 540px;
+    width: 100px;
+    height: 20px;
+    line-height: 20px;
     margin-right: auto;
     margin-left: auto;
     // transition: opacity .25s ease-in-out;
