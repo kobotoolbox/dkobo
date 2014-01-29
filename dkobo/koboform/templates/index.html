@@ -23,6 +23,7 @@
       <link rel="stylesheet" href="{% static 'css/main.css' %}">
       <link rel="stylesheet" type="text/x-scss" href="{% static 'css/xlformbuilder-styles.scss' %}">
       <link rel="stylesheet" type="text/x-scss" href="{% static 'css/modal.css' %}">
+      <link rel="stylesheet" href="{% static 'css/select2.css' %}">
     {% endcompress %}
 
     <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.7.0/modernizr.min.js"></script>
@@ -52,6 +53,7 @@
     <script src="http://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>
 
     {% compress js %}
+      <script src="{% static 'js/select2.min.js' %}"></script>
       <script src="{% static 'js/Backbone.Validation.js' %}"></script>
       <script src="{% static 'js/controllers/Builder.Controller.js' %}"></script>
       <script src="{% static 'js/controllers/Header.Controller.js' %}"></script>

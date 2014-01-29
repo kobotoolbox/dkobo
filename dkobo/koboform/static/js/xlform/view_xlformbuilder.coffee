@@ -73,7 +73,7 @@ class XLF.SkipLogicCriterionView extends Backbone.View
 
     @listen_rowselect()
 
-    wireUpInput(@$('input').eq(0), @model, 'criterion', 'keyup')
+    wire_up_input(@$('input:last'), @model, 'criterion', 'keyup')
     @
 
   populate_expressionselect: ->
@@ -97,7 +97,7 @@ class XLF.SkipLogicCriterionView extends Backbone.View
     survey = parentRow.getSurvey()
     surveyNames = survey.getNames()
 
-    skiplogic__rowselect = $('.skiplogic__rowselect', @$el).eq(0).empty()
+    skiplogic__rowselect = $('select.skiplogic__rowselect', @$el).eq(0).empty()
     $("<option>", {value: '-1', html: 'Question...', disabled: !!question}).appendTo(skiplogic__rowselect)
 
     survey.forEachRow (row)->
@@ -114,10 +114,11 @@ class XLF.SkipLogicCriterionView extends Backbone.View
       $('option[value=-1]', skiplogic__rowselect).prop('disabled', true)
       skiplogic__rowselect.off('change', disableDefaultOption)
     skiplogic__rowselect.on('change', disableDefaultOption)
+    skiplogic__rowselect.select2()
     ``
 
   listen_rowselect: ->
-    skiplogic__rowselect = @$(".skiplogic__rowselect")
+    skiplogic__rowselect = @$("select.skiplogic__rowselect")
     parentRow = @model.get("parentRow")
     survey = parentRow.getSurvey()
     skiplogic__rowselect.on "change", ()=>
@@ -139,7 +140,7 @@ class XLF.SkipLogicCriterionView extends Backbone.View
       @$(".skiplogic__responseval").css("display", "none")
     ``
 
-wireUpInput = ($input, model, name, event='change') =>
+wire_up_input = ($input, model, name, event='change') =>
   if model.get(name)
     $input.val(model.get(name))
   $input.on(event, () => model.set(name, $input.val()))
@@ -232,6 +233,7 @@ class XlfRowSelector extends Backbone.View
     @button.show()
     @line.empty().removeClass("expanded").css "height": 0
   selectMenuItem: (evt)->
+    $('select.skiplogic__rowselect').select2('destroy')
     mi = $(evt.target).data("menuItem")
     rowBefore = @options.spawnedFromView?.model
     survey = @options.survey || rowBefore._parent

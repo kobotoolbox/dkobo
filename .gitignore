@@ -16,6 +16,7 @@ staticfiles
 local_settings.py
 /.ropeproject
 node_modules
-dkobo/formbuilder/templates/sandbox.html
-dkobo/formbuilder/templates/sandbox-stub.html
+dkobo/koboform/templates/sandbox.html
+dkobo/koboform/templates/sandbox-stub.html
+
 .sass-cache/

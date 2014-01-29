@@ -2,25 +2,23 @@
 
 <html>
 	<head>
-        {% csrf_token %}
 		<title>Sandbox</title>
+      	<link rel="stylesheet" href="../../static/css/select2.css">
 		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-		<script src="/static/js/csrf.js"></script>
-
+	    <script src="../../static/js/select2.min.js"></script>
 		<script type="text/javascript">
-            var csvForm = "\"survey\",,,,,\n,\"name\",\"type\",\"label\",\"hint\",\"required\"\n,\"gps\",\"geopoint\",\"Record your current location\",,\"false\"\n,\"start\",\"start\",,,\n,\"end\",\"end\",,,\n\"settings\",\n,\"form_title\"\n,\"New survey\"";
-
-			$(function () {
-				$.post('csv', csvForm).done(function (response) {
-				    $('pre').text(response);
-				});
+            $(function () {
+            	$('select').select2();
 			});
 		</script>
-		
 	</head>
 	<body>
 		<form>
-			<input type="button" id="send-csv-btn" />
+			<select>
+				<option> opt 1 </option>
+				<option> opt 2 </option>
+				<option> opt 3 </option>
+			</select>
 		</form>
         <pre></pre>
 	</body>
