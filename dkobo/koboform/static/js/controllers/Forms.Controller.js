@@ -23,10 +23,12 @@ function FormsController ($scope, $rootScope, $resource, $miscUtils) {
         }
     };
 
-    $rootScope.$watch('updateFormList', function () {
+    $rootScope.updateFormList = function () {
         if ($rootScope.updateFormList) {
-            $scope.infoListItems = formsApi.query();
-            $rootScope.updateFormList = false;
+            formsApi.query(function (response) {
+                $scope.infoListItems = response;
+                $scope.$apply();
+            });
         }
-    });
+    };
 }
