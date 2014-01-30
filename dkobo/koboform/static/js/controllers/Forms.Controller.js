@@ -27,7 +27,6 @@ function FormsController ($scope, $rootScope, $resource, $miscUtils) {
         if ($rootScope.updateFormList) {
             formsApi.query(function (response) {
                 $scope.infoListItems = response;
-                //$scope.$apply();
             });
         }
     };
