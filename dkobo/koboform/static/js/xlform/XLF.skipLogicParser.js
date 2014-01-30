@@ -3,7 +3,7 @@
 'use strict';
 XLF.skipLogicParser = (function () {
     var equalityCriterionPattern = /\${(\w+)}\s+(=|!=)\s+\'(\w+)\'/,
-        existenceCriterionPattern = /\${(\w+)}\s+((?:=|!=)\s*NULL)/i,
+        existenceCriterionPattern = /\${(\w+)}\s+((?:=|!=)\s*(?:NULL|''))/i,
         criteriaJoinPattern = /and|or/gi;
 
     function parseCriterion(text) {
@@ -22,7 +22,7 @@ XLF.skipLogicParser = (function () {
             '=': 'resp_equals',
             '!=': 'resp_notequals',
             '!=NULL': 'ans_notnull',
-            '=NULL': 'ans_null'
+            "=''": 'ans_null'
         };
 
         var res = {
@@ -38,17 +38,17 @@ XLF.skipLogicParser = (function () {
     }
 
     function parseMultiselectCriterion(text) {
-        var matches = text.match(/selected\(\'(\w+)\',\s*\'(\w+)\'\)/)
+        var matches = text.match(/selected\(\'(\w+)\',\s*\'(\w+)\'\)/);
 
         if (!matches) {
-            throw new Error('criterion not recognized');
+            throw new Error('criterion not recognized: "' + text + '"');
         }
 
         return {
             name: matches[1],
             operator: 'multiplechoice_selected',
             response_value: matches[2]
-        }
+        };
     }
 
     return function (text) {

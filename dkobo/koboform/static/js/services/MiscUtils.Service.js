@@ -24,7 +24,7 @@ function MiscUtilsService() {
                     $scope.isLoading = true;
                     log(data.files[0].name + " is uploading...");
                     data.submit().success(function(result){
-                        window.importedSurveyDraft = JSON.parse(result);
+                        window.importedSurveyDraft = result;
                         $scope.updateFormList = true;
                         $scope.$apply();
                     })

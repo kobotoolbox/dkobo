@@ -17,4 +17,24 @@ viewUtils.makeEditable = (that, model, selector, {property, transformFunction, o
         newValue: ent
       , that
 
-  that.$el.find(selector).editable _.extend(opts, options)
+  editableOpts = _.extend(opts, options)
+
+  if selector instanceof jQuery
+    selector.editable editableOpts
+  else
+    that.$el.find(selector).editable editableOpts
+
+
+viewUtils.reorderElemsByData = (selector, parent, dataAttribute)->
+  arr = []
+  parentEl = false
+  $(parent).find(selector).each (i)->
+    if i is 0
+      parentEl = @parentElement
+    else if @parentElement isnt parentEl
+      throw new Error("All reordered items must be siblings")
+
+    $el = $(@).detach()
+    val = $el.data(dataAttribute)
+    arr[val] = $el  if _.isNumber(val)
+  $el.appendTo(parentEl)  for $el in arr

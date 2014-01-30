@@ -32,7 +32,7 @@ class XlfDetailView extends Backbone.View
       @$el.html rendered
     @
   html: ()->
-    viewTemplate.xlfDetailView @
+    viewTemplates.xlfDetailView @
 
   insertInDOM: (rowView)->
     rowView.rowExtras.append(@el)
@@ -52,7 +52,7 @@ class XLF.SkipLogicCriterionView extends Backbone.View
     throw new Error("Expression not found: #{str}")
   render: ()->
     @$el.html("""
-      <select></select>
+      <select class="skiplogic__rowselect on-row-detail-change-name on-row-detail-change-label"></select>
       <select class="skiplogic__expressionselect">
         <option value="resp_equals">was</option>
         <option value="resp_notequals">was not</option>
@@ -62,57 +62,85 @@ class XLF.SkipLogicCriterionView extends Backbone.View
       <input placeholder="response value" class="skiplogic__responseval" type="text" />
       <button class="skiplogic__deletecriterion" data-criterion-id="#{@model.cid}">&times;</button>
     """)
-    # @$el.html('<select></select> was <input placeholder="response value" type="text" />')
-    select = @$el.find('select').eq(0)
-    expressionSelect = @$el.find('select.skiplogic__expressionselect')
+
+    @populate_expressionselect()
+    @listen_expressionselect()
+    @hide_expressionSelect_if_singular()
+
+    @populate_rowselect()
+    @$(".skiplogic__rowselect").on "row-detail-change-name row-detail-change-label", =>
+      @populate_rowselect()
+
+    @listen_rowselect()
+
+    wire_up_input(@$('input:last'), @model, 'criterion', 'keyup')
+    @
+
+  populate_expressionselect: ->
+    expressionSelect = @$(".skiplogic__expressionselect")
     for key, vals in XLF.SkipLogicCriterion.expressionValues
       $("<option>", value: key, text: vals[1]).appendTo(expressionSelect)
-    responseValBox = @$(".skiplogic__responseval")
     expressionCode = @model.get("expressionCode")
     expressionSelect.val(expressionCode)
-    do ->
-      EXVALS = XLF.SkipLogicCriterion.expressionValues
-      unless expressionCode of EXVALS
-        throw new Error("ExpressionCode not recognized: #{expressionCode}")
-      [exprStr, descLabel, addlReqs] = EXVALS[expressionCode]
-      if !addlReqs
-        responseValBox.css("visibility", "hidden")
+    ``
 
-    input = @$el.find('input')
-    parentRow = @model.get("parentRow")
-    survey = parentRow.getSurvey()
-    surveyNames = survey.getNames()
-    question = @model.get("question")
-
-    $("<option>", {value: '-1', html: 'Question...', disabled: !!question}).appendTo(select)
-
-    for name in surveyNames
-      isCurrentName = name is parentRow.getValue('name')
-      $("<option>", {value: name, html: name, disabled: isCurrentName}).appendTo(select)
-
-    if (!!question)
-      questionName = question.getValue("name")
-      select.val(questionName)
-
+  listen_expressionselect: ->
+    expressionSelect = @$(".skiplogic__expressionselect")
     expressionSelect.on "change", (evt)=>
       expStr = @lookupExpression(evt.target.value)[0]
       @model.set("expressionCode", evt.target.value)
+    ``
 
-    select.on "change", ()=>
-      questionName = select.val()
-      question = survey.findRowByName(questionName)
-      @model.set("question", question)
+  populate_rowselect: ()->
+    question = @model.get("question")
+    parentRow = @model.get("parentRow")
+    survey = parentRow.getSurvey()
+    surveyNames = survey.getNames()
 
-    wireUpInput(input, @model, 'criterion', 'keyup')
+    skiplogic__rowselect = $('select.skiplogic__rowselect', @$el).eq(0).empty()
+    $("<option>", {value: '-1', html: 'Question...', disabled: !!question}).appendTo(skiplogic__rowselect)
+
+    survey.forEachRow (row)->
+      disableOption = row is parentRow
+      name = row.getValue("name")
+      label = row.getValue("label")
+      $("<option>", {value: name, html: label, disabled: disableOption}).appendTo(skiplogic__rowselect)
+
+    if question
+      questionName = question.getValue("name")
+      skiplogic__rowselect.val(questionName)
 
     disableDefaultOption = () ->
-      $('option[value=-1]', select).prop('disabled', true)
-      select.off('change', disableDefaultOption)
+      $('option[value=-1]', skiplogic__rowselect).prop('disabled', true)
+      skiplogic__rowselect.off('change', disableDefaultOption)
+    skiplogic__rowselect.on('change', disableDefaultOption)
+    skiplogic__rowselect.select2()
+    ``
 
-    select.on('change', disableDefaultOption)
-    @
+  listen_rowselect: ->
+    skiplogic__rowselect = @$("select.skiplogic__rowselect")
+    parentRow = @model.get("parentRow")
+    survey = parentRow.getSurvey()
+    skiplogic__rowselect.on "change", ()=>
+      questionName = skiplogic__rowselect.val()
+      question = survey.findRowByName(questionName)
+      if question
+        @model.set("question", question)
+      else
+        throw new Error("Question `#{questionName}` not found")
+    ``
 
-wireUpInput = ($input, model, name, event='change') =>
+  hide_expressionSelect_if_singular: ->
+    EXVALS = XLF.SkipLogicCriterion.expressionValues
+    expressionCode = @model.get("expressionCode")
+    unless expressionCode of EXVALS
+      throw new Error("ExpressionCode not recognized: #{expressionCode}")
+    [exprStr, descLabel, addlReqs] = EXVALS[expressionCode]
+    unless addlReqs
+      @$(".skiplogic__responseval").css("display", "none")
+    ``
+
+wire_up_input = ($input, model, name, event='change') =>
   if model.get(name)
     $input.val(model.get(name))
   $input.on(event, () => model.set(name, $input.val()))
@@ -129,8 +157,9 @@ class XLF.SkipLogicCollectionView extends Backbone.View
   render: ()->
     tempId = _.uniqueId("skiplogic_expr")
     @$el.html("""
-    <div class="skiplogic__criterialist">
-    </div>
+    <p class="skiplogic__addnew">
+      <button class="skiplogic__addcriterion">Add new</button>
+    </p>
     <p class="skiplogic__delimselect">
       Match all or any of these criteria?
       <br>
@@ -143,10 +172,7 @@ class XLF.SkipLogicCollectionView extends Backbone.View
         Any
       </label>
     </p>
-    <p class="skiplogic__addnew">
-      Add new
-      <button class="skiplogic__addcriterion">+</button>
-    </p>
+    <div class="skiplogic__criterialist"></div>
     <p class="skiplogic__extras">
       <button class="skiplogic__handcode">Hand code</button>
     </p>
@@ -191,16 +217,10 @@ class XlfRowSelector extends Backbone.View
     @line.css "height", "inherit"
     @line.html viewTemplates.xlfRowSelector.line()
     $menu = @line.find(".well")
-    mItems = [["geopoint"],
-      ["image", "audio", "video", "barcode"],
-      ["date", "datetime"],
-      ["text", "integer", "decimal", "note"],
-      # ["unk", "ellipse"],
-      ["select_one", "select_multiple"]]
-    for mrow in mItems
+    for mrow in XLF.icons.grouped()
       menurow = $("<div>", class: "menu-row").appendTo $menu
-      for mcell, i in mrow
-        menurow.append viewTemplates.xlfRowSelector.cell mcell
+      for mitem, i in mrow
+        menurow.append viewTemplates.xlfRowSelector.cell mitem.attributes
 
   shrink: ->
     $(".-form-editor .empty .survey-editor__message").css("display", "")
@@ -213,6 +233,7 @@ class XlfRowSelector extends Backbone.View
     @button.show()
     @line.empty().removeClass("expanded").css "height": 0
   selectMenuItem: (evt)->
+    $('select.skiplogic__rowselect').select2('destroy')
     mi = $(evt.target).data("menuItem")
     rowBefore = @options.spawnedFromView?.model
     survey = @options.survey || rowBefore._parent
@@ -222,7 +243,7 @@ class XlfRowSelector extends Backbone.View
 
 class XlfOptionView extends Backbone.View
   tagName: "li"
-  className: "xlf-option-view"
+  className: "xlf-option-view well"
   events:
     "keyup input": "keyupinput"
   initialize: (@options)->
@@ -331,8 +352,7 @@ class XlfRowView extends Backbone.View
    "click": "select"
    "click .add-row-btn": "expandRowSelector"
    "drop": "drop"
-   "click .row-extras-summary": "expandCog"
-   "click .glyphicon-cog": "expandCog"
+   "click .js-advanced-toggle": "expandCog"
   initialize: (opts)->
     @options = opts
     typeDetail = @model.get("type")
@@ -341,6 +361,10 @@ class XlfRowView extends Backbone.View
     # typeDetail.on "change:value", _.bind(@render, @)
     # typeDetail.on "change:listName", _.bind(@render, @)
     @surveyView = @options.surveyView
+    @model.on "detail-change", (key, value, ctxt)=>
+      customEventName = "row-detail-change-#{key}"
+      @$(".on-#{customEventName}").trigger(customEventName, key, value, ctxt)
+
     @$el.on "xlf-blur", =>
       @$el.removeClass("xlf-selected")
   drop: (evt, index)->
@@ -355,12 +379,11 @@ class XlfRowView extends Backbone.View
     @xlfRowSelector.expand()
   render: ->
     @$el.html viewTemplates.xlfRowView()
-
+    @$el.data("row-index", @model._parent.rows.indexOf @model)
     unless (cl = @model.getList())
       cl = new XLF.ChoiceList()
       @model.setList(cl)
     @listView = new XlfListView(el: @$(".list-view"), model: cl, rowView: @).render()
-    @rowContent = @$(".row-content")
     @rowExtras = @$(".row-extras")
     @rowExtrasSummary = @$(".row-extras-summary")
     for [key, val] in @model.attributesArray()
@@ -416,11 +439,32 @@ class @SurveyTemplateApp extends Backbone.View
       new SurveyApp(@options).render()
     @
 
+enketoIframe = do ->
+
+  buildUrl = (previewUrl)->
+    fullPreviewUrl = "#{window.location.origin}#{previewUrl}"
+    """https://enketo.org/webform/preview?form=#{fullPreviewUrl}"""
+
+  clickCloserBackground = ->
+    $("<div>", class: "js-click-remove-iframe")
+
+  launch = (previewUrl)->
+    wrap = $("<div>", class: "js-click-remove-iframe iframe-bg-shade")
+    $("<iframe>", src: buildUrl(previewUrl)).appendTo(wrap)
+    wrap.click ()-> wrap.remove()
+    wrap
+
+  launch.close = ()->
+    $(".iframe-bg-shade").remove()
+
+  launch
+
 class @SurveyApp extends Backbone.View
   className: "formbuilder-wrap container"
   events:
     "click .delete-row": "clickRemoveRow"
-    "click #preview": "previewButtonClick"
+    "click #xlf-preview": "previewButtonClick"
+    "click #csv-preview": "previewCsv"
     "click #download": "downloadButtonClick"
     "click #save": "saveButtonClick"
     "click #publish": "publishButtonClick"
@@ -436,6 +480,9 @@ class @SurveyApp extends Backbone.View
 
     @survey.rows.on "add", @softReset, @
     @survey.rows.on "remove", @softReset, @
+    @survey.on "row-detail-change", (row, key, val, ctxt)=>
+      evtCode = "row-detail-change-#{key}"
+      @$(".on-#{evtCode}").trigger(evtCode, row, key, val, ctxt)
 
     @onPublish = options.publish || $.noop
     @onSave = options.save || $.noop
@@ -455,6 +502,11 @@ class @SurveyApp extends Backbone.View
   render: ()->
     @$el.removeClass("content--centered").removeClass("content")
     @$el.html viewTemplates.surveyApp @survey
+
+    if @survey.__djangoModelDetails?.id
+      @djModelId = @survey.__djangoModelDetails.id
+    else
+      @$el.find("#xlf-preview").hide()
 
     @survey.settings.on 'validated:invalid', (model, validations) ->
       for key, value of validations
@@ -488,16 +540,23 @@ class @SurveyApp extends Backbone.View
         placeholder: "placeholder"
         opacity: 0.9
         scroll: false
-        activate: (evt, ui)-> ui.item.addClass("sortable-active")
-        deactivate: (evt,ui)-> ui.item.removeClass("sortable-active")
+        activate: (evt, ui)=>
+          @formEditorEl.addClass("insort")
+          ui.item.addClass("sortable-active")
+        deactivate: (evt,ui)=>
+          @formEditorEl.removeClass("insort")
+          ui.item.removeClass("sortable-active")
       })
     @
-  validateSurvey: ->
-    # TODO. Implement basic validation
+
+  validateSurvey: ()->
     true
 
-  showValidationMessages: ->
-
+  previewCsv: ->
+    scsv = @survey.toCSV()
+    console?.clear()
+    log scsv
+    ``
 
   softReset: ->
     fe = @formEditorEl
@@ -513,6 +572,7 @@ class @SurveyApp extends Backbone.View
         @formEditorEl.append($el)
 
     @formEditorEl.find(".empty").css("display", if isEmpty then "" else "none")
+    viewUtils.reorderElemsByData(".xlf-row-view", @$el, "row-index")
     ``
 
   reset: ->
@@ -559,7 +619,23 @@ class @SurveyApp extends Backbone.View
 
   onEscapeKeydown: -> #noop. to be overridden
   previewButtonClick: (evt)->
-    @onPreview.call(@, arguments)
+    if @djModelId
+      data = JSON.stringify(
+        body: @survey.toCSV()
+        survey_draft_id: @djModelId
+      )
+      $.ajax
+        url: "/koboform/survey_preview/"
+        method: "CREATE"
+        data: data
+        headers:
+          "X-CSRFToken": $('meta[name="csrf-token"]').attr('content')
+        success: (survey_preview, status, jqhr)=>
+          if survey_preview.unique_string
+            preview_url = "/koboform/survey_preview/#{survey_preview.unique_string}"
+            @onEscapeKeydown = enketoIframe.close
+            enketoIframe(preview_url).appendTo("body")
+
   downloadButtonClick: (evt)->
     # Download = save a CSV file to the disk
     surveyCsv = @survey.toCSV()

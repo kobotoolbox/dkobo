@@ -1,9 +1,9 @@
 from django.shortcuts import render_to_response, HttpResponse
 from django.http import HttpResponseServerError
 from django.template import RequestContext
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.contrib.auth.decorators import login_required
-from models import SurveyDraft
+from models import SurveyDraft, SurveyPreview
 from django.forms.models import model_to_dict
 from rest_framework import viewsets
 from rest_framework.decorators import action
@@ -59,6 +59,20 @@ def survey_drafts(request, sdid=0):
     elif request.method == 'PUT':
         return update_survey_draft(request, sdid)
 
+@login_required
+def survey_previews(request):
+    contents = json.loads(request.body)
+    survey_draft_id = contents.get(u'survey_draft_id')
+    survey_draft = request.user.survey_drafts.get(id=survey_draft_id)
+    if contents.get(u'body'):
+        preview = survey_draft.generate_preview(csv=contents.get(u'body'))
+    else:
+        preview = survey_draft.generate_preview()
+    return HttpResponse(json.dumps(model_to_dict(preview)), content_type="application/json")
+
+@csrf_exempt
+def get_survey_preview(request, unique_string):
+    return HttpResponse(SurveyPreview.objects.get(unique_string=unique_string).xml, content_type="application/xml")
 
 @login_required
 def list_survey_drafts(request):
@@ -136,27 +150,45 @@ def list_forms_in_library(request):
 def jasmine_spec(request):
     return render_to_response("jasmine_spec.html")
 
+XLS_CONTENT_TYPES = ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"]
+
 @login_required
 def import_survey_draft(request):
+    """
+    Imports an XLS or CSV file into the user's SurveyDraft list.
+    Returns an error in JSON if the survey was not valid.
+    """
     output = {}
     posted_file = request.FILES.get(u'files')
+    response_code = 200
     if posted_file:
         import pyxform_utils
-        # if posted_file.content_type == "application/vnd.ms-excel":
-        # or ... application/vnd.openxmlformats-officedocument.spreadsheetml.sheet ???
-        if posted_file.name.endswith(".xls"):
-            csv = pyxform_utils.convert_xls_to_csv_string(posted_file)
-        elif posted_file.content_type == "text/csv":
-            csv = posted_file.read()
-        new_survey_draft = SurveyDraft.objects.create(**{
-            u'body': csv,
-            u'name': posted_file.name,
-            u'user': request.user
-        })
-        output[u'survey_draft_id'] = new_survey_draft.id
+        try:
+            # create and validate the xform but ignore the resultss
+            pyxform_utils.convert_xls_to_xform(posted_file)
+            output[u'xlsform_valid'] = True
+
+            posted_file.seek(0)
+            if posted_file.content_type in XLS_CONTENT_TYPES:
+                csv = pyxform_utils.convert_xls_to_csv_string(posted_file)
+            elif posted_file.content_type == "text/csv":
+                csv = posted_file.read()
+            else:
+                raise Exception("Content-type not recognized: '%s'" % posted_file.content_type)
+
+            new_survey_draft = SurveyDraft.objects.create(**{
+                u'body': csv,
+                u'name': posted_file.name,
+                u'user': request.user
+            })
+            output[u'survey_draft_id'] = new_survey_draft.id
+        except Exception, err:
+            response_code = 500
+            output[u'error'] = err
     else:
+        response_code = 204 #Error 204: No input
         output[u'error'] = "No file posted"
-    return HttpResponse(json.dumps(output))
+    return HttpResponse(json.dumps(output), content_type="application/json", status=response_code)
 
 class SurveyDraftViewSet(viewsets.ModelViewSet):
     model = SurveyDraft

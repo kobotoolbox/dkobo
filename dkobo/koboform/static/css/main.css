@@ -24,6 +24,38 @@ html {
     -webkit-font-smoothing: antialiased;
 }
 
+input[type="text"] {
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.428571429;
+    color: #555;
+    vertical-align: middle;
+    background-color: #FFF;
+    background-image: none;
+    border: 1px solid #CCC;
+    border-radius: 4px;
+}
+
+select {
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.428571429;
+    color: #555;
+    vertical-align: middle;
+    background-color: #FFF;
+    background-image: none;
+    border: 1px solid #CCC;
+    border-radius: 4px;
+}
+
+select:after {
+    content: "yolo";
+}
+
 a {
     text-decoration: none;
     color: #1daee3;
@@ -77,8 +109,29 @@ textarea {
 }
 
 
+/* ==========================================================================
+   iframe wrapper
+   ========================================================================== */
 
+.iframe-bg-shade {
+    top: 0;
+    left: 0;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    background-color: rgba(168, 159, 159, 0.5);
+}
 
+.iframe-bg-shade iframe {
+  width: 800px;
+  margin-left: -400px;
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  height: 90%;
+  background-color: rgba(240, 240, 240, 0.7);
+}
 
 
 /* ==========================================================================
@@ -87,7 +140,7 @@ textarea {
 
 .top-level-menu {
     width: 230px;
-    position: absolute;
+    position: fixed;
     top: 0;
     bottom: 0;
     left: -230px;
@@ -649,7 +702,6 @@ input[type="button"].btn--block {
 }
 
 .info-list-item__details {
-    width: 300px;
     display: inline-block;
     vertical-align: middle;
 }

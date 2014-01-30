@@ -4,28 +4,17 @@
 
 DetailViewMixins.type =
   html: -> false
-  afterRender: ->
-    @$el.css width: 40, height: 40
-    tps = @model.get('typeId')
-    @$el.attr("title", "Row Type: #{tps}")
-    @$el.addClass("rt-#{tps} type-icon menu-item menu-item--#{tps}")
   insertInDOM: (rowView)->
-    rowView.$(".row-type").append(@$el)
+    typeStr = @model.get("value").split(" ")[0]
+    faClass = XLF.icons.get(typeStr).get("faClass")
+    rowView.$el.find(".card__header-icon").addClass("fa-#{faClass}")
 
 DetailViewMixins.label =
-  html: ->
-    """
-    <div class="col-md-12">
-      <blockquote style="display: inline-block">
-        #{@model.get("value")}
-      </blockquote>
-    </div>
-    """
+  html: -> false
   insertInDOM: (rowView)->
-    rowView.rowContent.prepend(@$el)
-
-  afterRender: ->
-    viewUtils.makeEditable @, @model, 'blockquote', options:
+    cht = rowView.$el.find(".card__header-title")
+    cht.html(@model.get("value"))
+    viewUtils.makeEditable @, @model, cht, options:
       placement: 'right'
       rows: 3
 

@@ -1,5 +1,5 @@
 // ==========================================================================
-   $module: "form-builder";
+// Form builder
 // ==========================================================================
 
 .form-builder {
@@ -15,10 +15,10 @@
 
 
 // ==========================================================================
-   $module: "sub-header-bar";
+// Sub header bar
 // ==========================================================================
 
-.#{$module} {
+.sub-header-bar {
     width: 100%;
     height: 60px;
     border-bottom: 1px solid #e2e2e2;
@@ -42,29 +42,29 @@
 
 
 // ==========================================================================
-   $module: "survey-header";
+// Survey header
 // ==========================================================================
 
-.#{$module} {
+.survey-header {
     margin-bottom: 40px;
 }
 
-    .#{$module}__title,
-    .#{$module}__hashtag {
+    .survey-header__title,
+    .survey-header__hashtag {
         margin-top: 0;
     }
 
-    .#{$module}__hashtag {
+    .survey-header__hashtag {
         font-size: 14px;
         color: #aaa;
     }
 
-    .#{$module}__options {
+    .survey-header__options {
         margin-top: 10px;
         margin-bottom: 10px;
     }
 
-    .#{$module}__option {
+    .survey-header__option {
         margin-right: 20px;
         display: inline-block;
         font-size: 13px;
@@ -76,14 +76,14 @@
 
 
 // ==========================================================================
-   $module: "survey-editor";
+// Survey editor
 // ==========================================================================
 
-.#{$module} {
+.survey-editor {
   padding-bottom: 36px;
 }
 
-    .#{$module}__message {
+    .survey-editor__message {
         text-align: center;
         color: #888;
     }
@@ -94,17 +94,37 @@
 
 
 // ==========================================================================
-   $module: "menu-row";
+// Menu row
 // ==========================================================================
 
-.#{$module} {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #ddd;
+.menu-title {
+    margin: 10px 5px 20px;
+}
 
-    &:last-child {
-        border-bottom: 0;
-    }
+.menu-row {
+    width: 25%;
+    padding-right: 5px;
+    padding-left: 5px;
+    float: left;
+}
+
+
+
+// ==========================================================================
+// Card
+// ==========================================================================
+
+.card {
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 10px;
+    display: block;
+    font-size: 14px;
+    cursor: pointer;
+    background: white;
+}
+.card__header {
+    margin-top: 0;
 }
 
 
@@ -113,57 +133,81 @@
 
 
 // ==========================================================================
-   $module: "menu-item";
+// Single/multiple select questions
 // ==========================================================================
 
-.#{$module} {
-    margin-right: 5px;
-    border: 1px solid #ddd;
-    border-radius: 3px;
-    padding: 7px 11px;
-    display: inline-block;
-    cursor: pointer;
-    background: white;
+.list-view {
+    padding-bottom: 20px;
+}
+
+.xlf-option-view {
+    margin-bottom: 10px;
+    cursor: move;
+}
+
+.editable:hover,
+.editable:focus {
+    border-bottom-style: solid
+}
+
+.option-placeholder {
+    height: 41px;
+    margin-bottom: 10px;
+    border: 2px dashed #ccc;
+    border-radius: 4px;
+}
+
+
+
+
+
+
+// ==========================================================================
+//   Menu item
+// ==========================================================================
+
+.menu-item {
+    margin-bottom: 10px;
 
     &:hover {
         border-color: #bbb;
         background-color: #f8f8f8;
     }
 
-    &:before {
-        content: "";
-        width: 1.2857142857142858em;
-        display: inline-block;
-        font-family: FontAwesome;
-        font-style: normal;
-        font-weight: normal;
-        line-height: 1;
-        text-align: center;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
+    > i {
         color: #1daee3;
+    }
+
+    // &:before {
+    //     content: "";
+    //     width: 1.2857142857142858em;
+    //     display: inline-block;
+    //     font-family: FontAwesome;
+    //     font-style: normal;
+    //     font-weight: normal;
+    //     line-height: 1;
+    //     text-align: center;
+    //     -webkit-font-smoothing: antialiased;
+    //     -moz-osx-font-smoothing: grayscale;
+    //     color: #1daee3;
+    // }
+}
+
+.close-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: transparent;
+    border: 0 none;
+    opacity: 0.6;
+    color: #444;
+
+    &:hover,
+    &:focus {
+        opacity: 1;
     }
 }
 
-.#{$module}--geopoint:before {content: "\f041"; }
-.#{$module}--image:before {content: "\f030"; }
-.#{$module}--audio:before {content: "\f025"; }
-.#{$module}--video:before {content: "\f03d"; }
-.#{$module}--barcode:before {content: "\f02a"; }
-.#{$module}--date:before {content: "\f073"; }
-.#{$module}--datetime:before {content: "\f133"; }
-.#{$module}--text:before {content: "\f15c"; }
-.#{$module}--integer:before {content: "\f033"; }
-.#{$module}--decimal:before {content: "\f0d6"; }
-.#{$module}--note:before {content: "\f0c5"; }
-.#{$module}--select_one:before {content: "\f0ca"; }
-.#{$module}--select_multiple:before {content: "\f022"; }
-
-
-
-.xlf-row-view {
-    position: relative;
-}
 .delete-row {
     position: absolute;
     right: 5px;
@@ -174,13 +218,20 @@
 // Quick fixes for KF-96. (Consider chainging HTML and CSS for BEM)
 
 .xlf-row-view {
-  border-left: 2px dashed #ddd;
   position: relative;
-  margin-top: 56px;
+
   &:first-child {
     margin-top: 0;
   }
 }
+
+.placeholder {
+    height: 100px;
+    margin-bottom: 10px;
+    border: 2px dashed #ccc;
+    border-radius: 4px;
+}
+
 .editor-message {
   position: relative;
 }
@@ -196,44 +247,198 @@
     line-height: 1em;
   }
 }
-.row-extras, .row-extras-summary {
-  margin: 0;
-  width: 75%;
-  padding-left: 20px;
-  float: left;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  background-color: #eee;
 
-  .glyphicon.glyphicon-cog {
-    &:after {
-      content: "*";
-      font-size: 30px;
-      margin-left: -0.5em;
-      color: #666;
-      cursor: pointer;
+
+
+
+
+
+// ==========================================================================
+// Edit buttons
+// ==========================================================================
+
+.editable-buttons button,
+.advanced-details button {
+    height: 28px;
+    margin: 3px 0;
+    border: 1px solid;
+    border-radius: 4px;
+    padding: 0 10px;
+    -webkit-appearance: none;
+    text-transform: capitalize;
+    color: #333;
+    background-color: #f8f8f8;
+
+    &:hover,
+    &:focus {
+        background-color: #f0f0f0;
     }
-  }
-  .adv-details-txt {
-    font-size: 15px;
-    color: #999;
-  }
 }
+
+
+
+
+
+
+// ==========================================================================
+// Advanced details
+// ==========================================================================
+
+.advanced-details {
+    position: relative;
+    border: 1px solid #E8E1E1;
+    border-radius: 3px;
+}
+
+.advanced-details .dt-view {
+    margin-bottom: 10px;
+    // .card
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 10px;
+    display: block;
+    font-size: 14px;
+    cursor: pointer;
+    background: white;
+}
+
+.row-extras, .row-extras-summary {
+    margin: 0;
+    padding: 10px;
+    color: #777;
+    background-color: #f8f8f8;
+
+    .adv-details-txt {
+        font-size: 14px;
+    }
+
+    &:hover > *,
+    &:focus > * {
+        color: #222;
+    }
+
+}
+
+.row-extras {
+    padding-left: 36px;
+}
+
+.row-extras__cog {
+    position: absolute;
+    top: 12px;
+    left: 10px;
+    color: #222;
+}
+
+.row-extras__cog-faded {
+    color: #777;
+}
+
+.expanding-spacer-between-rows {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.expanding-spacer-between-rows > .line {
+    height: 0;
+    position: relative;
+}
+
+.editable-input > input {
+    width: 180px;
+}
+
+.xlf-dv-name,
+.xlf-dv-hint {
+    text-transform: capitalize;
+}
+
+.xlf-dv-name > code,
+.xlf-dv-hint > code {
+    text-transform: none;
+}
+
+
+
+
+
+
+// ==========================================================================
+// Skip logic
+// ==========================================================================
+
+.skiplogic__criterialist > div {
+    // .well
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px 14px;
+    position: relative;
+    background-color: #eee;
+}
+
+button.skiplogic__deletecriterion {
+    height: auto;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    position: absolute;
+    top: 2px;
+    right: 7px;
+    opacity: 0.6;
+    -webkit-appearance: none;
+    text-transform: none;
+    color: #333;
+    background-color: transparent;
+
+    &:hover,
+    &:focus {
+        opacity: 1;
+    }
+}
+
+.skiplogic__responseval {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+
+
+
+
+// ==========================================================================
+// Add row button
+// ==========================================================================
 
 .add-row-btn {
-  position: absolute;
-  bottom: -42px;
-  padding: 0;
-  width: 500px;
-  line-height: 18px;
-  height: 18;
-  margin-left: 70px;
-  height: 18px;
-  opacity: 0.8;
-  &:hover {
-    opacity: 1;
-  }
+    width: 100px;
+    height: 20px;
+    line-height: 20px;
+    margin-right: auto;
+    margin-left: auto;
+    // transition: opacity .25s ease-in-out;
+    // -moz-transition: opacity .25s ease-in-out;
+    // -webkit-transition: opacity .25s ease-in-out;
 }
+.insort {
+    .add-row-btn {
+        opacity: 0;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // .formbuilder-wrap {
 //   h1 {
@@ -409,7 +614,6 @@
 //   }
 // }
 // .xlf-row-view {
-
 // }
 // .expanding-spacer-between-rows {
 //   position: relative;
