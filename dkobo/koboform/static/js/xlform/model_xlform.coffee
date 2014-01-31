@@ -531,12 +531,20 @@ class XLF.SkipLogicCollection extends BaseCollection
 
   switchEditingMode: () ->
     if @meta.get("mode") == "gui"
+      handcodedCriterion = new XLF.HandCodedSkipLogicCriterion(@serialize())
       @reset()
       @meta.set("mode", "handcode")
-      @add(new XLF.HandCodedSkipLogicCriterion())
+      @add(handcodedCriterion)
     else
-      @reset()
-      @meta.set("mode", "gui")
+      serialized = @serialize()
+      parseHelper.parseSkipLogic(@, serialized, @parentRow)
+      if @parseable == false
+        @add(new XLF.HandCodedSkipLogicCriterion(serialized))
+        alert("Could not parse: invalid / unsupported criteria")
+      else
+        @meta.set("mode", "gui")
+        @each((item) -> item.linkUp())
+
 
 
 # To be extended ontop of a RowDetail when the key matches
@@ -555,27 +563,30 @@ SkipLogicDetailMixin =
     @skipLogicCollection.serialize()
 
   parse: ()->
-    value = @get('value')
-    @skipLogicCollection.meta.set("rawValue", value)
+    parseHelper.parseSkipLogic(@skipLogicCollection, @get('value'), @parentRow)
+
+  linkUp: ->
+    @skipLogicCollection.each (i)-> i.linkUp()
+
+parseHelper =
+  parseSkipLogic: (collection, value, parentRow) ->
+    collection.meta.set("rawValue", value)
     try
       parsedValues = XLF.skipLogicParser(value)
-      @skipLogicCollection.empty()
-      @skipLogicCollection.parseable = true
+      collection.reset()
+      collection.parseable = true
       for crit in parsedValues.criteria
-        @skipLogicCollection.add({
+        collection.add({
           name: crit.name
-          parentRow: @parentRow
+          parentRow: parentRow
           expressionCode: crit.operator
           criterion: crit.response_value
         }, silent: true)
       if parsedValues.operator
-        @skipLogicCollection.meta.set("delimSelect", parsedValues.operator.toLowerCase())
+        collection.meta.set("delimSelect", parsedValues.operator.toLowerCase())
       ``
     catch e
-      @skipLogicCollection.parseable = false
-
-  linkUp: ->
-    @skipLogicCollection.each (i)-> i.linkUp()
+      collection.parseable = false
 
 @XLF.RowDetailMixins =
   relevant: SkipLogicDetailMixin
