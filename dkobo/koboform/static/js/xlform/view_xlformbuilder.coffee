@@ -100,11 +100,14 @@ class XLF.SkipLogicCriterionView extends Backbone.View
     skiplogic__rowselect = $('select.skiplogic__rowselect', @$el).eq(0).empty()
     $("<option>", {value: '-1', html: 'Question...', disabled: !!question}).appendTo(skiplogic__rowselect)
 
+    limit = false
+
     survey.forEachRow (row)->
-      disableOption = row is parentRow
-      name = row.getValue("name")
-      label = row.getValue("label")
-      $("<option>", {value: name, html: label, disabled: disableOption}).appendTo(skiplogic__rowselect)
+      limit = limit || row is parentRow
+      if !limit
+        name = row.getValue("name")
+        label = row.getValue("label")
+        $("<option>", {value: name, html: label}).appendTo(skiplogic__rowselect)
 
     if question
       questionName = question.getValue("name")
