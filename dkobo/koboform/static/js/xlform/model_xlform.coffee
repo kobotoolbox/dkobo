@@ -506,6 +506,7 @@ class XLF.HandCodedSkipLogicCriterion extends XLF.SkipLogicCriterion
     @set('value', criteria)
   serialize: () ->
     @get('value')
+  linkUp: () ->
 
 class XLF.SkipLogicCollectionMeta extends Backbone.Model
   defaults:
@@ -538,12 +539,15 @@ class XLF.SkipLogicCollection extends BaseCollection
     else
       serialized = @serialize()
       parseHelper.parseSkipLogic(@, serialized, @parentRow)
-      if @parseable == false
-        @add(new XLF.HandCodedSkipLogicCriterion(serialized))
-        alert("Could not parse: invalid / unsupported criteria")
-      else
+      if @parseable
         @meta.set("mode", "gui")
         @each((item) -> item.linkUp())
+      else if serialized == ''
+        @reset()
+        @meta.set("mode", "gui")
+      else
+        @add(new XLF.HandCodedSkipLogicCriterion(serialized))
+        alert("Could not parse: invalid / unsupported criteria")
 
 
 
@@ -556,6 +560,9 @@ SkipLogicDetailMixin =
   postInitialize: ()->
     @skipLogicCollection = new XLF.SkipLogicCollection([], rowDetail: @)
     @parse()
+    if !@skipLogicCollection.parseable and @get('value') != ''
+      @skipLogicCollection.add(new XLF.HandCodedSkipLogicCriterion(@get('value')))
+      @skipLogicCollection.meta.set('mode', 'handcode')
 
   serialize: ()->
     # @hidden = false
