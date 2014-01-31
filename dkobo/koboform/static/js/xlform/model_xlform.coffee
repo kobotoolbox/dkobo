@@ -501,9 +501,16 @@ class XLF.SkipLogicCriterion extends Backbone.Model
     wrappedCriterion = if addlReqs then ("'" + (@get('criterion') || '') + "'") else ""
     "${" + questionName + "} " + exprStr + " " + wrappedCriterion
 
+class XLF.HandCodedSkipLogicCriterion extends XLF.SkipLogicCriterion
+  initialize: (criteria) ->
+    @set('value', criteria)
+  serialize: () ->
+    @get('value')
+
 class XLF.SkipLogicCollectionMeta extends Backbone.Model
   defaults:
     "delimSelect": "and"
+    "mode": "gui"
 
 class XLF.SkipLogicCollection extends BaseCollection
   model: XLF.SkipLogicCriterion
@@ -521,6 +528,16 @@ class XLF.SkipLogicCollection extends BaseCollection
     joiner = @meta.get("delimSelect")
     throw new Error("Joiner not recognized: #{joiner}")  unless joiner of joiners
     _.compact(@map((item)=> item.serialize())).join(joiners[joiner])
+
+  switchEditingMode: () ->
+    if @meta.get("mode") == "gui"
+      @reset()
+      @meta.set("mode", "handcode")
+      @add(new XLF.HandCodedSkipLogicCriterion())
+    else
+      @reset()
+      @meta.set("mode", "gui")
+
 
 # To be extended ontop of a RowDetail when the key matches
 # the attribute in XLF.RowDetailMixin
