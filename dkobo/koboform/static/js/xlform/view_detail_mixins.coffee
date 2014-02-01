@@ -53,7 +53,7 @@ DetailViewMixins.constraint =
   afterRender: ->
     viewUtils.makeEditable @, @model, 'code', {}
 
-DetailViewMixins.name =
+DetailViewMixins.name = DetailViewMixins.default =
   html: ->
     """
     #{@model.key}: <code>#{@model.get("value")}</code>

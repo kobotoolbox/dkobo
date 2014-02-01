@@ -430,7 +430,7 @@ class XLF.RowDetail extends BaseModel
       _.extend(@, XLF.RowDetailMixins[@key])
     super()
     vals2set = {}
-    if _.isString(valOrObj)
+    if _.isString(valOrObj) || _.isNumber(valOrObj)
       vals2set.value = valOrObj
     else if "value" of valOrObj
       _.extend vals2set, valOrObj
@@ -719,7 +719,7 @@ txtid = ()->
 XLF.columns is used to determine the order that the elements
 are added into the page and the final CSV.
 ###
-XLF.columns = ["type", "name", "label", "hint", "required", "relevant", "constraint"]
+XLF.columns = ["type", "name", "label", "hint", "required", "relevant", "default", "constraint"]
 
 ###
 XLF.newRowDetails are the default values that are assigned to a new
@@ -740,6 +740,9 @@ XLF.newRowDetails =
     value: false
     _hideUnlessChanged: true
   relevant:
+    value: ""
+    _hideUnlessChanged: true
+  default:
     value: ""
     _hideUnlessChanged: true
   constraint:
