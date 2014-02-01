@@ -25,8 +25,7 @@ function MiscUtilsService() {
                     log(data.files[0].name + " is uploading...");
                     data.submit().success(function(result){
                         window.importedSurveyDraft = result;
-                        $scope.updateFormList = true;
-                        $scope.$apply();
+                        $scope.updateFormList();
                     })
                     .error(function (result) {
                         _this.handleXhrError(result);

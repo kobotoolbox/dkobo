@@ -89,8 +89,7 @@ describe ('Controllers', function () {
             it('should update forms list when changed to true', inject(function ($controller, $rootScope) {
                 initializeController($controller, 'Forms', $rootScope);
 
-                $rs.updateFormList = true;
-                $rs.$apply();
+                $rs.updateFormList();
 
                 expect(resourceStub.query).toHaveBeenCalledTwice();
             }));
