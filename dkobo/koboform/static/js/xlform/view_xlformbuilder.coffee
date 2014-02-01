@@ -176,6 +176,7 @@ class XLF.SkipLogicCollectionView extends Backbone.View
     <p class="skiplogic__extras">
       <button class="skiplogic__handcode">Hand code</button>
     </p>
+    <textarea class="skiplogic__handcode-edit"></textarea>
     """)
     @$list = @$(".skiplogic__criterialist")
 
@@ -185,10 +186,21 @@ class XLF.SkipLogicCollectionView extends Backbone.View
     for checkbox in delimSelect.find("input") when checkbox.value is delimSelectValue
       checkbox.checked = "checked"
 
-    @collection.each (model)=>
-      @$list.append(new XLF.SkipLogicCriterionView(model: model).render().$el)
+    if @collection.meta.get("mode") == "gui"
+      @collection.each (model)=>
+        @$list.append(new XLF.SkipLogicCriterionView(model: model).render().$el)
+      @$list.show()
+      @$('.skiplogic__addcriterion').show()
+      @$('.skiplogic__handcode-edit').hide()
+    else
+      @$list.hide()
+      delimSelect.hide()
+      @$('.skiplogic__addcriterion').hide()
+      wire_up_input(@$('.skiplogic__handcode-edit').show(), @collection.at(0), 'value')
+
+    @$('.skiplogic__handcode').click(_.bind @switchEditingMode, @)
     @
-  markChangedDelimSelector: (evt)->
+  markChangedDelimSelector: (evt) ->
     @collection.meta.set("delimSelect", evt.target.value)
   toggle: ->
     @$el.toggle()
@@ -199,6 +211,9 @@ class XLF.SkipLogicCollectionView extends Backbone.View
     modelId = $target.data("criterionId")
     criterion = @collection.get(modelId)
     @collection.remove(criterion)
+  switchEditingMode: (evt) ->
+    @collection.switchEditingMode()
+    @render()
 
 class XlfRowSelector extends Backbone.View
   events:

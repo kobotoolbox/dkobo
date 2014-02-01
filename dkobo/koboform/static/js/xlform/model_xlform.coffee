@@ -501,9 +501,17 @@ class XLF.SkipLogicCriterion extends Backbone.Model
     wrappedCriterion = if addlReqs then ("'" + (@get('criterion') || '') + "'") else ""
     "${" + questionName + "} " + exprStr + " " + wrappedCriterion
 
+class XLF.HandCodedSkipLogicCriterion extends XLF.SkipLogicCriterion
+  initialize: (criteria) ->
+    @set('value', criteria)
+  serialize: () ->
+    @get('value')
+  linkUp: () ->
+
 class XLF.SkipLogicCollectionMeta extends Backbone.Model
   defaults:
     "delimSelect": "and"
+    "mode": "gui"
 
 class XLF.SkipLogicCollection extends BaseCollection
   model: XLF.SkipLogicCriterion
@@ -522,6 +530,27 @@ class XLF.SkipLogicCollection extends BaseCollection
     throw new Error("Joiner not recognized: #{joiner}")  unless joiner of joiners
     _.compact(@map((item)=> item.serialize())).join(joiners[joiner])
 
+  switchEditingMode: () ->
+    if @meta.get("mode") == "gui"
+      handcodedCriterion = new XLF.HandCodedSkipLogicCriterion(@serialize())
+      @reset()
+      @meta.set("mode", "handcode")
+      @add(handcodedCriterion)
+    else
+      serialized = @serialize()
+      parseHelper.parseSkipLogic(@, serialized, @parentRow)
+      if @parseable
+        @meta.set("mode", "gui")
+        @each((item) -> item.linkUp())
+      else if serialized == ''
+        @reset()
+        @meta.set("mode", "gui")
+      else
+        @add(new XLF.HandCodedSkipLogicCriterion(serialized))
+        alert("Could not parse: invalid / unsupported criteria")
+
+
+
 # To be extended ontop of a RowDetail when the key matches
 # the attribute in XLF.RowDetailMixin
 SkipLogicDetailMixin =
@@ -531,6 +560,9 @@ SkipLogicDetailMixin =
   postInitialize: ()->
     @skipLogicCollection = new XLF.SkipLogicCollection([], rowDetail: @)
     @parse()
+    if !@skipLogicCollection.parseable and @get('value') != ''
+      @skipLogicCollection.add(new XLF.HandCodedSkipLogicCriterion(@get('value')))
+      @skipLogicCollection.meta.set('mode', 'handcode')
 
   serialize: ()->
     # @hidden = false
@@ -538,27 +570,30 @@ SkipLogicDetailMixin =
     @skipLogicCollection.serialize()
 
   parse: ()->
-    value = @get('value')
-    @skipLogicCollection.meta.set("rawValue", value)
+    parseHelper.parseSkipLogic(@skipLogicCollection, @get('value'), @parentRow)
+
+  linkUp: ->
+    @skipLogicCollection.each (i)-> i.linkUp()
+
+parseHelper =
+  parseSkipLogic: (collection, value, parentRow) ->
+    collection.meta.set("rawValue", value)
     try
       parsedValues = XLF.skipLogicParser(value)
-      @skipLogicCollection.empty()
-      @skipLogicCollection.parseable = true
+      collection.reset()
+      collection.parseable = true
       for crit in parsedValues.criteria
-        @skipLogicCollection.add({
+        collection.add({
           name: crit.name
-          parentRow: @parentRow
+          parentRow: parentRow
           expressionCode: crit.operator
           criterion: crit.response_value
         }, silent: true)
       if parsedValues.operator
-        @skipLogicCollection.meta.set("delimSelect", parsedValues.operator.toLowerCase())
+        collection.meta.set("delimSelect", parsedValues.operator.toLowerCase())
       ``
     catch e
-      @skipLogicCollection.parseable = false
-
-  linkUp: ->
-    @skipLogicCollection.each (i)-> i.linkUp()
+      collection.parseable = false
 
 @XLF.RowDetailMixins =
   relevant: SkipLogicDetailMixin
