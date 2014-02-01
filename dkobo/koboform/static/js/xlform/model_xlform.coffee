@@ -170,7 +170,7 @@ class XLF.Survey extends SurveyFragment
         r._parent = @
         if r.type in XLF.surveyDetailSchema.typeList()
           @surveyDetails.importDetail(r)
-        else if r.type in ["begin group", "begin repeat", "end group", "end repeat"]
+        else if r.type in ["begin group", "begin repeat", "end group", "end repeat", "begin_group", "begin_repeat", "end_group", "end_repeat"]
           #noop, for now.
         else
           @rows.add r, collection: @rows, silent: true
