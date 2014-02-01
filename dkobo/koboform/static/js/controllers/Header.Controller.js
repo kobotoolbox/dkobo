@@ -5,6 +5,7 @@ function HeaderController($scope, $rootScope, $miscUtils) {
     $scope.pageIconColor = 'teal';
     $scope.pageTitle = 'Forms';
     $scope.pageIcon = 'fa-file-text-o';
+    $rootScope.isLoading = false;
 
     $scope.topLevelMenuActive = '';
     $rootScope.activeTab = 'Forms';

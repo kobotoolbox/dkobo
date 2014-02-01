@@ -111,6 +111,12 @@
           <i class="header-bar__page-icon  fa  {{ pageIcon }}  fa-stack-1x  fa-inverse"></i>
         </span>
           <h1 class="header-bar__title">{{ activeTab }}</h1>
+          <span class="loader" ng-show="isLoading">
+  {% endverbatim %}
+            <img src="{% static 'img/ajax-loader.gif' %}" class="ajax-loader__image" />
+  {% verbatim %}
+            Your Form is Being Imported
+          </span>
           <a href="#/builder" ng-show="canAddNew" class="btn--header-create-new btn  btn--s  pull-right">Create New</a>
           <form action="/import_survey_draft" class="btn--header-import">
             <span class="btn btn-success fileinput-button">
