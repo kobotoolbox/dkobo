@@ -644,26 +644,14 @@ XLF...
   "createSurveyFromCsv"
 ###
 XLF.createSurveyFromCsv = (csv_repr)->
-  opts = {}
-  $settings   = opts.settings || {}
-  # $launchEditor = if "launchEditor" in opts then opts.launchEditor else true
-  $elemWrap   = $(opts.elemWrap || '#main')
-  $publishCb  = opts.publish || ->
+  csv.settings.parseFloat = false
 
-  if csv_repr
-    if opts.survey or opts.choices
-      throw new XlformError """
-      [csv_repr] will cause other options to be ignored: [survey, choices]
-      """
-    cobj = csv.sheeted(csv_repr)
-    $survey = if (sht = cobj.sheet "survey") then sht.toObjects() else []
-    $choices = if (sht = cobj.sheet "choices") then sht.toObjects() else []
+  cobj = csv.sheeted(csv_repr)
+  $survey = if (sht = cobj.sheet "survey") then sht.toObjects() else []
+  $choices = if (sht = cobj.sheet "choices") then sht.toObjects() else []
 
-    if (settingsSheet = cobj.sheet "settings")
-      $settings = settingsSheet.toObjects()[0]
-  else
-    $survey   = opts.survey || []
-    $choices  = opts.choices || []        # settings: $settings
+  if (settingsSheet = cobj.sheet "settings")
+    $settings = settingsSheet.toObjects()[0]
 
   new XLF.Survey(survey: $survey, choices: $choices, settings: $settings)
 
