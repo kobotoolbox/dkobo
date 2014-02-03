@@ -363,6 +363,8 @@ class XLF.Row extends BaseModel
           cl.set("name", clname, silent: true)
         @set("value", "#{@get('typeId')} #{clname}")
 
+  getType: ->
+    @get('type').get('typeId')
   getList: ->
     @get("type")?.get("list")
 

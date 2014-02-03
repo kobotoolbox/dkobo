@@ -51,6 +51,9 @@ class XLF.SkipLogicCriterionView extends Backbone.View
       return vals
     throw new Error("Expression not found: #{str}")
   render: ()->
+    question = @model.get('question')
+    @response_value_is_select = !!(question? && question.getType() == 'select_one')
+
     @$el.html("""
       <select class="skiplogic__rowselect on-row-detail-change-name on-row-detail-change-label"></select>
       <select class="skiplogic__expressionselect">
@@ -59,7 +62,9 @@ class XLF.SkipLogicCriterionView extends Backbone.View
         <option value="ans_notnull">was answered</option>
         <option value="ans_null">was not answered</option>
       </select>
-      <input placeholder="response value" class="skiplogic__responseval" type="text" />
+    """ +
+    (if @response_value_is_select then """<select class="skiplogic__responseval"></select>""" else """<input placeholder="response value" class="skiplogic__responseval" type="text" />""") +
+    """
       <button class="skiplogic__deletecriterion" data-criterion-id="#{@model.cid}">&times;</button>
     """)
 
@@ -72,10 +77,22 @@ class XLF.SkipLogicCriterionView extends Backbone.View
       @populate_rowselect()
 
     @listen_rowselect()
+    @populate_responseval()
 
-    wire_up_input(@$('input:last'), @model, 'criterion', 'keyup')
     @
 
+  populate_responseval: ->
+    $response_value_input = if @response_value_is_select then @$('select.skiplogic__responseval') else @$('.skiplogic__responseval')
+
+    if (@response_value_is_select)
+      @model.get('question').getList().options.forEach (option) ->
+        $("<option>", {value: option.get('name'), html: option.get('label')}).appendTo($response_value_input)
+
+      wire_up_input($response_value_input, @model, 'criterion', 'change')
+      $response_value_input.select2()
+
+    else
+      wire_up_input($response_value_input, @model, 'criterion', 'keyup')
   populate_expressionselect: ->
     expressionSelect = @$(".skiplogic__expressionselect")
     for key, vals in XLF.SkipLogicCriterion.expressionValues
@@ -86,6 +103,7 @@ class XLF.SkipLogicCriterionView extends Backbone.View
 
   listen_expressionselect: ->
     expressionSelect = @$(".skiplogic__expressionselect")
+    expressionSelect.off "change"
     expressionSelect.on "change", (evt)=>
       expStr = @lookupExpression(evt.target.value)[0]
       @model.set("expressionCode", evt.target.value)
@@ -124,11 +142,13 @@ class XLF.SkipLogicCriterionView extends Backbone.View
     skiplogic__rowselect = @$("select.skiplogic__rowselect")
     parentRow = @model.get("parentRow")
     survey = parentRow.getSurvey()
+    skiplogic__rowselect.off "change"
     skiplogic__rowselect.on "change", ()=>
       questionName = skiplogic__rowselect.val()
       question = survey.findRowByName(questionName)
       if question
         @model.set("question", question)
+        @render()
       else
         throw new Error("Question `#{questionName}` not found")
     ``
