@@ -467,6 +467,7 @@ class XLF.SkipLogicCriterion extends Backbone.Model
     resp_notequals: ["!=", "was not", true]
     ans_notnull:    ["!= NULL", "was answered", false]
     ans_null:       ["= ''", "was not answered", false]
+    multiplechoice_selected: [null, null, true]
 
   defaults:
     "expressionCode": "resp_equals"
@@ -496,12 +497,17 @@ class XLF.SkipLogicCriterion extends Backbone.Model
     else
       return null
 
-    exCode = @get("expressionCode")
-    unless exCode of @constructor.expressionValues
-      throw new Error("ExpressionCode not recognized: #{exCode}")
-    [exprStr, descLabel, addlReqs] = @constructor.expressionValues[exCode]
-    wrappedCriterion = if addlReqs then ("'" + (@get('criterion') || '') + "'") else ""
-    "${" + questionName + "} " + exprStr + " " + wrappedCriterion
+    if (question.getType() == 'select_one')
+      "selected('" + questionName + "', '" + @get('criterion') + "')"
+    else
+      exCode = @get("expressionCode")
+      unless exCode of @constructor.expressionValues
+        throw new Error("ExpressionCode not recognized: #{exCode}")
+      [exprStr, descLabel, addlReqs] = @constructor.expressionValues[exCode]
+
+      wrappedCriterion = if addlReqs then ("'" + (@get('criterion') || '') + "'") else ""
+
+      "${" + questionName + "} " + exprStr + " " + wrappedCriterion
 
 class XLF.HandCodedSkipLogicCriterion extends XLF.SkipLogicCriterion
   initialize: (criteria) ->

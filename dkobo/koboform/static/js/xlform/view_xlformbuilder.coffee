@@ -56,14 +56,9 @@ class XLF.SkipLogicCriterionView extends Backbone.View
 
     @$el.html("""
       <select class="skiplogic__rowselect on-row-detail-change-name on-row-detail-change-label"></select>
-      <select class="skiplogic__expressionselect">
-        <option value="resp_equals">was</option>
-        <option value="resp_notequals">was not</option>
-        <option value="ans_notnull">was answered</option>
-        <option value="ans_null">was not answered</option>
-      </select>
     """ +
-    (if @response_value_is_select then """<select class="skiplogic__responseval"></select>""" else """<input placeholder="response value" class="skiplogic__responseval" type="text" />""") +
+    @render_expression_select() +
+    (if @response_value_is_select then """<select class="skiplogic__responseval" style="width: 100px;"></select>""" else """<input placeholder="response value" class="skiplogic__responseval" type="text" />""") +
     """
       <button class="skiplogic__deletecriterion" data-criterion-id="#{@model.cid}">&times;</button>
     """)
@@ -81,12 +76,26 @@ class XLF.SkipLogicCriterionView extends Backbone.View
 
     @
 
+  render_expression_select: ->
+    if @response_value_is_select
+      " was "
+    else
+      """
+        <select class="skiplogic__expressionselect">
+          <option value="resp_equals">was</option>
+          <option value="resp_notequals">was not</option>
+          <option value="ans_notnull">was answered</option>
+          <option value="ans_null">was not answered</option>
+        </select>
+      """
   populate_responseval: ->
     $response_value_input = if @response_value_is_select then @$('select.skiplogic__responseval') else @$('.skiplogic__responseval')
 
     if (@response_value_is_select)
-      @model.get('question').getList().options.forEach (option) ->
+      @model.get('question').getList().options.forEach (option) =>
         $("<option>", {value: option.get('name'), html: option.get('label')}).appendTo($response_value_input)
+        option.on('change:name', _.bind(@render,@))
+        option.on('change:label', _.bind(@render,@))
 
       wire_up_input($response_value_input, @model, 'criterion', 'change')
       $response_value_input.select2()
