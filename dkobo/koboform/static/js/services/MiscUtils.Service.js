@@ -22,6 +22,7 @@ function MiscUtilsService() {
                 add: function (e, data) {
                     // maybe display some feedback saying the upload is starting...
                     $scope.isLoading = true;
+                    $scope.$apply();
                     log(data.files[0].name + " is uploading...");
                     data.submit().success(function(result){
                         window.importedSurveyDraft = result;
