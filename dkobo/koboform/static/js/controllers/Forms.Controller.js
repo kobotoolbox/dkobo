@@ -9,7 +9,6 @@ function FormsController ($scope, $rootScope, $resource, $miscUtils) {
 
     $rootScope.canAddNew = true;
     $rootScope.activeTab = 'Forms';
-    $rootScope.isLoading = false;
 
     $scope.deleteSurvey = function (survey) {
         var id = survey.id;
