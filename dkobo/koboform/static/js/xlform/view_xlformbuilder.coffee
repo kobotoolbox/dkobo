@@ -512,7 +512,7 @@ class @SurveyApp extends Backbone.View
     "click .delete-row": "clickRemoveRow"
     "click #xlf-preview": "previewButtonClick"
     "click #csv-preview": "previewCsv"
-    "click #download": "downloadButtonClick"
+    "click #xlf-download": "downloadButtonClick"
     "click #save": "saveButtonClick"
     "click #publish": "publishButtonClick"
     "update-sort": "updateSort"
