@@ -37,13 +37,6 @@ kobo.config(function ($routeProvider, $httpProvider) {
 
         $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
-        $routeProvider.when('/dashboard', {
-            templateUrl: staticFilesUri + 'templates/Dashboard.Template.html',
-            controller: function ($scope) {
-                $scope.additionalClasses = 'content--centered';
-            }
-        });
-
         $routeProvider.when('/forms', {
             templateUrl: staticFilesUri + 'templates/Forms.Template.html',
             controller: 'FormsController'
