@@ -26,7 +26,7 @@ describe('XLF.skipLogicParser', function () {
     });
 
     it('parses a single answered clause', function () {
-        expect(XLF.skipLogicParser("${question_name}   !=   NULL")).toEqual({
+        expect(XLF.skipLogicParser("${question_name}   !=   ''")).toEqual({
             criteria: [{
                 name: "question_name",
                 operator: "ans_notnull"
@@ -44,7 +44,7 @@ describe('XLF.skipLogicParser', function () {
     });
 
     it('parses multiple AND separated clauses', function () {
-        expect(XLF.skipLogicParser("${question_name} != 'value' AND ${question_name} != NULL")).toEqual({
+        expect(XLF.skipLogicParser("${question_name} != 'value' AND ${question_name} != ''")).toEqual({
             criteria: [
                 {
                     name: "question_name",
@@ -62,7 +62,7 @@ describe('XLF.skipLogicParser', function () {
     });
 
     it('parses multiple OR separated clauses', function () {
-        expect(XLF.skipLogicParser("${question_name} != 'value' OR ${question_name} != NULL")).toEqual({
+        expect(XLF.skipLogicParser("${question_name} != 'value' OR ${question_name} != ''")).toEqual({
             criteria: [
                 {
                     name: "question_name",
