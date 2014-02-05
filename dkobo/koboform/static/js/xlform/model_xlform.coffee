@@ -498,7 +498,13 @@ class XLF.SkipLogicCriterion extends Backbone.Model
       return null
 
     if (question.getType() == 'select_one')
-      "selected('" + questionName + "', '" + @get('criterion') + "')"
+      criterionName = @get('criterionOption')?.get('name') or @get('criterion')
+
+      if criterionName
+        "selected('#{questionName}', '#{criterionName}')"
+      else
+        console?.error("Criterion not specified", @)
+        null
     else
       exCode = @get("expressionCode")
       unless exCode of @constructor.expressionValues
@@ -591,12 +597,16 @@ parseHelper =
       collection.reset()
       collection.parseable = true
       for crit in parsedValues.criteria
-        collection.add({
+        opts = {
           name: crit.name
           parentRow: parentRow
           expressionCode: crit.operator
-          criterion: crit.response_value
-        }, silent: true)
+        }
+        if crit.operator is "multiplechoice_selected"
+          opts.criterionOption = @get("question").getList().options.get(crit.response_value)
+        else
+          opts.criterion = crit.response_value
+        collection.add(opts, silent: true)
       if parsedValues.operator
         collection.meta.set("delimSelect", parsedValues.operator.toLowerCase())
       ``

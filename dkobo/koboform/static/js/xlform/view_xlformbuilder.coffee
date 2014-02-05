@@ -92,13 +92,26 @@ class XLF.SkipLogicCriterionView extends Backbone.View
     $response_value_input = if @response_value_is_select then @$('select.skiplogic__responseval') else @$('.skiplogic__responseval')
 
     if (@response_value_is_select)
-      @model.get('question').getList().options.forEach (option) =>
-        $("<option>", {value: option.get('name'), html: option.get('label')}).appendTo($response_value_input)
-        option.on('change:name', _.bind(@render,@))
-        option.on('change:label', _.bind(@render,@))
+      question = @model.get('question')
+      if question
+        choiceListId = question.getList().cid
+        $response_value_input.attr("data-choice-list-cid", choiceListId)
+        $response_value_input.addClass("on-choice-list-update")
 
-      wire_up_input($response_value_input, @model, 'criterion', 'change')
-      $response_value_input.select2()
+      $response_value_input.on "rebuild-choice-list", ()=>
+        $response_value_input.empty()
+        @model.get('question').getList().options.forEach (option) =>
+          $("<option>", {value: option.cid, html: option.get('label')}).appendTo($response_value_input)
+
+        modelCriterion = @model.get("criterionOption")
+        if modelCriterion
+          $response_value_input.val(modelCriterion.cid)
+        $response_value_input.select2()
+
+      $response_value_input.trigger("rebuild-choice-list")
+      $response_value_input.on "change", ()=>
+        selectedOption = @model.get("question").getList().options.get($response_value_input.val())
+        @model.set("criterionOption", selectedOption)
 
     else
       wire_up_input($response_value_input, @model, 'criterion', 'keyup')
@@ -312,6 +325,8 @@ class XlfOptionView extends Backbone.View
       val = XLF.sluggify val
       @model.set('name', val)
       @model.set('setManually', true)
+      @$el.trigger("choice-list-update", @options.cl.cid)
+
       newValue: val
     @d.append(@p)
     @d.append(@c)
@@ -334,6 +349,7 @@ class XlfOptionView extends Backbone.View
       @model.set("label", nval, silent: true)
       if !@model.get('setManually')
         @model.set("name", XLF.sluggify(nval), silent: true)
+      @$el.trigger("choice-list-update", @options.cl.cid)
     ``
 
 class XlfListView extends Backbone.View
@@ -530,6 +546,8 @@ class @SurveyApp extends Backbone.View
     @survey.on "row-detail-change", (row, key, val, ctxt)=>
       evtCode = "row-detail-change-#{key}"
       @$(".on-#{evtCode}").trigger(evtCode, row, key, val, ctxt)
+    @$el.on "choice-list-update", (evt, clId) =>
+      $(".on-choice-list-update[data-choice-list-cid='#{clId}']").trigger("rebuild-choice-list")
 
     @onPublish = options.publish || $.noop
     @onSave = options.save || $.noop
