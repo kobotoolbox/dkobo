@@ -13,16 +13,16 @@ function ConfigurationService() {
                 'title': 'Assets',
                 'icon': 'fa-folder',
                 'name': 'assets'
-            },
+            // },
             // {
             //     'title': 'Admin',
             //     'icon': 'fa-cog',
             //     'name': 'admin'
             // },
-            {
-                'title': 'Import CSV',
-                'icon': 'fa-cog',
-                'name': 'import/csv'
+            // {
+            //     'title': 'Import CSV',
+            //     'icon': 'fa-cog',
+            //     'name': 'import/csv'
             }
         ];
     };
