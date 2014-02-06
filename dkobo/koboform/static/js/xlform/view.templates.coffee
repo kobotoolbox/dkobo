@@ -62,12 +62,10 @@ viewTemplates.xlfRowView = () ->
 
 viewTemplates.surveyTemplateApp = () ->
     """
-        <button class="btn--start-from-scratch btn">Start From Scratch</button>
+        <button class="btn--start-from-scratch btn">Start from scratch</button>
         <span class="or">or</span>
         <hr>
-        <div class="choose-template">
-            <h3>Choose Template</h3>
-        </div>
+        <button class="btn--start-from-scratch btn">Import from Excel</button>
     """
 
 viewTemplates.surveyApp = (survey) ->
