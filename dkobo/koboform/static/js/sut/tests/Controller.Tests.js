@@ -37,8 +37,8 @@ describe ('Controllers', function () {
     describe ('Forms Controller', function () {
         beforeEach(function () {
             resourceStub = {
-                            query: sinon.stub().returns(hello)
-                        };
+                    query: sinon.stub().returns(hello)
+                };
         });
         it('should initialize $rootScope and $scope correctly', inject(function ($controller, $rootScope) {
             initializeController($controller, 'Forms', $rootScope);
@@ -92,6 +92,26 @@ describe ('Controllers', function () {
                 $rs.updateFormList();
 
                 expect(resourceStub.query).toHaveBeenCalledTwice();
+            }));
+        });
+
+        describe('$scope.$watch("infoListItems")', function () {
+            it('should set additionalClasses = content-centered when infoListItems is empty', inject (function ($controller, $rootScope) {
+                initializeController($controller, 'Forms', $rootScope);
+
+                $rs.infoListItems = [];
+                $rs.$apply();
+
+                expect($rs.additionalClasses).toBe('content--centered');
+            }));
+
+            it('should set additionalClasses = "" when infoListItems contains elements', inject (function ($controller, $rootScope) {
+                initializeController($controller, 'Forms', $rootScope);
+
+                $rs.infoListItems = [1];
+                $rs.$apply();
+
+                expect($rs.additionalClasses).toBe('');
             }));
         })
     });
