@@ -298,6 +298,10 @@ textarea {
     background-color: #666;
 }
 
+.or + hr {
+    margin-bottom: 2em;
+}
+
 
 
 
