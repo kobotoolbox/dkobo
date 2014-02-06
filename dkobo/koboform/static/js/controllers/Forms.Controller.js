@@ -23,6 +23,10 @@ function FormsController ($scope, $rootScope, $resource, $miscUtils) {
         }
     };
 
+    $scope.$watch('infoListItems', function () {
+        $scope.additionalClasses = $scope.infoListItems.length === 0 ? 'content--centered' : '';
+    }, true);
+
     $rootScope.updateFormList = function () {
         if ($rootScope.updateFormList) {
             formsApi.query(function (response) {

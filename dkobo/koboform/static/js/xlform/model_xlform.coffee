@@ -430,9 +430,15 @@ class XLF.RowDetail extends BaseModel
       _.extend(@, XLF.RowDetailMixins[@key])
     super()
     vals2set = {}
+    if(@key == 'required')
+      if (valOrObj == 'yes')
+        valOrObj = true
+      else
+        valOrObj = false
+
     if _.isString(valOrObj) || _.isNumber(valOrObj)
       vals2set.value = valOrObj
-    else if "value" of valOrObj
+    else if _.isObject(valOrObj) && "value" of valOrObj
       _.extend vals2set, valOrObj
     else
       vals2set.value = valOrObj
@@ -463,7 +469,7 @@ class XLF.SkipLogicCriterion extends Backbone.Model
     # key: ["expressionString", "Descriptive Label", additionalValueRequired]
     resp_equals:    ["=", "was", true]
     resp_notequals: ["!=", "was not", true]
-    ans_notnull:    ["!= NULL", "was answered", false]
+    ans_notnull:    ["!= ''", "was answered", false]
     ans_null:       ["= ''", "was not answered", false]
 
   defaults:
