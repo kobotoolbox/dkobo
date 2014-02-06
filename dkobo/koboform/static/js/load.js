@@ -63,7 +63,7 @@ kobo.config(function ($routeProvider, $httpProvider) {
         });
 
         $routeProvider.otherwise({
-            redirectTo: '/dashboard'
+            redirectTo: '/forms'
         });
     });
 
