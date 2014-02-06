@@ -14,11 +14,11 @@ function ConfigurationService() {
                 'icon': 'fa-folder',
                 'name': 'assets'
             },
-            {
-                'title': 'Admin',
-                'icon': 'fa-cog',
-                'name': 'admin'
-            },
+            // {
+            //     'title': 'Admin',
+            //     'icon': 'fa-cog',
+            //     'name': 'admin'
+            // },
             {
                 'title': 'Import CSV',
                 'icon': 'fa-cog',
