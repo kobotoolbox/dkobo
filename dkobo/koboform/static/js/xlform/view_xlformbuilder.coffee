@@ -101,17 +101,22 @@ class XLF.SkipLogicCriterionView extends Backbone.View
       $response_value_input.on "rebuild-choice-list", ()=>
         $response_value_input.empty()
         @model.get('question').getList().options.forEach (option) =>
-          $("<option>", {value: option.cid, html: option.get('label')}).appendTo($response_value_input)
+          $("<option>", {value: option.get('name'), html: option.get('label')}).appendTo($response_value_input)
 
         modelCriterion = @model.get("criterionOption")
         if modelCriterion
-          $response_value_input.val(modelCriterion.cid)
+          $response_value_input.val(modelCriterion.get('name'))
         $response_value_input.select2()
 
       $response_value_input.trigger("rebuild-choice-list")
-      $response_value_input.on "change", ()=>
+
+      link_selected_option = ()=>
         selectedOption = @model.get("question").getList().options.get($response_value_input.val())
         @model.set("criterionOption", selectedOption)
+
+      $response_value_input.on "change", link_selected_option
+
+      link_selected_option()
 
     else
       wire_up_input($response_value_input, @model, 'criterion', 'keyup')
@@ -314,7 +319,9 @@ class XlfOptionView extends Backbone.View
     if @model
       @p.html @model.get("label")
       @$el.attr("data-option-id", @model.cid)
-      $('span', @c).html @model.get("name")
+      if @model.get('name') != XLF.sluggify(@model.get('label'))
+        $('span', @c).html @model.get("name")
+        @model.set('setManually', true)
     else
       @model = new XLF.Option()
       @options.cl.options.add(@model)
@@ -348,7 +355,7 @@ class XlfOptionView extends Backbone.View
     else
       @model.set("label", nval, silent: true)
       if !@model.get('setManually')
-        @model.set("name", XLF.sluggify(nval), silent: true)
+        @model.set("name", XLF.sluggify(nval))
       @$el.trigger("choice-list-update", @options.cl.cid)
     ``
 

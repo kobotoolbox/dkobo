@@ -603,7 +603,7 @@ parseHelper =
           expressionCode: crit.operator
         }
         if crit.operator is "multiplechoice_selected"
-          opts.criterionOption = @get("question").getList().options.get(crit.response_value)
+          opts.criterionOption = collection.parentRow.getSurvey().findRowByName(crit.name).getList().options.get(crit.response_value)
         else
           opts.criterion = crit.response_value
         collection.add(opts, silent: true)
