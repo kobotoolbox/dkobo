@@ -5,4 +5,4 @@ from models import SurveyDraft
 class SurveyDraftSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = SurveyDraft
-        fields = ('id', 'name', 'body', 'description')
+        fields = ('id', 'name', 'body', 'description', 'date_modified')

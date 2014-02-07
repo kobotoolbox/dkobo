@@ -5,7 +5,12 @@
 function FormsController ($scope, $rootScope, $resource, $miscUtils) {
     var formsApi = $resource('api/survey_drafts/:id', {id: '@id'});
 
-    $scope.infoListItems = formsApi.query();
+    $scope.infoListItems = formsApi.query(function (items) {
+        for (var i = 0; i < items.length; i++) {
+            var currentItem = items[i];
+            currentItem.date_modified = new Date(currentItem.date_modified);
+        }
+    });
 
     $rootScope.canAddNew = true;
     $rootScope.activeTab = 'Forms';

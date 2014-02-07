@@ -186,9 +186,10 @@ def import_survey_draft(request):
             response_code = 500
             output[u'error'] = err
     else:
-        response_code = 204 #Error 204: No input
+        response_code = 204  #Error 204: No input
         output[u'error'] = "No file posted"
     return HttpResponse(json.dumps(output), content_type="application/json", status=response_code)
+
 
 class SurveyDraftViewSet(viewsets.ModelViewSet):
     model = SurveyDraft
