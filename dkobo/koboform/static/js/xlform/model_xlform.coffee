@@ -431,7 +431,7 @@ class XLF.RowDetail extends BaseModel
     super()
     vals2set = {}
     if(@key == 'required')
-      if (valOrObj == 'yes')
+      if (valOrObj == 'yes' || valOrObj == 'true' || valOrObj == 'true()')
         valOrObj = true
       else
         valOrObj = false
