@@ -71,16 +71,7 @@
       <script src="{% static 'js/modal.js' %}"></script>
       <script src="{% static 'js/jquery-ui-1.10.3.custom.js' %}"></script>
       <script type="text/coffeescript" src="{% static 'js/csv.coffee' %}"></script>
-      <script type="text/coffeescript" src="{% static 'js/xlform/model_xlform.coffee' %}"></script>
-      <script type="text/coffeescript" src="{% static 'js/xlform/model.surveyDetailSchema.coffee' %}"></script>
-      <script src="{% static 'js/xlform/XLF.skipLogicParser.js' %}"></script>
-      <script type="text/coffeescript" src="{% static 'js/xlform/view_xlformbuilder.coffee' %}"></script>
-      <script type="text/coffeescript" src="{% static 'js/xlform/view_detail_mixins.coffee' %}"></script>
-      <script type="text/coffeescript" src="{% static 'js/xlform/view.utils.coffee' %}"></script>
-      <script type="text/coffeescript" src="{% static 'js/xlform/view.icons.coffee' %}"></script>
-      <script type="text/coffeescript" src="{% static 'js/xlform/view.templates.coffee' %}"></script>
-      <script src="{% static 'js/xlform/validator.js' %}"></script>
-      <script src="{% static 'js/xlform/validator.backbone.adapters.js' %}"></script>
+	  {% include 'xlform_scripts.html' %}
       {# ---------------------- File Upload --------------------------- #}
       <script src="{% static 'js/vendor/jquery.ui.widget.js' %}"></script>
       <script src="{% static 'js/jquery.iframe-transport.js' %}"></script>

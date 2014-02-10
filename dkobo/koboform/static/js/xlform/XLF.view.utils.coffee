@@ -1,3 +1,5 @@
+# enketoIframe = do ->
+
 @viewUtils = {}
 
 viewUtils.makeEditable = (that, model, selector, {property, transformFunction, options}) ->
@@ -38,3 +40,23 @@ viewUtils.reorderElemsByData = (selector, parent, dataAttribute)->
     val = $el.data(dataAttribute)
     arr[val] = $el  if _.isNumber(val)
   $el.appendTo(parentEl)  for $el in arr
+
+XLF.enketoIframe = do ->
+
+  buildUrl = (previewUrl)->
+    fullPreviewUrl = "#{window.location.origin}#{previewUrl}"
+    """https://enketo.org/webform/preview?form=#{fullPreviewUrl}"""
+
+  clickCloserBackground = ->
+    $("<div>", class: "js-click-remove-iframe")
+
+  launch = (previewUrl)->
+    wrap = $("<div>", class: "js-click-remove-iframe iframe-bg-shade")
+    $("<iframe>", src: buildUrl(previewUrl)).appendTo(wrap)
+    wrap.click ()-> wrap.remove()
+    wrap
+
+  launch.close = ()->
+    $(".iframe-bg-shade").remove()
+
+  launch
