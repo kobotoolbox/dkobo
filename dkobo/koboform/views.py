@@ -59,16 +59,12 @@ def survey_drafts(request, sdid=0):
     elif request.method == 'PUT':
         return update_survey_draft(request, sdid)
 
-@login_required
+@csrf_exempt
 def survey_previews(request):
     contents = json.loads(request.body)
-    survey_draft_id = contents.get(u'survey_draft_id')
-    survey_draft = request.user.survey_drafts.get(id=survey_draft_id)
     if contents.get(u'body'):
-        preview = survey_draft.generate_preview(csv=contents.get(u'body'))
-    else:
-        preview = survey_draft.generate_preview()
-    return HttpResponse(json.dumps(model_to_dict(preview)), content_type="application/json")
+        preview = SurveyPreview.objects.create(csv=contents.get(u'body'))
+        return HttpResponse(json.dumps(model_to_dict(preview)), content_type="application/json")
 
 @csrf_exempt
 def get_survey_preview(request, unique_string):
