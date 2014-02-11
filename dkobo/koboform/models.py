@@ -24,9 +24,22 @@ class SurveyPreview(models.Model):
 
     @classmethod
     def _generate_unique_string(kls, csv):
-        return md5.new("csv=%s" % (user.id, csv)).hexdigest()
+        return md5.new("csv=%s" % csv).hexdigest()
+
+    @classmethod
+    def _get_or_create(kls, *args, **kwargs):
+        csv = kwargs.get('csv')
+        kwargs[u'unique_string'] = kls._generate_unique_string(csv)
+        try:
+            return kls.objects.get(unique_string=kwargs[u'unique_string'])
+        except kls.DoesNotExist, e:
+            new_preview = kls(**kwargs)
+            new_preview.save()
+            return new_preview
 
     def save(self, *args, **kwargs):
-        self.unique_string = SurveyPreview._generate_unique_string(self.csv)
-        self.xml = create_survey_from_csv_text(self.csv, default_name="SurveyPreview__save").to_xml()
+        if self.unique_string is None:
+            self.unique_string = SurveyPreview._generate_unique_string(self.csv)
+        if self.xml is None:
+            self.xml = create_survey_from_csv_text(self.csv, default_name="SurveyPreview__save").to_xml()
         super(SurveyPreview, self).save(*args, **kwargs)

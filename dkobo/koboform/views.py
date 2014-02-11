@@ -63,8 +63,9 @@ def survey_drafts(request, sdid=0):
 def survey_previews(request):
     contents = json.loads(request.body)
     if contents.get(u'body'):
-        preview = SurveyPreview.objects.create(csv=contents.get(u'body'))
-        return HttpResponse(json.dumps(model_to_dict(preview)), content_type="application/json")
+        preview = SurveyPreview._get_or_create(csv=contents.get(u'body'))
+        preview_dict = model_to_dict(preview)
+        return HttpResponse(json.dumps(preview_dict), content_type="application/json")
 
 @csrf_exempt
 def get_survey_preview(request, unique_string):
