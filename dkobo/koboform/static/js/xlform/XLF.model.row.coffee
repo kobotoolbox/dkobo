@@ -6,7 +6,7 @@ _determineConstructorByParams = (obj)->
   if type in formSettingsTypes
     XLF.SurveyDetail
   else if type in XLF.aliases("group")
-    XLF.Group
+    XLF.RowError
   else
     XLF.Row
 

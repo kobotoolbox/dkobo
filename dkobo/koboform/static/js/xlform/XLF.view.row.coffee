@@ -87,3 +87,16 @@ class XLF.RowView extends Backbone.View
     @rowExtras.parent().toggleClass("activated")
     @rowExtrasSummary.toggleClass("hidden")
     @rowExtras.toggleClass("hidden")
+
+class XLF.RowErrorView extends Backbone.View
+  tagName: "li"
+  className: "xlf-row-view xlf-row-view-error card"
+  render: ->
+    atts = JSON.stringify(@model)
+    @$el.data("row-index", @model.getSurvey().rows.indexOf @model)
+    @$el.html """
+      Row could not be displayed:<br>
+      <pre>#{atts}</pre>
+      <em>This question could not be imported. Please re-create it manually. Please contact us at info@kobotoolbox.org so we can fix this bug!</em>
+    """
+    @

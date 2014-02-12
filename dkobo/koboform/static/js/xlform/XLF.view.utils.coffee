@@ -39,7 +39,8 @@ viewUtils.reorderElemsByData = (selector, parent, dataAttribute)->
     $el = $(@).detach()
     val = $el.data(dataAttribute)
     arr[val] = $el  if _.isNumber(val)
-  $el.appendTo(parentEl)  for $el in arr
+  $el.appendTo(parentEl)  for $el in arr when $el
+  ``
 
 XLF.enketoIframe = do ->
 
