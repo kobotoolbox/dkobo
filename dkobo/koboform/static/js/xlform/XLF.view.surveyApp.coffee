@@ -3,7 +3,7 @@
 class @SurveyApp extends Backbone.View
   className: "formbuilder-wrap container"
   events:
-    "click .delete-row": "clickRemoveRow"
+    "click .js-delete-row": "clickRemoveRow"
     "click #xlf-preview": "previewButtonClick"
     "click #csv-preview": "previewCsv"
     "click #xlf-download": "downloadButtonClick"
@@ -102,10 +102,7 @@ class @SurveyApp extends Backbone.View
     @survey.forEachRowIncludingErrors (row)=>
       isEmpty = false
       unless (xlfrv = @rowViews.get(row.cid))
-        if row instanceof XLF.Row
-          @rowViews.set(row.cid, new XLF.RowView(model: row, surveyView: @))
-        else
-          @rowViews.set(row.cid, new XLF.RowErrorView(model: row, surveyView: @))
+        @rowViews.set(row.cid, new XLF.RowView(model: row, surveyView: @))
         xlfrv = @rowViews.get(row.cid)
 
       $el = xlfrv.render().$el
@@ -170,7 +167,7 @@ class @SurveyApp extends Backbone.View
       success: (survey_preview, status, jqhr)=>
         if survey_preview.unique_string
           preview_url = "/koboform/survey_preview/#{survey_preview.unique_string}"
-          @onEscapeKeydown = enketoIframe.close
+          @onEscapeKeydown = XLF.enketoIframe.close
           XLF.enketoIframe(preview_url).appendTo("body")
 
   downloadButtonClick: (evt)->

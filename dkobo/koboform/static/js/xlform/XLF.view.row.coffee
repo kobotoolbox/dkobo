@@ -1,6 +1,3 @@
-# class XlfRowView extends Backbone.View
-# class XlfRowErrorView extends XlfRowView
-
 class XLF.RowView extends Backbone.View
   tagName: "li"
   className: "xlf-row-view"
@@ -36,8 +33,19 @@ class XLF.RowView extends Backbone.View
       @xlfRowSelector = new XLF.RowSelector(el: @$el.find(".expanding-spacer-between-rows").get(0), spawnedFromView: @)
     @xlfRowSelector.expand()
   render: ->
-    @$el.html viewTemplates.xlfRowView()
+    if @model instanceof XLF.RowError
+      @_renderError()
+    else
+      @_renderRow()
     @$el.data("row-index", @model.getSurvey().rows.indexOf @model)
+    @
+  _renderError: ->
+    @$el.addClass("xlf-row-view-error")
+    atts = viewUtils.cleanStringify(@model.attributes)
+    @$el.html viewTemplates.rowErrorView(atts)
+    @
+  _renderRow: ->
+    @$el.html viewTemplates.xlfRowView()
     unless (cl = @model.getList())
       cl = new XLF.ChoiceList()
       @model.setList(cl)
@@ -46,7 +54,6 @@ class XLF.RowView extends Backbone.View
     @rowExtrasSummary = @$(".row-extras-summary")
     for [key, val] in @model.attributesArray()
       new XLF.DetailView(model: val, rowView: @).renderInRowView(@)
-
     @
   editListForRow: (evt)->
     @_ensureNoListViewsOpen()
@@ -87,16 +94,3 @@ class XLF.RowView extends Backbone.View
     @rowExtras.parent().toggleClass("activated")
     @rowExtrasSummary.toggleClass("hidden")
     @rowExtras.toggleClass("hidden")
-
-class XLF.RowErrorView extends Backbone.View
-  tagName: "li"
-  className: "xlf-row-view xlf-row-view-error card"
-  render: ->
-    atts = JSON.stringify(@model)
-    @$el.data("row-index", @model.getSurvey().rows.indexOf @model)
-    @$el.html """
-      Row could not be displayed:<br>
-      <pre>#{atts}</pre>
-      <em>This question could not be imported. Please re-create it manually. Please contact us at info@kobotoolbox.org so we can fix this bug!</em>
-    """
-    @
