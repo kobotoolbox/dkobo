@@ -9,7 +9,7 @@
     <input placeholder="Search" class="filters__filter" ng-model="searchCriteria">
   </div>
   <ul class="info-list">
-    <li class="info-list__item" ng-repeat="item in items">
+    <li class="info-list__item" ng-repeat="item in items|orderBy:'-date_modified'">
       <input type="checkbox" class="info-list-item__checkbox">
       <span class="info-list-item__icon  fa-stack  fa-lg">
         <i class="fa  fa-circle  fa-stack-2x  icon--green"></i>
@@ -18,6 +18,9 @@
       <div class="info-list-item__details">
         <h3 class="info-list-item__title">
           <a href="#{{ getHashLink(item) }}">{{ item.name }}</a>
+          <span class="info-list__date-modified">
+            {{item.date_modified.getMonth()+1}}/{{item.date_modified.getDate()}}/{{item.date_modified.getYear() + 1900}}
+          </span>
           <a href="{{ getLink(item) }}" class="fa-stack  fa-lg">
 
             <i class="header-bar__page-icon-circle  fa  fa-circle  fa-stack-2x  icon--{{ pageIconColor }}"></i>

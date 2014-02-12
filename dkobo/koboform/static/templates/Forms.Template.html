@@ -1,1 +1,15 @@
-<section class="content" info-list items="infoListItems" refresh-item-list="filterList" can-add-new="true" name="{{ activeTab }}" delete-item="deleteSurvey(item)" can-delete="true" link-to="builder"></section>
+<section
+  class="content"
+  info-list items="infoListItems"
+  refresh-item-list="filterList"
+  can-add-new="true"
+  name="{{ activeTab }}"
+  delete-item="deleteSurvey(item)"
+  can-delete="true"
+  link-to="builder"
+  ng-show="infoListItems.length > 0">
+</section>
+<div class="content__message" ng-show="infoListItems.length === 0">
+    <h3 class="content__message-text">You have no forms. Go ahead and create your first one!</h3>
+    <a href="#/builder" class="content__message-action  btn  btn--block  btn--create-new-form">Create New Form</a>
+</div>

@@ -59,16 +59,13 @@ def survey_drafts(request, sdid=0):
     elif request.method == 'PUT':
         return update_survey_draft(request, sdid)
 
-@login_required
+@csrf_exempt
 def survey_previews(request):
     contents = json.loads(request.body)
-    survey_draft_id = contents.get(u'survey_draft_id')
-    survey_draft = request.user.survey_drafts.get(id=survey_draft_id)
     if contents.get(u'body'):
-        preview = survey_draft.generate_preview(csv=contents.get(u'body'))
-    else:
-        preview = survey_draft.generate_preview()
-    return HttpResponse(json.dumps(model_to_dict(preview)), content_type="application/json")
+        preview = SurveyPreview._get_or_create(csv=contents.get(u'body'))
+        preview_dict = model_to_dict(preview)
+        return HttpResponse(json.dumps(preview_dict), content_type="application/json")
 
 @csrf_exempt
 def get_survey_preview(request, unique_string):
@@ -186,9 +183,10 @@ def import_survey_draft(request):
             response_code = 500
             output[u'error'] = err
     else:
-        response_code = 204 #Error 204: No input
+        response_code = 204  #Error 204: No input
         output[u'error'] = "No file posted"
     return HttpResponse(json.dumps(output), content_type="application/json", status=response_code)
+
 
 class SurveyDraftViewSet(viewsets.ModelViewSet):
     model = SurveyDraft

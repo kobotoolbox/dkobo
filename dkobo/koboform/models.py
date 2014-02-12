@@ -16,31 +16,30 @@ class SurveyDraft(models.Model):
     date_modified = models.DateTimeField(auto_now=True)
     in_question_library = models.BooleanField(default=False)
 
-    def generate_preview(self, csv=False):
-        if not csv:
-            csv = self.body
-        try:
-            unique_string = SurveyPreview._generate_unique_string(self.user, csv)
-            return SurveyPreview.objects.get(unique_string=unique_string)
-        except SurveyPreview.DoesNotExist, e:
-            return SurveyPreview.objects.create(survey_draft=self, csv=csv)
-
-
 class SurveyPreview(models.Model):
     unique_string = models.CharField(max_length=64, null=False, unique=True)
-    survey_draft = models.ForeignKey(SurveyDraft, null=False, related_name="previews")
     csv = models.TextField()
     xml = models.TextField()
     date_created = models.DateTimeField(auto_now_add=True)
 
     @classmethod
-    def _generate_unique_string(kls, user, csv):
-        return md5.new("user=%d&csv=%s" % (user.id, csv)).hexdigest()
+    def _generate_unique_string(kls, csv):
+        return md5.new("csv=%s" % csv).hexdigest()
+
+    @classmethod
+    def _get_or_create(kls, *args, **kwargs):
+        csv = kwargs.get('csv')
+        kwargs[u'unique_string'] = kls._generate_unique_string(csv)
+        try:
+            return kls.objects.get(unique_string=kwargs[u'unique_string'])
+        except kls.DoesNotExist, e:
+            new_preview = kls(**kwargs)
+            new_preview.save()
+            return new_preview
 
     def save(self, *args, **kwargs):
-        sd = self.survey_draft
-        if not self.csv:
-            self.csv = sd.body
-        self.unique_string = SurveyPreview._generate_unique_string(sd.user, self.csv)
-        self.xml = create_survey_from_csv_text(self.csv, default_name=sd.name).to_xml()
+        if self.unique_string is None:
+            self.unique_string = SurveyPreview._generate_unique_string(self.csv)
+        if self.xml is None:
+            self.xml = create_survey_from_csv_text(self.csv, default_name="SurveyPreview__save").to_xml()
         super(SurveyPreview, self).save(*args, **kwargs)
