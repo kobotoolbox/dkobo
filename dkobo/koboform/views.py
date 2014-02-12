@@ -181,7 +181,7 @@ def import_survey_draft(request):
             output[u'survey_draft_id'] = new_survey_draft.id
         except Exception, err:
             response_code = 500
-            output[u'error'] = err
+            output[u'error'] = str(err)
     else:
         response_code = 204  #Error 204: No input
         output[u'error'] = "No file posted"
