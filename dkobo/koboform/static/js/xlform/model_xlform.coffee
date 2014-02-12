@@ -363,6 +363,8 @@ class XLF.Row extends BaseModel
           cl.set("name", clname, silent: true)
         @set("value", "#{@get('typeId')} #{clname}")
 
+  getType: ->
+    @get('type').get('typeId')
   getList: ->
     @get("type")?.get("list")
 
@@ -471,6 +473,7 @@ class XLF.SkipLogicCriterion extends Backbone.Model
     resp_notequals: ["!=", "was not", true]
     ans_notnull:    ["!= ''", "was answered", false]
     ans_null:       ["= ''", "was not answered", false]
+    multiplechoice_selected: [null, null, true]
 
   defaults:
     "expressionCode": "resp_equals"
@@ -500,12 +503,23 @@ class XLF.SkipLogicCriterion extends Backbone.Model
     else
       return null
 
-    exCode = @get("expressionCode")
-    unless exCode of @constructor.expressionValues
-      throw new Error("ExpressionCode not recognized: #{exCode}")
-    [exprStr, descLabel, addlReqs] = @constructor.expressionValues[exCode]
-    wrappedCriterion = if addlReqs then ("'" + (@get('criterion') || '') + "'") else ""
-    "${" + questionName + "} " + exprStr + " " + wrappedCriterion
+    if (question.getType() == 'select_one')
+      criterionName = @get('criterionOption')?.get('name') or @get('criterion')
+
+      if criterionName
+        "selected('#{questionName}', '#{criterionName}')"
+      else
+        console?.error("Criterion not specified", @)
+        null
+    else
+      exCode = @get("expressionCode")
+      unless exCode of @constructor.expressionValues
+        throw new Error("ExpressionCode not recognized: #{exCode}")
+      [exprStr, descLabel, addlReqs] = @constructor.expressionValues[exCode]
+
+      wrappedCriterion = if addlReqs then ("'" + (@get('criterion') || '') + "'") else ""
+
+      "${" + questionName + "} " + exprStr + " " + wrappedCriterion
 
 class XLF.HandCodedSkipLogicCriterion extends XLF.SkipLogicCriterion
   initialize: (criteria) ->
@@ -589,12 +603,16 @@ parseHelper =
       collection.reset()
       collection.parseable = true
       for crit in parsedValues.criteria
-        collection.add({
+        opts = {
           name: crit.name
           parentRow: parentRow
           expressionCode: crit.operator
-          criterion: crit.response_value
-        }, silent: true)
+        }
+        if crit.operator is "multiplechoice_selected"
+          opts.criterionOption = collection.parentRow.getSurvey().findRowByName(crit.name).getList().options.get(crit.response_value)
+        else
+          opts.criterion = crit.response_value
+        collection.add(opts, silent: true)
       if parsedValues.operator
         collection.meta.set("delimSelect", parsedValues.operator.toLowerCase())
       ``
