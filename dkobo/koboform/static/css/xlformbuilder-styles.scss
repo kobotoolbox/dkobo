@@ -123,6 +123,10 @@
     cursor: pointer;
     background: white;
 }
+.card--error {
+    @extend .card;
+    background-color: rgb(255, 176, 176);
+}
 .card__header {
     margin-top: 0;
 }

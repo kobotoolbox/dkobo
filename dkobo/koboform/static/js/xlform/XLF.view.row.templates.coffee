@@ -29,7 +29,7 @@ viewTemplates.xlfRowView = () ->
 
 viewTemplates.rowErrorView = (atts)->
   """
-  <div class="card card-error">
+  <div class="card--error">
     <button type="button" class="close delete-row close-button js-delete-row" aria-hidden="true">&times;</button>
     Row could not be displayed: <pre>#{atts}</pre>
     <em>This question could not be imported. Please re-create it manually. Please contact us at <a href="mailto:info@kobotoolbox.org">info@kobotoolbox.org</a> so we can fix this bug!</em>
