@@ -51,7 +51,7 @@ passFunctionToMetaModel = (obj, fname)->
 
 class XLF.SurveyFragment extends XLF.BaseCollection
   constructor: (a,b)->
-    @rows = @
+    @rows = new XLF.Rows([], _parent: @)
     @_meta = new Backbone.Model()
     passFunctionToMetaModel(@, "set")
     passFunctionToMetaModel(@, "get")
@@ -62,7 +62,7 @@ class XLF.SurveyFragment extends XLF.BaseCollection
   _validate: -> true
 
   forEachRow: (cb, ctx={})->
-    @each (r, index, list)->
+    @rows.each (r, index, list)->
       if r instanceof XLF.SurveyDetail
         ``
       else if r instanceof XLF.RowError
@@ -77,18 +77,6 @@ class XLF.SurveyFragment extends XLF.BaseCollection
       else
         cb(r)
 
-  add: (models, options)->
-    # working around the passFunctionToMetaModel temporary hack.
-    @__set(models, _.extend({merge: false}, options))
-
-  model: (obj, ctxt)->
-    RowConstructor = _determineConstructorByParams(obj)
-    try
-      new RowConstructor(obj, _.extend({}, ctxt, _parent: ctxt.collection))
-    catch e
-      # Store exceptions in with the survey
-      new XLF.RowError(obj, _.extend({}, ctxt, error: e, _parent: ctxt.collection))
-
   forEachRowIncludingErrors: (cb)->
     ###
     This is similar to forEachRow but it also iterates on
@@ -96,7 +84,7 @@ class XLF.SurveyFragment extends XLF.BaseCollection
     forEachRow and allow optional parameters to specify
     what fields should be iterated on.
     ###
-    @each (r, index, list)->
+    @rows.each (r, index, list)->
       if r instanceof XLF.SurveyDetail
         ``
       else if r instanceof XLF.Group
@@ -131,17 +119,4 @@ class XLF.SurveyFragment extends XLF.BaseCollection
 
   addRowAtIndex: (r, index)-> @addRow(r, at: index)
   addRow: (r, opts={})->
-    @add r, _.extend(opts, _parent: @rows)
-
-
-_determineConstructorByParams = (obj)->
-  formSettingsTypes = do ->
-    for key, val of XLF.defaultSurveyDetails
-      val.asJson.type
-  type = obj?.type
-  if type in formSettingsTypes
-    XLF.SurveyDetail
-  else if type in XLF.aliases("group")
-    XLF.Group
-  else
-    XLF.Row
+    @rows.add r, _.extend(opts, _parent: @rows)

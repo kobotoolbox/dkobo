@@ -1,3 +1,24 @@
+_determineConstructorByParams = (obj)->
+  formSettingsTypes = do ->
+    for key, val of XLF.defaultSurveyDetails
+      val.asJson.type
+  type = obj?.type
+  if type in formSettingsTypes
+    XLF.SurveyDetail
+  else if type in XLF.aliases("group")
+    XLF.Group
+  else
+    XLF.Row
+
+class XLF.Rows extends XLF.BaseCollection
+  model: (obj, ctxt)->
+    RowConstructor = _determineConstructorByParams(obj)
+    try
+      new RowConstructor(obj, _.extend({}, ctxt, _parent: ctxt.collection))
+    catch e
+      # Store exceptions in with the survey
+      new XLF.RowError(obj, _.extend({}, ctxt, error: e, _parent: ctxt.collection))
+  comparator: (m)-> m.ordinal
 
 class XLF.Row extends XLF.BaseModel
   initialize: ->

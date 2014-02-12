@@ -30,12 +30,10 @@ class XLF.Survey extends XLF.SurveyFragment
         if r.type in XLF.surveyDetailSchema.typeList()
           @surveyDetails.importDetail(r)
         else
-          @add r, collection: @, silent: true, _parent: @
+          @rows.add r, collection: @rows, silent: true, _parent: @rows
     else
       @surveyDetails.importDefaults()
     @rows.invoke('linkUp')
-
-  comparator: (m)-> m.ordinal
 
   toCsvJson: ()->
     # build an object that can be easily passed to the "csv" library
