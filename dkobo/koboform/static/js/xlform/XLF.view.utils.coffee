@@ -45,7 +45,7 @@ viewUtils.reorderElemsByData = (selector, parent, dataAttribute)->
 viewUtils.cleanStringify = (atts)->
   attArr = []
   for key, val of atts when val isnt ""
-    attArr.push """<span class="atts"><i>#{key}</i>=<em>#{val}</em></span>"""
+    attArr.push """<span class="atts"><i>#{key}</i>="<em>#{val}</em>"</span>"""
   attArr.join("&nbsp;")
 
 XLF.enketoIframe = do ->
