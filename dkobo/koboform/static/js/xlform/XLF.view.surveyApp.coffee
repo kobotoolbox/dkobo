@@ -170,7 +170,7 @@ class @SurveyApp extends Backbone.View
       success: (survey_preview, status, jqhr)=>
         if survey_preview.unique_string
           preview_url = "/koboform/survey_preview/#{survey_preview.unique_string}"
-          @onEscapeKeydown = enketoIframe.close
+          @onEscapeKeydown = XLF.enketoIframe.close
           XLF.enketoIframe(preview_url).appendTo("body")
 
   downloadButtonClick: (evt)->
