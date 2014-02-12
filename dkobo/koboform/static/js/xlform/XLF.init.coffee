@@ -33,6 +33,6 @@ The XLF object holds all of the independent modules of the XLFormBuilder tool.
 # window.log is a substitute for console.log
 @log = (args...)-> console?.log?.apply console, args
 
-# _.extend Backbone.Model.prototype, Backbone.Validation.mixin
+_.extend Backbone.Model.prototype, Backbone.Validation.mixin
 
 @viewTemplates = XLF.viewTemplates = {}
