@@ -38,8 +38,8 @@ class SurveyPreview(models.Model):
             return new_preview
 
     def save(self, *args, **kwargs):
-        if self.unique_string is None:
+        if self.unique_string in [u'', None]:
             self.unique_string = SurveyPreview._generate_unique_string(self.csv)
-        if self.xml is None:
+        if self.xml in [u'', None]:
             self.xml = create_survey_from_csv_text(self.csv, default_name="SurveyPreview__save").to_xml()
         super(SurveyPreview, self).save(*args, **kwargs)
