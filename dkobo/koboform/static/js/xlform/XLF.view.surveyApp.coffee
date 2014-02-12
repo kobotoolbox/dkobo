@@ -160,7 +160,7 @@ class @SurveyApp extends Backbone.View
     data = JSON.stringify(body: @survey.toCSV())
     $.ajax
       url: "/koboform/survey_preview/"
-      method: "CREATE"
+      method: "POST"
       data: data
       headers:
         "X-CSRFToken": $('meta[name="csrf-token"]').attr('content')
