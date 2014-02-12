@@ -102,10 +102,7 @@ class @SurveyApp extends Backbone.View
     @survey.forEachRowIncludingErrors (row)=>
       isEmpty = false
       unless (xlfrv = @rowViews.get(row.cid))
-        if row instanceof XLF.Row
-          @rowViews.set(row.cid, new XLF.RowView(model: row, surveyView: @))
-        else
-          @rowViews.set(row.cid, new XLF.RowErrorView(model: row, surveyView: @))
+        @rowViews.set(row.cid, new XLF.RowView(model: row, surveyView: @))
         xlfrv = @rowViews.get(row.cid)
 
       $el = xlfrv.render().$el

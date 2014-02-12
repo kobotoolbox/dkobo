@@ -42,6 +42,12 @@ viewUtils.reorderElemsByData = (selector, parent, dataAttribute)->
   $el.appendTo(parentEl)  for $el in arr when $el
   ``
 
+viewUtils.cleanStringify = (atts)->
+  attArr = []
+  for key, val of atts when val isnt ""
+    attArr.push """<span class="atts"><i>#{key}</i>=<em>#{val}</em></span>"""
+  attArr.join("&nbsp;")
+
 XLF.enketoIframe = do ->
 
   buildUrl = (previewUrl)->
