@@ -3,7 +3,7 @@
 class @SurveyApp extends Backbone.View
   className: "formbuilder-wrap container"
   events:
-    "click .delete-row": "clickRemoveRow"
+    "click .js-delete-row": "clickRemoveRow"
     "click #xlf-preview": "previewButtonClick"
     "click #csv-preview": "previewCsv"
     "click #xlf-download": "downloadButtonClick"

@@ -49,7 +49,7 @@ class XLF.Survey extends XLF.SurveyFragment
           oCols.push key
         oRows.push colJson
 
-      @forEachRow addRowToORows
+      @forEachRowIncludingErrors addRowToORows
       for sd in @surveyDetails.models when sd.get("value")
         addRowToORows(sd)
 
