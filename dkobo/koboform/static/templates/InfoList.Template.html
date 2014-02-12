@@ -19,7 +19,7 @@
         <h3 class="info-list-item__title">
           <a href="#{{ getHashLink(item) }}">{{ item.name }}</a>
           <span class="info-list__date-modified">
-            {{item.date_modified.getMonth()}}/{{item.date_modified.getDate()}}/{{item.date_modified.getYear() + 1900}}
+            {{item.date_modified.getMonth()+1}}/{{item.date_modified.getDate()}}/{{item.date_modified.getYear() + 1900}}
           </span>
           <a href="{{ getLink(item) }}" class="fa-stack  fa-lg">
 
