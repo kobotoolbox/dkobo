@@ -171,8 +171,11 @@ describe "xlform survey model (XLF.Survey)", ->
     it "can add a group", ->
       @pizzaSurvey.addRow type: "text", name: "pizza", hint: "pizza", label: "pizza"
       expect(@pizzaSurvey.rows.last() instanceof XLF.Row).toBe(true)
+      expect(@pizzaSurvey.rows.length).toBe(2)
       @pizzaSurvey.addRow type: "group", name: "group"
+      expect(@pizzaSurvey.rows.length).toBe(3)
       grp = @pizzaSurvey.rows.last()
+      expect(grp instanceof XLF.Group).toBe(true)
       grp.addRow type: "text", name: "textquestioningroup", label: "Text question in group"
       grp.addRow type: "group", name: "groupingroup"
       second_group = grp.rows.last()
@@ -327,16 +330,17 @@ describe "testing the view", ->
     $(".menu-item[data-menu-item='text']", firstRowEl).click()
     lastRowEl = @_div.find("li.xlf-row-view").eq(-1)
     $(".js-advanced-toggle", lastRowEl).eq(0).click()
+    expect(if $(".xlf-dv-relevant", lastRowEl).length is 1 then "relevant rendered" else "relevant not rendered").toBe("relevant rendered")
     $(".xlf-dv-relevant button", lastRowEl).eq(0).click()
     $(".skiplogic__addcriterion", lastRowEl).eq(0).click()
     slList = $(".skiplogic__criterialist", lastRowEl)
-    select = $(".skiplogic__rowselect", slList).eq(0)
+    select = $("select.skiplogic__rowselect", slList).eq(0)
     opt1 = select.find("option").eq(1)
     expect(opt1.prop("value")).toBe("likes_pizza")
     row1 = @pizzaSurvey.rows.at(0)
     row1.get("name").set("value", "different_name")
     row1.get("label").set("value", "A different label")
-    expect($("select", slList).find("option").eq(1).prop("value")).toBe("different_name")
+    expect($("select.skiplogic__rowselect", slList).find("option").eq(1).prop("value")).toBe("different_name")
 
 
 describe "reorder items by id", ->
@@ -349,3 +353,41 @@ describe "reorder items by id", ->
     viewUtils.reorderElemsByData "p", wrap, "sort-by-value"
     reorderedVals = ($(p).data("sort-by-value") for p in wrap.find("p"))
     expect(reorderedVals).toEqual([0..10])
+
+
+unknownTypeString = "unktype"
+ERRONEOUS_CSV = """
+"survey","type","name","label"
+,"text","test_q","text question"
+,"#{unknownTypeString}","unktype_name","unktype label"
+,"text","test_q2","text question 2"
+"""
+
+setupView = (survey)->
+  xlv = new SurveyApp(survey: @survey).render()
+  $("<div>", class: "test-div", html: xlv.$el).appendTo("body")
+
+teardownView = ->
+  $(".test-div").remove()
+  ``
+###
+This needs to pass for 509
+
+describe "properly handle erroneous rows", ->
+  beforeEach ->
+    XLF.ignoreConsoleErrors = true
+    @survey = XLF.createSurveyFromCsv(ERRONEOUS_CSV)
+  it "imports the erroneous row", ->
+    expect(@survey.rows.length).toBe(3)
+    expect(@survey.rows.at(1) instanceof XLF.RowError).toBeTruthy()
+
+  it "displays the erroneous row as a rowerror", ->
+    div = setupView(@survey)
+    expect(div.find(".xlf-row-view--error").length).toBe(1)
+    teardownView()
+
+  it "still exports the erroneous row", ->
+    expect(@survey.toCsvJson().survey.rowObjects.length).toBe(3)
+    errorRowOutput = @survey.toCsvJson().survey.rowObjects[1]
+    expect(errorRowOutput.type).toBe(unknownTypeString)
+###
