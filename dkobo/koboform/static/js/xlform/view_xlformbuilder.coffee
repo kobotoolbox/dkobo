@@ -521,11 +521,6 @@ class @SurveyApp extends Backbone.View
     @$el.removeClass("content--centered").removeClass("content")
     @$el.html viewTemplates.surveyApp @survey
 
-    if @survey.__djangoModelDetails?.id
-      @djModelId = @survey.__djangoModelDetails.id
-    else
-      @$el.find("#xlf-preview").hide()
-
     @survey.settings.on 'validated:invalid', (model, validations) ->
       for key, value of validations
           break
@@ -637,22 +632,18 @@ class @SurveyApp extends Backbone.View
 
   onEscapeKeydown: -> #noop. to be overridden
   previewButtonClick: (evt)->
-    if @djModelId
-      data = JSON.stringify(
-        body: @survey.toCSV()
-        survey_draft_id: @djModelId
-      )
-      $.ajax
-        url: "/koboform/survey_preview/"
-        method: "CREATE"
-        data: data
-        headers:
-          "X-CSRFToken": $('meta[name="csrf-token"]').attr('content')
-        success: (survey_preview, status, jqhr)=>
-          if survey_preview.unique_string
-            preview_url = "/koboform/survey_preview/#{survey_preview.unique_string}"
-            @onEscapeKeydown = enketoIframe.close
-            enketoIframe(preview_url).appendTo("body")
+    data = JSON.stringify(body: @survey.toCSV())
+    $.ajax
+      url: "/koboform/survey_preview/"
+      method: "CREATE"
+      data: data
+      headers:
+        "X-CSRFToken": $('meta[name="csrf-token"]').attr('content')
+      success: (survey_preview, status, jqhr)=>
+        if survey_preview.unique_string
+          preview_url = "/koboform/survey_preview/#{survey_preview.unique_string}"
+          @onEscapeKeydown = enketoIframe.close
+          enketoIframe(preview_url).appendTo("body")
 
   downloadButtonClick: (evt)->
     # Download = save a CSV file to the disk
