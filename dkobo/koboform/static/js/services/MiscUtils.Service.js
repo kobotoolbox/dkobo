@@ -29,6 +29,8 @@ function MiscUtilsService() {
                         $scope.updateFormList();
                     })
                     .error(function (result) {
+                        $scope.isLoading = false;
+                        $scope.$apply();
                         _this.handleXhrError(result);
                     }).done(function () {
                         $scope.isLoading = false;
