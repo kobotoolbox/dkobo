@@ -62,40 +62,25 @@ class XLF.SurveyFragment extends XLF.BaseCollection
   _validate: -> true
 
   forEachRow: (cb, ctx={})->
+    ctx.includeErrors ?= false
+
     @rows.each (r, index, list)->
       if r instanceof XLF.SurveyDetail
         ``
-      else if r instanceof XLF.RowError
+      else if !ctx.includeErrors && r instanceof XLF.RowError
         ``
       else if r instanceof XLF.Group
-        context = {}
 
         cb(r.groupStart())
-        r.forEachRow(cb, context)
+        r.forEachRow(cb, ctx)
         cb(r.groupEnd())
         ``
       else
         cb(r)
 
   forEachRowIncludingErrors: (cb)->
-    ###
-    This is similar to forEachRow but it also iterates on
-    "RowError"s. We probably should merge this in with
-    forEachRow and allow optional parameters to specify
-    what fields should be iterated on.
-    ###
-    @rows.each (r, index, list)->
-      if r instanceof XLF.SurveyDetail
-        ``
-      else if r instanceof XLF.Group
-        context = {}
-
-        cb(r.groupStart())
-        r.forEachRowIncludingErrors(cb, context)
-        cb(r.groupEnd())
-        ``
-      else
-        cb(r)
+    console.debug('a deprecated function has been called: forEachRowIncludingErrors')
+    @forEachRow(cb, includeErrors: true)
 
   getRowDescriptors: () ->
     descriptors = []

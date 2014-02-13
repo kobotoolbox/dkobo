@@ -19,8 +19,8 @@ class @SurveyApp extends Backbone.View
 
     @rowViews = new Backbone.Model()
 
-    @survey.rows.on "add", @softReset, @
-    @survey.rows.on "remove", @softReset, @
+    @survey.rows.on "add", @reset, @
+    @survey.rows.on "remove", @reset, @
     @survey.on "row-detail-change", (row, key, val, ctxt)=>
       evtCode = "row-detail-change-#{key}"
       @$(".on-#{evtCode}").trigger(evtCode, row, key, val, ctxt)
@@ -67,7 +67,7 @@ class @SurveyApp extends Backbone.View
     for detail in @survey.surveyDetails.models
       addOpts.append((new XLF.SurveyDetailView(model: detail)).render().el)
 
-    @softReset()
+    @reset()
 
     @formEditorEl.sortable({
         axis: "y"
@@ -96,7 +96,7 @@ class @SurveyApp extends Backbone.View
     log scsv
     ``
 
-  softReset: ->
+  reset: ->
     fe = @formEditorEl
     isEmpty = true
     @survey.forEachRowIncludingErrors (row)=>
@@ -113,18 +113,6 @@ class @SurveyApp extends Backbone.View
     viewUtils.reorderElemsByData(".xlf-row-view", @$el, "row-index")
     ``
 
-  reset: ->
-    fe = @formEditorEl.empty()
-    @survey.forEachRow (row)=>
-      # row._slideDown is for add/remove animation
-      $el = new XLF.RowView(model: row, surveyView: @).render().$el
-      if row._slideDown
-        row._slideDown = false
-        fe.append($el.hide())
-        $el.slideDown 175
-      else
-        fe.append($el)
-
   clickRemoveRow: (evt)->
     evt.preventDefault()
     if confirm("Are you sure you want to delete this question? This action cannot be undone.")
@@ -139,21 +127,7 @@ class @SurveyApp extends Backbone.View
 
       @survey.rows.remove matchingRow
       # this slideUp is for add/remove row animation
-      rowEl.slideUp 175, "swing", ()=>
-        @survey.rows.trigger "reset"
-
-  ensureAllRowsDrawn: ->
-    prev = false
-    @survey.forEachRow (row)=>
-      prevMatch = @formEditorEl.find(".xlf-row-view[data-row-id='#{row.cid}']").eq(0)
-      if prevMatch.length isnt 0
-        prev = prevMatch
-      else
-        $el = new XLF.RowView(model: row, surveyView: @).render().$el
-        if prev
-          prev.after($el)
-        else
-          @formEditorEl.prepend($el)
+      rowEl.slideUp 175, "swing"
 
   onEscapeKeydown: -> #noop. to be overridden
   previewButtonClick: (evt)->
