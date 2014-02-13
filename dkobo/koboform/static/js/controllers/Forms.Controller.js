@@ -34,8 +34,13 @@ function FormsController ($scope, $rootScope, $resource, $miscUtils) {
 
     $rootScope.updateFormList = function () {
         if ($rootScope.updateFormList) {
-            formsApi.query(function (response) {
-                $scope.infoListItems = response;
+            formsApi.query(function (items) {
+                for (var i = 0; i < items.length; i++) {
+                    var currentItem = items[i];
+                    currentItem.date_modified = new Date(currentItem.date_modified);
+                }
+
+                $scope.infoListItems = items;
             });
         }
     };
