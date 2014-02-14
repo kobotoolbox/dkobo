@@ -286,11 +286,11 @@ textarea {
 .or {
     width: 30px;
     height: 30px;
-    margin: -16px auto 0;
+    margin: -36px auto 0;
     border-bottom: 1px solid;
     border-radius: 5em;
     position: relative;
-    top: 32px;
+    top: 65px;
     display: block;
     font-weight: bold;
     font-size: 14px;
@@ -299,6 +299,11 @@ textarea {
     text-transform: uppercase;
     color: white;
     background-color: #666;
+}
+
+.or + hr {
+    margin-top: 50px;
+    margin-bottom: 40px;
 }
 
 
@@ -408,11 +413,6 @@ input[type="submit"].btn--block,
 input[type="reset"].btn--block,
 input[type="button"].btn--block {
     width: 100%;
-}
-
-.btn--start-from-scratch {
-    margin-top: 20px;
-    margin-bottom: 20px;
 }
 
 .btn--utility {
