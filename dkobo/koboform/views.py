@@ -65,7 +65,12 @@ def survey_previews(request):
     if contents.get(u'body'):
         preview = SurveyPreview._get_or_create(csv=contents.get(u'body'))
         preview_dict = model_to_dict(preview)
-        return HttpResponse(json.dumps(preview_dict), content_type="application/json")
+        response = HttpResponse(json.dumps(preview_dict), content_type="application/json")
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
+        response["Access-Control-Max-Age"] = "1000"
+        response["Access-Control-Allow-Headers"] = "*"
+        return response
 
 @csrf_exempt
 def get_survey_preview(request, unique_string):
