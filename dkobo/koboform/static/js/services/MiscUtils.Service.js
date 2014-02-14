@@ -15,7 +15,7 @@ function MiscUtilsService() {
 
     this.bootstrapFileUploader = function ($scope) {
         $(function(){
-            $('.btn--header-import').eq(0).fileupload({
+            $('.js-import-fileupload').eq(0).fileupload({
                 headers: {
                     "X-CSRFToken": $('meta[name="csrf-token"]').attr('content')
                 },

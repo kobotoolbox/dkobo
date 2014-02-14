@@ -506,13 +506,13 @@ input[type="button"].btn--block {
     background-color: #4d4d4d;
 }
 
-.btn--header-import {
+.btn--fileupload {
     /* form */
     margin-top: -1px;
     overflow: hidden;
 }
 
-.btn--header-import input {
+.btn--fileupload input {
     position: absolute;
     top: 0;
     right: 0;
