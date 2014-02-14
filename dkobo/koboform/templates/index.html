@@ -97,11 +97,15 @@
         <span class="header-bar__top-level-menu-button">
           <i class="fa  fa-bars  fa-lg  fa-inverse" ng-click="toggleTopMenu()"></i>
         </span>
-        <span class="header-bar__page-icon-stack  fa-stack  fa-lg">
-          <i class="header-bar__page-icon-circle  fa  fa-circle  fa-stack-2x  icon--{{ pageIconColor }}"></i>
-          <i class="header-bar__page-icon  fa  {{ pageIcon }}  fa-stack-1x  fa-inverse"></i>
-        </span>
-          <h1 class="header-bar__title">{{ activeTab }}</h1>
+        <h1 class="header-bar__title">
+          <a href="#/forms">
+            <span class="header-bar__page-icon-stack  fa-stack  fa-lg">
+              <i class="header-bar__page-icon-circle  fa  fa-circle  fa-stack-2x  icon--{{ pageIconColor }}"></i>
+              <i class="header-bar__page-icon  fa  {{ pageIcon }}  fa-stack-1x  fa-inverse"></i>
+            </span>
+            <span class="header-bar__title-text">{{ activeTab }}</span>
+          </a>
+        </h1>
           <span class="loader" ng-show="isLoading">
   {% endverbatim %}
             <img src="{% static 'img/ajax-loader.gif' %}" class="ajax-loader__image" />

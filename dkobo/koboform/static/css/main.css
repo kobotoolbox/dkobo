@@ -472,8 +472,7 @@ input[type="button"].btn--block {
     transition: left 300ms;
 }
 
-.header-bar__page-icon-stack {
-    margin-right: 10px;
+.header-bar__page-icon {
     left: 1px;
     top: -1px;
 }
@@ -484,6 +483,10 @@ input[type="button"].btn--block {
     margin-bottom: 0;
     display: inline-block;
     font-size: 17px;
+}
+
+.header-bar__title-text {
+    padding-left: 2px;
     color: white;
 }
 
