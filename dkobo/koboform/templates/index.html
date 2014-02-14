@@ -97,11 +97,15 @@
         <span class="header-bar__top-level-menu-button">
           <i class="fa  fa-bars  fa-lg  fa-inverse" ng-click="toggleTopMenu()"></i>
         </span>
-        <span class="header-bar__page-icon-stack  fa-stack  fa-lg">
-          <i class="header-bar__page-icon-circle  fa  fa-circle  fa-stack-2x  icon--{{ pageIconColor }}"></i>
-          <i class="header-bar__page-icon  fa  {{ pageIcon }}  fa-stack-1x  fa-inverse"></i>
-        </span>
-          <h1 class="header-bar__title">{{ activeTab }}</h1>
+        <h1 class="header-bar__title">
+          <a href="#/forms">
+            <span class="header-bar__page-icon-stack  fa-stack  fa-md">
+              <i class="header-bar__page-icon-circle  fa  fa-circle  fa-stack-2x  icon--{{ pageIconColor }}"></i>
+              <i class="header-bar__page-icon  fa  {{ pageIcon }}  fa-stack-1x  fa-inverse"></i>
+            </span>
+            <span class="header-bar__title-text">{{ activeTab }}</span>
+          </a>
+        </h1>
           <span class="loader" ng-show="isLoading">
   {% endverbatim %}
             <img src="{% static 'img/ajax-loader.gif' %}" class="ajax-loader__image" />
@@ -109,9 +113,8 @@
             Your Form is Being Imported
           </span>
           <a href="#/builder" ng-show="canAddNew" class="btn--header-create-new btn  btn--s  pull-right">Create New</a>
-          <form action="/import_survey_draft" class="btn--header-import">
-            <span class="btn btn-success fileinput-button">
-              <i class="glyphicon glyphicon-plus"></i>
+          <form action="/import_survey_draft" class="btn--header-import  pull-right">
+            <span class="btn btn--s btn-success fileinput-button">
               <span>Import form</span>
               <input type="file" name="files">
             </span>
