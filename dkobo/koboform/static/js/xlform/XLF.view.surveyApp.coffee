@@ -157,10 +157,12 @@ class @SurveyApp extends Backbone.View
     @onPublish.apply(@, arguments)
 
 class @SurveyTemplateApp extends Backbone.View
+  events:
+    "click .js-start-survey": "startSurvey"
   initialize: (@options)->
   render: ()->
     @$el.addClass("content--centered").addClass("content")
     @$el.html viewTemplates.surveyTemplateApp()
-    @$(".btn--start-from-scratch").click ()=>
-      new SurveyApp(@options).render()
     @
+  startSurvey: ->
+    new SurveyApp(@options).render()

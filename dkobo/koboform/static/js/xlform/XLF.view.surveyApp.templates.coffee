@@ -1,14 +1,9 @@
 viewTemplates.surveyTemplateApp = () ->
     """
-        <button class="btn">Start from Scratch</button>
+        <button class="btn js-start-survey">Start from Scratch</button>
         <span class="or">or</span>
         <hr>
         <button class="btn">Import from Excel</button>
-<!--
-        <div class="choose-template">
-            <h3>Choose Template</h3>
-        </div>
--->
     """
 
 viewTemplates.surveyApp = (survey) ->
