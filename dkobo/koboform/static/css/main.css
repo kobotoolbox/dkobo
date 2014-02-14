@@ -145,7 +145,7 @@ textarea {
     bottom: 0;
     left: -230px;
     background-color: #444;
-    transition: left 300ms;
+    transition: left 150ms;
 }
 
 .top-level-menu.is-active {
@@ -158,6 +158,9 @@ textarea {
 
 .top-level-menu.is-active ~ .main .header-bar,
 .top-level-menu.is-active ~ .main .sub-header-bar {
+    width: -webkit-calc(100% - 230px);
+    width: -moz-calc(100% - 230px);
+    width: calc(100% - 230px);
     left: 230px;
 }
 
@@ -232,8 +235,8 @@ textarea {
    ========================================================================== */
 
 .main {
-    margin-top: 60px;
-    transition: padding-left 300ms;
+    margin-top: 40px;
+    transition: padding-left 150ms;
 }
 
 
@@ -283,11 +286,11 @@ textarea {
 .or {
     width: 30px;
     height: 30px;
-    margin: -16px auto 0;
+    margin: -36px auto 0;
     border-bottom: 1px solid;
     border-radius: 5em;
     position: relative;
-    top: 32px;
+    top: 65px;
     display: block;
     font-weight: bold;
     font-size: 14px;
@@ -296,6 +299,11 @@ textarea {
     text-transform: uppercase;
     color: white;
     background-color: #666;
+}
+
+.or + hr {
+    margin-top: 50px;
+    margin-bottom: 40px;
 }
 
 
@@ -340,6 +348,7 @@ textarea {
     height: 40px;
     line-height: 40px;
     padding: 0 20px;
+    font-weight: 500;
     font-size: 14px;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -380,6 +389,8 @@ fieldset[disabled] .btn {
 .btn--s,
 .btn--xs {
     height: 30px;
+    padding-right: 10px;
+    padding-left: 10px;
     font-size: 12px;
     line-height: 30px;
     border-radius: 3px;
@@ -404,11 +415,6 @@ input[type="button"].btn--block {
     width: 100%;
 }
 
-.btn--start-from-scratch {
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
 .btn--utility {
     border: 1px solid #ddd;
     color: #222;
@@ -417,6 +423,7 @@ input[type="button"].btn--block {
 
 .btn--utility:hover,
 .btn--utility:focus {
+    border-color: #999;
     background-color: #e2e2e2;
 }
 
@@ -460,53 +467,61 @@ input[type="button"].btn--block {
 
 .header-bar {
     width: 100%;
-    height: 60px;
-    padding-right: 10px;
-    padding-left: 10px;
+    height: 40px;
     position: fixed;
     top: 0;
     left: 0;
     z-index: 2;
-    line-height: 60px;
+    line-height: 40px;
     background-color: #666;
-    transition: left 300ms;
+    transition: width 150ms, left 150ms;
 }
 
-.header-bar__page-icon-stack {
-    margin-right: 10px;
+.header-bar__page-icon {
     left: 1px;
-    top: -1px;
+    top: -2px;
 }
 
 .header-bar__title {
     margin-top: 0;
-    margin-right: 20px;
+    margin-right: 10px;
     margin-bottom: 0;
     display: inline-block;
     font-size: 17px;
+}
+
+.header-bar__title-text {
     color: white;
 }
 
-.btn--header-create-new {
-    margin: 15px 5px;
+.header-bar .btn {
+    margin-top: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    background-color: #3f3f3f;
 }
+
+.header-bar .btn:hover,
+.header-bar .btn:focus {
+    background-color: #4d4d4d;
+}
+
 .btn--header-import {
-  /* form */
-  display: inline-block;
-  float: right;
-  overflow: hidden;
+    /* form */
+    margin-top: -1px;
+    overflow: hidden;
 }
 
 .btn--header-import input {
-  position: absolute;
-  top: 0;
-  right: 0;
-  margin: 0;
-  opacity: 0;
-  -ms-filter: 'alpha(opacity=0)';
-  font-size: 200px;
-  direction: ltr;
-  cursor: pointer;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    opacity: 0;
+    -ms-filter: 'alpha(opacity=0)';
+    font-size: 200px;
+    direction: ltr;
+    cursor: pointer;
 }
 
 
@@ -519,9 +534,13 @@ input[type="button"].btn--block {
    Icons
    ========================================================================== */
 
+.header-bar__top-level-menu-button {
+    display: inline-block;
+    vertical-align: top;
+}
+
 .header-bar__top-level-menu-button > .fa {
-    margin-right: 5px;
-    padding: 15px;
+    padding: 12px 11px;
     cursor: pointer;
     color: rgba(29, 174, 227, 0.8);
 }
