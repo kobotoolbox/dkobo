@@ -28,7 +28,7 @@
     left: 0;
     z-index: 1;
     background-color: #f4f4f4;
-    transition: left 300ms;
+    transition: width 150ms, left 150ms;
 
     & > .btn {
         height: 30px;
