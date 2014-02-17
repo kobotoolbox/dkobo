@@ -112,15 +112,13 @@
   {% verbatim %}
             Your Form is Being Imported
           </span>
-          <a href="#/builder" ng-show="canAddNew" class="btn--header-create-new btn  btn--s  pull-right">Create New</a>
-          <!--
-          <form action="/import_survey_draft" class="btn--fileupload  pull-right">
+          <a href="#/builder" ng-show="showCreateButtons" class="btn--header-create-new btn  btn--s  pull-right">Create New</a>
+          <form ng-show="showCreateButtons" action="/import_survey_draft" class="btn--fileupload js-import-fileupload pull-right">
             <span class="btn btn--s btn-success fileinput-button">
               <span>Import form</span>
               <input type="file" name="files">
             </span>
           </form>
-          -->
       </header>
 
       <section ng-view class="content" ng-class="additionalClasses"></section>
