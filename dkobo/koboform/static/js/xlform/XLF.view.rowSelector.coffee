@@ -1,9 +1,6 @@
-# class XlfRowSelector extends Backbone.View
-
 class XLF.RowSelector extends Backbone.View
   events:
     "click .js-close-row-selector": "shrink"
-    "click .menu-item": "selectMenuItem"
   initialize: (opts)->
     @options = opts
     @button = @$el.find(".btn")
@@ -17,6 +14,7 @@ class XLF.RowSelector extends Backbone.View
     @line.css "height", "inherit"
     @line.html viewTemplates.xlfRowSelector.line()
     $menu = @line.find(".well")
+    $menu.on("click", ".menu-item", _.bind(@selectMenuItem, @))
     for mrow in XLF.icons.grouped()
       menurow = $("<div>", class: "menu-row").appendTo $menu
       for mitem, i in mrow
@@ -33,6 +31,7 @@ class XLF.RowSelector extends Backbone.View
   hide: ->
     @button.show()
     @line.empty().removeClass("expanded").css "height": 0
+
   selectMenuItem: (evt)->
     $('select.skiplogic__rowselect').select2('destroy')
     mi = $(evt.target).data("menuItem")
