@@ -2,7 +2,7 @@
 
 class XLF.RowSelector extends Backbone.View
   events:
-    "click .shrink": "shrink"
+    "click .js-close-row-selector": "shrink"
     "click .menu-item": "selectMenuItem"
   initialize: (opts)->
     @options = opts
@@ -23,6 +23,7 @@ class XLF.RowSelector extends Backbone.View
         menurow.append viewTemplates.xlfRowSelector.cell mitem.attributes
 
   shrink: ->
+    # click .js-close-row-selector
     $(".-form-editor .empty .survey-editor__message").css("display", "")
     @line.find("div").eq(0).fadeOut 250, =>
       @line.empty()

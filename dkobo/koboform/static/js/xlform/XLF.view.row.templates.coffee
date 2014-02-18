@@ -5,6 +5,10 @@ expandingSpacerHtml = """
     </div>
 """
 
+deleteRowButton = """
+    <button type="button" class="close delete-row close-button js-delete-row" aria-hidden="true">&times;</button>
+"""
+
 viewTemplates.xlfRowView = () ->
     """
     <div class="card">
@@ -12,7 +16,7 @@ viewTemplates.xlfRowView = () ->
         <i class="fa fa-fw card__header-icon"></i>
         <span class="card__header-title">Label goes here</span>
       </h4>
-      <button type="button" class="close delete-row close-button js-delete-row" aria-hidden="true">&times;</button>
+      #{deleteRowButton}
       <div class="row list-view hidden">
         <ul></ul>
       </div>
@@ -34,7 +38,7 @@ viewTemplates.xlfRowView = () ->
 viewTemplates.rowErrorView = (atts)->
   """
   <div class="card--error">
-    <button type="button" class="close delete-row close-button js-delete-row" aria-hidden="true">&times;</button>
+    #{deleteRowButton}
     Row could not be displayed: <pre>#{atts}</pre>
     <em>This question could not be imported. Please re-create it manually. Please contact us at <a href="mailto:info@kobotoolbox.org">info@kobotoolbox.org</a> so we can fix this bug!</em>
   </div>
