@@ -1,3 +1,10 @@
+expandingSpacerHtml = """
+    <div class="row clearfix expanding-spacer-between-rows">
+      <div class="add-row-btn js-expand-row-selector btn  btn--block  btn-xs  btn-default"><i class="fa  fa-plus"></i></div>
+      <div class="line">&nbsp;</div>
+    </div>
+"""
+
 viewTemplates.xlfRowView = () ->
     """
     <div class="card">
@@ -21,10 +28,7 @@ viewTemplates.xlfRowView = () ->
         </div>
       </div>
     </div>
-    <div class="row clearfix expanding-spacer-between-rows">
-      <div class="add-row-btn  btn  btn--block  btn-xs  btn-default"><i class="fa  fa-plus"></i></div>
-      <div class="line">&nbsp;</div>
-    </div>
+    #{expandingSpacerHtml}
     """
 
 viewTemplates.rowErrorView = (atts)->
@@ -34,8 +38,5 @@ viewTemplates.rowErrorView = (atts)->
     Row could not be displayed: <pre>#{atts}</pre>
     <em>This question could not be imported. Please re-create it manually. Please contact us at <a href="mailto:info@kobotoolbox.org">info@kobotoolbox.org</a> so we can fix this bug!</em>
   </div>
-  <div class="row clearfix expanding-spacer-between-rows">
-    <div class="add-row-btn  btn  btn--block  btn-xs  btn-default"><i class="fa  fa-plus"></i></div>
-    <div class="line">&nbsp;</div>
-  </div>
+  #{expandingSpacerHtml}
   """
