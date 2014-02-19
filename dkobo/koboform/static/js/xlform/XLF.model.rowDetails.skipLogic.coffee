@@ -102,15 +102,22 @@ class XLF.SkipLogicCollection extends XLF.BaseCollection
 
 
 class XLF.Model.SkipLogicFactory
+  create_operator: (type, symbol) ->
+    text: (symbol) =>
+      new XLF.TextValidationOperator symbol
+    basic: (symbol) =>
+      new XLF.BasicValidationOperator symbol
+    existence: (symbol) =>
+      new XLF.ExistenceValidationOperator symbol
 
 class XLF.SkipLogicCriterion extends XLF.BaseModel
   serialize: () ->
     return @get('operator').serialize @get('question_name'), @get('response_value')
   change_operator: (operator) ->
     @set('operator', operator)
-  set_question: (value) ->
+  change_question: (value) ->
     @set('question_name', value)
-  set_response: (value) ->
+  change_response: (value) ->
     @set('response_value', value)
 
 class XLF.ValidationOperator extends XLF.BaseModel
