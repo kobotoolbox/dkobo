@@ -51,8 +51,7 @@ viewUtils.cleanStringify = (atts)->
 XLF.enketoIframe = do ->
 
   buildUrl = (previewUrl)->
-    fullPreviewUrl = "#{window.location.origin}#{previewUrl}"
-    """https://enketo.org/webform/preview?form=#{fullPreviewUrl}"""
+    """https://enketo.org/webform/preview?form=#{previewUrl}"""
 
   clickCloserBackground = ->
     $("<div>", class: "js-click-remove-iframe")
