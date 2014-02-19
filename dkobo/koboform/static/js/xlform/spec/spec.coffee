@@ -28,7 +28,7 @@ describe "xlform survey model (XLF.Survey)", ->
         @pizzaSurvey.choices.add LISTS.gender
         expect(@pizzaSurvey.choices.length).toBe(2)
         x1 = @pizzaSurvey.toCsvJson()
-   
+
         # it should prevent duplicate lists with the same id
         @pizzaSurvey.choices.add LISTS.yes_no
         expect(@pizzaSurvey.choices.length).toBe(2)
@@ -101,7 +101,7 @@ describe "xlform survey model (XLF.Survey)", ->
         for r in _.min([x1r.length, x2r.length])
           expect(x1r[r]).toBe(x2r[r])
         expect(x1).toBe(x2)
-        
+
       @dumpAndLoad = (scsv)=>
         s1 = XLF.createSurveyFromCsv scsv
         x1 = s1.toCSV()
@@ -234,7 +234,7 @@ describe "xlform survey model (XLF.Survey)", ->
       @census = XLF.createSurveyFromCsv(CENSUS_SURVEY)
     it "looks good", ->
       expect(@census).toBeDefined()
-  
+
   describe "question name gets updated on change", ->
     it "has skip logic", ->
       expect(@pizzaSurvey.rows.length).toBe(1)

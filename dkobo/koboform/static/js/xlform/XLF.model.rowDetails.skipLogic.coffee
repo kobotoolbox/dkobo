@@ -29,20 +29,11 @@ class XLF.SkipLogicCriterion extends XLF.BaseModel
       @set("question", question)
 
   serialize: ->
-    if (question = @get("question"))
-      questionName = question.getValue("name")
-      if !questionName then return null
-    else
+    if (!(question = @get("question") && questionName = question.getValue("name")))
       return null
 
     if (question.getType() == 'select_one')
-      criterionName = @get('criterionOption')?.get('name') or @get('criterion')
-
-      if criterionName
-        "selected('#{questionName}', '#{criterionName}')"
-      else
-        console?.error("Criterion not specified", @)
-        null
+      @serialize_select_one()
     else
       exCode = @get("expressionCode")
       unless exCode of @constructor.expressionValues
@@ -52,6 +43,14 @@ class XLF.SkipLogicCriterion extends XLF.BaseModel
       wrappedCriterion = if addlReqs then ("'" + (@get('criterion') || '') + "'") else ""
 
       "${" + questionName + "} " + exprStr + " " + wrappedCriterion
+    serialize_select_one: ->
+      criterionName = @get('criterionOption')?.get('name') or @get('criterion')
+
+      if criterionName
+        "selected('#{questionName}', '#{criterionName}')"
+      else
+        console?.error("Criterion not specified", @)
+        null
 
 class XLF.HandCodedSkipLogicCriterion extends XLF.SkipLogicCriterion
   initialize: (criteria) ->
@@ -100,3 +99,38 @@ class XLF.SkipLogicCollection extends XLF.BaseCollection
       else
         @add(new XLF.HandCodedSkipLogicCriterion(serialized))
         alert("Could not parse: invalid / unsupported criteria")
+
+
+class XLF.Model.SkipLogicFactory
+
+class XLF.SkipLogicCriterion extends XLF.BaseModel
+  serialize: () ->
+    return @get('operator').serialize @get('question_name'), @get('response_value')
+  change_operator: (operator) ->
+    @set('operator', operator)
+  set_question: (value) ->
+    @set('question_name', value)
+  set_response: (value) ->
+    @set('response_value', value)
+
+class XLF.ValidationOperator extends XLF.BaseModel
+  serialize: (question_name, response_value) ->
+    throw new Error("Not Implemented")
+
+class XLF.BasicValidationOperator extends XLF.ValidationOperator
+  serialize: (question_name, response_value) ->
+    return '${' + questionName + '} ' + @get('operator') + ' ' + response_value
+  constructor: (operator) ->
+    @set('operator', operator)
+
+class XLF.ExistenceValidationOperator extends XLF.BasicValidationOperator
+  serialize: (question_name) ->
+    return super.serialize(question_name, '')
+
+class XLF.TextValidationOperator extends XLF.BasicValidationOperator
+  serialize: (question_name, response_value) ->
+    return super.serialize(quesion_name, "'" + response_value + "'")
+
+class XLF.SelectMultipleValidationOperator extends XLF.ValidationOperator
+  serialize: (question_name, response_value) ->
+    return "selected(${" + question_name + "}, '" + response_value + "')"

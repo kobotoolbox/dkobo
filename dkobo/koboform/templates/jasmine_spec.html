@@ -9,6 +9,8 @@
 
 {% endblock %}
 {% block foot %}
+  <div id="sandbox"></div>
+
   <script src="http://code.jquery.com/jquery-migrate-1.2.1.js"></script>
   <script src="//cdn.jsdelivr.net/poshytip/1.1/jquery.poshytip.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/jquery-editable/js/jquery-editable-poshytip.min.js"></script>
@@ -16,6 +18,22 @@
   {% load compress %}
   {% compress js %}
     {% include 'xlform_scripts.html' %}
-    <script type="text/coffeescript" src="{% static 'js/xlform/spec/spec.coffee' %}"></script>
   {% endcompress %}
+    <script type="text/xlform" id="mysurvey"></script>
+    <script>
+      var $sandbox = $('#sandbox'),
+          i,
+          survey = new XLF.Survey(),
+          skip_logic_builder;
+
+      for (i = 0; i < 6; i++) {
+        survey.addRow({ name: i, label: 'label' + i });
+      }
+
+      skip_logic_builder = new XLF.SkipLogicBuilder(new XLF.Model.SkipLogicFactory(), new XLF.Views.SkipLogicViewFactory, survey, survey.rows.models[4]);
+
+      skip_logic_builder.build();
+
+
+    </script>
 {% endblock %}
