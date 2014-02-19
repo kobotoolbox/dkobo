@@ -16,7 +16,7 @@ function HeaderController($scope, $rootScope, $miscUtils, $location) {
     };
 
     $scope.$on('$locationChangeSuccess', function() {
-        $scope.showCreateButtons = !!(""+$location.path()).match(/\/builder\/?(\d+)?$/);
+        $scope.showCreateButtons = !(""+$location.path()).match(/\/builder\/?(\d+)?$/);
     });
 
     $miscUtils.bootstrapFileUploader($rootScope);
