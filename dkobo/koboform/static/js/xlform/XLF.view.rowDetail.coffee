@@ -213,7 +213,7 @@ class XLF.SkipLogicCriterionView extends Backbone.View
     @
 
   render_expression_select: ->
-    if @response_value_is_select
+    ###    if @response_value_is_select
       " was "
     else
       """
@@ -223,7 +223,7 @@ class XLF.SkipLogicCriterionView extends Backbone.View
           <option value="ans_notnull">was answered</option>
           <option value="ans_null">was not answered</option>
         </select>
-      """
+      """###
   populate_responseval: ->
     $response_value_input = if @response_value_is_select then @$('select.skiplogic__responseval') else @$('.skiplogic__responseval')
 
@@ -257,12 +257,12 @@ class XLF.SkipLogicCriterionView extends Backbone.View
     else
       wire_up_input($response_value_input, @model, 'criterion', 'keyup')
   populate_expressionselect: ->
-    expressionSelect = @$(".skiplogic__expressionselect")
+    ###    expressionSelect = @$(".skiplogic__expressionselect")
     for key, vals in XLF.SkipLogicCriterion.expressionValues
       $("<option>", value: key, text: vals[1]).appendTo(expressionSelect)
     expressionCode = @model.get("expressionCode")
     expressionSelect.val(expressionCode)
-    ``
+    ``###
 
   listen_expressionselect: ->
     expressionSelect = @$(".skiplogic__expressionselect")
@@ -277,17 +277,19 @@ class XLF.SkipLogicCriterionView extends Backbone.View
     parent_row = @model._parent
     survey = @model.getSurvey()
 
-    skiplogic__rowselect = $('select.skiplogic__rowselect', @$el).eq(0).empty()
-    $("<option>", {value: '-1', html: 'Question...', disabled: !!question}).appendTo(skiplogic__rowselect)
+    # TODO disable default option when question is picked
+    ###    skiplogic__rowselect = $('select.skiplogic__rowselect', @$el).eq(0).empty()
+    $("<option>", {value: '-1', html: 'Question...', disabled: !!question}).appendTo(skiplogic__rowselect)###
 
-    limit = false
+    # TODO pass questions into constructor, filtering out all questions that come after the current one
+    ###    limit = false
 
     survey.forEachRow (row)->
       limit = limit || row is parent_row
       if !limit
         name = row.getValue("name")
         label = row.getValue("label")
-        $("<option>", {value: name, html: label}).appendTo(skiplogic__rowselect)
+        $("<option>", {value: name, html: label}).appendTo(skiplogic__rowselect)###
 
     if question
       questionName = question.getValue("name")
@@ -333,3 +335,120 @@ wire_up_input = ($input, model, name, event='change') =>
     $input.val(model.get(name))
   $input.on(event, () => model.set(name, $input.val()))
   ``
+
+class XLF.Views.Base extends Backbone.View
+  attach_to: ($el) ->
+    $el.append(@el)
+
+  fill_value: (value) ->
+    throw new Error('Invalid Operation: method is not implemented in child class')
+
+class XLF.Views.QuestionPicker extends XLF.Views.Base
+  render: () ->
+    render_questions = () ->
+      options = '<option value"-1">Question...</option>'
+      _.each @questions, (row)->
+        name = row.getValue("name")
+        label = row.getValue("label")
+        options += '<option value="' + name + '">' + label + "</option>"
+      options
+
+    @$el.html '<select class="skiplogic__rowselect">' + render_questions() + '</select>'
+
+    @$select = @$('select')
+
+    @$select.on 'change', () =>
+      @dispatcher.trigger 'change:question', @$select.val()
+      @$select.children(':first').prop('disabled', true)
+
+    @
+
+  fill_value: (value) ->
+    @$select.val value
+
+  constructor: (@questions, @dispatcher) ->
+    super()
+
+class XLF.Views.OperatorPicker extends XLF.Views.Base
+  render: () ->
+    render_operators: () ->
+      options = ''
+      _.each @operators, (operator) ->
+        options += '<option value="' + operator.id + '">' + operator.label + '</option>'
+        options += '<option value="-' + operator.id + '">' + operator.negated_label + '</option>'
+      options
+
+    @$el.html '<select class="skiplogic__expressionselect">' + render_operators() + '</select>'
+
+    @$select = @$('select')
+
+    @$select.on 'change', () -> @dispatcher.trigger 'change:operator', @$select.val()
+
+    @
+
+  fill_value: (value) ->
+    @$select.val value
+
+  constructor: (@operators, @dispatcher) ->
+
+
+class XLF.Views.SkipLogicEmptyResponse extends XLF.Views.Base
+  render: () ->
+    @$el.html ''
+
+    @el
+
+  fill_value: (value) ->
+    throw new Error('Invalid Operation: tried to fill an empty response view')
+
+
+class XLF.Views.SkipLogicTextResponse extends XLF.Views.Base
+  render: () ->
+    @$el.html '<input placeholder="response value" class="skiplogic__responseval" type="text" />'
+
+    @$input = @$('input')
+
+    @$input.on 'blur', () -> @dispatcher.trigger 'change:response-value', @$input.val()
+
+    @el
+
+  fill_value: (value) ->
+    @$input.val value
+
+  constructor: (@dispatcher) ->
+
+class XLF.Views.SkipLogicDropDownResponse extends XLF.Views.Base
+  render: () ->
+    render_response_values: () ->
+      options = ''
+      _.each @responses, (response) ->
+        options += '<option value="' + response.get('name') + '">' + response.get('label') + '</option>'
+
+    @$el.html '<select class="skiplogic__responseval" style="width: 100px;">' + render_response_values() + '</select>'
+
+    @$select = @$('select')
+
+    @$select.on 'change', () -> @dispatcher.trigger 'change:response-value', @$select.val()
+
+    @el
+
+  constructor: (@responses, @dispatcher) ->
+
+class XLF.Views.SkipLogicCriterion extends XLF.Views.Base
+  render: () ->
+    @$el.html 'div'
+
+    @$el.append @question_picker_view.render()
+    @$el.append @operator_picker_view.render()
+    @$el.append @response_value_view.render()
+
+    @$el.append $('<button class="skiplogic__deletecriterion" data-criterion-id="#{@model.cid}">&times;</button>')
+
+    @$ 'button.skiplogic__deletecriterion', @dispatcher.trigger 'remove:criterion'
+
+    @
+
+
+  constructor: (@dispatcher, @question_picker_view, @operator_picker_view, @response_value_view) ->
+
+class XLF.Views.SkipLogicViewFactory
