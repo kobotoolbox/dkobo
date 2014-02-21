@@ -31,6 +31,7 @@ The XLF object holds all of the independent modules of the XLFormBuilder tool.
 @XLF = {}
 
 XLF.Views = {}
+XLF.Model = {}
 
 # window.log is a substitute for console.log
 @log = (args...)-> console?.log?.apply console, args
