@@ -3,6 +3,7 @@ from lxml import etree
 from django.contrib.auth.models import User
 from django.test.client import Client
 from dkobo.koboform.models import SurveyDraft
+from dkobo.koboform import pyxform_utils
 import utils
 
 text = """"survey",,,,,
@@ -24,6 +25,33 @@ class Views_CsvToXformTests(TestCase):
         response = self.client.post('/csv', {'txtImport': text})
         etree.fromstring(response.content)
 
+simple_yn = """survey,,,
+,name,label,type
+,hithere,"Hi there",text
+,s1,"Select one","select_one yn"
+choices,,,
+,"list name",name,label
+,yn,y,Yes
+,yn,n,No
+"""
+
+from StringIO import StringIO
+from pyxform import xls2json_backends
+
+class CreateWorkbookFromCsvTests(TestCase):
+    def test_xls_to_dict(self):
+        # convert a CSV to XLS using our new method
+        new_xls = pyxform_utils.csv_to_xls(simple_yn)
+
+        # convert our new XLS to dict (using pyxform)
+        xls_dict = xls2json_backends.xls_to_dict(new_xls)
+        # convert the original CSV to dict (using pyxform)
+        csv_dict = xls2json_backends.csv_to_dict(StringIO(simple_yn))
+        # Our function, "pyxform_utils.csv_to_xls" performs (CSV -> XLS)
+        # This assertion tests equivalence of
+        #   (CSV) -> dict_representation
+        #   (CSV -> XLS) -> dict_representation
+        self.assertEqual(csv_dict, xls_dict)
 
 class SaveSurveyDrafts(TestCase):
     def setUp(self):
