@@ -21,8 +21,11 @@ function InfoListDirective($rootScope) {
                 return linkTo ? '/' + linkTo + '/' + item.id : '';
             };
 
-            scope.getLink = function (item) {
-                return scope.name.toLowerCase() + '/' + item.id;
+            scope.getLink = function (item, format) {
+                if(!format) {
+                    format = "xml";
+                }
+                return scope.name.toLowerCase() + '/' + item.id + "?format=" + format;
             };
 
             scope.canDelete = scope.canDelete === 'true';

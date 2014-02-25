@@ -21,11 +21,13 @@
           <span class="info-list__date-modified">
             {{item.date_modified.getMonth()+1}}/{{item.date_modified.getDate()}}/{{item.date_modified.getYear() + 1900}}
           </span>
-          <a href="{{ getLink(item) }}" class="fa-stack  fa-lg">
-
+          <a href="{{ getLink(item, 'xml') }}" class="fa-stack  fa-lg">
             <i class="header-bar__page-icon-circle  fa  fa-circle  fa-stack-2x  icon--{{ pageIconColor }}"></i>
-
             <i class="header-bar__page-icon  fa  fa-code  fa-stack-1x  fa-inverse"></i>
+          </a>
+          <a href="{{ getLink(item, 'xls') }}" class="fa-stack  fa-lg">
+            <i class="header-bar__page-icon-circle  fa  fa-circle  fa-stack-2x  icon--{{ pageIconColor }}"></i>
+            <i class="header-bar__page-icon  fa  fa-table  fa-stack-1x  fa-inverse"></i>
           </a>
           <a href="" ng-click="deleteItem({item: item})" ng-show="canDelete"> delete </a>
         </h3>

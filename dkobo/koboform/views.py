@@ -24,14 +24,20 @@ def csv_to_xform(request):
     return response
 
 
-def export_form_to_xform(request, id):
-    survey = utils.create_survey_from_csv_text(SurveyDraft.objects.get(pk=id).body)
-
-    response = HttpResponse(survey.to_xml(),
-                            mimetype='application/force-download')
-
-    response['Content-Disposition'] = 'attachment; filename=survey.xml'
-    return response
+def export_form(request, id):
+    survey_draft = SurveyDraft.objects.get(pk=id)
+    file_format = request.GET.get('format', 'xml')
+    if file_format == "xml":
+        xml = utils.create_survey_from_csv_text(survey_draft.body).to_xml()
+        response = HttpResponse(xml, mimetype='application/force-download')
+        response['Content-Disposition'] = 'attachment; filename=survey.xml'
+        return response
+    elif file_format == "xls":
+        import pyxform_utils
+        xls_io = pyxform_utils.convert_csv_to_xls(survey_draft.body)
+        xls_resp = HttpResponse(xls_io, mimetype='application/vnd.ms-excel; charset=utf-8')
+        xls_resp['Content-Disposition'] = 'attachment; filename=worksheet.xls'
+        return xls_resp
 
 
 @login_required

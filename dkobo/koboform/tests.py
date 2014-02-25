@@ -41,7 +41,7 @@ from pyxform import xls2json_backends
 class CreateWorkbookFromCsvTests(TestCase):
     def test_xls_to_dict(self):
         # convert a CSV to XLS using our new method
-        new_xls = pyxform_utils.csv_to_xls(simple_yn)
+        new_xls = pyxform_utils.convert_csv_to_xls(simple_yn)
 
         # convert our new XLS to dict (using pyxform)
         xls_dict = xls2json_backends.xls_to_dict(new_xls)

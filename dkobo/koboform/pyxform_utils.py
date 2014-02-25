@@ -5,7 +5,6 @@ import xlwt
 import csv
 import re
 
-
 def create_survey_from_csv_text(csv_text, default_name='KoBoFormSurvey', default_language=u'default', warnings=None, ):
     workbook_dict = xls2json_backends.csv_to_dict(StringIO.StringIO(csv_text))
     dict_repr = xls2json.workbook_to_json(workbook_dict, default_name, default_language, warnings)
@@ -101,7 +100,7 @@ def _add_contents_to_sheet(sheet, contents):
             if val:
                 sheet.write(ri+1, ci, val)
 
-def csv_to_xls(csv_repr):
+def convert_csv_to_xls(csv_repr):
     dict_repr = xls2json_backends.csv_to_dict(StringIO.StringIO(csv_repr))
     workbook = xlwt.Workbook()
     for sheet_name in dict_repr.keys():
