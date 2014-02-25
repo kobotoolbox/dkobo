@@ -102,13 +102,13 @@ class XLF.SkipLogicCollection extends XLF.BaseCollection
 
 
 class XLF.Model.SkipLogicFactory
-  create_operator:
-    text: (symbol) =>
-      new XLF.TextValidationOperator symbol
-    basic: (symbol) =>
-      new XLF.BasicValidationOperator symbol
-    existence: (symbol) =>
-      new XLF.ExistenceValidationOperator symbol
+  create_operator: (type, symbol, id) ->
+    switch type
+      when 'text' then operator = new XLF.TextValidationOperator symbol
+      when 'basic' then operator = new XLF.BasicValidationOperator symbol
+      when 'existence' then operator = new XLF.ExistenceValidationOperator symbol
+    operator.set 'id', id
+    operator
   create_criterion_model: (question_name, response_value, operator) ->
     criterion = new XLF.SkipLogicCriterion()
     criterion.change_question question_name
@@ -129,6 +129,11 @@ class XLF.SkipLogicCriterion extends XLF.BaseModel
 class XLF.ValidationOperator extends XLF.BaseModel
   serialize: (question_name, response_value) ->
     throw new Error("Not Implemented")
+  get_value: () ->
+    val = ''
+    if @get 'is_negated'
+      val = '-'
+    val + @get 'id'
 
 class XLF.BasicValidationOperator extends XLF.ValidationOperator
   serialize: (question_name, response_value) ->
@@ -136,10 +141,14 @@ class XLF.BasicValidationOperator extends XLF.ValidationOperator
   constructor: (operator) ->
     super()
     @set('operator', operator)
+    @set('is_negated', operator == '!=')
 
 class XLF.ExistenceValidationOperator extends XLF.BasicValidationOperator
   serialize: (question_name) ->
     return super.serialize(question_name, '')
+  constructor: (operator) ->
+    super(operator)
+    @set('is_negated', operator == '=')
 
 class XLF.TextValidationOperator extends XLF.BasicValidationOperator
   serialize: (question_name, response_value) ->
