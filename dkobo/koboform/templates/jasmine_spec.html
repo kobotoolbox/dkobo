@@ -36,7 +36,7 @@
         survey.addRow({ name: '' + i, label: 'label' + i });
       }
 
-      criterion = new Backbone.Model({value: "${3} = 'opt2'"});
+      criterion = new Backbone.Model({value: "${0} = 'opt2'"});
       survey.rows.models[4].set('relevant', criterion);
 
       skip_logic_builder = new XLF.SkipLogicBuilder(new XLF.Model.SkipLogicFactory(), new XLF.Views.SkipLogicViewFactory, survey, survey.rows.models[4], $sandbox);

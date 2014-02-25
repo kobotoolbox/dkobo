@@ -2,8 +2,8 @@ class XLF.SkipLogicPresenter
   change_question: (question_name) ->
     @model.change_question question_name
 
-    question = @builder.survey.findRowByName question_name
-    question_type = question_types[question.getType()] || question_types['default']
+    @question = @builder.survey.findRowByName question_name
+    question_type = question_types[@question.getType()] || question_types['default']
     operator_type = @builder.operator_type
 
     if question_type != @builder.question_type
@@ -18,24 +18,42 @@ class XLF.SkipLogicPresenter
 
         @builder.operator_type = operator_type = operator_types[operator_type_id - 1]
 
-        @model.change_operator @builder.build_operator_model  question_type, operator_type, operator_type.symbol[operator_type.parser_name[+negated]]
+        @model.change_operator @builder.build_operator_model(question_type, operator_type, operator_type.symbol[operator_type.parser_name[+negated]])
 
       @builder.question_type = question_type
 
-    @view.change_response @builder.build_response_view question, question_type, operator_type
+    @view.change_response @builder.build_response_view @question, question_type, operator_type
+    @view.response_value_view.fill_value @model.get('response_value')
+    @model.set('response_value', @view.$response_value.val())
 
 
   change_operator: (operator_id) ->
+    if operator_id < 0
+      negated = true
+      operator_id = operator_id * -1
+
+    @builder.operator_type = operator_type = operator_types[operator_id - 1]
+
+    @model.change_operator @builder.build_operator_model(@builder.question_type, operator_type, operator_type.symbol[operator_type.parser_name[+negated]])
+
+    @view.change_response @builder.build_response_view @question, @builder.question_type, operator_type
+    @view.response_value_view.fill_value @model.get('response_value')
+    @model.set('response_value', @view.$response_value.val())
+
   change_response: (response_text) ->
+    @model.set('response_value', response_text)
   constructor: (@model, @view, @builder) ->
     @view.presenter = @
+    @question = @builder.survey.findRowByName @model.get('question_name')
   render: (destination) ->
     @view.render().attach_to(destination)
     @view.question_picker_view.fill_value(@model.get('question_name'))
     @view.operator_picker_view.fill_value(@model.get('operator').get_value())
     @view.response_value_view.fill_value(@model.get('response_value'))
   serialize: () ->
-
+    @model.serialize()
+  destroy: () ->
+    @collection.remove(@)
 
 class XLF.SkipLogicBuilder
   build: () ->
