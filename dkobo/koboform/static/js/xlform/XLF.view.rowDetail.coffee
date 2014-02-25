@@ -341,10 +341,9 @@ class XLF.Views.Base extends Backbone.View
     $el.append(@el)
 
   fill_value: (value) ->
-    if @el?
-      @$el.val value
-    else
-      @value = value
+    @$el.val value
+    if !@$el.val()?
+      @$el.prop('selectedIndex', 0);
 
 class XLF.Views.QuestionPicker extends XLF.Views.Base
   tagName: 'select'
@@ -361,7 +360,6 @@ class XLF.Views.QuestionPicker extends XLF.Views.Base
     @$el.html render_questions()
 
     @$el.on 'change', () =>
-      #@dispatcher.trigger 'change:question', @$el.val()
       @$el.children(':first').prop('disabled', true)
 
     @
@@ -384,8 +382,6 @@ class XLF.Views.OperatorPicker extends XLF.Views.Base
     if @value
       @fill_value @value
 
-    @$el.on 'change', () -> @presenter.change_operator @$el.val()
-
     @
 
   constructor: (@operators) ->
@@ -393,17 +389,10 @@ class XLF.Views.OperatorPicker extends XLF.Views.Base
 
 
 class XLF.Views.SkipLogicEmptyResponse extends XLF.Views.Base
-  render: () ->
-    @
-
   fill_value: (value) ->
 
 class XLF.Views.SkipLogicTextResponse extends XLF.Views.Base
   el: $('<input placeholder="response value" class="skiplogic__responseval" type="text" />')
-  render: () ->
-    @$el.on 'blur', () -> #@dispatcher.trigger 'change:response-value', @$el.val()
-
-    @
 
 class XLF.Views.SkipLogicDropDownResponse extends XLF.Views.Base
   tagName: 'select'
@@ -413,10 +402,9 @@ class XLF.Views.SkipLogicDropDownResponse extends XLF.Views.Base
       options = ''
       @responses.forEach (response) ->
         options += '<option value="' + response.get('name') + '">' + response.get('label') + '</option>'
+      options
 
     @$el.html render_response_values()
-
-    @$el.on 'change', () -> #@dispatcher.trigger 'change:response-value', @$el.val()
 
     @
 
@@ -433,28 +421,44 @@ class XLF.Views.SkipLogicCriterion extends XLF.Views.Base
 
     @$el.append $('<button class="skiplogic__deletecriterion">&times;</button>')
 
-    @$('button.skiplogic__deletecriterion').click () -> #@dispatcher.trigger 'remove:criterion'
+    @$('button.skiplogic__deletecriterion').click () ->
+      @presenter.destroy()
 
     @$question_picker = @$('.skiplogic__rowselect')
     @$operator_picker = @$('.skiplogic__expressionselect')
     @$response_value = @$('.skiplogic__responseval')
 
+    @bind_question_picker()
+    @bind_response_value()
+    @bind_operator_picker()
+
+    @
+
+  bind_question_picker: () ->
     @$question_picker.on 'change', () =>
       @presenter.change_question @$question_picker.val()
 
+  bind_operator_picker: () ->
+    @$operator_picker.on 'change', () =>
+      @presenter.change_operator @$operator_picker.val()
 
-    @$response_value.on (if @$response_value.prop('tagName') == 'select' then 'change' else 'blur'), () ->
+  bind_response_value: () ->
+    @$response_value.on (if @$response_value.prop('tagName') == 'select' then 'change' else 'blur'), () =>
       @presenter.change_response @$response_value.val()
-
-    @
 
   change_operator: (@operator_picker_view) ->
     @operator_picker_view.render()
     @$operator_picker.replaceWith(@operator_picker_view.el)
 
+    @$operator_picker = @operator_picker_view.$el
+    @bind_operator_picker()
+
   change_response: (@response_value_view) ->
     @response_value_view.render()
     @$response_value.replaceWith(@response_value_view.el)
+
+    @$response_value = @response_value_view.$el
+    @bind_response_value()
 
   constructor: (@question_picker_view, @operator_picker_view, @response_value_view, @presenter) ->
     super()
