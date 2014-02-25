@@ -361,12 +361,12 @@ class XLF.Views.QuestionPicker extends XLF.Views.Base
     @$el.html render_questions()
 
     @$el.on 'change', () =>
-      @dispatcher.trigger 'change:question', @$el.val()
+      #@dispatcher.trigger 'change:question', @$el.val()
       @$el.children(':first').prop('disabled', true)
 
     @
 
-  constructor: (@questions, @dispatcher) ->
+  constructor: (@questions) ->
     super()
 
 class XLF.Views.OperatorPicker extends XLF.Views.Base
@@ -384,11 +384,11 @@ class XLF.Views.OperatorPicker extends XLF.Views.Base
     if @value
       @fill_value @value
 
-    @$el.on 'change', () -> @dispatcher.trigger 'change:operator', @$el.val()
+    @$el.on 'change', () -> @presenter.change_operator @$el.val()
 
     @
 
-  constructor: (@operators, @dispatcher) ->
+  constructor: (@operators) ->
     super()
 
 
@@ -397,18 +397,13 @@ class XLF.Views.SkipLogicEmptyResponse extends XLF.Views.Base
     @
 
   fill_value: (value) ->
-    throw new Error('Invalid Operation: tried to fill an empty response view')
-
 
 class XLF.Views.SkipLogicTextResponse extends XLF.Views.Base
   el: $('<input placeholder="response value" class="skiplogic__responseval" type="text" />')
   render: () ->
-    @$el.on 'blur', () -> @dispatcher.trigger 'change:response-value', @$el.val()
+    @$el.on 'blur', () -> #@dispatcher.trigger 'change:response-value', @$el.val()
 
     @
-
-  constructor: (@dispatcher) ->
-    super()
 
 class XLF.Views.SkipLogicDropDownResponse extends XLF.Views.Base
   tagName: 'select'
@@ -421,11 +416,11 @@ class XLF.Views.SkipLogicDropDownResponse extends XLF.Views.Base
 
     @$el.html render_response_values()
 
-    @$el.on 'change', () -> @dispatcher.trigger 'change:response-value', @$el.val()
+    @$el.on 'change', () -> #@dispatcher.trigger 'change:response-value', @$el.val()
 
     @
 
-  constructor: (@responses, @dispatcher) ->
+  constructor: (@responses) ->
     super()
 
 class XLF.Views.SkipLogicCriterion extends XLF.Views.Base
@@ -438,24 +433,43 @@ class XLF.Views.SkipLogicCriterion extends XLF.Views.Base
 
     @$el.append $('<button class="skiplogic__deletecriterion">&times;</button>')
 
-    @$ 'button.skiplogic__deletecriterion', @dispatcher.trigger 'remove:criterion'
+    @$('button.skiplogic__deletecriterion').click () -> #@dispatcher.trigger 'remove:criterion'
+
+    @$question_picker = @$('.skiplogic__rowselect')
+    @$operator_picker = @$('.skiplogic__expressionselect')
+    @$response_value = @$('.skiplogic__responseval')
+
+    @$question_picker.on 'change', () =>
+      @presenter.change_question @$question_picker.val()
+
+
+    @$response_value.on (if @$response_value.prop('tagName') == 'select' then 'change' else 'blur'), () ->
+      @presenter.change_response @$response_value.val()
 
     @
 
-  constructor: (@dispatcher, @question_picker_view, @operator_picker_view, @response_value_view) ->
+  change_operator: (@operator_picker_view) ->
+    @operator_picker_view.render()
+    @$operator_picker.replaceWith(@operator_picker_view.el)
+
+  change_response: (@response_value_view) ->
+    @response_value_view.render()
+    @$response_value.replaceWith(@response_value_view.el)
+
+  constructor: (@question_picker_view, @operator_picker_view, @response_value_view, @presenter) ->
     super()
 
 class XLF.Views.SkipLogicViewFactory
-  create_question_picker: (questions, dispatcher) ->
-    new XLF.Views.QuestionPicker questions, dispatcher
-  create_operator_picker: (operators, dispatcher) ->
-    new XLF.Views.OperatorPicker operators, dispatcher
+  create_question_picker: (questions) ->
+    new XLF.Views.QuestionPicker questions
+  create_operator_picker: (operators) ->
+    new XLF.Views.OperatorPicker operators
   create_response_value_view:
     empty: () ->
-      return new XLF.Views.SkipLogicEmptyResponse()
-    text: (dispatcher) ->
-      return new XLF.Views.SkipLogicTextResponse(dispatcher)
-    dropdown: (dispatcher, responses) ->
-      return new XLF.Views.SkipLogicDropDownResponse(responses, dispatcher)
-  create_criterion_view: (@dispatcher, @question_picker_view, @operator_picker_view, @response_value_view) ->
-    return new XLF.Views.SkipLogicCriterion(@dispatcher, @question_picker_view, @operator_picker_view, @response_value_view)
+      return new XLF.Views.SkipLogicEmptyResponse
+    text: () ->
+      return new XLF.Views.SkipLogicTextResponse
+    dropdown: (responses) ->
+      return new XLF.Views.SkipLogicDropDownResponse responses
+  create_criterion_view: (question_picker_view, operator_picker_view, response_value_view, presenter) ->
+    return new XLF.Views.SkipLogicCriterion question_picker_view, operator_picker_view, response_value_view, presenter

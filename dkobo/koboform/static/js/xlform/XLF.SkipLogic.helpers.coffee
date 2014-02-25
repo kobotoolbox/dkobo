@@ -1,61 +1,96 @@
+class XLF.SkipLogicPresenter
+  change_question: (question_name) ->
+    @model.change_question question_name
+
+    question = @builder.survey.findRowByName question_name
+    question_type = question_types[question.getType()] || question_types['default']
+    operator_type = @builder.operator_type
+
+    if question_type != @builder.question_type
+      @view.change_operator @builder.build_operator_view question_type
+      @view.operator_picker_view.fill_value @model.get('operator').get_value()
+
+      if @view.$operator_picker.val() != @model.get('operator').get_value()
+        operator_type_id = @view.$operator_picker.val()
+        if operator_type_id < 0
+          negated = true
+          operator_type_id = operator_type_id * -1
+
+        @builder.operator_type = operator_type = operator_types[operator_type_id - 1]
+
+        @model.change_operator @builder.build_operator_model  question_type, operator_type, operator_type.symbol[operator_type.parser_name[+negated]]
+
+      @builder.question_type = question_type
+
+    @view.change_response @builder.build_response_view question, question_type, operator_type
+
+
+  change_operator: (operator_id) ->
+  change_response: (response_text) ->
+  constructor: (@model, @view, @builder) ->
+    @view.presenter = @
+  render: (destination) ->
+    @view.render().attach_to(destination)
+    @view.question_picker_view.fill_value(@model.get('question_name'))
+    @view.operator_picker_view.fill_value(@model.get('operator').get_value())
+    @view.response_value_view.fill_value(@model.get('response_value'))
+  serialize: () ->
+
+
 class XLF.SkipLogicBuilder
   build: () ->
     serialized_criteria = @current_question.get('relevant').get('value')
 
     parsed = XLF.skipLogicParser serialized_criteria
 
-    negated_operator_pattern = /not/
+    if parsed.criteria.length > 1
+      _.map parsed.criteria, @build_criterion_logic
+    else
+      @build_criterion_logic parsed.criteria[0]
 
-    is_negated = (operator, operator_type) -> !!operator_type.parser_name.indexOf(operator)
 
-    build_operator_logic = (criterion, question_type, operator_type, dispatcher) =>
-      symbol = operator_type.symbol[!is_negated]
+  build_operator_logic: (question_type, operator_type, criterion) =>
+    return [@build_operator_model(question_type, operator_type, operator_type.symbol[criterion.operator]), @build_operator_view(question_type)]
 
-      operators = _.filter(operator_types, (op_type) -> op_type.id in question_type.operators)
+  build_operator_model: (question_type, operator_type, symbol) ->
+    return @model_factory.create_operator((if operator_type.type == 'existence' then 'existence' else question_type.equality_operator_type), symbol, operator_type.id)
 
-      operator_picker_view = @view_factory.create_operator_picker operators, dispatcher
+  build_operator_view: (question_type) ->
+    operators = _.filter(operator_types, (op_type) -> op_type.id in question_type.operators)
+    @view_factory.create_operator_picker operators
 
-      if operator_type.type == 'existence'
-        return [@model_factory.create_operator['existence'](symbol), operator_picker_view]
-      else
-        return [@model_factory.create_operator[question_type.equality_operator_type](symbol), operator_picker_view]
-    build_criterion_logic = (criterion) =>
-      operator_type = _.find operator_types, (op_type) ->
+  build_question_view: () ->
+    @view_factory.create_question_picker @questions
+
+  build_response_view: (question, question_type, operator_type) ->
+    responses = null
+
+    if question_type.response_type == 'dropdown'
+      responses = question.getList().options
+
+    response_type = if operator_type.response_type? then operator_type.response_type else question_type.response_type
+
+    @view_factory.create_response_value_view[response_type](responses)
+
+  build_criterion_logic: (criterion) =>
+    @operator_type = _.find operator_types, (op_type) ->
         criterion.operator in op_type.parser_name
 
-      dispatcher = _.clone Backbone.Events
+    question = @survey.findRowByName criterion.name
+    @question_type = question_types[question.getType()] || question_types['default']
 
-      question = @survey.findRowByName criterion.name
-      question_type = question_types[question.getType()]
+    [operator_model, operator_picker_view] = @build_operator_logic @question_type, @operator_type, criterion
 
-      [operator_model, operator_picker_view] = build_operator_logic criterion, question_type, operator_type, dispatcher
+    criterion_model = @model_factory.create_criterion_model(
+      criterion.name, criterion.response_value || '', operator_model)
 
-      criterion_model = @model_factory.create_criterion_model(
-        criterion.name, criterion.response_value || '', operator_model)
+    question_picker_view = @build_question_view()
 
-      question_picker_view = @view_factory.create_question_picker @questions, dispatcher
+    response_value_view = @build_response_view question, @question_type, @operator_type
 
-      responses = null
+    criterion_view = @view_factory.create_criterion_view question_picker_view, operator_picker_view, response_value_view
 
-      if question_type.response_type == 'dropdown'
-        responses = question.getList().options
-
-      response_type = if operator_type.response_type? then operator_type.response_type else question_type.response_type
-
-      response_value_view = @view_factory.create_response_value_view[response_type](dispatcher, responses)
-
-      criterion_view = @view_factory.create_criterion_view dispatcher, question_picker_view, operator_picker_view, response_value_view
-
-      criterion_view.render().attach_to(@root_element)
-
-      operator_picker_view.fill_value((is_negated(criterion.operator, operator_type) && '-' || '') + operator_type.id)
-
-      dispatcher.on 'change:question', (value) ->
-        criterion_model.change_question value
-
-    if parsed.criteria.length > 1
-      _.each parsed.criteria, build_criterion_logic
-    else build_criterion_logic parsed.criteria[0]
+    new XLF.SkipLogicPresenter(criterion_model, criterion_view, @)
 
   constructor: (@model_factory, @view_factory, @survey, @current_question, @root_element) ->
     @questions = []
@@ -68,10 +103,14 @@ class XLF.SkipLogicBuilder
 
 
 question_types =
-  text:
+  default:
     operators: [1, 2]
     equality_operator_type: 'text'
     response_type: 'text'
+  select_one:
+    operators: [1, 2]
+    equality_operator_type: 'text'
+    response_type: 'dropdown'
 
 operator_types = [
   {
@@ -81,8 +120,8 @@ operator_types = [
     negated_label: 'Was not Answered'
     parser_name: ['ans_notnull','ans_null']
     symbol: {
-      true: '!=',
-      false: '='
+      ans_notnull: '!=',
+      ans_null: '='
     }
     response_type: 'empty'
   }
@@ -93,8 +132,8 @@ operator_types = [
     negated_label: 'Was not'
     parser_name: ['resp_equals', 'resp_notequals']
     symbol: {
-      true: '=',
-      false: '!='
+      resp_equals: '=',
+      resp_notequals: '!='
     }
   }
 ]
