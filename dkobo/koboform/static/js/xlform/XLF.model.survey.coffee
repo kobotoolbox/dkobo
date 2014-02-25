@@ -57,14 +57,14 @@ class XLF.Survey extends XLF.SurveyFragment
       rowObjects: oRows
 
     choicesCsvJson = do =>
-      lists = []
+      lists = new XLF.ChoiceLists()
       @forEachRow (r)->
         if (list = r.getList())
-          lists.push(list)
+          lists.add list
 
       rows = []
       cols = ["list name", "name", "label"]
-      for choiceList in lists
+      for choiceList in lists.models
         choiceList.set("name", XLF.txtid(), silent: true)  unless choiceList.get("name")
         clName = choiceList.get("name")
         for option in choiceList.options.models

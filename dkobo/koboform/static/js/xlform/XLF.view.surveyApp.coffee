@@ -132,15 +132,14 @@ class @SurveyApp extends Backbone.View
   onEscapeKeydown: -> #noop. to be overridden
   previewButtonClick: (evt)->
     data = JSON.stringify(body: @survey.toCSV())
+    PREVIEW_SERVER = "http://kfdev.kobotoolbox.org"
     $.ajax
-      url: "/koboform/survey_preview/"
+      url: "#{PREVIEW_SERVER}/koboform/survey_preview/"
       method: "POST"
       data: data
-      headers:
-        "X-CSRFToken": $('meta[name="csrf-token"]').attr('content')
       success: (survey_preview, status, jqhr)=>
         if survey_preview.unique_string
-          preview_url = "/koboform/survey_preview/#{survey_preview.unique_string}"
+          preview_url = "#{PREVIEW_SERVER}/koboform/survey_preview/#{survey_preview.unique_string}"
           @onEscapeKeydown = XLF.enketoIframe.close
           XLF.enketoIframe(preview_url).appendTo("body")
 
@@ -157,10 +156,12 @@ class @SurveyApp extends Backbone.View
     @onPublish.apply(@, arguments)
 
 class @SurveyTemplateApp extends Backbone.View
+  events:
+    "click .js-start-survey": "startSurvey"
   initialize: (@options)->
   render: ()->
     @$el.addClass("content--centered").addClass("content")
     @$el.html viewTemplates.surveyTemplateApp()
-    @$(".btn--start-from-scratch").click ()=>
-      new SurveyApp(@options).render()
     @
+  startSurvey: ->
+    new SurveyApp(@options).render()

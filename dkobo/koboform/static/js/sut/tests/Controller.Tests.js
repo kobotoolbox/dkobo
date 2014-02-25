@@ -134,8 +134,9 @@ describe ('Controllers', function () {
             };
         });
 
-        it('should initialize $scope and $rootScope correctly', inject(function ($controller) {
-            initializeController($controller, 'Header');
+
+        it('should initialize $scope and $rootScope correctly', inject(function ($controller, $rootScope) {
+            initializeController($controller, 'Header', $rootScope);
 
             expect($scope.pageIconColor).toBe('teal');
             expect($scope.pageTitle).toBe('Forms');
@@ -146,8 +147,8 @@ describe ('Controllers', function () {
 
         describe('$scope.toggleTopMenu', function () {
             it('should set the value of $scope.topLevelMenuActive to "is-active" when its value is an empty string',
-                inject(function ($controller) {
-                    initializeController($controller, 'Header');
+                inject(function ($controller, $rootScope) {
+                    initializeController($controller, 'Header', $rootScope);
 
                     $rs.topLevelMenuActive = '';
                     $scope.toggleTopMenu();
@@ -157,8 +158,8 @@ describe ('Controllers', function () {
             );
 
             it('should set the value of $scope.topLevelMenuActive to an empty string when its value is "is-active"',
-                inject(function ($controller) {
-                    initializeController($controller, 'Header');
+                inject(function ($controller, $rootScope) {
+                    initializeController($controller, 'Header', $rootScope);
 
                     $rs.topLevelMenuActive = 'is-active';
                     $scope.toggleTopMenu();
@@ -228,8 +229,8 @@ describe ('Controllers', function () {
     });
 
     describe('Import Controller', function () {
-        it('should initialize $scope and $rootScope correctly', inject(function ($controller) {
-            initializeController($controller, 'Import');
+        it('should initialize $scope and $rootScope correctly', inject(function ($controller, $rootScope) {
+            initializeController($controller, 'Import', $rootScope);
 
             expect($scope.csrfToken).toBe('test token');
             expect($rs.canAddNew).toBe(false);

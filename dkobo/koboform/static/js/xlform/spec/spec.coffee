@@ -175,11 +175,7 @@ describe "xlform survey model (XLF.Survey)", ->
       @pizzaSurvey.addRow type: "group", name: "group"
       expect(@pizzaSurvey.rows.length).toBe(3)
       grp = @pizzaSurvey.rows.last()
-      expect(grp instanceof XLF.Group).toBe(true)
-      grp.addRow type: "text", name: "textquestioningroup", label: "Text question in group"
-      grp.addRow type: "group", name: "groupingroup"
-      second_group = grp.rows.last()
-      second_group.addRow type: "text", name: "secondgroupquestion", label: "Second group question"
+      expect(grp instanceof XLF.RowError).toBe(true)
 
   describe "lists", ->
     it "can change a list for a question", ->
@@ -317,8 +313,14 @@ describe "testing the view", ->
 
     expect(clickNewRow).not.toThrow()
     expect(lastRowEl.find(".line").eq(-1).hasClass("expanded")).toBeTruthy()
+    closeButton = lastRowEl.find(".line.expanded").find(".js-close-row-selector")
+    expect(closeButton.length).toBe(1)
+    closeButton.click()
+    clickNewRow()
+    lastRowEl.find(".line.expanded").find(".menu-item[data-menu-item='geopoint']").trigger("click")
 
-    lastRowEl.find(".line.expanded").find(".menu-item-geopoint").trigger("click")
+    # when the event is triggered twice this next test will fail.
+    expect(@_div.find("li.xlf-row-view").length).toBe(2)
 
   it "changes values inside the skip logic dropdowns", ->
     expect(@pizzaSurvey.rows.length).toBe(1)

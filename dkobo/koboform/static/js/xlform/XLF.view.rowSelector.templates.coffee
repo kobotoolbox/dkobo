@@ -1,10 +1,14 @@
 viewTemplates.xlfRowSelector = {}
 
+closeRowSelectorButton = """
+    <button type="button" class="close-button js-close-row-selector shrink pull-right close" aria-hidden="true">&times;</button>
+"""
+
 viewTemplates.xlfRowSelector.line = () ->
     """
       <div class="iwrap">
         <div class="well row-fluid clearfix">
-          <button type="button" class="close-button shrink pull-right close" aria-hidden="true">&times;</button>
+          #{closeRowSelectorButton}
           <h4 class="menu-title">Choose question type</h4>
         </div>
       </div>

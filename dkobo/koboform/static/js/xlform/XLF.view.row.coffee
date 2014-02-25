@@ -5,7 +5,7 @@ class XLF.RowView extends Backbone.View
    "click .create-new-list": "createListForRow"
    "click .edit-list": "editListForRow"
    "click": "select"
-   "click .add-row-btn": "expandRowSelector"
+   "click .js-expand-row-selector": "expandRowSelector"
    "drop": "drop"
    "click .js-advanced-toggle": "expandCog"
   initialize: (opts)->
@@ -29,9 +29,7 @@ class XLF.RowView extends Backbone.View
       $(".xlf-selected").trigger("xlf-blur")
       @$el.addClass("xlf-selected")
   expandRowSelector: ->
-    if !@xlfRowSelector
-      @xlfRowSelector = new XLF.RowSelector(el: @$el.find(".expanding-spacer-between-rows").get(0), spawnedFromView: @)
-    @xlfRowSelector.expand()
+    new XLF.RowSelector(el: @$el.find(".expanding-spacer-between-rows").get(0), spawnedFromView: @).expand()
   render: ->
     if @model instanceof XLF.RowError
       @_renderError()
