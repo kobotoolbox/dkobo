@@ -1,10 +1,13 @@
 from django.test import TestCase
 from lxml import etree
+from StringIO import StringIO
 from django.contrib.auth.models import User
 from django.test.client import Client
+from pyxform import xls2json_backends
 from dkobo.koboform.models import SurveyDraft
 from dkobo.koboform import pyxform_utils
 import utils
+
 
 text = """"survey",,,,,
                 ,"name","type","label","hint","required"
@@ -35,8 +38,18 @@ choices,,,
 ,yn,n,No
 """
 
-from StringIO import StringIO
-from pyxform import xls2json_backends
+sample_for_ordered_columns = """"survey",,,,,,,,
+,"name","type","label","hint","required"
+,"ug3fj23","text","Whats your name?",,"false",
+,"ii3we34","select_multiple hv1rw91","Choose from my options",,"false"
+"choices",,,
+,"list name","name","label"
+,"hv1rw91","my_option","My option"
+,"hv1rw91","my_option_2","My Option 2"
+"settings",,
+,"form_title","form_id"
+,"What is your name","new_survey"
+"""
 
 class CreateWorkbookFromCsvTests(TestCase):
     def test_xls_to_dict(self):
@@ -52,6 +65,12 @@ class CreateWorkbookFromCsvTests(TestCase):
         #   (CSV) -> dict_representation
         #   (CSV -> XLS) -> dict_representation
         self.assertEqual(csv_dict, xls_dict)
+
+    def test_order_of_dict_values(self):
+        csv_dict = xls2json_backends.csv_to_dict(StringIO(sample_for_ordered_columns))
+        self.assertEqual(csv_dict.keys()[0], "survey")
+        survey = csv_dict.get("survey")
+        self.assertEqual(survey[0].keys(), ["name", "type", "label", "required"])
 
 class SaveSurveyDrafts(TestCase):
     def setUp(self):

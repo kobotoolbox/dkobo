@@ -89,9 +89,11 @@ def convert_xls_to_csv_string(xls_file_object, strip_empty_rows=True):
     return csvout.getvalue()
 
 def _add_contents_to_sheet(sheet, contents):
-    cols = set()
+    cols = []
     for row in contents:
-        cols.update(row.keys())
+        for key in row.keys():
+            if key not in cols:
+                cols.append(key)
     for ci, col in enumerate(cols):
         sheet.write(0, ci, col)
     for ri, row in enumerate(contents):
