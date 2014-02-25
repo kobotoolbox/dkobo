@@ -16,6 +16,11 @@ class SurveyDraft(models.Model):
     date_modified = models.DateTimeField(auto_now=True)
     in_question_library = models.BooleanField(default=False)
 
+    def _pyxform_survey(self):
+        survey = create_survey_from_csv_text(self.body)
+        survey.name = self.name
+        return survey
+
 class SurveyPreview(models.Model):
     unique_string = models.CharField(max_length=64, null=False, unique=True)
     csv = models.TextField()

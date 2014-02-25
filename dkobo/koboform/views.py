@@ -16,10 +16,10 @@ def csv_to_xform(request):
     csv_data = request.POST.get('txtImport')
 
     survey = utils.create_survey_from_csv_text(csv_data)
-
+    survey_id_string = survey.id_string
     response = HttpResponse(survey.to_xml(),
                             mimetype='application/force-download')
-    response['Content-Disposition'] = 'attachment; filename=survey.xml'
+    response['Content-Disposition'] = 'attachment; filename=%s.xml' % (survey_id_string)
 
     return response
 
@@ -34,9 +34,10 @@ def export_form(request, id):
         return response
     elif file_format == "xls":
         import pyxform_utils
+        survey = survey_draft._pyxform_survey()
         xls_io = pyxform_utils.convert_csv_to_xls(survey_draft.body)
         xls_resp = HttpResponse(xls_io, mimetype='application/vnd.ms-excel; charset=utf-8')
-        xls_resp['Content-Disposition'] = 'attachment; filename=worksheet.xls'
+        xls_resp['Content-Disposition'] = 'attachment; filename=%s.xls' % survey.id_string
         return xls_resp
 
 
