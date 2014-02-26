@@ -1,10 +1,12 @@
 from pyxform import xls2json, xls2json_backends, builder, create_survey_from_xls
 import StringIO
 import xlrd
+import xlwt
 import csv
+import re
 
 def create_survey_from_csv_text(csv_text, default_name='KoBoFormSurvey', default_language=u'default', warnings=None, ):
-    workbook_dict = xls2json_backends.csv_to_dict(StringIO.StringIO(csv_text))
+    workbook_dict = xls2json_backends.csv_to_dict(StringIO.StringIO(csv_text.encode("utf-8")))
     dict_repr = xls2json.workbook_to_json(workbook_dict, default_name, default_language, warnings)
     dict_repr[u'name'] = dict_repr[u'id_string']
     return builder.create_survey_element_from_dict(dict_repr)
@@ -85,3 +87,30 @@ def convert_xls_to_csv_string(xls_file_object, strip_empty_rows=True):
         for row in _sheet_to_lists(sheet):
             writer.writerow([s.encode("utf-8") for s in ([""] + row)])
     return csvout.getvalue()
+
+def _add_contents_to_sheet(sheet, contents):
+    cols = []
+    for row in contents:
+        for key in row.keys():
+            if key not in cols:
+                cols.append(key)
+    for ci, col in enumerate(cols):
+        sheet.write(0, ci, col)
+    for ri, row in enumerate(contents):
+        for ci, col in enumerate(cols):
+            val = row.get(col, None)
+            if val:
+                sheet.write(ri+1, ci, val)
+
+def convert_csv_to_xls(csv_repr):
+    dict_repr = xls2json_backends.csv_to_dict(StringIO.StringIO(csv_repr.encode("utf-8")))
+    workbook = xlwt.Workbook()
+    for sheet_name in dict_repr.keys():
+        # pyxform.xls2json_backends adds "_header" items for each sheet.....
+        if not re.match(r".*_header$", sheet_name):
+            cur_sheet = workbook.add_sheet(sheet_name)
+            _add_contents_to_sheet(cur_sheet, dict_repr[sheet_name])
+    string_io = StringIO.StringIO()
+    workbook.save(string_io)
+    string_io.seek(0)
+    return string_io

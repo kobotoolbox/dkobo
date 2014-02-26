@@ -1,5 +1,3 @@
-# enketoIframe = do ->
-
 @viewUtils = {}
 
 viewUtils.makeEditable = (that, model, selector, {property, transformFunction, options}) ->

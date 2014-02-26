@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from pyxform_utils import create_survey_from_csv_text
 import md5
 
 class SurveyDraft(models.Model):
@@ -15,6 +14,27 @@ class SurveyDraft(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
     in_question_library = models.BooleanField(default=False)
+
+    @property
+    def _pyxform_survey(self):
+        import pyxform_utils
+        survey = pyxform_utils.create_survey_from_csv_text(self.body)
+        survey.title = self.name
+        return survey
+
+    @property
+    def id_string(self):
+        # Ideally, we could determine this without needing to load the entire
+        # survey into pyxform, but parsing csvs from unk sources can be complicated
+        # and this method of finding the id_string is (at least) consistent.
+        return self._pyxform_survey.id_string
+
+    def to_xml(self):
+        return self._pyxform_survey.to_xml()
+
+    def to_xls(self):
+        import pyxform_utils
+        return pyxform_utils.convert_csv_to_xls(self.body)
 
 class SurveyPreview(models.Model):
     unique_string = models.CharField(max_length=64, null=False, unique=True)

@@ -1,9 +1,16 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 from django.test import TestCase
 from lxml import etree
+from StringIO import StringIO
 from django.contrib.auth.models import User
 from django.test.client import Client
+from pyxform import xls2json_backends
 from dkobo.koboform.models import SurveyDraft
+from dkobo.koboform import pyxform_utils
 import utils
+
 
 text = """"survey",,,,,
                 ,"name","type","label","hint","required"
@@ -24,6 +31,60 @@ class Views_CsvToXformTests(TestCase):
         response = self.client.post('/csv', {'txtImport': text})
         etree.fromstring(response.content)
 
+simple_yn = """survey,,,
+,name,label,type
+,hithere,"Hi there",text
+,s1,"Select one","select_one yn"
+choices,,,
+,"list name",name,label
+,yn,y,Yes
+,yn,n,No
+"""
+
+sample_for_ordered_columns = """"survey",,,,,,,,
+,"name","type","label","hint","required"
+,"ug3fj23","text","What's your name?",,"false",
+,"ii3we34","select_multiple hv1rw91","Choose from my options",,"false"
+"choices",,,
+,"list name","name","label"
+,"hv1rw91","my_option","My option"
+,"hv1rw91","my_option_2","My Option 2"
+"settings",,
+,"form_title","form_id"
+,"What is your name","new_survey"
+"""
+
+utf_survey = u"""\
+"survey",,,
+,"name","type","label"
+,"burger_toppings","text","What toppings do you prefer on your 🍔s?"
+"""
+
+class CreateWorkbookFromCsvTests(TestCase):
+    def test_xls_to_dict(self):
+        # convert a CSV to XLS using our new method
+        new_xls = pyxform_utils.convert_csv_to_xls(simple_yn)
+
+        # convert our new XLS to dict (using pyxform)
+        xls_dict = xls2json_backends.xls_to_dict(new_xls)
+        # convert the original CSV to dict (using pyxform)
+        csv_dict = xls2json_backends.csv_to_dict(StringIO(simple_yn))
+        # Our function, "pyxform_utils.csv_to_xls" performs (CSV -> XLS)
+        # This assertion tests equivalence of
+        #   (CSV) -> dict_representation
+        #   (CSV -> XLS) -> dict_representation
+        self.assertEqual(csv_dict, xls_dict)
+
+    def test_order_of_dict_values(self):
+        csv_dict = xls2json_backends.csv_to_dict(StringIO(sample_for_ordered_columns))
+        self.assertEqual(csv_dict.keys()[0], "survey")
+        survey = csv_dict.get("survey")
+        self.assertEqual(survey[0].keys(), ["name", "type", "label", "required"])
+
+    def test_unicode_surveys_work(self):
+        survey = utils.create_survey_from_csv_text(utf_survey)
+        xml = survey.to_xml()
+        self.assertTrue(u"🍔" in xml)
 
 class SaveSurveyDrafts(TestCase):
     def setUp(self):

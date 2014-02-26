@@ -1,5 +1,5 @@
 from django.shortcuts import render_to_response, HttpResponse
-from django.http import HttpResponseServerError
+from django.http import HttpResponseServerError, HttpResponseBadRequest
 from django.template import RequestContext
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.contrib.auth.decorators import login_required
@@ -16,21 +16,36 @@ def csv_to_xform(request):
     csv_data = request.POST.get('txtImport')
 
     survey = utils.create_survey_from_csv_text(csv_data)
-
     response = HttpResponse(survey.to_xml(),
                             mimetype='application/force-download')
-    response['Content-Disposition'] = 'attachment; filename=survey.xml'
+    response['Content-Disposition'] = 'attachment; filename=%s.xml' % (survey.id_string)
 
     return response
 
 
-def export_form_to_xform(request, id):
-    survey = utils.create_survey_from_csv_text(SurveyDraft.objects.get(pk=id).body)
-
-    response = HttpResponse(survey.to_xml(),
-                            mimetype='application/force-download')
-
-    response['Content-Disposition'] = 'attachment; filename=survey.xml'
+def export_form(request, id):
+    survey_draft = SurveyDraft.objects.get(pk=id)
+    file_format = request.GET.get('format', 'xml')
+    if file_format == "xml":
+        contents = survey_draft.to_xml()
+        mimetype = 'application/force-download'
+        disposition = 'attachment; filename=%s.%s' % (survey_draft.id_string, file_format)
+        # content_length = len(contents) + 2 # the length of the string != the length of the file
+    elif file_format == "xls":
+        contents = survey_draft.to_xls()
+        mimetype = 'application/vnd.ms-excel; charset=utf-8'
+        # contents.read()
+        # content_length = contents.tell()
+        # contents.seek(0)
+    elif file_format == "csv":
+        contents = survey_draft.body
+        mimetype = 'text/csv; charset=utf-8'
+        # content_length = len(contents)
+    else:
+        return HttpResponseBadRequest("Format not supported: '%s'. Supported formats are [xml,xls,csv]." % file_format)
+    response = HttpResponse(contents, mimetype=mimetype)
+    response['Content-Disposition'] = 'attachment; filename=%s.%s' % (survey_draft.id_string, file_format)
+    # response['Content-Length'] = content_length
     return response
 
 
