@@ -22,7 +22,7 @@ SkipLogicDetailMixin =
   serialize: ()->
     # @hidden = false
     # note: reimplement "hidden" if response is invalid
-    @skipLogicCollection.serialize()
+    @facade?.serialize()
 
   parse: ()->
     XLF.parseHelper.parseSkipLogic(@skipLogicCollection, @get('value'), @_parent)

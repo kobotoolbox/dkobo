@@ -78,7 +78,7 @@ XLF.DetailViewMixins.relevant =
       else
         if !@model.skipLogicCollection
           console?.error("Skip Logic Colleciton not found for RowDetail model.")
-        @skipLogicEditor = new XLF.SkipLogicCollectionView(el: @$el.find(".relevant__editor"))
+        @skipLogicEditor = new XLF.SkipLogicCollectionView(el: @$el.find(".relevant__editor"), model: @model)
         @skipLogicEditor.builder = @model.builder
         @skipLogicEditor.render()
 
@@ -122,6 +122,7 @@ class XLF.SkipLogicCriterionBuilderView extends XLF.Views.Base
     "click .skiplogic__addcriterion": "addCriterion"
     "click .skiplogic__delimselectcb": "markChangedDelimSelector"
   render: () ->
+    tempId = _.uniqueId("skiplogic_expr")
     @$el.html("""
       <p class="skiplogic__addnew">
         <button class="skiplogic__addcriterion">Add new</button>
@@ -141,23 +142,23 @@ class XLF.SkipLogicCriterionBuilderView extends XLF.Views.Base
       <div class="skiplogic__criterialist"></div>
     """)
 
-    @
-
     delimSelect = @$(".skiplogic__delimselect")
-    delimSelect[if @collection.length < 2 then "hide" else "show"]()
-    delimSelectValue = @collection.meta.get("delimSelect")
-    for checkbox in delimSelect.find("input") when checkbox.value is delimSelectValue
+
+    for checkbox in delimSelect.find("input") when checkbox.value is @criterion_delimiter
       checkbox.checked = "checked"
 
-  addCriterion: (evt)->
-    @collection.add(_parent: @collection._parent)
+    @
+
+  addCriterion: (evt) =>
+    @facade.add_empty()
   deleteCriterion: (evt)->
     $target = $(evt.target)
     modelId = $target.data("criterionId")
-    criterion = @collection.get(modelId)
-    @collection.remove(criterion)
+    @facade.remove modelId
+    $target.parent().remove()
+
   markChangedDelimSelector: (evt) ->
-    @collection.meta.set("delimSelect", evt.target.value)
+    @criterion_delimiter = evt.target.value
 
 class XLF.SkipLogicHandCodeView extends XLF.Views.Base
   render: () ->
@@ -169,7 +170,6 @@ SkipLogicCollectionView
 ###
 class XLF.SkipLogicCollectionView extends Backbone.View
   render: ()->
-    tempId = _.uniqueId("skiplogic_expr")
     @$el.html("""
       <div class="skiplogic__main"></div>
       <p class="skiplogic__extras">
@@ -177,17 +177,21 @@ class XLF.SkipLogicCollectionView extends Backbone.View
       </p>
     """)
 
-    target_element = @$('.skiplogic__main')
+    @target_element = @$('.skiplogic__main')
 
-    facade = @builder.build()
-    facade.render target_element
+    @facade = @builder.build()
+    @facade.render @target_element
+    @model.facade = @facade
 
     @$('.skiplogic__handcode').click(_.bind @switchEditingMode, @)
     @
   toggle: ->
     @$el.toggle()
-  switchEditingMode: (evt) ->
-
+  switchEditingMode: () =>
+    @facade = @facade.switch_editing_mode()
+    @target_element.empty()
+    @facade.render @target_element
+    @model.facade = @facade
 
 class XLF.Views.QuestionPicker extends XLF.Views.Base
   tagName: 'select'
@@ -233,10 +237,13 @@ class XLF.Views.OperatorPicker extends XLF.Views.Base
 
 
 class XLF.Views.SkipLogicEmptyResponse extends XLF.Views.Base
+  className: 'skiplogic__responseval'
   fill_value: (value) ->
 
 class XLF.Views.SkipLogicTextResponse extends XLF.Views.Base
-  el: $('<input placeholder="response value" class="skiplogic__responseval" type="text" />')
+  render: () ->
+    @setElement('<input placeholder="response value" class="skiplogic__responseval" type="text" />')
+    @
 
 class XLF.Views.SkipLogicDropDownResponse extends XLF.Views.Base
   tagName: 'select'
@@ -263,7 +270,7 @@ class XLF.Views.SkipLogicCriterion extends XLF.Views.Base
     @operator_picker_view.render().attach_to @$el
     @response_value_view.render().attach_to @$el
 
-    @$el.append $('<button class="skiplogic__deletecriterion">&times;</button>')
+    @$el.append $("""<button class="skiplogic__deletecriterion" data-criterion-id="#{@model.cid}">&times;</button>""")
 
     @$question_picker = @$('.skiplogic__rowselect')
     @$operator_picker = @$('.skiplogic__expressionselect')
