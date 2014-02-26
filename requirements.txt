@@ -8,3 +8,4 @@ BeautifulSoup==3.2.1
 django-registration==1.0
 -e git+https://github.com/SEL-Columbia/pyxform.git@c94d566920618a868b281f40511fd81340001948#egg=pyxform-dev
 djangorestframework==2.3.10
+xlwt==0.7.5
