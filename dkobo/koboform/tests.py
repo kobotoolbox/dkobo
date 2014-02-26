@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 from django.test import TestCase
 from lxml import etree
 from StringIO import StringIO
@@ -40,7 +43,7 @@ choices,,,
 
 sample_for_ordered_columns = """"survey",,,,,,,,
 ,"name","type","label","hint","required"
-,"ug3fj23","text","Whats your name?",,"false",
+,"ug3fj23","text","What's your name?",,"false",
 ,"ii3we34","select_multiple hv1rw91","Choose from my options",,"false"
 "choices",,,
 ,"list name","name","label"
@@ -49,6 +52,12 @@ sample_for_ordered_columns = """"survey",,,,,,,,
 "settings",,
 ,"form_title","form_id"
 ,"What is your name","new_survey"
+"""
+
+utf_survey = u"""\
+"survey",,,
+,"name","type","label"
+,"burger_toppings","text","What toppings do you prefer on your 🍔s?"
 """
 
 class CreateWorkbookFromCsvTests(TestCase):
@@ -71,6 +80,11 @@ class CreateWorkbookFromCsvTests(TestCase):
         self.assertEqual(csv_dict.keys()[0], "survey")
         survey = csv_dict.get("survey")
         self.assertEqual(survey[0].keys(), ["name", "type", "label", "required"])
+
+    def test_unicode_surveys_work(self):
+        survey = utils.create_survey_from_csv_text(utf_survey)
+        xml = survey.to_xml()
+        self.assertTrue(u"🍔" in xml)
 
 class SaveSurveyDrafts(TestCase):
     def setUp(self):

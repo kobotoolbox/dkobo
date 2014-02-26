@@ -6,7 +6,7 @@ import csv
 import re
 
 def create_survey_from_csv_text(csv_text, default_name='KoBoFormSurvey', default_language=u'default', warnings=None, ):
-    workbook_dict = xls2json_backends.csv_to_dict(StringIO.StringIO(csv_text))
+    workbook_dict = xls2json_backends.csv_to_dict(StringIO.StringIO(csv_text.encode("utf-8")))
     dict_repr = xls2json.workbook_to_json(workbook_dict, default_name, default_language, warnings)
     dict_repr[u'name'] = dict_repr[u'id_string']
     return builder.create_survey_element_from_dict(dict_repr)
@@ -103,7 +103,7 @@ def _add_contents_to_sheet(sheet, contents):
                 sheet.write(ri+1, ci, val)
 
 def convert_csv_to_xls(csv_repr):
-    dict_repr = xls2json_backends.csv_to_dict(StringIO.StringIO(csv_repr))
+    dict_repr = xls2json_backends.csv_to_dict(StringIO.StringIO(csv_repr.encode("utf-8")))
     workbook = xlwt.Workbook()
     for sheet_name in dict_repr.keys():
         # pyxform.xls2json_backends adds "_header" items for each sheet.....

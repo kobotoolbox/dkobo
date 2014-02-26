@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from pyxform_utils import create_survey_from_csv_text
 import md5
 
 class SurveyDraft(models.Model):
@@ -17,6 +16,7 @@ class SurveyDraft(models.Model):
     in_question_library = models.BooleanField(default=False)
 
     def _pyxform_survey(self):
+        from pyxform_utils import create_survey_from_csv_text
         survey = create_survey_from_csv_text(self.body)
         survey.name = self.name
         return survey
