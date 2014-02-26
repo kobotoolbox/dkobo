@@ -107,6 +107,7 @@ class XLF.Model.SkipLogicFactory
       when 'text' then operator = new XLF.TextValidationOperator symbol
       when 'basic' then operator = new XLF.BasicValidationOperator symbol
       when 'existence' then operator = new XLF.ExistenceValidationOperator symbol
+      when 'empty' then return new XLF.EmptyOperator
     operator.set 'id', id
     operator
   create_criterion_model: (question_name, response_value, operator) ->
@@ -153,6 +154,12 @@ class XLF.ExistenceValidationOperator extends XLF.BasicValidationOperator
 class XLF.TextValidationOperator extends XLF.BasicValidationOperator
   serialize: (question_name, response_value) ->
     return super.serialize(quesion_name, "'" + response_value + "'")
+
+class XLF.EmptyOperator extends XLF.ValidationOperator
+  constructor: () ->
+    super()
+    @set 'id', 0
+    @set 'is_negated', false
 
 class XLF.SelectMultipleValidationOperator extends XLF.ValidationOperator
   serialize: (question_name, response_value) ->
