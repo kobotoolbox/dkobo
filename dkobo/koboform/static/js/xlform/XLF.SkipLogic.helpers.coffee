@@ -52,19 +52,42 @@ class XLF.SkipLogicPresenter
     @view.response_value_view.fill_value(@model.get('response_value'))
   serialize: () ->
     @model.serialize()
-  destroy: () ->
-    @collection.remove(@)
+
+class XLF.SkipLogicCriterionBuilderFacade
+  render: (destination) ->
+    _.each @presenters, (presenter) ->
+      presenter.render destination
+  serialize: (separator) ->
+    serialized = _.map presenters, (presenter) ->
+      presenter.serialize()
+    serialized.join(separator)
+  constructor: (@presenters) ->
+
+
+class XLF.SkipLogicHandCodeFacade
+  render: (destination) ->
+    @view.render().attach_to(destination)
+  serialize: () ->
+    @view.$el.val()
+  constructor: () ->
+    @view = new XLF.SkipLogicHandCodeView
 
 class XLF.SkipLogicBuilder
   build: () ->
     serialized_criteria = @current_question.get('relevant').get('value')
 
-    parsed = XLF.skipLogicParser serialized_criteria
+    if serialized_criteria == ''
+      return new XLF.SkipLogicCriterionBuilderFacade [@build_empty_criterion_logic()]
+    try
+      parsed = XLF.skipLogicParser serialized_criteria
 
-    if parsed.criteria.length > 1
-      _.map parsed.criteria, @build_criterion_logic
-    else
-      @build_criterion_logic parsed.criteria[0]
+      if parsed.criteria.length > 1
+        new XLF.SkipLogicCriterionBuilderFacade _.map parsed.criteria, @build_criterion_logic
+      else
+        new XLF.SkipLogicCriterionBuilderFacade [@build_criterion_logic parsed.criteria[0]]
+    catch e
+      new XLF.SkipLogicHandCodeFacade
+
 
 
   build_operator_logic: (question_type, operator_type, criterion) =>
@@ -110,7 +133,17 @@ class XLF.SkipLogicBuilder
 
     new XLF.SkipLogicPresenter(criterion_model, criterion_view, @)
 
-  constructor: (@model_factory, @view_factory, @survey, @current_question, @root_element) ->
+  build_empty_criterion_logic: () =>
+    criterion_model = @model_factory.create_criterion_model('', '', @model_factory.create_operator('empty'))
+
+    question_picker_view = @build_question_view()
+
+
+    criterion_view = @view_factory.create_criterion_view question_picker_view, @view_factory.create_operator_picker([]), @view_factory.create_response_value_view['empty']()
+
+    new XLF.SkipLogicPresenter(criterion_model, criterion_view, @)
+
+  constructor: (@model_factory, @view_factory, @survey, @current_question) ->
     @questions = []
     limit = false
 

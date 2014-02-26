@@ -6,6 +6,14 @@ SkipLogicDetailMixin =
 
   postInitialize: ()->
     @skipLogicCollection = new XLF.SkipLogicCollection([], rowDetail: @)
+
+    model_factory = new XLF.Model.SkipLogicFactory
+    view_factory = new XLF.Views.SkipLogicViewFactory
+    survey = @getSurvey()
+    current_question = @_parent
+
+    @builder = new XLF.SkipLogicBuilder model_factory, view_factory, survey, current_question
+
     @parse()
     if !@skipLogicCollection.parseable and @get('value') != ''
       @skipLogicCollection.add(new XLF.HandCodedSkipLogicCriterion(@get('value')))
