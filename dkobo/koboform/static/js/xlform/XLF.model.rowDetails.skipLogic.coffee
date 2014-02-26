@@ -138,7 +138,7 @@ class XLF.ValidationOperator extends XLF.BaseModel
 
 class XLF.BasicValidationOperator extends XLF.ValidationOperator
   serialize: (question_name, response_value) ->
-    return '${' + questionName + '} ' + @get('operator') + ' ' + response_value
+    return '${' + question_name + '} ' + @get('operator') + ' ' + response_value
   constructor: (operator) ->
     super()
     @set('operator', operator)
@@ -146,14 +146,14 @@ class XLF.BasicValidationOperator extends XLF.ValidationOperator
 
 class XLF.ExistenceValidationOperator extends XLF.BasicValidationOperator
   serialize: (question_name) ->
-    return super.serialize(question_name, '')
+    return super(question_name, "''")
   constructor: (operator) ->
     super(operator)
     @set('is_negated', operator == '=')
 
 class XLF.TextValidationOperator extends XLF.BasicValidationOperator
   serialize: (question_name, response_value) ->
-    return super.serialize(quesion_name, "'" + response_value + "'")
+    return super(question_name, "'" + response_value + "'")
 
 class XLF.EmptyOperator extends XLF.ValidationOperator
   constructor: () ->
