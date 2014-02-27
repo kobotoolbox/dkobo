@@ -107,7 +107,8 @@ class XLF.Model.SkipLogicFactory
       when 'text' then operator = new XLF.TextValidationOperator symbol
       when 'basic' then operator = new XLF.BasicValidationOperator symbol
       when 'existence' then operator = new XLF.ExistenceValidationOperator symbol
-      when 'empty' then return new XLF.EmptyOperator
+      when 'select_multiple' then operator = new XLF.SelectMultipleValidationOperator symbol
+      when 'empty' then return new XLF.EmptyOperator()
     operator.set 'id', id
     operator
   create_criterion_model: (question_name, response_value, operator) ->
@@ -138,11 +139,11 @@ class XLF.ValidationOperator extends XLF.BaseModel
 
 class XLF.BasicValidationOperator extends XLF.ValidationOperator
   serialize: (question_name, response_value) ->
-    return '${' + question_name + '} ' + @get('operator') + ' ' + response_value
-  constructor: (operator) ->
+    return '${' + question_name + '} ' + @get('symbol') + ' ' + response_value
+  constructor: (symbol) ->
     super()
-    @set('operator', operator)
-    @set('is_negated', operator == '!=')
+    @set('symbol', symbol)
+    @set('is_negated', symbol == '!=')
 
 class XLF.ExistenceValidationOperator extends XLF.BasicValidationOperator
   serialize: (question_name) ->
@@ -163,4 +164,12 @@ class XLF.EmptyOperator extends XLF.ValidationOperator
 
 class XLF.SelectMultipleValidationOperator extends XLF.ValidationOperator
   serialize: (question_name, response_value) ->
-    return "selected(${" + question_name + "}, '" + response_value + "')"
+    selected = "selected(${" + question_name + "}, '" + response_value + "')"
+
+    if @get('is_negated')
+      return 'not(' + selected + ')'
+    return selected
+  constructor: (symbol) ->
+    super()
+    @set('symbol', symbol)
+    @set('is_negated', symbol == '!=')

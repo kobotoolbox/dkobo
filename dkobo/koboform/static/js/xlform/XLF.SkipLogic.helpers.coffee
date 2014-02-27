@@ -5,7 +5,7 @@ class XLF.SkipLogicPresenter
     @question = @builder.survey.findRowByName question_name
     question_type = question_types[@question.getType()] || question_types['default']
 
-    operator_type_id = @view.$operator_picker.val()
+    operator_type_id = @view.$operator_picker.val() || question_type.operators[0]
 
     negated = false
     if operator_type_id < 0
@@ -86,7 +86,7 @@ class XLF.SkipLogicCriterionBuilderFacade
         @presenters.splice(index, 1)
   constructor: (@presenters, separator, @builder) ->
     @view = new XLF.SkipLogicCriterionBuilderView
-    @view.criterion_delimiter = separator.toLowerCase()
+    @view.criterion_delimiter = (separator || 'and').toLowerCase()
     @view.facade = @
   switch_editing_mode: () ->
     @builder.build_hand_code_criteria @serialize()
@@ -113,15 +113,15 @@ class XLF.SkipLogicBuilder
   build_criterion_builder: (serialized_criteria) ->
     if serialized_criteria == ''
       return new XLF.SkipLogicCriterionBuilderFacade [@build_empty_criterion_logic()], 'and', @
-    try
-      parsed = XLF.skipLogicParser serialized_criteria
+#    try
+    parsed = XLF.skipLogicParser serialized_criteria
 
-      if parsed.criteria.length > 1
-        new XLF.SkipLogicCriterionBuilderFacade _.map(parsed.criteria, @build_criterion_logic), parsed.operator, @
-      else
-        new XLF.SkipLogicCriterionBuilderFacade [@build_criterion_logic parsed.criteria[0]], parsed.operator, @
-    catch e
-      @build_hand_code_criteria serialized_criteria
+    if parsed.criteria.length > 1
+      new XLF.SkipLogicCriterionBuilderFacade _.map(parsed.criteria, @build_criterion_logic), parsed.operator, @
+    else
+      new XLF.SkipLogicCriterionBuilderFacade [@build_criterion_logic parsed.criteria[0]], parsed.operator, @
+#   catch e
+#     @build_hand_code_criteria serialized_criteria
 
   build_operator_logic: (question_type, operator_type, criterion) =>
     return [@build_operator_model(question_type, operator_type, operator_type.symbol[criterion.operator]), @build_operator_view(question_type)]
@@ -203,6 +203,10 @@ question_types =
     operators: [1, 2]
     equality_operator_type: 'text'
     response_type: 'dropdown'
+  select_multiple:
+    operators: [1, 2]
+    equality_operator_type: 'select_multiple'
+    response_type: 'dropdown'
 
 operator_types = [
   {
@@ -222,10 +226,12 @@ operator_types = [
     type: 'equality'
     label: 'Was'
     negated_label: 'Was not'
-    parser_name: ['resp_equals', 'resp_notequals']
+    parser_name: ['resp_equals', 'resp_notequals', 'multiplechoice_selected', 'multiplechoice_notselected']
     symbol: {
       resp_equals: '=',
-      resp_notequals: '!='
+      resp_notequals: '!=',
+      multiplechoice_selected: '='
+      multiplechoice_notselected: '!='
     }
   }
 ]
