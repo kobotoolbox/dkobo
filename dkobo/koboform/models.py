@@ -61,5 +61,6 @@ class SurveyPreview(models.Model):
         if self.unique_string in [u'', None]:
             self.unique_string = SurveyPreview._generate_unique_string(self.csv)
         if self.xml in [u'', None]:
-            self.xml = create_survey_from_csv_text(self.csv, default_name="SurveyPreview__save").to_xml()
+            import pyxform_utils
+            self.xml = pyxform_utils.create_survey_from_csv_text(self.csv, default_name="SurveyPreview__save").to_xml()
         super(SurveyPreview, self).save(*args, **kwargs)

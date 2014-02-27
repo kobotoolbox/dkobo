@@ -7,8 +7,9 @@ from StringIO import StringIO
 from django.contrib.auth.models import User
 from django.test.client import Client
 from pyxform import xls2json_backends
-from dkobo.koboform.models import SurveyDraft
+from dkobo.koboform.models import SurveyDraft, SurveyPreview
 from dkobo.koboform import pyxform_utils
+import json
 import utils
 
 
@@ -108,3 +109,14 @@ class SaveSurveyDrafts(TestCase):
         self.assertEqual(SurveyDraft.objects.count(), sdcount + 1)
         survey = SurveyDraft.objects.all()[0]
         self.assertEqual(survey.name, sdname)
+
+class SurveyPreviews(TestCase):
+    def setUp(self):
+        self.client = Client()
+
+    def test_can_generate_preview(self):
+        self.assertEqual(SurveyPreview.objects.count(), 0)
+        self.client.post("/koboform/survey_preview",
+                json.dumps({u'body': sample_for_ordered_columns}),
+                content_type="application/json")
+        self.assertEqual(SurveyPreview.objects.count(), 1)
