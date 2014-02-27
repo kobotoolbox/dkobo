@@ -12,6 +12,9 @@ class XLF.SkipLogicPresenter
       negated = true
       operator_type_id = operator_type_id * -1
 
+    if operator_type_id not in question_type.operators
+      operator_type_id = question_type.operators[0]
+
     @builder.operator_type = operator_type = operator_types[operator_type_id - 1]
 
 
@@ -207,6 +210,28 @@ question_types =
     operators: [1, 2]
     equality_operator_type: 'select_multiple'
     response_type: 'dropdown'
+  integer:
+    operators: [1, 2, 3, 4]
+    equality_operator_type: 'basic'
+    response_type: 'text'
+  decimal:
+    operators: [1, 2, 3, 4]
+    equality_operator_type: 'basic'
+    response_type: 'text'
+  geopoint:
+    operators: [1]
+  image:
+    operators: [1]
+  audio:
+    operators: [1]
+  video:
+    operators: [1]
+  acknowledge:
+    operators: [1]
+  date:
+    operators: [2, 3, 4]
+    equality_operator_type: 'text'
+    response_type: 'text'
 
 operator_types = [
   {
@@ -232,6 +257,28 @@ operator_types = [
       resp_notequals: '!=',
       multiplechoice_selected: '='
       multiplechoice_notselected: '!='
+    }
+  }
+  {
+    id: 3
+    type: 'equality'
+    label: 'Was Greater Than'
+    negated_label: 'Was Less Than'
+    parser_name: ['resp_greater', 'resp_less']
+    symbol: {
+      resp_greater: '>'
+      resp_less: '<'
+    }
+  }
+  {
+    id: 4
+    type: 'equality'
+    label: 'Was Greater Than or Equal to'
+    negated_label: 'Was Less Than or Equal to'
+    parser_name: ['resp_greaterequals', 'resp_lessequals']
+    symbol: {
+      resp_greaterequals: '>=',
+      resp_lessequals: '<='
     }
   }
 ]

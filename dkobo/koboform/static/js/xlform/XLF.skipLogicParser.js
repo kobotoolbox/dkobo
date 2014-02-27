@@ -2,7 +2,7 @@
 /*global _*/
 'use strict';
 XLF.skipLogicParser = (function () {
-    var equalityCriterionPattern = /\${(\w+)}\s+(=|!=)\s+\'(\w+)\'/,
+    var equalityCriterionPattern = /\${(\w+)}\s+(=|!=|<|>|<=|>=)\s+\'?(\w+|\d+)\'?/,
         existenceCriterionPattern = /\${(\w+)}\s+((?:=|!=)\s*(?:NULL|''))/i,
         criteriaJoinPattern = /and|or/gi;
 
@@ -21,6 +21,10 @@ XLF.skipLogicParser = (function () {
         var equalityMapper = {
             '=': 'resp_equals',
             '!=': 'resp_notequals',
+            '>': 'resp_greater',
+            '<': 'resp_less',
+            '>=': 'resp_greaterequals',
+            '<=': 'resp_lessequals',
             "!=''": 'ans_notnull',
             "=''": 'ans_null'
         };
