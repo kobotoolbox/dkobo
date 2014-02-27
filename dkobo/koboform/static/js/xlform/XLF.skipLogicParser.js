@@ -2,7 +2,7 @@
 /*global _*/
 'use strict';
 XLF.skipLogicParser = (function () {
-    var equalityCriterionPattern = /\${(\w+)}\s+(=|!=)\s+\'(\w+)\'/,
+    var equalityCriterionPattern = /\${(\w+)}\s+(=|!=|<|>|<=|>=)\s+\'?(\w+|\d+)\'?/,
         existenceCriterionPattern = /\${(\w+)}\s+((?:=|!=)\s*(?:NULL|''))/i,
         criteriaJoinPattern = /and|or/gi;
 
@@ -21,6 +21,10 @@ XLF.skipLogicParser = (function () {
         var equalityMapper = {
             '=': 'resp_equals',
             '!=': 'resp_notequals',
+            '>': 'resp_greater',
+            '<': 'resp_less',
+            '>=': 'resp_greaterequals',
+            '<=': 'resp_lessequals',
             "!=''": 'ans_notnull',
             "=''": 'ans_null'
         };
@@ -38,7 +42,7 @@ XLF.skipLogicParser = (function () {
     }
 
     function parseMultiselectCriterion(text) {
-        var matches = text.match(/selected\(\'(\w+)\',\s*\'(\w+)\'\)/);
+        var matches = text.match(/selected\(\$\{(\w+)\},\s*\'(\w+)\'\)/);
 
         if (!matches) {
             throw new Error('criterion not recognized: "' + text + '"');
@@ -46,8 +50,8 @@ XLF.skipLogicParser = (function () {
 
         return {
             name: matches[1],
-            operator: 'multiplechoice_selected',
-            response_value: matches[2]
+            operator: text.indexOf('not(') == -1 ? 'multiplechoice_selected' : 'multiplechoice_notselected',
+            response_value: matches[2],
         };
     }
 
@@ -55,6 +59,7 @@ XLF.skipLogicParser = (function () {
         var criteria = text.split(criteriaJoinPattern),
             criteriaLength = criteria.length,
             joinOperators = text.match(criteriaJoinPattern);
+
 
         if(!!joinOperators && _.uniq(joinOperators).length > 1) {
             throw new Error('multiple criteria join operators are not supported at the moment');
