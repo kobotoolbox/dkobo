@@ -25,6 +25,16 @@ describe('XLF.skipLogicParser', function () {
         });
     });
 
+    it('parses a single equals clause without padding between operands', function () {
+        expect(XLF.skipLogicParser("${question_name}='value')")).toEqual({
+            criteria: [{
+                name: "question_name",
+                operator: "resp_equals",
+                response_value: "value"
+            }]
+        });
+    });
+
     it('parses a single answered clause', function () {
         expect(XLF.skipLogicParser("${question_name}   !=   ''")).toEqual({
             criteria: [{
