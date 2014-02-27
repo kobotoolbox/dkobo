@@ -9,6 +9,8 @@
 
 {% endblock %}
 {% block foot %}
+  <div id="sandbox"></div>
+
   <script src="http://code.jquery.com/jquery-migrate-1.2.1.js"></script>
   <script src="//cdn.jsdelivr.net/poshytip/1.1/jquery.poshytip.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/jquery-editable/js/jquery-editable-poshytip.min.js"></script>
@@ -16,6 +18,30 @@
   {% load compress %}
   {% compress js %}
     {% include 'xlform_scripts.html' %}
-    <script type="text/coffeescript" src="{% static 'js/xlform/spec/spec.coffee' %}"></script>
   {% endcompress %}
+    <script type="text/javascript" src="{% static 'js/xlform/XLF.skipLogicParser.js' %}"></script>
+    <script type="text/xlform" id="mysurvey"></script>
+    <script>
+      var $sandbox = $('#sandbox'),
+          i,
+          survey = new XLF.Survey(),
+          skip_logic_builder;
+
+      var asdf = new XLF.ChoiceList({name: 'asdf', options: [{label: 'opt1', name: 'opt1'}, {label: 'opt2', name: 'opt2'}]});
+      survey.choices.add(asdf);
+
+      survey.addRow({ name: '0', label: 'label0', type: 'select_one asdf'});
+
+      for (i = 1; i < 6; i++) {
+        survey.addRow({ name: '' + i, label: 'label' + i });
+      }
+
+      criterion = new Backbone.Model({value: "${0} = 'opt2'"});
+      survey.rows.models[4].set('relevant', criterion);
+
+      skip_logic_builder = new XLF.SkipLogicBuilder(new XLF.Model.SkipLogicFactory(), new XLF.Views.SkipLogicViewFactory, survey, survey.rows.models[4], $sandbox);
+
+      var presenter = skip_logic_builder.build();
+      presenter.render($sandbox);
+    </script>
 {% endblock %}
