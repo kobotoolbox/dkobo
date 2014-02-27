@@ -94,7 +94,7 @@ describe('XLF.skipLogicParser', function () {
     });
 
     it('parses a single multiselect clause', function () {
-        expect(XLF.skipLogicParser("selected('question_name', 'value')")).toEqual({
+        expect(XLF.skipLogicParser("selected(${question_name}, 'value')")).toEqual({
             criteria: [
                 {
                     name: "question_name",
@@ -106,7 +106,7 @@ describe('XLF.skipLogicParser', function () {
     });
 
     it('parses multiple multiselect clauses', function () {
-        expect(XLF.skipLogicParser("selected('question_name', 'value') OR selected('question_name2', 'value2')")).toEqual({
+        expect(XLF.skipLogicParser("selected(${question_name}, 'value') OR selected(${question_name2}, 'value2')")).toEqual({
             criteria: [
                 {
                     name: "question_name",
@@ -116,6 +116,36 @@ describe('XLF.skipLogicParser', function () {
                 {
                     name: "question_name2",
                     operator: "multiplechoice_selected",
+                    response_value: "value2"
+                }
+            ],
+            operator: "OR"
+        });
+    });
+
+    it('parses a single negated multiselect clause', function () {
+        expect(XLF.skipLogicParser("not(selected(${question_name}, 'value'))")).toEqual({
+            criteria: [
+                {
+                    name: "question_name",
+                    operator: "multiplechoice_notselected",
+                    response_value: "value"
+                }
+            ]
+        });
+    });
+
+    it('parses multiple negated multiselect clauses', function () {
+        expect(XLF.skipLogicParser("not(selected(${question_name}, 'value')) OR not(selected(${question_name2}, 'value2'))")).toEqual({
+            criteria: [
+                {
+                    name: "question_name",
+                    operator: "multiplechoice_notselected",
+                    response_value: "value",
+                },
+                {
+                    name: "question_name2",
+                    operator: "multiplechoice_notselected",
                     response_value: "value2"
                 }
             ],
