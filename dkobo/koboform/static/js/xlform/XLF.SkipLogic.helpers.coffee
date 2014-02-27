@@ -134,7 +134,7 @@ class XLF.SkipLogicBuilder
     @view_factory.create_operator_picker operators
 
   build_question_view: () ->
-    @view_factory.create_question_picker @questions
+    @view_factory.create_question_picker @questions()
 
   build_response_view: (question, question_type, operator_type) ->
     responses = null
@@ -178,14 +178,20 @@ class XLF.SkipLogicBuilder
 
     new XLF.SkipLogicPresenter(criterion_model, criterion_view, @)
 
-  constructor: (@model_factory, @view_factory, @survey, @current_question) ->
-    @questions = []
+  questions: () ->
+    questions = []
     limit = false
 
+    non_selectable = ['datetime', 'time', 'note', 'calculate']
+
     @survey.forEachRow (question) =>
-      limit = limit || question is current_question
-      if !limit
-        @questions.push question
+      limit = limit || question is @current_question
+      if !limit && question.getType() not in non_selectable
+        questions.push question
+
+    questions
+
+  constructor: (@model_factory, @view_factory, @survey, @current_question) ->
 
 
 question_types =
