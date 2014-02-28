@@ -55,6 +55,25 @@ XLF.parseHelper =
     catch e
       collection.parseable = false
 
+XLF.sluggifyLabel = (str, other_names=[])->
+  attempt_base = str.replace(/\s+$/, "")
+                  .replace(/^\s+/, "")
+                  .replace(/\s/g, "_")
+                  .replace(/\W/g, "")
+                  .replace(/[_]+/g, "_")
+  names_lc = (name.toLowerCase()  for name in other_names)
+  if attempt_base.length is 0
+    return false
+  else if attempt_base[0].match(/\d/)
+    attempt_base = "_#{attempt_base}"
+  attempt = attempt_base
+  increment = 0
+  while attempt.toLowerCase() in names_lc
+    increment++
+    increment_str = if increment < 1000 then ("00"+increment).slice(-4) else increment_str
+    attempt = "#{attempt_base}_#{increment_str}"
+  attempt
+
 XLF.sluggify = (str)->
   # Convert text to a slug/xml friendly format.
   str.toLowerCase().replace(/\s/g, '_').replace(/\W/g, '').replace(/[_]+/g, "_")

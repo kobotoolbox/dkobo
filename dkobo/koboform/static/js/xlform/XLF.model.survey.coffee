@@ -83,6 +83,10 @@ class XLF.Survey extends XLF.SurveyFragment
       sheeted.sheet shtName, csv(content)
     sheeted.toString()
 
+  finalize: ->
+    @forEachRow (r)=> r.finalize()
+    @
+
 ###
 XLF.Settings (assigned to each XLF.Survey instance)
 ###

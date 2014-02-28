@@ -1,6 +1,33 @@
 describe "xlform survey model (XLF.Survey)", ->
   beforeEach ->
     @pizzaSurvey = XLF.createSurveyFromCsv(PIZZA_SURVEY)
+    @createSurveyCsv = (survey=[],choices=[])->
+      choiceSheet = if choices.length is 0 then "" else """
+      choices,,,
+      ,list name,name,label
+      ,#{choices.join("\n,")}
+      """
+      """
+      survey,,,
+      ,type,name,label,hint
+      ,#{survey.join("\n,")}
+      #{choiceSheet}
+      """
+    @createSurvey = (survey=[],choices=[])=>
+      XLF.createSurveyFromCsv @createSurveyCsv survey, choices
+    @firstRow = (s)-> s.rows.at(0)
+    @compareCsvs = (x1, x2)->
+      x1r = x1.split("\n")
+      x2r = x2.split("\n")
+      for r in _.min([x1r.length, x2r.length])
+        expect(x1r[r]).toBe(x2r[r])
+      expect(x1).toBe(x2)
+    @dumpAndLoad = (scsv)=>
+      s1 = XLF.createSurveyFromCsv scsv
+      x1 = s1.toCSV()
+      s2 = XLF.createSurveyFromCsv x1
+      x2 = s2.toCSV()
+      @compareCsvs(x1, x2)
 
   it "creates xlform", ->
     xlf = new XLF.Survey name: "Sample"
@@ -79,36 +106,6 @@ describe "xlform survey model (XLF.Survey)", ->
       expect(list.get("name")).toBe("yes_no")
 
   describe "with custom surveys", ->
-    beforeEach ->
-      @createSurveyCsv = (survey=[],choices=[])->
-        choiceSheet = if choices.length is 0 then "" else """
-        choices,,,
-        ,list name,name,label
-        ,#{choices.join("\n,")}
-        """
-        """
-        survey,,,
-        ,type,name,label,hint
-        ,#{survey.join("\n,")}
-        #{choiceSheet}
-        """
-      @createSurvey = (survey=[],choices=[])=>
-        XLF.createSurveyFromCsv @createSurveyCsv survey, choices
-      @firstRow = (s)-> s.rows.at(0)
-      @compareCsvs = (x1, x2)->
-        x1r = x1.split("\n")
-        x2r = x2.split("\n")
-        for r in _.min([x1r.length, x2r.length])
-          expect(x1r[r]).toBe(x2r[r])
-        expect(x1).toBe(x2)
-        
-      @dumpAndLoad = (scsv)=>
-        s1 = XLF.createSurveyFromCsv scsv
-        x1 = s1.toCSV()
-        s2 = XLF.createSurveyFromCsv x1
-        x2 = s2.toCSV()
-        @compareCsvs(x1, x2)
-
     it "breaks with an unk qtype", ->
       # makeInvalidTypeSurvey = =>
       #   @createSurvey ["telegram,a,a,a"]
@@ -121,7 +118,6 @@ describe "xlform survey model (XLF.Survey)", ->
       #         "geopoint", "image", "barcode", "date",
       #         "datetime", "audio", "video", "select_one",
       #         "select_multiple"]
-
 
     it "tries a few question types", ->
       srv = @createSurvey ["text,text,text,text"]
@@ -176,6 +172,34 @@ describe "xlform survey model (XLF.Survey)", ->
       expect(@pizzaSurvey.rows.length).toBe(3)
       grp = @pizzaSurvey.rows.last()
       expect(grp instanceof XLF.RowError).toBe(true)
+  describe "automatic naming", ->
+    it "can import questions without names", ->
+      survey = @createSurvey([
+        "text,,\"Label with no name\""
+        ])
+      expect(survey.rows.at(0)?.get("name").getValue()).not.toBeTruthy()
+    it "can finalize survey and generate names", ->
+      survey = @createSurvey([
+        "text,,\"Label with no name\""
+        ])
+      expect(survey.rows.at(0)?.get("name").getValue()).not.toBeTruthy()
+      survey.rows.at(0).finalize()
+      expect(survey.rows.at(0)?.get("name").getValue()).toBe("Label_with_no_name")
+    it "increments names that are already taken", ->
+      survey = @createSurvey([
+        "text,question_one,\"already named question_one\"",
+        "text,,\"question one\""
+        ])
+      # as imported
+      expect(survey.rows.at(0)?.get("name").getValue()).toBe("question_one")
+      # incremented from other question
+      expect(survey.finalize().rows.at(1)?.get("name").getValue()).toBe("question_one_001")
+    it "uses a proper name sluggification", ->
+      expect(XLF.sluggifyLabel("asdf jkl")).toBe("asdf_jkl")
+      expect(XLF.sluggifyLabel("asdf", ["asdf"])).toBe("asdf_001")
+      expect(XLF.sluggifyLabel("2. asdf")).toBe("_2_asdf")
+      expect(XLF.sluggifyLabel("2. asdf", ["_2_asdf"])).toBe("_2_asdf_001")
+      expect(XLF.sluggifyLabel(" hello ")).toBe("hello")
 
   describe "lists", ->
     it "can change a list for a question", ->

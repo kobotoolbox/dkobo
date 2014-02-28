@@ -96,6 +96,17 @@ class XLF.Row extends XLF.BaseModel
           cl.set("name", clname, silent: true)
         @set("value", "#{@get('typeId')} #{clname}")
 
+  finalize: ->
+    existing_name = @get("name").getValue()
+    unless existing_name
+      names = []
+      @getSurvey().forEachRow (r)->
+        name = r.get("name").getValue()
+        names.push(name)  if name
+      label = @get("label").get("value")
+      @get("name").set("value", XLF.sluggifyLabel(label, names))
+    @
+
   getType: ->
     @get('type').get('typeId')
   getList: ->
