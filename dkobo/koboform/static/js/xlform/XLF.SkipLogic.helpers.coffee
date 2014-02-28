@@ -213,11 +213,11 @@ question_types =
   integer:
     operators: [1, 2, 3, 4]
     equality_operator_type: 'basic'
-    response_type: 'text'
+    response_type: 'integer'
   decimal:
     operators: [1, 2, 3, 4]
     equality_operator_type: 'basic'
-    response_type: 'text'
+    response_type: 'decimal'
   geopoint:
     operators: [1]
   image:
