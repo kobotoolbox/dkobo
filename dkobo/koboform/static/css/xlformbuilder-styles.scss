@@ -59,20 +59,49 @@
         margin-top: 0;
     }
 
+    .survey-header__title .editable-buttons > button {
+        font-size: 14px;
+    }
+
     .survey-header__hashtag {
         font-size: 14px;
         color: #aaa;
     }
 
+    .survey-header__options-toggle {
+        position: relative;
+        top: -2px;
+        font-size: 24px;
+        cursor: pointer;
+        color: #bbb;
+
+        &:hover,
+        &:focus {
+            color: #777;
+        }
+    }
+
     .survey-header__options {
         margin-top: 10px;
         margin-bottom: 10px;
+        display: none;
     }
 
     .survey-header__option {
         margin-right: 20px;
         display: inline-block;
         font-size: 13px;
+    }
+
+    .survey-header__options-table {
+        margin-bottom: 50px;
+        border-spacing: 10px 0;
+        border-collapse: separate;
+        font-size: 13px;
+
+        .editable-buttons {
+            display: none;
+        }
     }
 
 
