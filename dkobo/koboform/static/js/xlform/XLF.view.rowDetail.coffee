@@ -245,6 +245,12 @@ class XLF.Views.SkipLogicTextResponse extends XLF.Views.Base
     @setElement('<input placeholder="response value" class="skiplogic__responseval" type="text" />')
     @
 
+class XLF.Views.SkipLogicIntegerResponseView extends XLF.Views.SkipLogicTextResponse
+  render: () ->
+    super()
+    @$el.on 'blur', () ->
+      is_valid = @facade
+
 class XLF.Views.SkipLogicDropDownResponse extends XLF.Views.Base
   tagName: 'select'
   className: 'skiplogic__responseval'
