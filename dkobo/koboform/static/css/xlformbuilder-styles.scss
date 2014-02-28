@@ -93,11 +93,34 @@
         font-size: 13px;
     }
 
+    .survey-header__options-table-title {
+        margin-top: 0;
+    }
+
     .survey-header__options-table {
         margin-bottom: 50px;
-        border-spacing: 10px 0;
-        border-collapse: separate;
         font-size: 13px;
+
+        tr {
+            height: 65px;
+        }
+
+        tr:nth-of-type(2n) {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        td {
+            padding-right: 10px;
+            padding-left: 10px;
+        }
+
+        td:first-child {
+            width: 120px;
+        }
+
+        td:nth-child(2) {
+            width: 200px;
+        }
 
         .editable-buttons {
             display: none;

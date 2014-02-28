@@ -31,12 +31,17 @@ viewTemplates.surveyApp = (survey) ->
           </hgroup>
         </p>
         <div class="survey-header__options  well">
-          <h4>Form settings</h4>
+          <h4 class="survey-header__options-table-title">Form settings</h4>
           <table class="survey-header__options-table">
             <tr>
               <td><span>Form ID</span></td>
               <td><span class="form-id  editable  editable-click">#{survey.settings.get("form_id")}</span></td>
               <td><span>(Unique form name)</span></td>
+            </tr>
+            <tr>
+              <td><span>Automatic IDs</span></td>
+              <td><span class="editable  editable-click">Standard mode</span></td>
+              <td><span>(Choose Statistics mode for question IDs like A01, A02, etc.)</span></td>
             </tr>
             <tr>
               <td><span>Version</span></td>
@@ -59,7 +64,7 @@ viewTemplates.surveyApp = (survey) ->
               <td><span>(The specific server instance where the data should go to - optional)</span></td>
             </tr>
           </table>
-          <h4>Hidden meta questions to include in your form to help with analysis</h4>
+          <h4 class="survey-header__options-table-title">Hidden meta questions to include in your form to help with analysis</h4>
           <div class="stats  row-details" id="additional-options"></div>
         </div>
       </header>
