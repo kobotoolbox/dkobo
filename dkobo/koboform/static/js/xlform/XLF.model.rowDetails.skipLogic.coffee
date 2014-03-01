@@ -111,22 +111,30 @@ class XLF.Model.SkipLogicFactory
       when 'empty' then return new XLF.EmptyOperator()
     operator.set 'id', id
     operator
-  create_criterion_model: (question_name, response_value, operator) ->
+  create_criterion_model: (question_name, operator) ->
     criterion = new XLF.SkipLogicCriterion()
     criterion.change_question question_name
-    criterion.change_response response_value
     criterion.change_operator operator
     criterion
+  create_response_model: (type) ->
+    switch type
+      when 'integer' then new XLF.Model.IntegerResponseModel
+      when 'decimal' then new XLF.Model.DecimalResponseModel
+      else new XLF.Model.TextResponseModel
 
 class XLF.SkipLogicCriterion extends XLF.BaseModel
   serialize: () ->
-    return @get('operator').serialize @get('question_name'), @get('response_value')
+    response_model = @get('response_value')
+    if response_model.isValid() != false
+      return @get('operator').serialize @get('question_name'), response_model.get('value')
+    else
+      return ''
   change_operator: (operator) ->
     @set('operator', operator)
   change_question: (value) ->
     @set('question_name', value)
   change_response: (value) ->
-    @set('response_value', value)
+    @get('response_value').set('value', value, validate: true)
 
 class XLF.ValidationOperator extends XLF.BaseModel
   serialize: (question_name, response_value) ->
@@ -136,6 +144,20 @@ class XLF.ValidationOperator extends XLF.BaseModel
     if @get 'is_negated'
       val = '-'
     val + @get 'id'
+
+class XLF.Model.TextResponseModel extends XLF.BaseModel
+
+class XLF.Model.IntegerResponseModel extends XLF.BaseModel
+  validation:
+    value:
+      pattern: 'digits'
+      msg: 'Number must be integer'
+
+class XLF.Model.DecimalResponseModel extends XLF.BaseModel
+  validation:
+    value:
+      pattern: 'number'
+      msg: 'Number must be decimal'
 
 class XLF.BasicValidationOperator extends XLF.ValidationOperator
   serialize: (question_name, response_value) ->
