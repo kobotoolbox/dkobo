@@ -17,6 +17,16 @@ class XLF.SkipLogicPresenter
 
     @builder.operator_type = operator_type = operator_types[operator_type_id - 1]
 
+    if @model.get('response_value')?
+      response_value = @model.get('response_value').get('value') || ''
+    else
+      response_value = ''
+
+    response_value_model = @builder.build_response_model question_type
+    @model.set('response_value', response_value_model)
+    @view.response_value_view.model = response_value_model
+
+    @model.change_response response_value
 
     @view.change_operator @builder.build_operator_view question_type
     @view.operator_picker_view.fill_value @model.get('operator').get_value()
@@ -28,11 +38,21 @@ class XLF.SkipLogicPresenter
     @builder.question_type = question_type
 
     @view.change_response @builder.build_response_view @question, question_type, operator_type
-    @view.response_value_view.fill_value @model.get('response_value')
-    @model.set('response_value', @view.$response_value.val())
+    @view.response_value_view.fill_value @model.get('response_value').get('value')
 
 
   change_operator: (operator_id) ->
+    question_type = question_types[@question.getType()] || question_types['default']
+
+    if @model.get('response_value')?
+      response_value = @model.get('response_value').get('value') || ''
+    else
+      response_value = ''
+
+    response_value_model = @builder.build_response_model question_type
+    @model.set('response_value', response_value_model)
+
+
     negated = false
     if operator_id < 0
       negated = true
@@ -40,14 +60,18 @@ class XLF.SkipLogicPresenter
 
     @builder.operator_type = operator_type = operator_types[operator_id - 1]
 
-    @model.change_operator @builder.build_operator_model(@builder.question_type, operator_type, operator_type.symbol[operator_type.parser_name[+negated]])
+    @model.change_operator @builder.build_operator_model(question_type, operator_type, operator_type.symbol[operator_type.parser_name[+negated]])
 
-    @view.change_response @builder.build_response_view @question, @builder.question_type, operator_type
-    @view.response_value_view.fill_value @model.get('response_value')
-    @model.set('response_value', @view.$response_value.val())
+    response_view = @builder.build_response_view @question, question_type, operator_type
+    response_view.model = response_value_model
+
+    @view.change_response response_view
+    @view.response_value_view.fill_value @model.get('response_value').get('value')
+
+    @model.change_response(response_value) unless response_value == ''
 
   change_response: (response_text) ->
-    @model.set('response_value', response_text)
+    @model.change_response response_text
   constructor: (@model, @view, @builder) ->
     @view.presenter = @
     @question = @builder.survey.findRowByName @model.get('question_name')
@@ -55,7 +79,7 @@ class XLF.SkipLogicPresenter
     @view.render().attach_to(destination)
     @view.question_picker_view.fill_value(@model.get('question_name'))
     @view.operator_picker_view.fill_value(@model.get('operator').get_value())
-    @view.response_value_view.fill_value(@model.get('response_value'))
+    @view.response_value_view.fill_value(@model.get('response_value')?.get('value'))
   serialize: () ->
     @model.serialize()
 
@@ -77,7 +101,7 @@ class XLF.SkipLogicCriterionBuilderFacade
   serialize: () ->
     serialized = _.map @presenters, (presenter) ->
       presenter.serialize()
-    serialized.join(' ' + @view.criterion_delimiter + ' ')
+    _.filter(serialized, (crit) -> crit).join(' ' + @view.criterion_delimiter + ' ')
   add_empty: () ->
     presenter = @builder.build_empty_criterion_logic()
     presenter.render @destination
@@ -147,7 +171,9 @@ class XLF.SkipLogicBuilder
 
     response_type = if operator_type.response_type? then operator_type.response_type else question_type.response_type
 
-    @view_factory.create_response_value_view[response_type](responses)
+    @view_factory.create_response_value_view(response_type, responses)
+  build_response_model: (question_type) ->
+    @model_factory.create_response_model question_type.response_type
 
   build_criterion_logic: (criterion) =>
     @operator_type = _.find operator_types, (op_type) ->
@@ -158,12 +184,16 @@ class XLF.SkipLogicBuilder
 
     [operator_model, operator_picker_view] = @build_operator_logic @question_type, @operator_type, criterion
 
-    criterion_model = @model_factory.create_criterion_model(
-      criterion.name, criterion.response_value || '', operator_model)
+    criterion_model = @model_factory.create_criterion_model(criterion.name, operator_model)
 
     question_picker_view = @build_question_view()
 
+    response_value_model = @build_response_model @question_type
+    criterion_model.set('response_value', response_value_model)
+    response_value_model.set('value', criterion.response_value)
+
     response_value_view = @build_response_view question, @question_type, @operator_type
+    response_value_view.model = response_value_model
 
     criterion_view = @view_factory.create_criterion_view question_picker_view, operator_picker_view, response_value_view
     criterion_view.model = criterion_model
@@ -171,12 +201,12 @@ class XLF.SkipLogicBuilder
     new XLF.SkipLogicPresenter(criterion_model, criterion_view, @)
 
   build_empty_criterion_logic: () =>
-    criterion_model = @model_factory.create_criterion_model('', '', @model_factory.create_operator('empty'))
+    criterion_model = @model_factory.create_criterion_model('', @model_factory.create_operator('empty'))
 
     question_picker_view = @build_question_view()
 
 
-    criterion_view = @view_factory.create_criterion_view question_picker_view, @view_factory.create_operator_picker([]), @view_factory.create_response_value_view['empty']()
+    criterion_view = @view_factory.create_criterion_view question_picker_view, @view_factory.create_operator_picker([]), @view_factory.create_response_value_view('empty')
     criterion_view.model = criterion_model
 
     new XLF.SkipLogicPresenter(criterion_model, criterion_view, @)
