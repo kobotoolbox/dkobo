@@ -76,16 +76,28 @@ def survey_drafts(request, sdid=0):
 
 @csrf_exempt
 def survey_previews(request):
-    contents = json.loads(request.body)
-    if contents.get(u'body'):
-        preview = SurveyPreview._get_or_create(csv=contents.get(u'body'))
-        preview_dict = model_to_dict(preview)
-        response = HttpResponse(json.dumps(preview_dict), content_type="application/json")
-        response["Access-Control-Allow-Origin"] = "*"
-        response["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS"
-        response["Access-Control-Max-Age"] = "1000"
-        response["Access-Control-Allow-Headers"] = "*"
-        return response
+    output_dict = {}
+    try:
+        contents = json.loads(request.body)
+    except Exception, e:
+        output_dict[u'error'] = "JSON parse error: %s" % repr(e)
+
+    try:
+        if contents.get(u'body'):
+            preview = SurveyPreview._get_or_create(csv=contents.get(u'body'))
+            output_dict.update(model_to_dict(preview))
+        else:
+            output_dict[u'error'] = "'body' field not found"
+    except Exception, e:
+        output_dict[u'error'] = repr(e)
+
+    response = HttpResponse(json.dumps(output_dict))
+    response_options = {'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Max-Age': '1000',
+                        'Access-Control-Allow-Headers': '*'}
+    for k, v in response_options.items(): response[k]=v
+    return response
 
 @csrf_exempt
 def get_survey_preview(request, unique_string):
