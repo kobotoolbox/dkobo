@@ -25,9 +25,13 @@ module.exports = function(config) {
             '../services/*.js',
             'lib/*.js',
             '../*.js',
-            '../xlform/*.js',
             '../../templates/*.html',
-            'tests/*.js'
+            'tests/*.js',
+            '../../../../static/js/backbone.js',
+            '../../../../static/js/Backbone.Validation.js',
+            '../xlform/*.coffee',
+            '../xlform/*.js',
+            '../xlform/spec/skip_logic.coffee'
         ],
 
 
@@ -40,7 +44,7 @@ module.exports = function(config) {
         // test results reporter to use
         // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
         reporters: ['progress', 'coverage'],
-        preprocessors: {'../*/*.js': ['coverage'], '../../templates/*.html': 'ng-html2js'},
+        preprocessors: {'../*/*.js': ['coverage'], '../../templates/*.html': 'ng-html2js', '../**/*.coffee': 'coffee'},
 
 
         /// https://github.com/vojtajina/ng-directive-testing/commit/7b7a0b8f6b3698868daddc40828da39c3c6b6272#diff-766793014309586429b517112184567d
