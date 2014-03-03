@@ -150,8 +150,7 @@ XLF.columnOrder = do ->
 
 XLF.newRowDetails =
   name:
-    value: ()-> XLF.txtid()
-    randomId: true
+    value: ""
   label:
     value: "new question"
   type:

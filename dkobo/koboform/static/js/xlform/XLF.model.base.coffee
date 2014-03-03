@@ -27,6 +27,7 @@ class XLF.BaseModel extends Backbone.Model
 
   parse: ->
   linkUp: ->
+  finalize: ->
 
   getValue: (what)->
     if what

@@ -32,3 +32,8 @@ SkipLogicDetailMixin =
 
 @XLF.RowDetailMixins =
   relevant: SkipLogicDetailMixin
+  label:
+    postInitialize: ()->
+      # When the row's name changes, trigger the row's [finalize] function.
+      @on "change:value", => @_parent.finalize()
+      ``
