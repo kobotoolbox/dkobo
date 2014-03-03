@@ -91,6 +91,9 @@ XLF.DetailViewMixins.constraint =
 
 XLF.DetailViewMixins.name = XLF.DetailViewMixins.default =
   html: ->
+    @listenTo @model, "change:value", ()=>
+      @render()
+      @afterRender()
     """
     #{@model.key}: <code>#{@model.get("value")}</code>
     """
