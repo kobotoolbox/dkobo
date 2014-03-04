@@ -76,8 +76,6 @@ XLF.DetailViewMixins.relevant =
       if @skipLogicEditor
         @skipLogicEditor.toggle()
       else
-        if !@model.skipLogicCollection
-          console?.error("Skip Logic Colleciton not found for RowDetail model.")
         @skipLogicEditor = new XLF.SkipLogicCollectionView(el: @$el.find(".relevant__editor"), model: @model)
         @skipLogicEditor.builder = @model.builder
         @skipLogicEditor.render()
