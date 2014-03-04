@@ -39,6 +39,8 @@ class XLF.Survey extends XLF.SurveyFragment
     # build an object that can be easily passed to the "csv" library
     # to generate the XL(S)Form spreadsheet
 
+    @finalize()
+
     surveyCsvJson = do =>
       oCols = ["name", "type", "label"]
       oRows = []
