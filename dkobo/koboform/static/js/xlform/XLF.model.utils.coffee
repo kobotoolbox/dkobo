@@ -56,7 +56,8 @@ XLF.parseHelper =
       collection.parseable = false
 
 XLF.sluggifyLabel = (str, other_names=[])->
-  attempt_base = str.replace(/\s+$/, "")
+  attempt_base = str.slice(0,30)
+                  .replace(/\s+$/, "")
                   .replace(/^\s+/, "")
                   .replace(/\s/g, "_")
                   .replace(/\W/g, "")
