@@ -116,7 +116,9 @@ class SurveyPreviews(TestCase):
 
     def test_can_generate_preview(self):
         self.assertEqual(SurveyPreview.objects.count(), 0)
-        self.client.post("/koboform/survey_preview",
-                json.dumps({u'body': sample_for_ordered_columns}),
+        response = self.client.post("/koboform/survey_preview",
+                json.dumps({u'body': utf_survey}),
                 content_type="application/json")
+        response_obj = json.loads(response.content)
+        self.assertEqual(response_obj.get(u'error', None), None)
         self.assertEqual(SurveyPreview.objects.count(), 1)

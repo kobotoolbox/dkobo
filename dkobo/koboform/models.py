@@ -44,7 +44,7 @@ class SurveyPreview(models.Model):
 
     @classmethod
     def _generate_unique_string(kls, csv):
-        return md5.new(u'csv=%s' % csv).hexdigest()
+        return md5.new(u'csv=%s' % csv.encode("utf-8")).hexdigest()
 
     @classmethod
     def _get_or_create(kls, *args, **kwargs):
