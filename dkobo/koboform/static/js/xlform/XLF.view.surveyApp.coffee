@@ -135,17 +135,23 @@ class @SurveyApp extends Backbone.View
 
   onEscapeKeydown: -> #noop. to be overridden
   previewButtonClick: (evt)->
-    data = JSON.stringify(body: @survey.toCSV())
-    PREVIEW_SERVER = "http://kfdev.kobotoolbox.org"
-    $.ajax
-      url: "#{PREVIEW_SERVER}/koboform/survey_preview/"
-      method: "POST"
-      data: data
-      success: (survey_preview, status, jqhr)=>
-        if survey_preview.unique_string
-          preview_url = "#{PREVIEW_SERVER}/koboform/survey_preview/#{survey_preview.unique_string}"
-          @onEscapeKeydown = XLF.enketoIframe.close
-          XLF.enketoIframe(preview_url).appendTo("body")
+    if evt.shiftKey and evt.altKey
+      evt.preventDefault()
+      viewUtils.debugFrame @survey.toCSV()
+      @onEscapeKeydown = viewUtils.debugFrame.close
+    else
+      data = JSON.stringify(body: @survey.toCSV())
+      PREVIEW_SERVER = "http://kfdev.kobotoolbox.org"
+      $.ajax
+        url: "#{PREVIEW_SERVER}/koboform/survey_preview/"
+        method: "POST"
+        data: data
+        success: (survey_preview, status, jqhr)=>
+          if survey_preview.unique_string
+            preview_url = "#{PREVIEW_SERVER}/koboform/survey_preview/#{survey_preview.unique_string}"
+            @onEscapeKeydown = XLF.enketoIframe.close
+            XLF.enketoIframe(preview_url).appendTo("body")
+    ``
 
   downloadButtonClick: (evt)->
     # Download = save a CSV file to the disk

@@ -46,6 +46,27 @@ viewUtils.cleanStringify = (atts)->
     attArr.push """<span class="atts"><i>#{key}</i>="<em>#{val}</em>"</span>"""
   attArr.join("&nbsp;")
 
+viewUtils.debugFrame = do ->
+  $div = false
+  debugFrameStyle =
+    position: "fixed"
+    width: "95%"
+    height: "50%"
+    bottom: 10
+    left: "2.5%"
+    overflow: "auto"
+
+  showFn = (txt)->
+    html = txt.split("\n").join("<br>")
+    $div = $("<div>", class: "well debug-frame").html("<code>#{html}</code>")
+      .css(debugFrameStyle)
+      .appendTo("body")
+  showFn.close = ->
+    if $div
+      $div.remove()
+      $div = false
+  showFn
+
 XLF.enketoIframe = do ->
 
   buildUrl = (previewUrl)->
