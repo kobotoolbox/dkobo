@@ -33,7 +33,7 @@ class @SurveyApp extends Backbone.View
 
     $(window).on "keydown", (evt)=>
       @onEscapeKeydown(evt)  if evt.keyCode is 27
-  updateSort: ()->
+  updateSort: (evt, model, position)->
     # inspired by this:
     # http://stackoverflow.com/questions/10147969/saving-jquery-ui-sortables-order-to-backbone-js-collection
     @survey.rows.remove(model)
@@ -41,6 +41,7 @@ class @SurveyApp extends Backbone.View
       m.ordinal = if index >= position then (index + 1) else index
     model.ordinal = position
     @survey.rows.add(model, at: position)
+    ``
 
   render: ()->
     @$el.removeClass("content--centered").removeClass("content")
@@ -78,6 +79,9 @@ class @SurveyApp extends Backbone.View
         placeholder: "placeholder"
         opacity: 0.9
         scroll: false
+        stop: (evt, ui)->
+          itemSet = ui.item.parent().find("> .xlf-row-view")
+          ui.item.trigger "drop", ui.item.index(itemSet)
         activate: (evt, ui)=>
           @formEditorEl.addClass("insort")
           ui.item.addClass("sortable-active")
