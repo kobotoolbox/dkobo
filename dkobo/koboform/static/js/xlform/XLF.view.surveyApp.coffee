@@ -33,7 +33,7 @@ class @SurveyApp extends Backbone.View
 
     $(window).on "keydown", (evt)=>
       @onEscapeKeydown(evt)  if evt.keyCode is 27
-  updateSort: ()->
+  updateSort: (evt, model, position)->
     # inspired by this:
     # http://stackoverflow.com/questions/10147969/saving-jquery-ui-sortables-order-to-backbone-js-collection
     @survey.rows.remove(model)
@@ -41,6 +41,7 @@ class @SurveyApp extends Backbone.View
       m.ordinal = if index >= position then (index + 1) else index
     model.ordinal = position
     @survey.rows.add(model, at: position)
+    ``
 
   render: ()->
     @$el.removeClass("content--centered").removeClass("content")
@@ -78,6 +79,9 @@ class @SurveyApp extends Backbone.View
         placeholder: "placeholder"
         opacity: 0.9
         scroll: false
+        stop: (evt, ui)->
+          itemSet = ui.item.parent().find("> .xlf-row-view")
+          ui.item.trigger "drop", ui.item.index(itemSet)
         activate: (evt, ui)=>
           @formEditorEl.addClass("insort")
           ui.item.addClass("sortable-active")
@@ -131,17 +135,23 @@ class @SurveyApp extends Backbone.View
 
   onEscapeKeydown: -> #noop. to be overridden
   previewButtonClick: (evt)->
-    data = JSON.stringify(body: @survey.toCSV())
-    PREVIEW_SERVER = "http://kfdev.kobotoolbox.org"
-    $.ajax
-      url: "#{PREVIEW_SERVER}/koboform/survey_preview/"
-      method: "POST"
-      data: data
-      success: (survey_preview, status, jqhr)=>
-        if survey_preview.unique_string
-          preview_url = "#{PREVIEW_SERVER}/koboform/survey_preview/#{survey_preview.unique_string}"
-          @onEscapeKeydown = XLF.enketoIframe.close
-          XLF.enketoIframe(preview_url).appendTo("body")
+    if evt.shiftKey and evt.altKey
+      evt.preventDefault()
+      viewUtils.debugFrame @survey.toCSV()
+      @onEscapeKeydown = viewUtils.debugFrame.close
+    else
+      data = JSON.stringify(body: @survey.toCSV())
+      PREVIEW_SERVER = "http://kfdev.kobotoolbox.org"
+      $.ajax
+        url: "#{PREVIEW_SERVER}/koboform/survey_preview/"
+        method: "POST"
+        data: data
+        success: (survey_preview, status, jqhr)=>
+          if survey_preview.unique_string
+            preview_url = "#{PREVIEW_SERVER}/koboform/survey_preview/#{survey_preview.unique_string}"
+            @onEscapeKeydown = XLF.enketoIframe.close
+            XLF.enketoIframe(preview_url).appendTo("body")
+    ``
 
   downloadButtonClick: (evt)->
     # Download = save a CSV file to the disk

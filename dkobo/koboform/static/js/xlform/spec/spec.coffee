@@ -355,8 +355,6 @@ describe "testing the view", ->
     @_div.remove()
 
   it "builds the view", ->
-    @$el.appendTo(@_div)
-
     expect(@_div.find("li.xlf-row-view").length).toBe(1)
 
     lastRowEl = @_div.find("li.xlf-row-view").eq(0)
