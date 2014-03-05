@@ -141,6 +141,8 @@ class @SurveyApp extends Backbone.View
       @onEscapeKeydown = viewUtils.debugFrame.close
     else
       XLF.enketoIframe.fromCsv @survey.toCSV(),
+        previewServer: "http://kfdev.kobotoolbox.org"
+        onSuccess: => @onEscapeKeydown = XLF.enketoIframe.close
         onError: (errArgs...)->
           console?.error.apply(console, errArgs)
     ``
