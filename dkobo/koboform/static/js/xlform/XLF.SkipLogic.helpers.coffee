@@ -65,7 +65,6 @@ class XLF.SkipLogicPresenter
     response_view = @builder.build_response_view @question, question_type, operator_type
     response_view.model = response_value_model
 
-    @view.change_response response_view
     @view.response_value_view.fill_value @model.get('response_value').get('value')
 
     @model.change_response(response_value) unless response_value == ''

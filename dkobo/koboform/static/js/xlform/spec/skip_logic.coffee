@@ -200,3 +200,76 @@ describe 'skip logic model', () ->
       _response_model.set('value', 'asdf', validate:true)
 
       expect(_response_model.isValid()).toBeFalsy()
+
+describe 'skip logic helpers' () ->
+  describe 'presenter', () ->
+    describe 'change question', () ->
+      it 'changes the question in the model'
+      it 'changes the response model to the question types model'
+      it 'attaches the response value model to the view'
+      it 'updates the operator view according to selected question type'
+      it 'updates the response view if operator is changed'
+      it 'changes the operator model if current operator not in new operator list'
+      it 'changes the response value on the criterion model'
+      it 'fills the value into the updated operator picker view'
+      it 'fills the value into the updated response view'
+
+      it 'updates the builders question type'
+      it 'rebinds the question to itself'
+      it 'updates the builders operator type'
+    describe 'change operator', () ->
+      it 'changes the response model to the question types model'
+      it 'changes the operator model using the operator type id'
+      it 'binds the new response model to the response view'
+      it 'fills the value into the updated response view'
+
+      it 'updates the builders operator type'
+    describe 'change response value', () ->
+      it 'changes the response value on the model'
+    describe 'constructor'
+      it 'binds itself to the criterion view'
+      it 'binds the question to itself'
+    describe 'render'
+      it 'attaches the view to the provided destination and fills in the defaults from the model'
+
+    describe 'serialize'
+
+  describe 'criterion builder facade'
+    describe 'render'
+      it 'attaches the root view to the provided destination'
+
+      it 'sets visibility of criterion delimiter'
+
+    describe 'serialize'
+    describe 'switch editing mode'
+    describe 'constructor'
+
+    describe 'add empty'
+    describe 'remove'
+
+    describe 'determine criterion delimiter visibility'
+      it 'shows the criterion delimiter picker when there is more than 1 criteria in the list'
+      it 'hides the criterion delimiter picker when there is 1 or less criteria in the list'
+
+  describe 'hand code facade'
+    describe 'render'
+    describe 'serialize'
+    describe 'switch editing mode'
+    describe 'constructor'
+
+  describe 'skip logic builder'
+    describe 'build'
+
+    describe 'build empty criterion logic'
+    describe 'build criterion logic'
+
+    describe 'build hand code criteria'
+    describe 'build criterion builder'
+
+    describe 'build operator logic'
+    describe 'build operator model'
+    describe 'build operator view'
+    describe 'build question view'
+    describe 'build response view'
+    describe 'build response model'
+    describe 'questions'
