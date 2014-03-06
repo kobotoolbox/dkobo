@@ -31,7 +31,7 @@ kobo.service('$configuration', ConfigurationService);
 kobo.service('$miscUtils', MiscUtilsService);
 
 
-kobo.config(function ($routeProvider, $httpProvider) {
+kobo.config(function ($routeProvider, $locationProvider, $httpProvider) {
 
         //http://django-angular.readthedocs.org/en/latest/integration.html
 
@@ -71,5 +71,5 @@ kobo.run(function ($http, $cookies, $miscUtils) {
     $http.defaults.headers.common['X-CSRFToken'] = $cookies.csrftoken;
 
     // jQuery.fileupload for importing forms to the user's form list.
-    $miscUtils.bootstrapFileUploader();
+//    $miscUtils.bootstrapFileUploader();
 });
