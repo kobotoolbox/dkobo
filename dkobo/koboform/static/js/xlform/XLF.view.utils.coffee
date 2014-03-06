@@ -84,4 +84,25 @@ XLF.enketoIframe = do ->
   launch.close = ()->
     $(".iframe-bg-shade").remove()
 
+  launch.fromCsv = (surveyCsv, options={})->
+    previewServer = options.previewServer or ""
+    data = JSON.stringify(body: surveyCsv)
+    onError = options.onError or (args...)-> console?.error.apply(console, args)
+    $.ajax
+      url: "#{previewServer}/koboform/survey_preview/"
+      method: "POST"
+      data: data
+      complete: (jqhr, status)=>
+        response = jqhr.responseJSON
+        if status is "success" and response and response.unique_string
+          unique_string = response.unique_string
+          launch("#{previewServer}/koboform/survey_preview/#{unique_string}").appendTo("body")
+          options.onSuccess()  if options.onSuccess?
+        else if status isnt "success"
+          onError "Error launching preview: ", status, jqhr
+        else if response and response.error
+          onError response.error
+        else
+          onError "SurveyPreview response JSON is not recognized"
+
   launch
