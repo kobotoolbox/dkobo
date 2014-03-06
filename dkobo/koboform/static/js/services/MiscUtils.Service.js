@@ -4,7 +4,9 @@
 'use strict';
 
 function MiscUtilsService() {
-    var _this = this;
+    var _this = this,
+        _fileUpload,
+        _successFn;
 
     this.confirm = function (message) {
         return confirm(message);
@@ -14,31 +16,35 @@ function MiscUtilsService() {
     };
 
     this.bootstrapFileUploader = function ($scope) {
-        $(function(){
-            $('.js-import-fileupload').eq(0).fileupload({
-                headers: {
-                    "X-CSRFToken": $('meta[name="csrf-token"]').attr('content')
-                },
-                add: function (e, data) {
-                    // maybe display some feedback saying the upload is starting...
-                    $scope.isLoading = true;
-                    $scope.$apply();
-                    log(data.files[0].name + " is uploading...");
-                    data.submit().success(function(result){
-                        window.importedSurveyDraft = result;
-                        $scope.updateFormList();
-                    })
-                    .error(function (result) {
-                        $scope.isLoading = false;
+        if (!_fileUpload) {
+            _fileUpload = $(function () {
+                $('.js-import-fileupload').eq(0).fileupload({
+                    headers: {
+                        "X-CSRFToken": $('meta[name="csrf-token"]').attr('content')
+                    },
+                    add: function (e, data) {
+                        // maybe display some feedback saying the upload is starting...
+                        $scope.isLoading = true;
                         $scope.$apply();
-                        _this.handleXhrError(result);
-                    }).done(function () {
-                        $scope.isLoading = false;
-                    });
-                }
+                        log(data.files[0].name + " is uploading...");
+                        data.submit().success(_successFn)
+                        .error(function (result) {
+                            $scope.isLoading = false;
+                            $scope.$apply();
+                            _this.handleXhrError(result);
+                        }).done(function () {
+                            $scope.isLoading = false;
+                            $scope.$apply();
+                        });
+                    }
+                });
             });
-        });
+        }
     };
+
+    this.changeFileUploaderSuccess = function (successFn) {
+        _successFn = successFn
+    }
 
     this.alert = function (message) {
         alert(message);
