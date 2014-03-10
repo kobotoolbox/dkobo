@@ -41,7 +41,8 @@ class XLF.Survey extends XLF.SurveyFragment
 
     @finalize()
 
-    surveyCsvJson = do =>
+    out = {}
+    out.survey = do =>
       oCols = ["name", "type", "label"]
       oRows = []
 
@@ -71,13 +72,16 @@ class XLF.Survey extends XLF.SurveyFragment
         clName = choiceList.get("name")
         for option in choiceList.options.models
           rows.push _.extend {}, option.toJSON(), "list name": choiceList.get("name")
+      if rows.length > 0
+        columns: cols
+        rowObjects: rows
+      else
+        false
 
-      columns: cols
-      rowObjects: rows
+    out.choices = choicesCsvJson  if choicesCsvJson
+    out.settings = @settings.toCsvJson()
 
-    survey: surveyCsvJson
-    choices: choicesCsvJson
-    settings: @settings.toCsvJson()
+    out
 
   toCSV: ->
     sheeted = csv.sheeted()
