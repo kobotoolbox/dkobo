@@ -24,7 +24,7 @@ function BuilderDirective($rootScope, $restApi, $routeTo) {
                 }
             }
 
-            if (scope.routeParams.id){
+            if (scope.routeParams.id && scope.routeParams.id != 'new'){
                 surveyDraftApi.get({id: scope.routeParams.id}, function builder_get_callback(response) {
                     scope.xlfSurvey = XLF.createSurveyFromCsv(response.body);
                     // temporarily saving response in __djangoModelDetails
@@ -32,7 +32,7 @@ function BuilderDirective($rootScope, $restApi, $routeTo) {
                     new SurveyApp({el: element, survey: scope.xlfSurvey, save: saveCallback}).render();
                 });
             } else {
-                new SurveyTemplateApp({el: element, survey: scope.xlfSurvey, save: saveCallback}).render();
+                new SurveyApp({el: element, survey: scope.xlfSurvey, save: saveCallback}).render();
             }
         }
     };

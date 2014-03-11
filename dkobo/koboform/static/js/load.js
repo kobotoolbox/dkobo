@@ -42,9 +42,14 @@ kobo.config(function ($routeProvider, $locationProvider, $httpProvider) {
             controller: 'FormsController'
         });
 
-        $routeProvider.when('/builder/:id?', {
+        $routeProvider.when('/builder/:id', {
             template: "<section koboform-builder class='form-builder'></section>",
             controller: 'BuilderController'
+        });
+
+        $routeProvider.when('/builder', {
+            templateUrl: staticFilesUri + 'templates/PreBuilder.Template.html',
+            controller: 'PreBuilderController'
         });
 
         $routeProvider.when('/assets', {

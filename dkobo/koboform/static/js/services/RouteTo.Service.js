@@ -8,4 +8,8 @@ function RouteToService($location) {
     this.forms = function () {
         $$path('/forms');
     };
+
+    this.builder = function () {
+        $$path('/builder/new')
+    }
 }

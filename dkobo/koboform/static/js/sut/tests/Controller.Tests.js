@@ -13,7 +13,7 @@ describe ('Controllers', function () {
         $resource = function () {
                         return resourceStub;
                     },
-        miscServiceStub = function () {},
+        miscServiceStub = function () {this.changeFileUploaderSuccess = sinon.spy();},
         resourceStub;
 
 
@@ -56,6 +56,7 @@ describe ('Controllers', function () {
 
                 miscServiceStub = function () {
                     this.confirm = confirmStub;
+                    this.changeFileUploaderSuccess = sinon.spy();
                 };
                 confirmStub.returns(true);
 
@@ -73,6 +74,7 @@ describe ('Controllers', function () {
 
                 miscServiceStub = function () {
                     this.confirm = confirmStub;
+                    this.changeFileUploaderSuccess = sinon.spy();
                 };
                 confirmStub.returns(false);
 
@@ -82,16 +84,6 @@ describe ('Controllers', function () {
 
                 expect(confirmStub).toHaveBeenCalledOnce();
                 expect(deleteSpy).not.toHaveBeenCalled();
-            }));
-        });
-
-        describe('$scope.updateFormList', function () {
-            it('should update forms list when changed to true', inject(function ($controller, $rootScope) {
-                initializeController($controller, 'Forms', $rootScope);
-
-                $rs.updateFormList();
-
-                expect(resourceStub.query).toHaveBeenCalledTwice();
             }));
         });
 
@@ -131,6 +123,7 @@ describe ('Controllers', function () {
         beforeEach(function () {
             miscServiceStub = function () {
                 this.bootstrapFileUploader = function () {};
+                this.changeFileUploaderSuccess = sinon.spy();
             };
         });
 
@@ -189,6 +182,7 @@ describe ('Controllers', function () {
 
                 miscServiceStub = function () {
                     this.confirm = confirmStub;
+                    this.changeFileUploaderSuccess = sinon.spy();
                 };
                 confirmStub.returns(true);
 
@@ -210,6 +204,7 @@ describe ('Controllers', function () {
                 miscServiceStub = function () {
                     this.confirm = confirmStub;
                     this.preventDefault = preventDefaultSpy;
+                    this.changeFileUploaderSuccess = sinon.spy();
                 };
 
                 confirmStub.returns(false);
