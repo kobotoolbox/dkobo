@@ -101,6 +101,9 @@ XLF.defaultsForType =
   date:
     label:
       value: "Enter a date"
+  calculate:
+    calculation:
+      value: ""
   datetime:
     label:
       value: "Enter a date and time"
