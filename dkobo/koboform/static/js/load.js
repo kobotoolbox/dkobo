@@ -31,7 +31,7 @@ kobo.service('$configuration', ConfigurationService);
 kobo.service('$miscUtils', MiscUtilsService);
 
 
-kobo.config(function ($routeProvider, $httpProvider) {
+kobo.config(function ($routeProvider, $locationProvider, $httpProvider) {
 
         //http://django-angular.readthedocs.org/en/latest/integration.html
 
@@ -42,9 +42,14 @@ kobo.config(function ($routeProvider, $httpProvider) {
             controller: 'FormsController'
         });
 
-        $routeProvider.when('/builder/:id?', {
+        $routeProvider.when('/builder/:id', {
             template: "<section koboform-builder class='form-builder'></section>",
             controller: 'BuilderController'
+        });
+
+        $routeProvider.when('/builder', {
+            templateUrl: staticFilesUri + 'templates/PreBuilder.Template.html',
+            controller: 'PreBuilderController'
         });
 
         $routeProvider.when('/assets', {
@@ -71,5 +76,5 @@ kobo.run(function ($http, $cookies, $miscUtils) {
     $http.defaults.headers.common['X-CSRFToken'] = $cookies.csrftoken;
 
     // jQuery.fileupload for importing forms to the user's form list.
-    $miscUtils.bootstrapFileUploader();
+//    $miscUtils.bootstrapFileUploader();
 });

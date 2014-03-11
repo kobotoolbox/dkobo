@@ -28,20 +28,18 @@ function FormsController ($scope, $rootScope, $resource, $miscUtils) {
         }
     };
 
+    $miscUtils.changeFileUploaderSuccess(function () {
+        formsApi.query(function (items) {
+            for (var i = 0; i < items.length; i++) {
+                var currentItem = items[i];
+                currentItem.date_modified = new Date(currentItem.date_modified);
+            }
+
+            $scope.infoListItems = items;
+        });
+    });
+
     $scope.$watch('infoListItems', function () {
         $scope.additionalClasses = $scope.infoListItems.length === 0 ? 'content--centered' : '';
     }, true);
-
-    $rootScope.updateFormList = function () {
-        if ($rootScope.updateFormList) {
-            formsApi.query(function (items) {
-                for (var i = 0; i < items.length; i++) {
-                    var currentItem = items[i];
-                    currentItem.date_modified = new Date(currentItem.date_modified);
-                }
-
-                $scope.infoListItems = items;
-            });
-        }
-    };
 }

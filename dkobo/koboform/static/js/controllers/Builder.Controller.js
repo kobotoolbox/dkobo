@@ -1,7 +1,7 @@
 /*exported BuilderController*/
 'use strict';
 
-function BuilderController($scope, $rootScope, $routeParams, $miscUtils) {
+function BuilderController($scope, $rootScope, $routeParams, $miscUtils, $location) {
     $rootScope.activeTab = 'Forms';
     $scope.routeParams = $routeParams;
     $rootScope.deregisterLocationChangeStart = $rootScope.$on('$locationChangeStart', handleUnload);
