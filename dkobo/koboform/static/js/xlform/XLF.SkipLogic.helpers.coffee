@@ -5,7 +5,7 @@ class XLF.SkipLogicPresenter
     @question = @model._get_question()
     question_type = @question.get_type()
 
-    operator_type_id = @view.$operator_picker.val() || question_type.operators[0]
+    operator_type = @model.get('operator').get_type()
 
     @builder.operator_type = operator_type = @model.get('operator').get_type()
 

@@ -91,7 +91,10 @@ describe 'skip logic model', () ->
 
     describe 'serialize method', () ->
       beforeEach () ->
-        _criterion._get_question = sinon.stub().returns(get: sinon.stub().returns('test question'))
+        _criterion._get_question = sinon.stub().returns
+          get: sinon.stub().returns(get: sinon.stub().returns 'test question')
+          finalize: () ->
+
         _criterion.set 'question_name', 'test question'
         _criterion.set 'operator', _operator
 

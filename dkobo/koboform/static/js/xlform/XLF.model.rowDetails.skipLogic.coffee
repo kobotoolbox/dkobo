@@ -21,6 +21,7 @@ class XLF.SkipLogicCriterion extends XLF.BaseModel
   serialize: () ->
     response_model = @get('response_value')
     if response_model.isValid() != false
+      @_get_question().finalize()
       return @get('operator').serialize @_get_question().get('name').get('value'), response_model.get('value')
     else
       return ''
