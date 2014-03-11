@@ -3,7 +3,7 @@
 /*global log*/
 'use strict';
 
-function MiscUtilsService() {
+function MiscUtilsService($rootScope) {
     var _this = this,
         _fileUpload,
         _successFn;
@@ -15,31 +15,27 @@ function MiscUtilsService() {
         event.preventDefault();
     };
 
-    this.bootstrapFileUploader = function ($scope) {
-        if (!_fileUpload) {
-            _fileUpload = $(function () {
-                $('.js-import-fileupload').eq(0).fileupload({
-                    headers: {
-                        "X-CSRFToken": $('meta[name="csrf-token"]').attr('content')
-                    },
-                    add: function (e, data) {
-                        // maybe display some feedback saying the upload is starting...
-                        $scope.isLoading = true;
-                        $scope.$apply();
-                        log(data.files[0].name + " is uploading...");
-                        data.submit().success(_successFn)
-                        .error(function (result) {
-                            $scope.isLoading = false;
-                            $scope.$apply();
-                            _this.handleXhrError(result);
-                        }).done(function () {
-                            $scope.isLoading = false;
-                            $scope.$apply();
-                        });
-                    }
+    this.bootstrapFileUploader = function (idx) {
+        _fileUpload = $('.js-import-fileupload').eq(idx || 0).fileupload({
+            headers: {
+                "X-CSRFToken": $('meta[name="csrf-token"]').attr('content')
+            },
+            add: function (e, data) {
+                // maybe display some feedback saying the upload is starting...
+                $rootScope.isLoading = true;
+                $rootScope.$apply();
+                log(data.files[0].name + " is uploading...");
+                data.submit().success(_successFn)
+                .error(function (result) {
+                    $rootScope.isLoading = false;
+                    $rootScope.$apply();
+                    _this.handleXhrError(result);
+                }).done(function () {
+                    $rootScope.isLoading = false;
+                    $rootScope.$apply();
                 });
-            });
-        }
+            }
+        });
     };
 
     this.changeFileUploaderSuccess = function (successFn) {
