@@ -91,6 +91,7 @@ describe 'skip logic model', () ->
 
     describe 'serialize method', () ->
       beforeEach () ->
+        _criterion._get_question = sinon.stub().returns(get: sinon.stub().returns('test question'))
         _criterion.set 'question_name', 'test question'
         _criterion.set 'operator', _operator
 
@@ -126,7 +127,7 @@ describe 'skip logic model', () ->
     describe 'change question', () ->
       beforeEach () ->
         _criterion.survey = _survey
-        _criterion._get_question = sinon.stub().returns(getType: sinon.stub().returns(response_type: 'text', operators: [1, 2]))
+        _criterion._get_question = sinon.stub().returns(get_type: sinon.stub().returns(response_type: 'text', operators: [1, 2]))
         _criterion.change_operator = sinon.spy()
         _criterion.change_response = sinon.spy()
 
@@ -151,7 +152,7 @@ describe 'skip logic model', () ->
 
       it 'keeps current operator if in new question type', () ->
         _criterion.change_operator = sinon.spy()
-        _criterion._get_question = sinon.stub().withArgs('operator in question type').returns(getType: () -> operators: [-1])
+        _criterion._get_question = sinon.stub().withArgs('operator in question type').returns(get_type: () -> operators: [-1])
         _criterion.change_question('operator in question type')
 
         expect(_criterion.change_operator).not.toHaveBeenCalled()
@@ -174,6 +175,7 @@ describe 'skip logic model', () ->
     describe 'change operator', () ->
       beforeEach () ->
         _criterion.factory = create_operator: sinon.stub().withArgs('existence', '=', 1).returns 'test operator'
+        _criterion._get_question = sinon.stub().returns(get_type: sinon.stub().returns(response_type: 'text', operators: [1, 2]))
         _criterion.change_response = sinon.spy()
         response_value_getter = sinon.stub()
         response_value_getter.withArgs('type').returns('none')

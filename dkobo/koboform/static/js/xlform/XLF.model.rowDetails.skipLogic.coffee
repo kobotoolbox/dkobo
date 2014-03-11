@@ -9,26 +9,26 @@ class XLF.Model.SkipLogicFactory
     operator.set 'id', id
     operator
   create_criterion_model: () ->
-    criterion = new XLF.SkipLogicCriterion()
-    criterion
+    new XLF.SkipLogicCriterion(@, @survey)
   create_response_model: (type) ->
     switch type
       when 'integer' then new XLF.Model.IntegerResponseModel
       when 'decimal' then new XLF.Model.DecimalResponseModel
       else new XLF.Model.TextResponseModel
+  constructor: (@survey) ->
 
 class XLF.SkipLogicCriterion extends XLF.BaseModel
   serialize: () ->
     response_model = @get('response_value')
     if response_model.isValid() != false
-      return @get('operator').serialize @get('question_name'), response_model.get('value')
+      return @get('operator').serialize @_get_question().get('name').get('value'), response_model.get('value')
     else
       return ''
   _get_question: () ->
-    @survey.rows.get(cid)
+    @survey.rows.get(@get 'question_cid')
   change_question: (cid) ->
     @set('question_cid', cid)
-    question_type = @_get_question().getType()
+    question_type = @_get_question().get_type()
 
     if @get('operator').get_id() not in question_type.operators
       @change_operator question_type.operators[0]
@@ -41,7 +41,7 @@ class XLF.SkipLogicCriterion extends XLF.BaseModel
       is_negated = true
       operator *=-1
 
-    if !(operator in @_get_question().operators)
+    if !(operator in @_get_question().get_type().operators)
       return
 
     type = XLF.operator_types[operator - 1]
@@ -49,12 +49,12 @@ class XLF.SkipLogicCriterion extends XLF.BaseModel
     operator_model = @factory.create_operator type.type, symbol, operator
     @set('operator', operator_model)
 
-    if type.response_type? && type.response_type != @get('response_value').get('type')
-      @change_response @get('response_value').get('value')
+    if type.response_type? && type.response_type != @get('response_value')?.get('type')
+      @change_response @get('response_value')?.get('value') || ''
 
   change_response: (value) ->
     response_model = @get('response_value')
-    if response_model.get('type') != (@get('operator').get_type().response_type || @_get_question().get_type().response_type)
+    if !response_model || response_model.get('type') != (@get('operator').get_type().response_type || @_get_question().get_type().response_type)
       response_model = @factory.create_response_model (@get('operator').get_type().response_type || @_get_question().get_type().response_type)
       @set('response_value', response_model)
 
@@ -71,6 +71,10 @@ class XLF.Operator extends XLF.BaseModel
     if @get 'is_negated'
       val = '-'
     val + @get 'id'
+  get_type: () ->
+    XLF.operator_types[@get('id') - 1]
+  get_id: () ->
+    @get 'id'
 
 class XLF.EmptyOperator extends XLF.Operator
   serialize: () -> ''

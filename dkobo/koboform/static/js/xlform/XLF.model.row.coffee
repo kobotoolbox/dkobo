@@ -108,7 +108,7 @@ class XLF.Row extends XLF.BaseModel
     @
 
   get_type: ->
-    question_types[@get('type').get('typeId')] || question_types['default']
+    XLF.question_types[@get('type').get('typeId')] || XLF.question_types['default']
   getList: ->
     @get("type")?.get("list")
 

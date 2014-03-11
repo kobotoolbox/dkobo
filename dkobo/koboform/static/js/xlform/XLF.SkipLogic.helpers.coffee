@@ -3,7 +3,7 @@ class XLF.SkipLogicPresenter
     @model.change_question question_name
 
     @question = @model._get_question()
-    question_type = question.get_type()
+    question_type = @question.get_type()
 
     operator_type_id = @view.$operator_picker.val() || question_type.operators[0]
 
@@ -21,32 +21,17 @@ class XLF.SkipLogicPresenter
 
 
   change_operator: (operator_id) ->
-    question_type = question_types[@question.getType()] || question_types['default']
+    @model.change_operator operator_id
+    question_type = @model._get_question().get_type()
 
-    if @model.get('response_value')?
-      response_value = @model.get('response_value').get('value') || ''
-    else
-      response_value = ''
-
-    response_value_model = @builder.build_response_model question_type
-    @model.set('response_value', response_value_model)
+    @builder.operator_type = operator_type = @model.get('operator').get_type()
 
 
-    negated = false
-    if operator_id < 0
-      negated = true
-      operator_id = operator_id * -1
+    response_view = @builder.build_response_view @model._get_question(), question_type, operator_type
+    response_view.model = @model.get('response_value')
 
-    @builder.operator_type = operator_type = operator_types[operator_id - 1]
-
-    @model.change_operator @builder.build_operator_model(question_type, operator_type, operator_type.symbol[operator_type.parser_name[+negated]])
-
-    response_view = @builder.build_response_view @question, question_type, operator_type
-    response_view.model = response_value_model
-
+    @view.change_response response_view
     @view.response_value_view.fill_value @model.get('response_value').get('value')
-
-    @model.change_response(response_value) unless response_value == ''
 
   change_response: (response_text) ->
     @model.change_response response_text
@@ -135,7 +120,7 @@ class XLF.SkipLogicBuilder
     return @model_factory.create_operator((if operator_type.type == 'existence' then 'existence' else question_type.equality_operator_type), symbol, operator_type.id)
 
   build_operator_view: (question_type) ->
-    operators = _.filter(operator_types, (op_type) -> op_type.id in question_type.operators)
+    operators = _.filter(XLF.operator_types, (op_type) -> op_type.id in question_type.operators)
     @view_factory.create_operator_picker operators
 
   build_question_view: () ->
@@ -154,15 +139,17 @@ class XLF.SkipLogicBuilder
     @model_factory.create_response_model question_type.response_type
 
   build_criterion_logic: (criterion) =>
-    @operator_type = _.find operator_types, (op_type) ->
+    @operator_type = _.find XLF.operator_types, (op_type) ->
         criterion.operator in op_type.parser_name
 
     question = @survey.findRowByName criterion.name
-    @question_type = question_types[question.getType()] || question_types['default']
+    @question_type = question.get_type()
 
     [operator_model, operator_picker_view] = @build_operator_logic @question_type, @operator_type, criterion
 
-    criterion_model = @model_factory.create_criterion_model(criterion.name, operator_model)
+    criterion_model = @model_factory.create_criterion_model()
+    criterion_model.set('operator', operator_model)
+    criterion_model.change_question @survey.findRowByName(criterion.name).cid
 
     question_picker_view = @build_question_view()
 
@@ -179,7 +166,8 @@ class XLF.SkipLogicBuilder
     new XLF.SkipLogicPresenter(criterion_model, criterion_view, @)
 
   build_empty_criterion_logic: () =>
-    criterion_model = @model_factory.create_criterion_model('', @model_factory.create_operator('empty'))
+    criterion_model = @model_factory.create_criterion_model()
+    criterion_model.set('operator', @model_factory.create_operator('empty'))
 
     question_picker_view = @build_question_view()
 
@@ -197,7 +185,7 @@ class XLF.SkipLogicBuilder
 
     @survey.forEachRow (question) =>
       limit = limit || question is @current_question
-      if !limit && question.getType() not in non_selectable
+      if !limit && question.get('type').get('typeId') not in non_selectable
         questions.push question
 
     questions
