@@ -28,7 +28,8 @@ DAMAGE.
 ###
 The XLF object holds all of the independent modules of the XLFormBuilder tool.
 ###
-@XLF = {}
+if !@XLF?
+  @XLF = {}
 
 XLF.Views = {}
 XLF.Model = {}

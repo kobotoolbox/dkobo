@@ -226,7 +226,7 @@ class XLF.SkipLogicBuilder
   constructor: (@model_factory, @view_factory, @survey, @current_question) ->
 
 
-question_types =
+XLF.question_types =
   default:
     operators: [1, 2]
     equality_operator_type: 'text'
@@ -262,7 +262,7 @@ question_types =
     equality_operator_type: 'text'
     response_type: 'text'
 
-operator_types = [
+XLF.operator_types = [
   {
     id: 1
     type: 'existence'
