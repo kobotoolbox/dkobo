@@ -208,10 +208,14 @@ describe 'skip logic model', () ->
     describe 'change response value', () ->
       beforeEach () ->
         response_model = set: sinon.spy()
-
+        response_value_getter = sinon.stub()
+        response_value_getter.withArgs('type').returns('none')
+        response_value_getter.withArgs('value').returns('test')
+        response_model.get = response_value_getter
+        _criterion.set 'operator', get_type: () -> {}
         _criterion._get_question = sinon.stub().returns(get_type: sinon.stub().returns(response_type: 'text'))
 
-        _criterion.factory = create_response: sinon.stub().withArgs().returns set: sinon.spy()
+        _criterion.factory = create_response_model: sinon.stub().returns set: sinon.spy()
         _criterion.set 'response_value', response_model
       it 'changes the response value', () ->
         _criterion.change_response 'test value'
@@ -220,10 +224,12 @@ describe 'skip logic model', () ->
         _criterion._get_question = sinon.stub().returns(get_type: sinon.stub().returns(response_type: 'integer'))
         _criterion.change_response(12)
 
-        expect()
-      it 'changes the response model to decimal when question type is decimal', () ->
-      it 'changes the response model to select when question type is single select', () ->
-      it 'changes the response model to select when question type is single select', () ->
+        expect(_criterion.factory.create_response_model).toHaveBeenCalledWith 'integer'
+      it "gives operator's response type precedence", () ->
+        _criterion.set 'operator', get_type: () -> response_type: 'empty'
+        _criterion.change_response null
+
+        expect(_criterion.factory.create_response_model).toHaveBeenCalledWith 'empty'
 
 
   ###******************************************************************************************************************************

@@ -18,6 +18,12 @@ describe ('Directives', function () {
                     return mockObject;
                 };
             });
+
+            $provide.provider('$miscUtils', function () {
+                this.$get = function () {
+                    return { bootstrapFileUploader: sinon.stub() };
+                }
+            })
         });
     }
 
@@ -172,7 +178,7 @@ describe ('Directives', function () {
 
 // this is the correct way to mock the method. Sadly, the resulting element.html() calls returns ''
 // TODO: get this working before test volume makes this kind of calls expensive
-// (remember this is expensive because loading the entire template causes 
+// (remember this is expensive because loading the entire template causes
 // the directive to process it and run all contained logic)
 
 /*                it('should use mocked data provided by backend as template',

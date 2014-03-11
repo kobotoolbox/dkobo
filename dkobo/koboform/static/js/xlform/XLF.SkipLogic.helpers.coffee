@@ -2,38 +2,17 @@ class XLF.SkipLogicPresenter
   change_question: (question_name) ->
     @model.change_question question_name
 
-    @question = @builder.survey.findRowByName question_name
-    question_type = question_types[@question.getType()] || question_types['default']
+    @question = @model._get_question()
+    question_type = question.get_type()
 
     operator_type_id = @view.$operator_picker.val() || question_type.operators[0]
 
-    negated = false
-    if operator_type_id < 0
-      negated = true
-      operator_type_id = operator_type_id * -1
+    @builder.operator_type = operator_type = @model.get('operator').get_type()
 
-    if operator_type_id not in question_type.operators
-      operator_type_id = question_type.operators[0]
-
-    @builder.operator_type = operator_type = operator_types[operator_type_id - 1]
-
-    if @model.get('response_value')?
-      response_value = @model.get('response_value').get('value') || ''
-    else
-      response_value = ''
-
-    response_value_model = @builder.build_response_model question_type
-    @model.set('response_value', response_value_model)
-    @view.response_value_view.model = response_value_model
-
-    @model.change_response response_value
+    @view.response_value_view.model = @model.get 'response_value'
 
     @view.change_operator @builder.build_operator_view question_type
     @view.operator_picker_view.fill_value @model.get('operator').get_value()
-
-    if @view.$operator_picker.val() != @model.get('operator').get_value()
-
-      @model.change_operator @builder.build_operator_model(question_type, operator_type, operator_type.symbol[operator_type.parser_name[+negated]])
 
     @builder.question_type = question_type
 

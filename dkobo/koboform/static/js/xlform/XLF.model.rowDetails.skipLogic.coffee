@@ -53,8 +53,12 @@ class XLF.SkipLogicCriterion extends XLF.BaseModel
       @change_response @get('response_value').get('value')
 
   change_response: (value) ->
+    response_model = @get('response_value')
+    if response_model.get('type') != (@get('operator').get_type().response_type || @_get_question().get_type().response_type)
+      response_model = @factory.create_response_model (@get('operator').get_type().response_type || @_get_question().get_type().response_type)
+      @set('response_value', response_model)
 
-    @get('response_value').set('value', value, validate: true)
+    response_model.set('value', value, validate: true)
   constructor: (@factory, @survey) ->
     super()
 
