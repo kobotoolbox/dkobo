@@ -55,7 +55,7 @@ describe 'skip logic model', () ->
       expect(criterion).toBeInstanceOf XLF.SkipLogicCriterion
 
     it 'creates a text response model', () ->
-      expect(_factory.create_response_model 'text').toBeInstanceOf XLF.Model.TextResponseModel
+      expect(_factory.create_response_model 'text').toBeInstanceOf XLF.Model.ResponseModel
 
     it 'creates an integer response model', () ->
       expect(_factory.create_response_model 'integer').toBeInstanceOf XLF.Model.IntegerResponseModel
@@ -178,7 +178,7 @@ describe 'skip logic model', () ->
     describe 'change operator', () ->
       beforeEach () ->
         _criterion.factory = create_operator: sinon.stub().withArgs('existence', '=', 1).returns 'test operator'
-        _criterion._get_question = sinon.stub().returns(get_type: sinon.stub().returns(response_type: 'text', operators: [1, 2]))
+        _criterion._get_question = sinon.stub().returns(get_type: sinon.stub().returns(response_type: 'text', operators: [1, 2], equality_operator_type: 'text'))
         _criterion.change_response = sinon.spy()
         response_value_getter = sinon.stub()
         response_value_getter.withArgs('type').returns('none')
@@ -205,12 +205,20 @@ describe 'skip logic model', () ->
 
         expect(_criterion.change_response).toHaveBeenCalledWith 'test'
 
+      it "uses question's equality operator when operator type is equality", () ->
+        _criterion.factory.create_operator = sinon.stub()
+        _criterion.factory.create_operator.withArgs('text', '=', 2).returns 'test operator'
+        _criterion.change_operator 2
+
+        expect(_criterion.get 'operator').toBe 'test operator'
+
 
     ###******************************************************************************************************************************
     ***---------------------------------------------------------------------------------------------------------------------------***
     ******************************************************************************************************************************###
 
     describe 'change response value', () ->
+      __getter = null
       beforeEach () ->
         response_model = set: sinon.spy()
         response_value_getter = sinon.stub()
@@ -218,14 +226,16 @@ describe 'skip logic model', () ->
         response_value_getter.withArgs('value').returns('test')
         response_model.get = response_value_getter
         _criterion.set 'operator', get_type: () -> {}
-        _criterion._get_question = sinon.stub().returns(get_type: sinon.stub().returns(response_type: 'text'))
+        _question_getter = sinon.stub()
+
+        _criterion._get_question = sinon.stub().returns(get_type: sinon.stub().returns(response_type: 'text'), getList: () -> options: models: [{get: sinon.stub().returns('test option')}, {get: sinon.stub().returns('test option 2')}, {get: sinon.stub().returns('test option 3')}])
 
         _criterion.factory = create_response_model: sinon.stub().returns set: sinon.spy()
         _criterion.set 'response_value', response_model
       it 'changes the response value', () ->
         _criterion.change_response 'test value'
         expect(_criterion.get('response_value').set).toHaveBeenCalledWith 'value', 'test value'
-      it 'changes the response model question type specifies different response type', () ->
+      it 'changes the response model when question type specifies different response type', () ->
         _criterion._get_question = sinon.stub().returns(get_type: sinon.stub().returns(response_type: 'integer'))
         _criterion.change_response(12)
 
@@ -235,6 +245,29 @@ describe 'skip logic model', () ->
         _criterion.change_response null
 
         expect(_criterion.factory.create_response_model).toHaveBeenCalledWith 'empty'
+
+      it 'sets value to first option for select question types', () ->
+        _criterion.get_correct_type = sinon.stub().returns('dropdown')
+
+        _criterion.change_response 'test'
+
+        expect(_criterion.get('response_value').set).toHaveBeenCalledWith 'value', 'test option'
+
+      it 'keeps current value when it is valid option for select question types', () ->
+        _criterion.get_correct_type = sinon.stub().returns('dropdown')
+        _criterion.get('response_value').get.withArgs('value').returns('test option 2')
+
+        _criterion.change_response 'test'
+
+        expect(_criterion.get('response_value').set).toHaveBeenCalledWith 'value', 'test option 2'
+
+      it 'uses passed value when in choice list', () ->
+        _criterion.get_correct_type = sinon.stub().returns('dropdown')
+        _criterion.get('response_value').get.withArgs('value').returns('test option 2')
+
+        _criterion.change_response 'test option 3'
+
+        expect(_criterion.get('response_value').set).toHaveBeenCalledWith 'value', 'test option 3'
 
 
   ###******************************************************************************************************************************

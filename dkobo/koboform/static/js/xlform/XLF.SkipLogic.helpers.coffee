@@ -40,7 +40,7 @@ class XLF.SkipLogicPresenter
     @question = @builder.survey.findRowByName @model.get('question_name')
   render: (destination) ->
     @view.render().attach_to(destination)
-    @view.question_picker_view.fill_value(@model.get('question_name'))
+    @view.question_picker_view.fill_value(@model.get('question_cid'))
     @view.operator_picker_view.fill_value(@model.get('operator').get_value())
     @view.response_value_view.fill_value(@model.get('response_value')?.get('value'))
   serialize: () ->
