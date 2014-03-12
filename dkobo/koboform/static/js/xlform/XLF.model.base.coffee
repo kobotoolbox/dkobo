@@ -79,10 +79,6 @@ class XLF.SurveyFragment extends XLF.BaseCollection
       else
         cb(r)
 
-  forEachRowIncludingErrors: (cb)->
-    console.debug('a deprecated function has been called: forEachRowIncludingErrors')
-    @forEachRow(cb, includeErrors: true)
-
   getRowDescriptors: () ->
     descriptors = []
     @forEachRow (row) ->

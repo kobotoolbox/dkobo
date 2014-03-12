@@ -21,6 +21,10 @@ class XLF.Rows extends XLF.BaseCollection
   comparator: (m)-> m.ordinal
 
 class XLF.Row extends XLF.BaseModel
+  constructor: (attributes={}, options={})->
+    for key, val of attributes when key is ""
+      delete attributes[key]
+    super(attributes, options)
   initialize: ->
     ###
     The best way to understand the @details collection is
@@ -107,8 +111,8 @@ class XLF.Row extends XLF.BaseModel
       @get("name").set("value", XLF.sluggifyLabel(label, names))
     @
 
-  getType: ->
-    @get('type').get('typeId')
+  get_type: ->
+    XLF.question_types[@get('type').get('typeId')] || XLF.question_types['default']
   getList: ->
     @get("type")?.get("list")
 

@@ -2,7 +2,7 @@
 /*global _*/
 'use strict';
 XLF.skipLogicParser = (function () {
-    var equalityCriterionPattern = /\${(\w+)}\s*(=|!=|<|>|<=|>=)\s*\'?(\w+|\d+)\'?/,
+    var equalityCriterionPattern = /\${(\w+)}\s*(=|!=|<|>|<=|>=)\s*\'?((?:\w+|-?\d+)\.?\d*)\'?/,
         existenceCriterionPattern = /\${(\w+)}\s*((?:=|!=)\s*(?:NULL|''))/i,
         criteriaJoinPattern = /and|or/gi;
 

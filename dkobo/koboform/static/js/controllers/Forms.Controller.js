@@ -41,5 +41,6 @@ function FormsController ($scope, $rootScope, $resource, $miscUtils) {
 
     $scope.$watch('infoListItems', function () {
         $scope.additionalClasses = $scope.infoListItems.length === 0 ? 'content--centered' : '';
+        $rootScope.showCreateButton = $scope.infoListItems.length > 0
     }, true);
 }

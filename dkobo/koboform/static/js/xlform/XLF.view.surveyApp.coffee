@@ -103,7 +103,7 @@ class @SurveyApp extends Backbone.View
   reset: ->
     fe = @formEditorEl
     isEmpty = true
-    @survey.forEachRowIncludingErrors (row)=>
+    fn = (row)=>
       isEmpty = false
       unless (xlfrv = @rowViews.get(row.cid))
         @rowViews.set(row.cid, new XLF.RowView(model: row, surveyView: @))
@@ -112,6 +112,8 @@ class @SurveyApp extends Backbone.View
       $el = xlfrv.render().$el
       if $el.parents(@$el).length is 0
         @formEditorEl.append($el)
+
+    @survey.forEachRow(fn, includeErrors: true)
 
     @formEditorEl.find(".empty").css("display", if isEmpty then "" else "none")
     viewUtils.reorderElemsByData(".xlf-row-view", @$el, "row-index")

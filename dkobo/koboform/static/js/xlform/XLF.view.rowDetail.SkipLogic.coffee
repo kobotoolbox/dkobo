@@ -91,7 +91,7 @@ class XLF.Views.QuestionPicker extends XLF.Views.Base
     render_questions = () =>
       options = '<option value="-1">Question...</option>'
       _.each @questions, (row) ->
-        name = row.getValue("name")
+        name = row.cid
         label = row.getValue("label")
         options += '<option value="' + name + '">' + label + "</option>"
       options
@@ -144,8 +144,9 @@ class XLF.Views.SkipLogicValidatingTextResponseView extends XLF.Views.SkipLogicT
     @model.bind('validated:valid', @clear_invalid_view)
     @
   show_invalid_view: (model, errors) =>
-    @$el.addClass('textbox--invalid')
-    @$error_message.html(errors.value)
+    if @$('input').val()
+      @$el.addClass('textbox--invalid')
+      @$error_message.html(errors.value)
   clear_invalid_view: (model, errors) =>
     @$el.removeClass('textbox--invalid')
     @$error_message.html('')
