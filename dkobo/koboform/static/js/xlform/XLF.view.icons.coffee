@@ -63,6 +63,11 @@ XLF.iconDetails = [
     grouping: "choice"
     id: "datetime"
   ,
+    label: "Time"
+    faClass: "clock-o"
+    grouping: "choice"
+    id: "time"
+  ,
     label: "GPS Location"
     faClass: "map-marker"
     grouping: "misc"
