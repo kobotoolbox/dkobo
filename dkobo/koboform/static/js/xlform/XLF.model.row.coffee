@@ -21,6 +21,10 @@ class XLF.Rows extends XLF.BaseCollection
   comparator: (m)-> m.ordinal
 
 class XLF.Row extends XLF.BaseModel
+  constructor: (attributes={}, options={})->
+    for key, val of attributes when key is ""
+      delete attributes[key]
+    super(attributes, options)
   initialize: ->
     ###
     The best way to understand the @details collection is
