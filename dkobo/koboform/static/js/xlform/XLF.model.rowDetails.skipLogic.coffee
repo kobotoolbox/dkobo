@@ -164,3 +164,12 @@ class XLF.Model.DecimalResponseModel extends XLF.Model.ResponseModel
         else
           final_value = +(value.replace(',', ''))
     @set('value', final_value, validate: true)
+
+class XLF.Model.DateResponseModel extends XLF.Model.ResponseModel
+  validation:
+    value:
+      pattern: /date\(\'\d{4}-\d{2}-\d{2}\'\)/
+  set_value: (value) ->
+    if /^\d{4}-\d{2}-\d{2}$/.test(value)
+      value = "date('" + value + "')"
+    @set('value', value, validate: true)

@@ -45,6 +45,16 @@ describe('XLF.skipLogicParser', function () {
         })
     });
 
+    it('parses a date equals clause', function () {
+        expect(XLF.skipLogicParser("${question} = date('1234-12-12')")).toEqual({
+            criteria: [{
+                name: 'question',
+                operator: 'resp_equals',
+                response_value: "date('1234-12-12')"
+            }]
+        })
+    })
+
     it('parses a single equals clause without padding between operands', function () {
         expect(XLF.skipLogicParser("${question_name}='value')")).toEqual({
             criteria: [{

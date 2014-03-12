@@ -356,6 +356,32 @@ describe 'skip logic model', () ->
   ***---------------------------------------------------------------------------------------------------------------------------***
   ******************************************************************************************************************************###
 
+  describe 'date response value', () ->
+    it 'sets state to valid when passed value is in date format', () ->
+      response = new XLF.Model.DateResponseModel
+      response.set_value("date('1234-12-12')")
+
+      expect(response.isValid()).toBeTruthy()
+      expect(response.get('value')).toBe("date('1234-12-12')")
+
+    it 'sets state to invalid when passed value is not in date format', () ->
+      response = new XLF.Model.DateResponseModel
+      response.set_value('asdfasdf')
+
+      expect(response.isValid()).toBeFalsy()
+      expect(response.get('value')).toBeUndefined()
+
+    it 'formats value when is raw date format', () ->
+      response = new XLF.Model.DateResponseModel
+      response.set_value('1234-12-12')
+
+      expect(response.isValid()).toBeTruthy()
+      expect(response.get('value')).toBe("date('1234-12-12')")
+
+  ###******************************************************************************************************************************
+  ***---------------------------------------------------------------------------------------------------------------------------***
+  ******************************************************************************************************************************###
+
   describe 'select response value', () ->
     it 'validates the current value against the option list of single select and multi select option lists ', () ->
 
