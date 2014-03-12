@@ -71,7 +71,7 @@ do ->
 XLF.surveyDetailSchema = new XLF.SurveyDetailSchema(_.values(XLF.defaultSurveyDetails))
 
 ###
-Default values for each type
+Default values for rows of each question type
 ###
 XLF.defaultsForType =
   geopoint:
@@ -107,12 +107,16 @@ XLF.defaultsForType =
   datetime:
     label:
       value: "Enter a date and time"
+  acknowledge:
+    label:
+      value: "Acknowledge"
 
 XLF.columns = ["type", "name", "label", "hint", "required", "relevant", "default", "constraint"]
 
 XLF.lookupRowType = do->
   typeLabels = [
     ["note", "Note", preventRequired: true],
+    ["acknowledge", "Acknowledge"],
     ["text", "Text"], # expects text
     ["integer", "Integer"], #e.g. 42
     ["decimal", "Decimal"], #e.g. 3.14
