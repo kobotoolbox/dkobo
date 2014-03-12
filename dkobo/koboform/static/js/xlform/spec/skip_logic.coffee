@@ -95,7 +95,7 @@ describe 'skip logic model', () ->
           get: sinon.stub().returns(get: sinon.stub().returns 'test question')
           finalize: () ->
 
-        _criterion.set 'question_name', 'test question'
+        _criterion.set 'question_cid', 'test question'
         _criterion.set 'operator', _operator
 
       it 'serializes the criterion when response model validation state is true', () ->
