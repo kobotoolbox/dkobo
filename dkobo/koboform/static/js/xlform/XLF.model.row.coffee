@@ -107,8 +107,8 @@ class XLF.Row extends XLF.BaseModel
       @get("name").set("value", XLF.sluggifyLabel(label, names))
     @
 
-  getType: ->
-    @get('type').get('typeId')
+  get_type: ->
+    XLF.question_types[@get('type').get('typeId')] || XLF.question_types['default']
   getList: ->
     @get("type")?.get("list")
 

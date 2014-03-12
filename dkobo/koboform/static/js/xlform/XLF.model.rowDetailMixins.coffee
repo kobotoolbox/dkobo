@@ -5,7 +5,7 @@ SkipLogicDetailMixin =
     @serialize()
 
   postInitialize: ()->
-    model_factory = new XLF.Model.SkipLogicFactory
+    model_factory = new XLF.Model.SkipLogicFactory @getSurvey()
     view_factory = new XLF.Views.SkipLogicViewFactory
     survey = @getSurvey()
     current_question = @_parent

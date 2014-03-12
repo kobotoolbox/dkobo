@@ -8,30 +8,81 @@ class XLF.Model.SkipLogicFactory
       when 'empty' then return new XLF.EmptyOperator()
     operator.set 'id', id
     operator
-  create_criterion_model: (question_name, operator) ->
-    criterion = new XLF.SkipLogicCriterion()
-    criterion.change_question question_name
-    criterion.change_operator operator
-    criterion
+  create_criterion_model: () ->
+    new XLF.SkipLogicCriterion(@, @survey)
   create_response_model: (type) ->
+    model = null
     switch type
-      when 'integer' then new XLF.Model.IntegerResponseModel
-      when 'decimal' then new XLF.Model.DecimalResponseModel
-      else new XLF.Model.TextResponseModel
+      when 'integer' then model = new XLF.Model.IntegerResponseModel
+      when 'decimal' then model = new XLF.Model.DecimalResponseModel
+      else model = new XLF.Model.ResponseModel
+    model.set 'type', type
+  constructor: (@survey) ->
 
 class XLF.SkipLogicCriterion extends XLF.BaseModel
   serialize: () ->
     response_model = @get('response_value')
     if response_model.isValid() != false
-      return @get('operator').serialize @get('question_name'), response_model.get('value')
+      @_get_question().finalize()
+      return @get('operator').serialize @_get_question().get('name').get('value'), response_model.get('value')
     else
       return ''
+  _get_question: () ->
+    @survey.rows.get(@get 'question_cid')
+  change_question: (cid) ->
+    @set('question_cid', cid)
+    question_type = @_get_question().get_type()
+
+    if @get('operator').get_id() not in question_type.operators
+      @change_operator question_type.operators[0]
+
+    if !@get('operator').get_type().response_type? && @_get_question().response_type != @get('response_value')?.get_type()
+      @change_response @get('response_value').get 'value'
   change_operator: (operator) ->
-    @set('operator', operator)
-  change_question: (value) ->
-    @set('question_name', value)
+    operator = +operator
+    is_negated = false
+    if operator < 0
+      is_negated = true
+      operator *=-1
+
+    question_type = @_get_question().get_type()
+
+    if !(operator in question_type.operators)
+      return
+
+    type = XLF.operator_types[operator - 1]
+    symbol = type.symbol[type.parser_name[+is_negated]]
+    operator_model = @factory.create_operator (if type.type == 'equality' then question_type.equality_operator_type else type.type), symbol, operator
+    @set('operator', operator_model)
+
+    if (type.response_type || question_type.response_type) != @get('response_value')?.get('type')
+      @change_response @get('response_value')?.get('value') || ''
+
+  get_correct_type: () ->
+    @get('operator').get_type().response_type || @_get_question().get_type().response_type
+
   change_response: (value) ->
-    @get('response_value').set('value', value, validate: true)
+    response_model = @get('response_value')
+    current_value = response_model?.get('value')
+    if !response_model || response_model.get('type') != @get_correct_type()
+      response_model = @factory.create_response_model @get_correct_type()
+      @set('response_value', response_model)
+
+    if @get_correct_type() == 'dropdown'
+      choices = @_get_question().getList().options.models
+      choice_names = _.map(choices, (model) -> model.get('name'))
+
+      if value in choice_names
+        response_model.set 'value', value
+      else if current_value in choice_names
+        response_model.set 'value', current_value
+      else
+        response_model.set 'value', choices[0].get('name')
+    else
+      response_model.set('value', value, validate: true)
+  constructor: (@factory, @survey) ->
+    super()
+
 
 class XLF.Operator extends XLF.BaseModel
   serialize: (question_name, response_value) ->
@@ -41,6 +92,10 @@ class XLF.Operator extends XLF.BaseModel
     if @get 'is_negated'
       val = '-'
     val + @get 'id'
+  get_type: () ->
+    XLF.operator_types[@get('id') - 1]
+  get_id: () ->
+    @get 'id'
 
 class XLF.EmptyOperator extends XLF.Operator
   serialize: () -> ''
@@ -76,15 +131,17 @@ class XLF.SelectMultipleSkipLogicOperator extends XLF.SkipLogicOperator
       return 'not(' + selected + ')'
     return selected
 
-class XLF.Model.TextResponseModel extends XLF.BaseModel
+class XLF.Model.ResponseModel extends XLF.BaseModel
+  get_type: () ->
+    return @get('type')
 
-class XLF.Model.IntegerResponseModel extends XLF.BaseModel
+class XLF.Model.IntegerResponseModel extends XLF.Model.ResponseModel
   validation:
     value:
       pattern: 'digits'
       msg: 'Number must be integer'
 
-class XLF.Model.DecimalResponseModel extends XLF.BaseModel
+class XLF.Model.DecimalResponseModel extends XLF.Model.ResponseModel
   validation:
     value:
       pattern: 'number'
