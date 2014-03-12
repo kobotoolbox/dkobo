@@ -49,11 +49,12 @@ XLF.DetailViewMixins.type =
 XLF.DetailViewMixins.label =
   html: -> false
   insertInDOM: (rowView)->
-    cht = rowView.$el.find(".card__header-title")
-    cht.html(@model.get("value"))
-    viewUtils.makeEditable @, @model, cht, options:
-      placement: 'right'
-      rows: 3
+    if rowView.model.get("type").get("typeId") isnt "calculate"
+      cht = rowView.$el.find(".card__header-title")
+      cht.html(@model.get("value"))
+      viewUtils.makeEditable @, @model, cht, options:
+        placement: 'right'
+        rows: 3
 
 XLF.DetailViewMixins.hint =
   html: ->
@@ -99,6 +100,16 @@ XLF.DetailViewMixins.name = XLF.DetailViewMixins.default =
     """
   afterRender: ->
     viewUtils.makeEditable @, @model, "code", transformFunction: XLF.sluggify
+
+XLF.DetailViewMixins.calculation =
+  html: -> false
+  insertInDOM: (rowView)->
+    if rowView.model.get("type").get("typeId") is "calculate"
+      cht = rowView.$el.find(".card__header-title")
+      cht.html(@model.get("value"))
+      viewUtils.makeEditable @, @model, cht, options:
+        placement: 'right'
+        rows: 3
 
 XLF.DetailViewMixins.required =
   html: ->
