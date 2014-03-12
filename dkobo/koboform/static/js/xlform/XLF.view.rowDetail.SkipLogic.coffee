@@ -144,8 +144,9 @@ class XLF.Views.SkipLogicValidatingTextResponseView extends XLF.Views.SkipLogicT
     @model.bind('validated:valid', @clear_invalid_view)
     @
   show_invalid_view: (model, errors) =>
-    @$el.addClass('textbox--invalid')
-    @$error_message.html(errors.value)
+    if @$('input').val()
+      @$el.addClass('textbox--invalid')
+      @$error_message.html(errors.value)
   clear_invalid_view: (model, errors) =>
     @$el.removeClass('textbox--invalid')
     @$error_message.html('')

@@ -137,6 +137,7 @@ describe 'skip logic model', () ->
         _criterion.set 'operator',
           get_id: () -> return -1
           get_type: () -> {}
+          get_value: () -> -1
 
         _criterion.set 'response_value',
           get: sinon.stub().withArgs('value').returns('test')
@@ -155,7 +156,7 @@ describe 'skip logic model', () ->
 
       it 'keeps current operator if in new question type', () ->
         _criterion.change_operator = sinon.spy()
-        _criterion._get_question = sinon.stub().withArgs('operator in question type').returns(get_type: () -> operators: [-1])
+        _criterion._get_question = sinon.stub().withArgs('operator in question type').returns(get_type: () -> {operators: [-1], name: 'test'})
         _criterion.change_question('operator in question type')
 
         expect(_criterion.change_operator).not.toHaveBeenCalled()
@@ -220,7 +221,7 @@ describe 'skip logic model', () ->
     describe 'change response value', () ->
       __getter = null
       beforeEach () ->
-        response_model = set: sinon.spy()
+        response_model = set_value: sinon.spy()
         response_value_getter = sinon.stub()
         response_value_getter.withArgs('type').returns('none')
         response_value_getter.withArgs('value').returns('test')
@@ -230,12 +231,12 @@ describe 'skip logic model', () ->
 
         _criterion._get_question = sinon.stub().returns(get_type: sinon.stub().returns(response_type: 'text'), getList: () -> options: models: [{get: sinon.stub().returns('test option')}, {get: sinon.stub().returns('test option 2')}, {get: sinon.stub().returns('test option 3')}])
 
-        _criterion.factory = create_response_model: sinon.stub().returns set: sinon.spy()
+        _criterion.factory = create_response_model: sinon.stub().returns set_value: sinon.spy()
         _criterion.set 'response_value', response_model
-      it 'changes the response value', () ->
+      it 'changes response value', () ->
         _criterion.change_response 'test value'
-        expect(_criterion.get('response_value').set).toHaveBeenCalledWith 'value', 'test value'
-      it 'changes the response model when question type specifies different response type', () ->
+        expect(_criterion.get('response_value').set_value).toHaveBeenCalledWith 'test value'
+      it 'changes response model when question type specifies different response type', () ->
         _criterion._get_question = sinon.stub().returns(get_type: sinon.stub().returns(response_type: 'integer'))
         _criterion.change_response(12)
 
@@ -251,7 +252,7 @@ describe 'skip logic model', () ->
 
         _criterion.change_response 'test'
 
-        expect(_criterion.get('response_value').set).toHaveBeenCalledWith 'value', 'test option'
+        expect(_criterion.get('response_value').set_value).toHaveBeenCalledWith 'test option'
 
       it 'keeps current value when it is valid option for select question types', () ->
         _criterion.get_correct_type = sinon.stub().returns('dropdown')
@@ -259,7 +260,7 @@ describe 'skip logic model', () ->
 
         _criterion.change_response 'test'
 
-        expect(_criterion.get('response_value').set).toHaveBeenCalledWith 'value', 'test option 2'
+        expect(_criterion.get('response_value').set_value).toHaveBeenCalledWith 'test option 2'
 
       it 'uses passed value when in choice list', () ->
         _criterion.get_correct_type = sinon.stub().returns('dropdown')
@@ -267,7 +268,7 @@ describe 'skip logic model', () ->
 
         _criterion.change_response 'test option 3'
 
-        expect(_criterion.get('response_value').set).toHaveBeenCalledWith 'value', 'test option 3'
+        expect(_criterion.get('response_value').set_value).toHaveBeenCalledWith 'test option 3'
 
 
   ###******************************************************************************************************************************
@@ -395,6 +396,32 @@ describe 'skip logic model', () ->
       _response_model.set('value', 'asdf', validate:true)
 
       expect(_response_model.isValid()).toBeFalsy()
+    it 'parses decimals where comma is decimal separator', () ->
+      _response_model.set_value('123,123')
+
+      expect(_response_model.isValid()).toBeTruthy()
+      expect(_response_model.get('value')).toBe(123.123)
+    it 'parses decimals where comma is thousands and period is decimal separator', () ->
+      _response_model.set_value('1,004.8')
+
+      expect(_response_model.isValid()).toBeTruthy()
+      expect(_response_model.get('value')).toBe(1004.8)
+    it 'parses decimals where period is thousands and comma is decimal separator', () ->
+      _response_model.set_value('1.004,8')
+
+      expect(_response_model.isValid()).toBeTruthy()
+      expect(_response_model.get('value')).toBe(1004.8)
+    it 'strips spaces out of value', () ->
+      _response_model.set_value('1  0 0 4,8')
+
+      expect(_response_model.isValid()).toBeTruthy()
+      expect(_response_model.get('value')).toBe(1004.8)
+    it 'strips non breaking spaces out of value', () ->
+      _response_model.set_value('1\u00A00\u00A00\u00A04,8')
+
+      expect(_response_model.isValid()).toBeTruthy()
+      expect(_response_model.get('value')).toBe(1004.8)
+
 
 ###******************************************************************************************************************************
 ***---------------------------------------------------------------------------------------------------------------------------***

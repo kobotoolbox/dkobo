@@ -30,11 +30,14 @@ class XLF.SkipLogicCriterion extends XLF.BaseModel
   _get_question: () ->
     @survey.rows.get(@get 'question_cid')
   change_question: (cid) ->
+    old_question_type = @_get_question()?.get_type() || name: null
     @set('question_cid', cid)
     question_type = @_get_question().get_type()
 
     if @get('operator').get_id() not in question_type.operators
       @change_operator question_type.operators[0]
+    else if old_question_type.name != question_type.name
+      @change_operator @get('operator').get_value()
 
     if !@get('operator').get_type().response_type? && @_get_question().response_type != @get('response_value')?.get_type()
       @change_response @get('response_value').get 'value'
@@ -73,13 +76,13 @@ class XLF.SkipLogicCriterion extends XLF.BaseModel
       choice_names = _.map(choices, (model) -> model.get('name'))
 
       if value in choice_names
-        response_model.set 'value', value
+        response_model.set_value value
       else if current_value in choice_names
-        response_model.set 'value', current_value
+        response_model.set_value current_value
       else
-        response_model.set 'value', choices[0].get('name')
+        response_model.set_value choices[0].get('name')
     else
-      response_model.set('value', value, validate: true)
+      response_model.set_value(value)
   constructor: (@factory, @survey) ->
     super()
 
@@ -134,6 +137,8 @@ class XLF.SelectMultipleSkipLogicOperator extends XLF.SkipLogicOperator
 class XLF.Model.ResponseModel extends XLF.BaseModel
   get_type: () ->
     return @get('type')
+  set_value: (value) ->
+    @set('value', value, validate: true)
 
 class XLF.Model.IntegerResponseModel extends XLF.Model.ResponseModel
   validation:
@@ -146,3 +151,16 @@ class XLF.Model.DecimalResponseModel extends XLF.Model.ResponseModel
     value:
       pattern: 'number'
       msg: 'Number must be decimal'
+  set_value: (value) ->
+    if typeof value == 'undefined'
+      return
+    value = value.replace(/\s/g, '')
+    final_value = +value
+    if isNaN(final_value)
+      final_value = +(value.replace(',', '.'))
+      if isNaN(final_value)
+        if value.lastIndexOf(',') > value.lastIndexOf('.')
+          final_value = +(value.replace('.', '').replace(',', '.'))
+        else
+          final_value = +(value.replace(',', ''))
+    @set('value', final_value, validate: true)

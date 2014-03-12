@@ -9,14 +9,15 @@ class XLF.SkipLogicPresenter
 
     @builder.operator_type = operator_type = @model.get('operator').get_type()
 
-    @view.response_value_view.model = @model.get 'response_value'
 
     @view.change_operator @builder.build_operator_view question_type
     @view.operator_picker_view.fill_value @model.get('operator').get_value()
 
     @builder.question_type = question_type
 
-    @view.change_response @builder.build_response_view @question, question_type, operator_type
+    response_view = @builder.build_response_view @question, question_type, operator_type
+    response_view.model = @model.get 'response_value'
+    @view.change_response response_view
     @view.response_value_view.fill_value @model.get('response_value').get('value')
 
 
@@ -198,36 +199,52 @@ XLF.question_types =
     operators: [1, 2]
     equality_operator_type: 'text'
     response_type: 'text'
+    name: 'default'
   select_one:
     operators: [1, 2]
     equality_operator_type: 'text'
     response_type: 'dropdown'
+    name: 'select_one'
   select_multiple:
     operators: [1, 2]
     equality_operator_type: 'select_multiple'
     response_type: 'dropdown'
+    name: 'select_multiple'
   integer:
     operators: [1, 2, 3, 4]
     equality_operator_type: 'basic'
     response_type: 'integer'
+    name: 'integer'
+  barcode:
+    operators: [1, 2, 3, 4]
+    equality_operator_type: 'basic'
+    response_type: 'integer'
+    name: 'barcode'
   decimal:
     operators: [1, 2, 3, 4]
     equality_operator_type: 'basic'
     response_type: 'decimal'
+    name: 'decimal'
   geopoint:
     operators: [1]
+    name: 'geopoint'
   image:
     operators: [1]
+    name: 'image'
   audio:
     operators: [1]
+    name: 'audio'
   video:
     operators: [1]
+    name: 'video'
   acknowledge:
     operators: [1]
+    name: 'acknowledge'
   date:
     operators: [2, 3, 4]
     equality_operator_type: 'text'
     response_type: 'text'
+    name: 'date'
 
 XLF.operator_types = [
   {

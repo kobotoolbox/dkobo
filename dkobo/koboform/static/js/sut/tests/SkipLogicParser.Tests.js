@@ -25,6 +25,26 @@ describe('XLF.skipLogicParser', function () {
         });
     });
 
+    it('parses a decimal equals clause', function () {
+        expect(XLF.skipLogicParser('${question_name} = 123.123')).toEqual({
+            criteria: [{
+                name: "question_name",
+                operator: "resp_equals",
+                response_value: "123.123"
+            }]
+        })
+    });
+
+    it('parses a negative number equals clause', function () {
+        expect(XLF.skipLogicParser('${question_name} = -1')).toEqual({
+            criteria: [{
+                name: "question_name",
+                operator: "resp_equals",
+                response_value: "-1"
+            }]
+        })
+    });
+
     it('parses a single equals clause without padding between operands', function () {
         expect(XLF.skipLogicParser("${question_name}='value')")).toEqual({
             criteria: [{
