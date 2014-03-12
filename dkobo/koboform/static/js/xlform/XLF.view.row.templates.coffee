@@ -14,7 +14,7 @@ viewTemplates.xlfRowView = () ->
     <div class="card">
       <h4 class="card__header">
         <i class="fa fa-fw card__header-icon"></i>
-        <span class="card__header-title">Label goes here</span>
+        <span class="card__header-title"></span>
       </h4>
       #{deleteRowButton}
       <div class="row list-view hidden">
