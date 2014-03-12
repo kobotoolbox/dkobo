@@ -38,6 +38,11 @@ XLF.iconDetails = [
     grouping: "text"
     id: "note"
   ,
+    label: "Acknowledge"
+    faClass: "check-square-o"
+    grouping: "text"
+    id: "acknowledge"
+  ,
     label: "Select one"
     faClass: "check-square-o"
     grouping: "choice"
