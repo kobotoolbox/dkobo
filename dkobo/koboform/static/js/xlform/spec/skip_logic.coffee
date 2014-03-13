@@ -95,7 +95,7 @@ describe 'skip logic model', () ->
           get: sinon.stub().returns(get: sinon.stub().returns 'test question')
           finalize: () ->
 
-        _criterion.set 'question_name', 'test question'
+        _criterion.set 'question_cid', 'test question'
         _criterion.set 'operator', _operator
 
       it 'serializes the criterion when response model validation state is true', () ->
@@ -351,6 +351,32 @@ describe 'skip logic model', () ->
     it 'serializes negated criterion', () ->
       operator = new XLF.SelectMultipleSkipLogicOperator '!='
       expect(operator.serialize 'test question', 'test response').toEqual("not(selected(${test question}, 'test response'))")
+
+  ###******************************************************************************************************************************
+  ***---------------------------------------------------------------------------------------------------------------------------***
+  ******************************************************************************************************************************###
+
+  describe 'date response value', () ->
+    it 'sets state to valid when passed value is in date format', () ->
+      response = new XLF.Model.DateResponseModel
+      response.set_value("date('1234-12-12')")
+
+      expect(response.isValid()).toBeTruthy()
+      expect(response.get('value')).toBe("date('1234-12-12')")
+
+    it 'sets state to invalid when passed value is not in date format', () ->
+      response = new XLF.Model.DateResponseModel
+      response.set_value('asdfasdf')
+
+      expect(response.isValid()).toBeFalsy()
+      expect(response.get('value')).toBeUndefined()
+
+    it 'formats value when is raw date format', () ->
+      response = new XLF.Model.DateResponseModel
+      response.set_value('1234-12-12')
+
+      expect(response.isValid()).toBeTruthy()
+      expect(response.get('value')).toBe("date('1234-12-12')")
 
   ###******************************************************************************************************************************
   ***---------------------------------------------------------------------------------------------------------------------------***
