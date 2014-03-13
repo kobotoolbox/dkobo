@@ -14,9 +14,7 @@ viewTemplates.surveyTemplateApp = () ->
 viewTemplates.surveyApp = (survey) ->
     """
       <div class="sub-header-bar">
-        <button class="btn  btn--utility" id="xlf-export">Export and clone</button>
         <button class="btn  btn--utility" id="save">Save</button>
-        <a class="btn  btn--utility" id="xlf-download" href="#">Download</a>
         <button class="btn  btn--utility" id="xlf-preview">Preview</button>
         <button class="btn  btn--utility  pull-right" id="xlf-group">Group questions</button>
         <button class="btn  btn--utility  pull-right" id="xlf-repeat">Repeat questions</button>
