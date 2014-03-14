@@ -73,6 +73,11 @@ class XLF.SkipLogicCriterion extends XLF.BaseModel
 
     if @get_correct_type() == 'dropdown'
       choices = @_get_question().getList().options.models
+
+      _.each choices, (model) ->
+        if !model.get('name')?
+          model.set('name', XLF.sluggify model.get 'label')
+
       choice_names = _.map(choices, (model) -> model.get('name'))
 
       if value in choice_names
