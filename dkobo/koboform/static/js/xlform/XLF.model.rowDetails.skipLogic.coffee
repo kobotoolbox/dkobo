@@ -73,6 +73,11 @@ class XLF.SkipLogicCriterion extends XLF.BaseModel
 
     if @get_correct_type() == 'dropdown'
       choices = @_get_question().getList().options.models
+
+      _.each choices, (model) ->
+        if !model.get('name')?
+          model.set('name', XLF.sluggify model.get 'label')
+
       choice_names = _.map(choices, (model) -> model.get('name'))
 
       if value in choice_names
@@ -152,15 +157,18 @@ class XLF.Model.DecimalResponseModel extends XLF.Model.ResponseModel
       pattern: 'number'
       msg: 'Number must be decimal'
   set_value: (value) ->
-    if typeof value == 'undefined'
+    if typeof value == 'undefined' || value == ''
       return
-    value = value.replace(/\s/g, '')
-    final_value = +value
+    if typeof value == 'number'
+      final_value = value
+    else
+      value = value.replace(/\s/g, '')
+      final_value = +value
     if isNaN(final_value)
       final_value = +(value.replace(',', '.'))
       if isNaN(final_value)
         if value.lastIndexOf(',') > value.lastIndexOf('.')
-          final_value = +(value.replace('.', '').replace(',', '.'))
+          final_value = +(value.replace(/\./g, '').replace(',', '.'))
         else
           final_value = +(value.replace(',', ''))
     @set('value', final_value, validate: true)

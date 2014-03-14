@@ -53,7 +53,7 @@ describe('XLF.skipLogicParser', function () {
                 response_value: "date('1234-12-12')"
             }]
         })
-    })
+    });
 
     it('parses a single equals clause without padding between operands', function () {
         expect(XLF.skipLogicParser("${question_name}='value')")).toEqual({

@@ -433,10 +433,10 @@ describe 'skip logic model', () ->
       expect(_response_model.isValid()).toBeTruthy()
       expect(_response_model.get('value')).toBe(1004.8)
     it 'parses decimals where period is thousands and comma is decimal separator', () ->
-      _response_model.set_value('1.004,8')
+      _response_model.set_value('1.001.004,8')
 
       expect(_response_model.isValid()).toBeTruthy()
-      expect(_response_model.get('value')).toBe(1004.8)
+      expect(_response_model.get('value')).toBe(1001004.8)
     it 'strips spaces out of value', () ->
       _response_model.set_value('1  0 0 4,8')
 
