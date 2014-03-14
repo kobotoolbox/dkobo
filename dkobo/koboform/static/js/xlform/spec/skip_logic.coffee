@@ -543,6 +543,15 @@ describe 'skip logic model', () ->
 
 describe 'skip logic helpers', () ->
   describe 'presenter', () ->
+    _presenter = null
+    _model = null
+    _view = null
+    _builder = null
+    beforeEach () ->
+      _model = sinon.stubObject XLF.SkipLogicCriterion
+      _view = sinon.stubObject XLF.Views.SkipLogicCriterion
+      _builder = sinon.stubObject
+      _presenter = new XLF.SkipLogicPresenter @model, @view, @builder
     describe 'change question', () ->
       it 'changes the question in the model', () ->
       it 'changes the response model to the question types model', () ->

@@ -24,6 +24,7 @@ module.exports = function(config) {
             '../factories/*.js',
             '../services/*.js',
             'lib/*.js',
+            'init.js',
             '../*.js',
             '../../templates/*.html',
             'tests/*.js',
