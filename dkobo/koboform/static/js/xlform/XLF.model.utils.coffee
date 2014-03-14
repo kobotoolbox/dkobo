@@ -1,6 +1,4 @@
 XLF.createSurveyFromCsv = (csv_repr)->
-  csv.settings.parseFloat = false
-
   cobj = csv.sheeted(csv_repr)
   $survey = if (sht = cobj.sheet "survey") then sht.toObjects() else []
   $choices = if (sht = cobj.sheet "choices") then sht.toObjects() else []
