@@ -12,8 +12,6 @@ _.extend(Backbone.Validation.validators, {
     },
     unique: function (value, attr, customValue, model) {
         var rows = model.getSurvey().rows.pluck(model.key);
-        rows.pop();
-        rows.pop();
         var values = _.map(
             rows,
             function (rd) {

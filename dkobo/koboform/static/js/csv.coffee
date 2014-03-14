@@ -49,7 +49,7 @@ class Csv
   constructor: (param, opts={})->
     if _isString param
       @string = param
-      rows = csv.toArray removeTrailingNewlines param
+      rows = csv.toArray param
       @rows = arrayToObjects rows
       [@columns, @rowArray...] = rows
     else if _isArray param
@@ -156,17 +156,18 @@ csv.fromArray = (arr, opts={})->
   csv.fromStringArray outpArr, opts
 
 csv.toObjects = (csvString)->
-  arrayToObjects csv.toArray removeTrailingNewlines csvString
+  arrayToObjects csv.toArray csvString
 
 arrayToObjects = (arr)->
   [headRow, rows...] = arr
   for row in rows when !(row.length is 1 and row[0] is "")
     obj = {}
-    obj[key] = row[i]  for key, i in headRow
+    for key, i in headRow
+      obj[key] = row[i]
     obj
 
 csv.toObject = (csvString, opts)->
-  arrayToObject csv.toArray(removeTrailingNewlines csvString), opts
+  arrayToObject csv.toArray(csvString), opts
 
 arrayToObject = (arr, opts={})->
   [headRow, rows...] = arr
@@ -196,6 +197,8 @@ removeTrailingNewlines = (str)-> str.replace(/(\n+)$/g, "")
 # can be overriden in the second argument.
 
 csv.toArray = (strData) ->
+  if csv.settings.removeTrailingNewlines
+    strData = removeTrailingNewlines(strData)
   strDelimiter = csv.settings.delimiter
 
   rows = []
@@ -206,20 +209,32 @@ csv.toArray = (strData) ->
   # * Delimiters
   # * quoted fields
   # * and standard fields
-  objPattern = ///
+  csv._objPattern = ///
     (
       \ #{strDelimiter}
-      | \r?\n
-      | \r
-      | ^
+      |
+      \r?\n
+      |
+      \r
+      |
+      ^
     )
     (?:
-      "([^"]*(?:""[^"]*)*)"
-      | ( [^"\ #{strDelimiter}\r\n]* )
+      "(
+        (?:
+          \\"
+          |
+          [^"]
+        )*
+      )"
+      |
+      (
+        [^"\ #{strDelimiter}\r\n]*
+      )
     )
   ///gi
 
-  while arrMatches = objPattern.exec(strData)
+  while arrMatches = csv._objPattern.exec(strData)
     strMatchedDelimiter = arrMatches[1]
 
     if strMatchedDelimiter.length and (strMatchedDelimiter isnt strDelimiter)
@@ -227,8 +242,10 @@ csv.toArray = (strData) ->
       row = []
 
     if arrMatches[2]
-      strMatchedValue = arrMatches[2].replace /""/g, "\""
+      # cell is wrapped in quotes
+      strMatchedValue = JSON.parse('"'+arrMatches[2]+'"')
     else
+      # cell is not wrapped in quotes
       strMatchedValue = arrMatches[3]
 
     if csv.settings.parseFloat and !isNaN (parsedMatch = parseFloat strMatchedValue)
@@ -357,7 +374,8 @@ _keys           = _nativeKeys or (obj)->
 
 csv.settings =
   delimiter: ","
-  parseFloat: true
+  parseFloat: false
+  removeTrailingNewlines: true
 
 @csv = csv
 
