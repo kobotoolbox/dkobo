@@ -14,7 +14,7 @@ Details pulled from ODK documents / google docs. Notably this one:
 XLF.defaultSurveyDetails =
   start_time:
     name: "start"
-    label: "Start time"
+    label: "start time"
     description: "Records when the survey was begun"
     default: true
     asJson:
@@ -22,23 +22,39 @@ XLF.defaultSurveyDetails =
       name: "start"
   end_time:
     name: "end"
-    label: "End time"
-    description: "Records when the survey was marked as completed"
+    label: "end time"
+    description: "tecords when the survey was marked as completed"
     default: true
     asJson:
       type: "end"
       name: "end"
   today:
     name: "today"
-    label: "Today"
-    description: "Includes todays date"
+    label: "today"
+    description: "includes today's date"
     default: false
     asJson:
       type: "today"
       name: "today"
+  simserial:
+    name: "simserial"
+    label: "sim serial"
+    description: "records the serial number of the network sim card"
+    default: false
+    asJson:
+      type: "simserial"
+      name: "simserial"
+  subscriberid:
+    name: "subscriberid"
+    label: "subscriber id"
+    description: "records the subscriber id of the sim card"
+    default: false
+    asJson:
+      type: "subscriberid"
+      name: "subscriberid"
   deviceid:
     name: "deviceid"
-    label: "Device ID number"
+    label: "device id"
     aliases: ["imei"]
     description: "Records the internal device ID number (works on Android phones)"
     default: false
@@ -47,7 +63,7 @@ XLF.defaultSurveyDetails =
       name: "deviceid"
   phoneNumber:
     name: "phonenumber"
-    label: "Phone number"
+    label: "phone number"
     description: "Records the device's phone number, when available"
     default: false
     asJson:
