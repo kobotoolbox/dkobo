@@ -152,7 +152,7 @@ class XLF.Model.DecimalResponseModel extends XLF.Model.ResponseModel
       pattern: 'number'
       msg: 'Number must be decimal'
   set_value: (value) ->
-    if typeof value == 'undefined'
+    if typeof value == 'undefined' || value == ''
       return
     value = value.replace(/\s/g, '')
     final_value = +value
@@ -160,7 +160,7 @@ class XLF.Model.DecimalResponseModel extends XLF.Model.ResponseModel
       final_value = +(value.replace(',', '.'))
       if isNaN(final_value)
         if value.lastIndexOf(',') > value.lastIndexOf('.')
-          final_value = +(value.replace('.', '').replace(',', '.'))
+          final_value = +(value.replace(/\./g, '').replace(',', '.'))
         else
           final_value = +(value.replace(',', ''))
     @set('value', final_value, validate: true)
