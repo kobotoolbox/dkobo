@@ -374,7 +374,7 @@ _keys           = _nativeKeys or (obj)->
 
 csv.settings =
   delimiter: ","
-  parseFloat: true
+  parseFloat: false
   removeTrailingNewlines: true
 
 @csv = csv
