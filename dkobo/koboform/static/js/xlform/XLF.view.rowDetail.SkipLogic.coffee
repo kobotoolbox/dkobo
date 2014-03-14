@@ -138,7 +138,7 @@ class XLF.Views.SkipLogicTextResponse extends XLF.Views.Base
 
 class XLF.Views.SkipLogicValidatingTextResponseView extends XLF.Views.SkipLogicTextResponse
   render: () ->
-    @setElement('<div><input placeholder="response value" class="skiplogic__responseval" type="text" /><div></div></div>')
+    @setElement('<div class="skiplogic__responseval-wrapper"><input placeholder="response value" class="skiplogic__responseval" type="text" /><div></div></div>')
     @$error_message = @$('div')
     @model.bind('validated:invalid', @show_invalid_view)
     @model.bind('validated:valid', @clear_invalid_view)
@@ -215,7 +215,10 @@ class XLF.Views.SkipLogicCriterion extends XLF.Views.Base
 
   change_response: (@response_value_view) ->
     @response_value_view.render()
-    @$response_value.replaceWith(@response_value_view.el)
+    if @$('.skiplogic__responseval-wrapper').length > 0
+      @$('.skiplogic__responseval-wrapper').replaceWith(@response_value_view.el)
+    else
+      @$response_value.replaceWith(@response_value_view.el)
 
     @$response_value = @$('.skiplogic__responseval')
 

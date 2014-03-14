@@ -154,8 +154,11 @@ class XLF.Model.DecimalResponseModel extends XLF.Model.ResponseModel
   set_value: (value) ->
     if typeof value == 'undefined' || value == ''
       return
-    value = value.replace(/\s/g, '')
-    final_value = +value
+    if typeof value == 'number'
+      final_value = value
+    else
+      value = value.replace(/\s/g, '')
+      final_value = +value
     if isNaN(final_value)
       final_value = +(value.replace(',', '.'))
       if isNaN(final_value)
