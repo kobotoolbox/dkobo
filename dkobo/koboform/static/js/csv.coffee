@@ -222,11 +222,26 @@ csv.toArray = (strData) ->
     (?:
       "(
         (?:
-          \\"
-          |
-          [^"]
-        )*
+          (?:
+            [^\\]
+            |
+            \\\\
+            |
+            [\\(?=")]"
+            |
+            [\\(?!")]
+          )*?
+        )
       )"
+      # > a simpler version that fails
+      # > when cell ends with a backslash:
+      # "(
+      #   (?:
+      #     \\"
+      #     |
+      #     [^"]
+      #   )*
+      # )"
       |
       (
         [^"\ #{strDelimiter}\r\n]*
