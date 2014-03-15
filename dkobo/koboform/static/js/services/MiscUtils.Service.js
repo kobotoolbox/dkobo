@@ -42,11 +42,19 @@ function MiscUtilsService($rootScope) {
         _successFn = successFn
     }
 
-    this.alert = function (message) {
-        alert(message);
+    this.alert = function (message, type) {
+        type = type || 'Information';
+        $('.alert-modal').text(message).dialog('option', {
+            title: type,
+            width: 500
+        }).dialog('open');
     };
 
     this.handleXhrError = function (xhrResult) {
-        _this.alert('The server encountered an error: ' + xhrResult.status + ": " + xhrResult.statusText);
+        if(xhrResult.responseJSON && xhrResult.responseJSON.error) {
+            _this.alert('Error: ' + xhrResult.responseJSON.error, 'Error');
+        } else {
+            _this.alert('The server encountered an error: ' + xhrResult.status + ": " + xhrResult.statusText, 'Error');
+        }
     };
 }

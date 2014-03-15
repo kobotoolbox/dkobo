@@ -24,6 +24,7 @@
       <link rel="stylesheet" type="text/x-scss" href="{% static 'css/xlformbuilder-styles.scss' %}">
       <link rel="stylesheet" type="text/x-scss" href="{% static 'css/modal.css' %}">
       <link rel="stylesheet" href="{% static 'css/select2.css' %}">
+      <link rel="stylesheet" href="{% static 'css/jquery-ui-1.10.4.custom.css' %}">
     {% endcompress %}
 
     <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.7.0/modernizr.min.js"></script>
@@ -70,7 +71,7 @@
       <script src="{% static 'js/services/MiscUtils.Service.js' %}"></script>
       <script src="{% static 'js/services/Configuration.Service.js' %}"></script>
       <script src="{% static 'js/modal.js' %}"></script>
-      <script src="{% static 'js/jquery-ui-1.10.3.custom.js' %}"></script>
+      <script src="{% static 'js/jquery-ui-1.10.4.custom.js' %}"></script>
       <script type="text/coffeescript" src="{% static 'js/csv.coffee' %}"></script>
 	  {% include 'xlform_scripts.html' %}
       {# ---------------------- File Upload --------------------------- #}
@@ -123,6 +124,7 @@
       </header>
 
       <section ng-view class="content" ng-class="additionalClasses"></section>
+      <div class="alert-modal"></div>
     </main>
 
   {% endverbatim %}
