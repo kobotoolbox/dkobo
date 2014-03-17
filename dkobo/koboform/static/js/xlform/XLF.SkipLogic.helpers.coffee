@@ -5,8 +5,6 @@ class XLF.SkipLogicPresenter
     @question = @model._get_question()
     question_type = @question.get_type()
 
-    operator_type = @model.get('operator').get_type()
-
     @builder.operator_type = operator_type = @model.get('operator').get_type()
 
 
@@ -38,7 +36,7 @@ class XLF.SkipLogicPresenter
     @model.change_response response_text
   constructor: (@model, @view, @builder) ->
     @view.presenter = @
-    @question = @builder.survey.findRowByName @model.get('question_name')
+    @question = @model._get_question()
   render: (destination) ->
     @view.render().attach_to(destination)
     @view.question_picker_view.fill_value(@model.get('question_cid'))

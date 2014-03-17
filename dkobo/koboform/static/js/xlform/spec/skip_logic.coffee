@@ -549,23 +549,50 @@ describe 'skip logic helpers', () ->
     _builder = null
     beforeEach () ->
       _model = sinon.stubObject XLF.SkipLogicCriterion
+      _model._get_question.returns sinon.stubObject XLF.Row
+      _model.get.withArgs('operator').returns(sinon.stubObject XLF.Operator)
+      _model.get.withArgs('response_value').returns(sinon.stubObject XLF.Model.ResponseModel)
+
       _view = sinon.stubObject XLF.Views.SkipLogicCriterion
-      _builder = sinon.stubObject
-      _presenter = new XLF.SkipLogicPresenter @model, @view, @builder
+      _view.operator_picker_view = sinon.stubObject XLF.Views.OperatorPicker
+      _view.response_value_view = sinon.stubObject XLF.Views.SkipLogicEmptyResponse
+
+      _builder = sinon.stubObject XLF.SkipLogicBuilder
+      _builder.build_response_view.returns(sinon.stubObject XLF.Views.SkipLogicEmptyResponse)
+      _presenter = new XLF.SkipLogicPresenter _model, _view, _builder
+
     describe 'change question', () ->
       it 'changes the question in the model', () ->
-      it 'changes the response model to the question types model', () ->
-      it 'attaches the response value model to the view', () ->
-      it 'updates the operator view according to selected question type', () ->
-      it 'updates the response view if operator is changed', () ->
-      it 'changes the operator model if current operator not in new operator list', () ->
-      it 'changes the response value on the criterion model', () ->
-      it 'fills the value into the updated operator picker view', () ->
-      it 'fills the value into the updated response view', () ->
+        _presenter.change_question 'test'
 
-      it 'updates the builders question type', () ->
-      it 'rebinds the question to itself', () ->
-      it 'updates the builders operator type', () ->
+        expect(_model.change_question).toHaveBeenCalledWith 'test'
+      it 'attaches the response value model to the view', () ->
+        response_view_stub = sinon.stubObject XLF.Views.SkipLogicEmptyResponse
+        response_model_stub = sinon.stubObject XLF.Model.ResponseModel
+        _model.get.withArgs('response_value').returns response_model_stub
+        _builder.build_response_view.returns response_view_stub
+
+        _presenter.change_question 'test'
+
+        expect(response_view_stub.model).toBe response_model_stub
+      it 'updates the operator view according to selected question type', () ->
+        operator_view_stub = sinon.stubObject XLF.Views.OperatorPicker
+
+        _model._get_question().get_type.returns 'test type'
+        _builder.build_operator_view.withArgs('test type').returns operator_view_stub
+
+        _presenter.change_question 'test'
+        expect(_view.change_operator).toHaveBeenCalledWith operator_view_stub
+      it "fills updated operator picker view's value", () ->
+        _model.get('operator').get_value.returns -1
+        _presenter.change_question 'test'
+
+        expect(_view.operator_picker_view.fill_value).toHaveBeenCalledWith -1
+      it "fills updated response view's value", () ->
+        _model.get('response_value').get.withArgs('value').returns -1
+        _presenter.change_question 'test'
+
+        expect(_view.response_value_view.fill_value).toHaveBeenCalledWith -1
 
     ###******************************************************************************************************************************
     ***---------------------------------------------------------------------------------------------------------------------------***

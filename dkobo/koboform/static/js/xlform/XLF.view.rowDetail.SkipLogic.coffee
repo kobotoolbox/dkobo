@@ -101,6 +101,7 @@ class XLF.Views.QuestionPicker extends XLF.Views.Base
     @$el.on 'change', () =>
       @$el.children(':first').prop('disabled', true)
 
+    XLF.dispatcher().on 'change:label', () => @render()
     @
 
   constructor: (@questions) ->

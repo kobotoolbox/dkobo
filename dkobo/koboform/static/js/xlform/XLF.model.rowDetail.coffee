@@ -38,6 +38,7 @@ class XLF.RowDetail extends XLF.BaseModel
       @_parent.trigger "change", @key, val, ctxt
       @_parent.trigger "detail-change", @key, val, ctxt
       @getSurvey().trigger "row-detail-change", @_parent, @key, val, ctxt
+      XLF.dispatcher().trigger 'change:' + @key
     if @key is "type"
       @on "change:list", (rd, val, ctxt)=>
         @_parent.trigger "change", @key, val, ctxt
