@@ -137,7 +137,7 @@ class @SurveyApp extends Backbone.View
 
   onEscapeKeydown: -> #noop. to be overridden
   previewButtonClick: (evt)->
-    if evt.shiftKey and evt.altKey
+    if evt.shiftKey #and evt.altKey
       evt.preventDefault()
       viewUtils.debugFrame @survey.toCSV()
       @onEscapeKeydown = viewUtils.debugFrame.close
@@ -145,10 +145,15 @@ class @SurveyApp extends Backbone.View
       XLF.enketoIframe.fromCsv @survey.toCSV(),
         previewServer: "http://kfdev.kobotoolbox.org"
         onSuccess: => @onEscapeKeydown = XLF.enketoIframe.close
-        onError: (errArgs...)->
-          console?.error.apply(console, errArgs)
+        onError: (errArgs...)=>
+          @alert errArgs
     ``
 
+  alert: (message) ->
+      $('.alert-modal').text(message).dialog('option', {
+          title: 'Error'
+          width: 500
+      }).dialog 'open'
   downloadButtonClick: (evt)->
     # Download = save a CSV file to the disk
     surveyCsv = @survey.toCSV()

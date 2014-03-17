@@ -74,7 +74,12 @@ kobo.config(function ($routeProvider, $locationProvider, $httpProvider) {
 
 kobo.run(function ($http, $cookies, $miscUtils) {
     $http.defaults.headers.common['X-CSRFToken'] = $cookies.csrftoken;
-
+    $(function () {
+        $('.alert-modal').dialog({
+            autoOpen: false,
+            modal: true
+        });
+    });
     // jQuery.fileupload for importing forms to the user's form list.
 //    $miscUtils.bootstrapFileUploader();
 });
