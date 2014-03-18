@@ -236,10 +236,8 @@ class SurveyDraftViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        items = SurveyDraft.objects.filter(user=user)
-        for item in items:
-            item.body = ''
-        return items
+        return SurveyDraft.objects.filter(user=user).values('id', 'name', 'description', 'date_modified')
+
 
     serializer_class = SurveyDraftSerializer
 
