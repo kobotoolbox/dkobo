@@ -599,12 +599,24 @@ describe 'skip logic helpers', () ->
     ******************************************************************************************************************************###
 
     describe 'change operator', () ->
-      it 'changes the response model to the question types model', () ->
       it 'changes the operator model using the operator type id', () ->
-      it 'binds the new response model to the response view', () ->
-      it 'fills the value into the updated response view', () ->
+        _presenter.change_operator 'test'
 
-      it 'updates the builders operator type', () ->
+        expect(_model.change_operator).toHaveBeenCalledWith 'test'
+      it 'binds the new response model to the response view', () ->
+        response_view_stub = sinon.stubObject XLF.Views.SkipLogicEmptyResponse
+        response_model_stub = sinon.stubObject XLF.Model.ResponseModel
+        _model.get.withArgs('response_value').returns response_model_stub
+        _builder.build_response_view.returns response_view_stub
+
+        _presenter.change_operator 'test'
+
+        expect(response_view_stub.model).toBe response_model_stub
+      it 'fills the value into the updated response view', () ->
+        _model.get('response_value').get.withArgs('value').returns -1
+        _presenter.change_question 'test'
+
+        expect(_view.response_value_view.fill_value).toHaveBeenCalledWith -1
 
     ###******************************************************************************************************************************
     ***---------------------------------------------------------------------------------------------------------------------------***
