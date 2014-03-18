@@ -1,5 +1,5 @@
 from django.shortcuts import render_to_response, HttpResponse
-from django.http import HttpResponseServerError, HttpResponseBadRequest
+from django.http import HttpResponseBadRequest
 from django.template import RequestContext
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.contrib.auth.decorators import login_required
@@ -29,7 +29,6 @@ def export_form(request, id):
     if file_format == "xml":
         contents = survey_draft.to_xml()
         mimetype = 'application/force-download'
-        disposition = 'attachment; filename=%s.%s' % (survey_draft.id_string, file_format)
         # content_length = len(contents) + 2 # the length of the string != the length of the file
     elif file_format == "xls":
         contents = survey_draft.to_xls()
@@ -42,9 +41,11 @@ def export_form(request, id):
         mimetype = 'text/csv; charset=utf-8'
         # content_length = len(contents)
     else:
-        return HttpResponseBadRequest("Format not supported: '%s'. Supported formats are [xml,xls,csv]." % file_format)
+        return HttpResponseBadRequest(
+            "Format not supported: '%s'. Supported formats are [xml,xls,csv]." % file_format)
     response = HttpResponse(contents, mimetype=mimetype)
-    response['Content-Disposition'] = 'attachment; filename=%s.%s' % (survey_draft.id_string, file_format)
+    response['Content-Disposition'] = 'attachment; filename=%s.%s' % (survey_draft.id_string,
+                                                                      file_format)
     # response['Content-Length'] = content_length
     return response
 
@@ -74,6 +75,7 @@ def survey_drafts(request, sdid=0):
     elif request.method == 'PUT':
         return update_survey_draft(request, sdid)
 
+
 @csrf_exempt
 def survey_previews(request):
     output_dict = {}
@@ -96,12 +98,17 @@ def survey_previews(request):
                         'Access-Control-Allow-Origin': '*',
                         'Access-Control-Max-Age': '1000',
                         'Access-Control-Allow-Headers': '*'}
-    for k, v in response_options.items(): response[k]=v
+    for k, v in response_options.items():
+        response[k] = v
     return response
+
 
 @csrf_exempt
 def get_survey_preview(request, unique_string):
-    return HttpResponse(SurveyPreview.objects.get(unique_string=unique_string).xml, content_type="application/xml")
+    return HttpResponse(
+        SurveyPreview.objects.get(unique_string=unique_string).xml,
+        content_type="application/xml")
+
 
 @login_required
 def list_survey_drafts(request):
@@ -179,7 +186,11 @@ def list_forms_in_library(request):
 def jasmine_spec(request):
     return render_to_response("jasmine_spec.html")
 
-XLS_CONTENT_TYPES = ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"]
+XLS_CONTENT_TYPES = [
+    "application/vnd.ms-excel",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+]
+
 
 @login_required
 def import_survey_draft(request):
@@ -215,7 +226,7 @@ def import_survey_draft(request):
             response_code = 500
             output[u'error'] = str(err)
     else:
-        response_code = 204  #Error 204: No input
+        response_code = 204  # Error 204: No input
         output[u'error'] = "No file posted"
     return HttpResponse(json.dumps(output), content_type="application/json", status=response_code)
 
@@ -225,7 +236,10 @@ class SurveyDraftViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return SurveyDraft.objects.filter(user=user)
+        items = SurveyDraft.objects.filter(user=user)
+        for item in items:
+            item.body = ''
+        return items
 
     serializer_class = SurveyDraftSerializer
 
