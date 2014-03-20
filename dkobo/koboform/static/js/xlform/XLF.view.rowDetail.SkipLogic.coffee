@@ -100,9 +100,14 @@ class XLF.Views.QuestionPicker extends XLF.Views.Base
 
     @$el.on 'change', () =>
       @$el.children(':first').prop('disabled', true)
+
+    @survey.on 'row-detail-change', (row, key) =>
+      if key == 'label'
+        @render()
+
     @
 
-  constructor: (@questions) ->
+  constructor: (@questions, @survey) ->
     super()
 
 class XLF.Views.OperatorPicker extends XLF.Views.Base
@@ -228,7 +233,7 @@ class XLF.Views.SkipLogicCriterion extends XLF.Views.Base
 
 class XLF.Views.SkipLogicViewFactory
   create_question_picker: (questions) ->
-    new XLF.Views.QuestionPicker questions
+    new XLF.Views.QuestionPicker questions, @survey
   create_operator_picker: (operators) ->
     new XLF.Views.OperatorPicker operators
   create_response_value_view: (type, responses) ->
@@ -239,3 +244,4 @@ class XLF.Views.SkipLogicViewFactory
       when 'integer', 'decimal' then new XLF.Views.SkipLogicValidatingTextResponseView
   create_criterion_view: (question_picker_view, operator_picker_view, response_value_view, presenter) ->
     return new XLF.Views.SkipLogicCriterion question_picker_view, operator_picker_view, response_value_view, presenter
+  constructor: (@survey) ->
