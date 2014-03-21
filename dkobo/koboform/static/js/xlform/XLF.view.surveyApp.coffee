@@ -81,7 +81,7 @@ class @SurveyApp extends Backbone.View
         scroll: false
         stop: (evt, ui)->
           itemSet = ui.item.parent().find("> .xlf-row-view")
-          ui.item.trigger "drop", ui.item.index(itemSet)
+          ui.item.trigger "drop", itemSet.index(ui.item)
         activate: (evt, ui)=>
           @formEditorEl.addClass("insort")
           ui.item.addClass("sortable-active")
