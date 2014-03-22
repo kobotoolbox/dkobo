@@ -80,7 +80,7 @@ describe 'skip logic model', () ->
         rows:
           get: sinon.stub().withArgs('test').returns(getType: () -> operators: [1, 2])
       _criterion = new XLF.SkipLogicCriterion
-      _criterion._get_question = sinon.stub().returns(operators: [1, 2, 3])
+
       _operator =
         serialize: sinon.stub().withArgs('test question', 'test value').returns 'test criterion'
       _factory = sinon.stub()
@@ -127,6 +127,19 @@ describe 'skip logic model', () ->
     ***---------------------------------------------------------------------------------------------------------------------------***
     ******************************************************************************************************************************###
 
+    describe 'get question', () ->
+      it 'returns current question', () ->
+        _criterion.survey =
+          rows:
+            get: sinon.stub().withArgs('test').returns 'success'
+        _criterion.set 'question_cid', 'test'
+
+        expect(_criterion._get_question()).toBe 'success'
+
+    ###******************************************************************************************************************************
+    ***---------------------------------------------------------------------------------------------------------------------------***
+    ******************************************************************************************************************************###
+
     describe 'change question', () ->
       beforeEach () ->
         _criterion.survey = _survey
@@ -149,13 +162,11 @@ describe 'skip logic model', () ->
         expect(_criterion.get 'question_cid').toBe 'test question'
 
       it 'changes current operator if not in new question type', () ->
-        _criterion.change_operator = sinon.spy()
         _criterion.change_question('test')
 
         expect(_criterion.change_operator).toHaveBeenCalledWith 1
 
       it 'keeps current operator if in new question type', () ->
-        _criterion.change_operator = sinon.spy()
         _criterion._get_question = sinon.stub().withArgs('operator in question type').returns(get_type: () -> {operators: [-1], name: 'test'})
         _criterion.change_question('operator in question type')
 
@@ -171,6 +182,16 @@ describe 'skip logic model', () ->
         _criterion.change_question('test')
 
         expect(_criterion.change_response).not.toHaveBeenCalled()
+
+      it 'changes operator when question type changes', () ->
+        get_question_stub = sinon.stub()
+        get_question_stub.onCall(0).returns get_type: () -> {response_type: 'text', operators: [1, 2]}
+        get_question_stub.returns get_type: () -> {operators: [-1], name: 'test'}
+
+        _criterion._get_question = get_question_stub
+        _criterion.change_question('test')
+
+        expect(_criterion.change_operator).toHaveBeenCalledWith -1
 
     ###******************************************************************************************************************************
     ***---------------------------------------------------------------------------------------------------------------------------***
@@ -213,6 +234,22 @@ describe 'skip logic model', () ->
 
         expect(_criterion.get 'operator').toBe 'test operator'
 
+
+    ###******************************************************************************************************************************
+    ***---------------------------------------------------------------------------------------------------------------------------***
+    ******************************************************************************************************************************###
+
+    describe 'set option names', () ->
+      it 'sets option names to sluggified version of their labels', () ->
+        options = [
+          new Backbone.Model(label: 'Option 1')
+          new Backbone.Model(label: 'Option 2')
+        ]
+
+        _criterion.set_option_names options
+
+        expect(options[0].get('name')).toBe 'option_1'
+        expect(options[1].get('name')).toBe 'option_2'
 
     ###******************************************************************************************************************************
     ***---------------------------------------------------------------------------------------------------------------------------***
@@ -290,6 +327,18 @@ describe 'skip logic model', () ->
 
       expect(_operator.get_value()).toBe '1'
 
+    describe 'serialize method', () ->
+      it 'throws an exception when serialize is called', () ->
+        expect(() -> _operator.serialize()).toThrow 'Not Implemented'
+
+    describe 'get type method', () ->
+      it 'gets the correct type', () ->
+        expect(_operator.get_type()).toBe XLF.operator_types[0]
+
+    describe 'get id method', () ->
+      it 'gets the id', () ->
+        expect(_operator.get_id()).toBe 1
+
   ###******************************************************************************************************************************
   ***---------------------------------------------------------------------------------------------------------------------------***
   ******************************************************************************************************************************###
@@ -338,6 +387,26 @@ describe 'skip logic model', () ->
     it 'constructs negated criterion', () ->
       operator = new XLF.ExistenceSkipLogicOperator '='
       expect(operator.get('is_negated')).toBeTruthy()
+
+  ###******************************************************************************************************************************
+  ***---------------------------------------------------------------------------------------------------------------------------***
+  ******************************************************************************************************************************###
+
+  describe 'Response Model', () ->
+    _response_model = null
+
+    beforeEach () ->
+      _response_model = new XLF.Model.ResponseModel()
+
+    describe 'get type', () ->
+      it 'gets the type name', () ->
+        _response_model.set 'type', 'test'
+        expect(_response_model.get_type()).toBe 'test'
+
+    describe 'set value', () ->
+      it 'sets the value correctly', () ->
+        _response_model.set_value 'test'
+        expect(_response_model.attributes.value).toBe 'test'
 
   ###******************************************************************************************************************************
   ***---------------------------------------------------------------------------------------------------------------------------***
@@ -409,7 +478,9 @@ describe 'skip logic model', () ->
   ******************************************************************************************************************************###
 
   describe 'decimal response model', () ->
-    _response_model = new XLF.Model.DecimalResponseModel()
+    _response_model = null
+    beforeEach () ->
+      _response_model = new XLF.Model.DecimalResponseModel()
     it 'sets state to valid when passed value is integer', () ->
       _response_model.set('value', 123, validate:true)
 
@@ -437,6 +508,23 @@ describe 'skip logic model', () ->
 
       expect(_response_model.isValid()).toBeTruthy()
       expect(_response_model.get('value')).toBe(1001004.8)
+    it 'parses decimals where period is thousands and comma is decimal separator', () ->
+      _response_model.set_value('-1.001.004,8')
+
+      expect(_response_model.isValid()).toBeTruthy()
+      expect(_response_model.get('value')).toBe(-1001004.8)
+    it "doesn't execute when value is undefined", () ->
+      _response_model.set_value()
+
+      expect(_response_model.get('value')).toBeUndefined()
+    it "doesn't execute when value is an empty string", () ->
+      _response_model.set_value('')
+
+      expect(_response_model.get('value')).toBeUndefined()
+    it 'uses unaltered value when type is number', () ->
+      _response_model.set_value(1)
+
+      expect(_response_model.get('value')).toBe 1
     it 'strips spaces out of value', () ->
       _response_model.set_value('1  0 0 4,8')
 
@@ -455,32 +543,80 @@ describe 'skip logic model', () ->
 
 describe 'skip logic helpers', () ->
   describe 'presenter', () ->
+    _presenter = null
+    _model = null
+    _view = null
+    _builder = null
+    beforeEach () ->
+      _model = sinon.stubObject XLF.SkipLogicCriterion
+      _model._get_question.returns sinon.stubObject XLF.Row
+      _model.get.withArgs('operator').returns(sinon.stubObject XLF.Operator)
+      _model.get.withArgs('response_value').returns(sinon.stubObject XLF.Model.ResponseModel)
+
+      _view = sinon.stubObject XLF.Views.SkipLogicCriterion
+      _view.operator_picker_view = sinon.stubObject XLF.Views.OperatorPicker
+      _view.response_value_view = sinon.stubObject XLF.Views.SkipLogicEmptyResponse
+
+      _builder = sinon.stubObject XLF.SkipLogicBuilder
+      _builder.build_response_view.returns(sinon.stubObject XLF.Views.SkipLogicEmptyResponse)
+      _presenter = new XLF.SkipLogicPresenter _model, _view, _builder
+
     describe 'change question', () ->
       it 'changes the question in the model', () ->
-      it 'changes the response model to the question types model', () ->
-      it 'attaches the response value model to the view', () ->
-      it 'updates the operator view according to selected question type', () ->
-      it 'updates the response view if operator is changed', () ->
-      it 'changes the operator model if current operator not in new operator list', () ->
-      it 'changes the response value on the criterion model', () ->
-      it 'fills the value into the updated operator picker view', () ->
-      it 'fills the value into the updated response view', () ->
+        _presenter.change_question 'test'
 
-      it 'updates the builders question type', () ->
-      it 'rebinds the question to itself', () ->
-      it 'updates the builders operator type', () ->
+        expect(_model.change_question).toHaveBeenCalledWith 'test'
+      it 'attaches the response value model to the view', () ->
+        response_view_stub = sinon.stubObject XLF.Views.SkipLogicEmptyResponse
+        response_model_stub = sinon.stubObject XLF.Model.ResponseModel
+        _model.get.withArgs('response_value').returns response_model_stub
+        _builder.build_response_view.returns response_view_stub
+
+        _presenter.change_question 'test'
+
+        expect(response_view_stub.model).toBe response_model_stub
+      it 'updates the operator view according to selected question type', () ->
+        operator_view_stub = sinon.stubObject XLF.Views.OperatorPicker
+
+        _model._get_question().get_type.returns 'test type'
+        _builder.build_operator_view.withArgs('test type').returns operator_view_stub
+
+        _presenter.change_question 'test'
+        expect(_view.change_operator).toHaveBeenCalledWith operator_view_stub
+      it "fills updated operator picker view's value", () ->
+        _model.get('operator').get_value.returns -1
+        _presenter.change_question 'test'
+
+        expect(_view.operator_picker_view.fill_value).toHaveBeenCalledWith -1
+      it "fills updated response view's value", () ->
+        _model.get('response_value').get.withArgs('value').returns -1
+        _presenter.change_question 'test'
+
+        expect(_view.response_value_view.fill_value).toHaveBeenCalledWith -1
 
     ###******************************************************************************************************************************
     ***---------------------------------------------------------------------------------------------------------------------------***
     ******************************************************************************************************************************###
 
     describe 'change operator', () ->
-      it 'changes the response model to the question types model', () ->
       it 'changes the operator model using the operator type id', () ->
-      it 'binds the new response model to the response view', () ->
-      it 'fills the value into the updated response view', () ->
+        _presenter.change_operator 'test'
 
-      it 'updates the builders operator type', () ->
+        expect(_model.change_operator).toHaveBeenCalledWith 'test'
+      it 'binds the new response model to the response view', () ->
+        response_view_stub = sinon.stubObject XLF.Views.SkipLogicEmptyResponse
+        response_model_stub = sinon.stubObject XLF.Model.ResponseModel
+        _model.get.withArgs('response_value').returns response_model_stub
+        _builder.build_response_view.returns response_view_stub
+
+        _presenter.change_operator 'test'
+
+        expect(response_view_stub.model).toBe response_model_stub
+      it 'fills the value into the updated response view', () ->
+        _model.get('response_value').get.withArgs('value').returns -1
+        _presenter.change_question 'test'
+
+        expect(_view.response_value_view.fill_value).toHaveBeenCalledWith -1
 
     ###******************************************************************************************************************************
     ***---------------------------------------------------------------------------------------------------------------------------***
