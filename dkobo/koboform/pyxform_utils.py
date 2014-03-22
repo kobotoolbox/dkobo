@@ -79,14 +79,15 @@ def convert_xls_to_csv_string(xls_file_object, strip_empty_rows=True):
         return result
 
     workbook = xlrd.open_workbook(file_contents=xls_file_object.read())
-    csvout = StringIO.StringIO()
-    writer = csv.writer(csvout, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-
+    csv_out = StringIO.StringIO()
+    csv_opts = {'quotechar':'"', 'doublequote':False, 'escapechar':'\\',
+                'delimiter':',', 'quoting':csv.QUOTE_ALL}
+    writer = csv.writer(csv_out, **csv_opts)
     for sheet in workbook.sheets():
         writer.writerow([sheet.name])
         for row in _sheet_to_lists(sheet):
             writer.writerow([s.encode("utf-8") for s in ([""] + row)])
-    return csvout.getvalue()
+    return csv_out.getvalue()
 
 def _add_contents_to_sheet(sheet, contents):
     cols = []
