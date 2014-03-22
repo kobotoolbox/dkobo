@@ -9,8 +9,8 @@ from django.test.client import Client
 from pyxform import xls2json_backends
 from dkobo.koboform.models import SurveyDraft, SurveyPreview
 from dkobo.koboform import pyxform_utils
+from dkobo.koboform import utils
 import json
-import utils
 
 
 text = """"survey",,,,,
