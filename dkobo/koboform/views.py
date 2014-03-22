@@ -1,4 +1,4 @@
-from django.shortcuts import render_to_response, HttpResponse
+from django.shortcuts import render_to_response, HttpResponse, get_object_or_404
 from django.http import HttpResponseBadRequest
 from django.template import RequestContext
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
@@ -7,7 +7,8 @@ from models import SurveyDraft, SurveyPreview
 from django.forms.models import model_to_dict
 from rest_framework import viewsets
 from rest_framework.decorators import action
-from serializers import SurveyDraftSerializer
+from rest_framework.response import Response
+from serializers import ListSurveyDraftSerializer, DetailSurveyDraftSerializer
 import json
 import utils
 
@@ -230,16 +231,20 @@ def import_survey_draft(request):
         output[u'error'] = "No file posted"
     return HttpResponse(json.dumps(output), content_type="application/json", status=response_code)
 
-
 class SurveyDraftViewSet(viewsets.ModelViewSet):
     model = SurveyDraft
+    serializer_class = ListSurveyDraftSerializer
 
     def get_queryset(self):
         user = self.request.user
-        return SurveyDraft.objects.filter(user=user).values('id', 'name', 'description', 'date_modified')
+        return SurveyDraft.objects.filter(user=user)
 
-
-    serializer_class = SurveyDraftSerializer
+    def retrieve(self, request, pk=None):
+        user = request.user
+        queryset = SurveyDraft.objects.filter(user=user)
+        survey_draft = get_object_or_404(queryset, pk=pk)
+        serializer = DetailSurveyDraftSerializer(survey_draft)
+        return Response(serializer.data)
 
     @action(methods=['DELETE'])
     def delete_survey_draft(self, request, pk=None):
