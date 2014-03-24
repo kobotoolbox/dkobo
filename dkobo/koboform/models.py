@@ -13,7 +13,7 @@ class SurveyDraft(models.Model):
     description = models.CharField(max_length=255, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
-    in_question_library = models.BooleanField(default=False)
+    asset_type = models.CharField(max_length=32, null=True)
 
     @property
     def _pyxform_survey(self):
