@@ -952,13 +952,11 @@ input[type="button"].btn--block {
 .question-filter__select-all {
     width: 200px;
     position: absolute;
-    left: 20px;
+    left: 0px;
     top: 46px;
 }
 
 .question-filter__select-all-checkbox {
-    position: absolute;
-    top: 50px;
 }
 
 .question-filter__show-responses {
@@ -1067,7 +1065,7 @@ input[type="button"].btn--block {
     color: #38a1f1;
 }
 
-.question__type-icon--expanded {
+.question__type--expanded-icon {
     color: #38a1f1;
 }
 
