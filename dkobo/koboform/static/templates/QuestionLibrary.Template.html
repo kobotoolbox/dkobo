@@ -87,7 +87,7 @@
         <option value="alpha-empty">A - Z, Empty First</option>
         <option value="alpha-non-empty">A - Z, Empty Last</option>
       </select>
-      <input class="question-filter__select-all-checkbox" type="checkbox" /><label class="question-filter__select-all" for="question-filter__select-all-checkbox">select all</label>
+      <label class="question-filter__select-all"><input class="question-filter__select-all-checkbox" type="checkbox" /> select all</label>
       <a class="question-filter__show-responses" href=""><i class="question-filter__show-responses-icon"></i>show responses</a>
     </div>
 
@@ -100,47 +100,12 @@
 
   </div>
   <ul class="questions__container">
-    <li class="questions__question">
-      <h4 class="question__name">Currently, what is your main priority or concern?</h4>
-      <span class="question__type"><i class="question__type-icon fa fa-caret-right"></i>Select Many</span><span class="question__no-tag">Not Tagged</span>
-    </li>
-    <li class="questions__question">
-      <h4 class="question__name">If you have a dispute in your community, to whom do you take it first?</h4>
-      <span class="question__type"><i class="question__type-icon fa fa-caret-right"></i>Select Many</span><span class="question__tag">Land</span><span class="question__tag">Peace</span><span class="question__tag">Justice</span>
-    </li>
-    <li class="questions__question--selected">
-      <h4 class="question__name--selected">Why do you take it first to that person or institution</h4>
-      <span class="question__type"><i class="question__type-icon fa fa-caret-right"></i>Select Many</span><span class="question__tag">Land</span><span class="question__tag">Peace</span><span class="question__tag">Justice</span>
-    </li>
-    <li class="questions__question">
-      <h4 class="question__name">If needed, what kind of documentation do you have prove your access or interest to this land? (READ RESPONSES)</h4>
-      <span class="question__type question__type--expanded"><i class="question__type-icon question__type-icon--expanded fa fa-caret-down"></i>Select Many</span><span class="question__tag">Land</span><span class="question__tag">Peace</span><span class="question__tag">Justice</span>
-      <ul class="question__responses">
-        <li class="question__response-option">Title deed</li>
-        <li class="question__response-option">Tribal certificate</li>
-        <li class="question__response-option">Rental Agreement (lease)</li>
-        <li class="question__response-option">Letter or document</li>
+    <li ng-class="item.meta.question_class" ng-repeat="item in info_list_items">
+      <h4 class="question__name">{{ item.label }}</h4>
+      <a href="" ng-click="toggle_response_list(item)" ng-class="item.meta.question_type_class"><i ng-class="item.meta.question_type_icon_class + ' ' + item.meta.question_type_icon" ng-show="item.type === 'Select One' || item.type === 'Select Many'"></i>{{item.type}}</span>
+      <ul class="question__responses" ng-show="item.meta.show_responses">
+        <li class="question__response-option" ng-repeat="response in item.responses">{{response}}</li>
       </ul>
-    </li>
-    <li class="questions__question">
-      <h4 class="question__name">What type of crops does your household sell, if any?</h4>
-      <span class="question__type"><i class="question__type-icon fa fa-caret-right"></i>Select Many</span><span class="question__tag">Land</span><span class="question__tag">Peace</span><span class="question__tag">Justice</span>
-    </li>
-    <li class="questions__question">
-      <h4 class="question__name">During the war, did someone take over all or part of your house plot?</h4>
-      <span class="question__type"><i class="question__type-icon fa fa-caret-right"></i>Select Many</span><span class="question__tag">Land</span><span class="question__tag">Peace</span><span class="question__tag">Justice</span>
-    </li>
-    <li class="questions__question">
-      <h4 class="question__name">During the war, did someone take over all or part of your household farm land?</h4>
-      <span class="question__type"><i class="question__type-icon fa fa-caret-right"></i>Select Many</span><span class="question__tag">Land</span><span class="question__tag">Peace</span><span class="question__tag">Justice</span>
-    </li>
-    <li class="questions__question">
-      <h4 class="question__name">Since the end of the war in 2003, did someone take over all or part of your house plot?</h4>
-      <span class="question__type"><i class="question__type-icon fa fa-caret-right"></i>Select Many</span><span class="question__tag">Land</span><span class="question__tag">Peace</span><span class="question__tag">Justice</span>
-    </li>
-    <li class="questions__question">
-      <h4 class="question__name">What what describe your access to this land? (READ RESPONSES)</h4>
-      <span class="question__type"><i class="question__type-icon fa fa-caret-right"></i>Select Many</span><span class="question__tag">Land</span><span class="question__tag">Peace</span><span class="question__tag">Justice</span>
     </li>
   </ul>
 </div>

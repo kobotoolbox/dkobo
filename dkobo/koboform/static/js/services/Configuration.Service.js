@@ -12,7 +12,7 @@ function ConfigurationService() {
             {
                 'title': 'Question Library',
                 'icon': 'fa-folder',
-                'name': 'qlib'
+                'name': 'library/questions'
             // },
             // {
             //     'title': 'Admin',
