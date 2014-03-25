@@ -10,9 +10,9 @@ function ConfigurationService() {
                 'name': 'forms'
             },
             {
-                'title': 'Assets',
+                'title': 'Question Library',
                 'icon': 'fa-folder',
-                'name': 'assets'
+                'name': 'qlib'
             // },
             // {
             //     'title': 'Admin',

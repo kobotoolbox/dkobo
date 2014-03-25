@@ -6,5 +6,5 @@ function AssetsController($scope, $rootScope, $resource) {
     $scope.infoListItems = assets.query();
 
     $rootScope.canAddNew = true;
-    $rootScope.activeTab = 'Assets';
+    $rootScope.activeTab = 'Question Library';
 }
