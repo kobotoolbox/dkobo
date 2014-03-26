@@ -2,14 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from django.test import TestCase
-# from lxml import etree
-# from StringIO import StringIO
 from django.contrib.auth.models import User
 from django.test.client import Client
-# from pyxform import xls2json_backends
-# from dkobo.koboform.models import SurveyDraft, SurveyPreview
-# from dkobo.koboform import pyxform_utils
-# from dkobo.koboform import utils
 import json
 
 
