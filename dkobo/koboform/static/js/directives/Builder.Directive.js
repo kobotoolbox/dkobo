@@ -15,7 +15,7 @@ function BuilderDirective($rootScope, $restApi, $routeTo) {
                     surveyDraftApi.save({
                             body: this.survey.toCSV(),
                             description: this.survey.get('description'),
-                            title: this.survey.settings.get('form_title')
+                            name: this.survey.settings.get('form_title')
                         }, function () {
                             $rootScope.deregisterLocationChangeStart && $rootScope.deregisterLocationChangeStart()
                             $(window).unbind('beforeunload');
