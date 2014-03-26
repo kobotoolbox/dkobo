@@ -11,7 +11,7 @@
 1. Activate a [python virtualenv](https://pypi.python.org/pypi/virtualenv).
 
     _It's suggested that you use virtualenv wrapper, which provides the "mkvirtualenv" and "workon" commands_<br>
-    `mkvirtualenv kobo` <!--shouldn't it be 'virtualenv kobo' ? -->
+    `mkvirtualenv kobo` 
 
 1. Install python requirements:
 
