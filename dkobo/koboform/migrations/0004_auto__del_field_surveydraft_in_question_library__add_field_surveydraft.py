@@ -11,6 +11,11 @@ class Migration(SchemaMigration):
         # Deleting field 'SurveyDraft.in_question_library'
         db.delete_column(u'koboform_surveydraft', 'in_question_library')
 
+        # Adding field 'SurveyDraft.slug'
+        db.add_column(u'koboform_surveydraft', 'slug',
+                      self.gf('django.db.models.fields.CharField')(max_length=32, null=True),
+                      keep_default=False)
+
         # Adding field 'SurveyDraft.asset_type'
         db.add_column(u'koboform_surveydraft', 'asset_type',
                       self.gf('django.db.models.fields.CharField')(max_length=32, null=True),
@@ -22,6 +27,9 @@ class Migration(SchemaMigration):
         db.add_column(u'koboform_surveydraft', 'in_question_library',
                       self.gf('django.db.models.fields.BooleanField')(default=False),
                       keep_default=False)
+
+        # Deleting field 'SurveyDraft.slug'
+        db.delete_column(u'koboform_surveydraft', 'slug')
 
         # Deleting field 'SurveyDraft.asset_type'
         db.delete_column(u'koboform_surveydraft', 'asset_type')
@@ -73,6 +81,7 @@ class Migration(SchemaMigration):
             'description': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'slug': ('django.db.models.fields.CharField', [], {'max_length': '32', 'null': 'True'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'survey_drafts'", 'to': u"orm['auth.User']"})
         },
         u'koboform.surveypreview': {
