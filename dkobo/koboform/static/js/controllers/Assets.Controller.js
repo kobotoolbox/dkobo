@@ -2,6 +2,7 @@
 'use strict';
 function AssetsController($scope, $rootScope, $resource, $restApi) {
     var assets = $restApi.create_question_api();
+    $scope.sort_criteria = '-date';
 
     assets.query(function (results) {
 
@@ -14,18 +15,11 @@ function AssetsController($scope, $rootScope, $resource, $restApi) {
                 question_type_icon: 'fa fa-caret-right',
                 question_type_icon_class: 'question__type-icon'
             }
+
+            // for demo purposes
+
+            results[i].date = new Date().setDate(new Date().getDate() - i);
         }
-
-        // for demo purposes
-
-        results[2].meta.question_class = 'questions__question questions__question--selected';
-        results[2].meta.is_selected = true;
-
-        results[3].meta.question_type_class = 'question__type question__type--expanded';
-        results[3].meta.question_type_icon_class = 'question__type-icon question__type--expanded-icon';
-        results[3].meta.question_type_icon = 'fa fa-caret-down';
-        results[3].meta.show_responses = true;
-
         $scope.info_list_items = results;
     });
 
@@ -40,6 +34,59 @@ function AssetsController($scope, $rootScope, $resource, $restApi) {
             item.meta.question_type_icon_class = 'question__type-icon question__type--expanded-icon';
             item.meta.question_type_icon = 'fa fa-caret-down';
             item.meta.show_responses = true;
+        }
+    }
+
+    $scope.select_all = null;
+
+    $scope.$watch('select_all', function () {
+        if ($scope.select_all === null) {
+            return;
+        }
+        var new_class = $scope.select_all ? 'questions__question questions__question--selected' : 'questions__question';
+
+        _.each($scope.info_list_items, function (item) {
+            item.meta.is_selected = $scope.select_all;
+            item.meta.question_class = new_class;
+        });
+    });
+
+    $scope.$watch('show_responses', function () {
+        if (typeof $scope.show_responses === 'undefined') {
+            return;
+        }
+        var show_responses = $scope.show_responses,
+            new_question_type_class,
+            new_question_type_icon,
+            new_question_type_icon_class;
+
+        if (show_responses) {
+            new_question_type_class = 'question__type question__type--expanded';
+            new_question_type_icon = 'fa fa-caret-down';
+            new_question_type_icon_class = 'question__type-icon question__type--expanded-icon';
+        } else {
+            new_question_type_class = 'question__type';
+            new_question_type_icon = 'fa fa-caret-right';
+            new_question_type_icon_class = 'question__type-icon';
+        }
+
+        _.each($scope.info_list_items, function (item) {
+            item.meta.show_responses = show_responses;
+            item.meta.question_type_class = new_question_type_class;
+            item.meta.question_type_icon = new_question_type_icon;
+            item.meta.question_type_icon_class = new_question_type_icon_class;
+        });
+    });
+
+    $scope.get_selected_amount = function () {
+        var amount = _.filter($scope.info_list_items, function (item) {
+            return item.meta.is_selected;
+        }).length
+
+        if (amount > 1 || amount === 0) {
+            return amount + ' questions';
+        } else {
+            return amount + ' question';
         }
     }
 

@@ -75,24 +75,24 @@
 </div>
 
 <div class="questions">
-  <h2 class="questions__title">Questions <span class="questions__question-count">122 questions</span></h2>
+  <h2 class="questions__title">Questions <span class="questions__question-count">{{info_list_items.length}} questions</span></h2>
   <a class="question__create-new" href="">+ Add New question</a>
   <div class="question-filter">
     <div class="question-filter__filters">
       <i class="question-filter__searchbox-icon fa fa-search"></i>
-      <input class="question-filter__searchbox" placeholder="Search questions" value="example of typing a very long question" />
-      <select class="question-filter__sorter">
-        <option value="newest">Newest</option>
-        <option value="alpha">A - Z</option>
-        <option value="alpha-empty">A - Z, Empty First</option>
-        <option value="alpha-non-empty">A - Z, Empty Last</option>
+      <input class="question-filter__searchbox" ng-model="text_search" placeholder="Search questions" value="example of typing a very long question" />
+      <select class="question-filter__sorter" ng-model="sort_criteria">
+        <option value="-date">Newest First</option>
+        <option value="date">Oldest First</option>
+        <option value="label">A - Z</option>
+        <option value="-label">Z - A</option>
       </select>
-      <label class="question-filter__select-all"><input class="question-filter__select-all-checkbox" type="checkbox" /> select all</label>
-      <a class="question-filter__show-responses" href=""><i class="question-filter__show-responses-icon"></i>show responses</a>
+      <label class="question-filter__select-all"><input class="question-filter__select-all-checkbox" type="checkbox" ng-model="select_all" /> select all</label>
+      <a class="question-filter__show-responses" href="" ng-click="show_responses = !show_responses"><i class="question-filter__show-responses-icon"></i>show responses</a>
     </div>
 
     <div class="question-filter__actions">
-      <div class="question-filter__selected-count">1 question selected</div>
+      <div class="question-filter__selected-count">{{get_selected_amount()}} selected</div>
       <a class="question-filter__add-to-new" href=""><i class="question-filter__add-to-new-icon"></i>Add to new form</a>
       <a class="question-filter__add-to-block" href=""><i class="question-filter__add-to-block-icon"></i>Add to block</a>
       <a class="question-filter__delete" href=""><i class="question-filter__delete-icon"></i>Delete</a>
@@ -100,9 +100,12 @@
 
   </div>
   <ul class="questions__container">
-    <li ng-class="item.meta.question_class" ng-repeat="item in info_list_items">
+    <li ng-class="item.meta.question_class" ng-repeat="item in info_list_items|filter:text_search|orderBy:sort_criteria">
       <h4 class="question__name">{{ item.label }}</h4>
-      <a href="" ng-click="toggle_response_list(item)" ng-class="item.meta.question_type_class"><i ng-class="item.meta.question_type_icon_class + ' ' + item.meta.question_type_icon" ng-show="item.type === 'Select One' || item.type === 'Select Many'"></i>{{item.type}}</span>
+      <a href="" ng-click="toggle_response_list(item)" ng-class="item.meta.question_type_class">
+        <i ng-class="item.meta.question_type_icon_class + ' ' + item.meta.question_type_icon" ng-show="item.type === 'Select One' || item.type === 'Select Many'"></i>
+        {{item.type}}
+      </a>
       <ul class="question__responses" ng-show="item.meta.show_responses">
         <li class="question__response-option" ng-repeat="response in item.responses">{{response}}</li>
       </ul>
