@@ -19,7 +19,7 @@ describe ('Controllers', function () {
 
     function initializeController($controller, name, $rootScope) {
         if (typeof $rootScope === 'undefined') {
-            $rootScope = {};
+            throw 'no root scope';
         }
         $rs = $rootScope;
         $scope = $rootScope;
@@ -30,14 +30,17 @@ describe ('Controllers', function () {
             $resource: $resource,
             $routeParams: hello,
             $cookies: {csrftoken: 'test token'},
-            $miscUtils: new miscServiceStub()
+            $miscUtils: new miscServiceStub(),
+            $restApi: {
+                create_question_api: function () { return resourceStub; }
+            }
         });
     }
 
     describe ('Forms Controller', function () {
         beforeEach(function () {
             resourceStub = {
-                    query: sinon.stub().returns(hello)
+                    query: function (fn) { fn(hello); }
                 };
         });
         it('should initialize $rootScope and $scope correctly', inject(function ($controller, $rootScope) {
@@ -109,13 +112,18 @@ describe ('Controllers', function () {
     });
 
     describe('Assets Controller', function () {
-        it('should initialize $scope and $rootScope correctly', inject(function ($controller) {
-            initializeController($controller, 'Assets');
+        beforeEach(function () {
+            resourceStub = {
+                    query: function (fn) { fn(hello); }
+                };
+        });
+        it('should initialize $scope and $rootScope correctly', inject(function ($controller, $rootScope) {
+            initializeController($controller, 'Assets', $rootScope);
 
             expect($rs.canAddNew).toBe(true);
-            expect($rs.activeTab).toBe('Assets');
+            expect($rs.activeTab).toBe('Question Library');
 
-            expect($scope.infoListItems).toBe(hello);
+            expect($scope.info_list_items).toBe(hello);
         }));
     });
 
