@@ -14,7 +14,6 @@ class CreateReadUpdateDeleteSurveyDraftsTests(TestCase):
             new_user = User(username=test_user_credentials['username'], email="user1@example.com")
             new_user.set_password(test_user_credentials['password'])
             new_user.save()
-        # a client to test behavior when not logged in
         self.anonymousClient = Client()
 
         self.user = User.objects.all()[0]
@@ -35,14 +34,35 @@ class CreateReadUpdateDeleteSurveyDraftsTests(TestCase):
     def test_empty_list(self):
         resp = self.client.get('/api/survey_drafts')
         self.assertEqual(resp.status_code, 200)
-        # json_resp = json.loads(resp.content)
         self.assertEqual(len(resp.data), 0)
 
-        rr = self.post_survey(self.client)
-        print rr.content
+        self.post_survey(self.client)
         resp2 = self.client.get('/api/survey_drafts')
         self.assertEqual(len(resp2.data), 1)
 
-    def test_create_survey_draft(self):
-        # self.client.get
-        self.assertEqual(User.objects.count(), 1)
+    def test_retrieve_survey(self):
+        self.post_survey(self.client)
+
+        resp = self.client.get('/api/survey_drafts')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.data[0]['id'], 1)
+
+        resp = self.client.get('/api/survey_drafts/1')
+        self.assertEqual(resp.data.get('id'), 1)
+
+    def test_library_assets(self):
+        # post a library_asset (question)
+        resp = self.client.get('/api/library_assets')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(len(resp.data), 0)
+
+        # ensure library_assets was incremented
+        self.post_survey(self.client, {u'asset_type': 'question'})
+        resp = self.client.get('/api/library_assets')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(len(resp.data), 1)
+
+        # ensure that survey_drafts was not incremented
+        resp = self.client.get('/api/survey_drafts')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(len(resp.data), 0)
