@@ -724,6 +724,22 @@ input[type="button"].btn--block {
    Info list
    ========================================================================== */
 
+.info-list td {
+    border-bottom: 1px solid #e9ecee;
+    text-align: left;
+}
+.info-list tr:hover td {
+    background-color: #f3f5f6;
+}
+.info-list a {
+    color: #333333;
+    display: block;
+}
+.info-list .info-list__links a {
+    display: inline-block;
+}
+
+/*
 .info-list__item {
     padding: 15px 5px;
     border-top: 1px solid #ccc;
@@ -772,7 +788,7 @@ input[type="button"].btn--block {
 
 .info-list-item__tags {
     display: inline-block;
-}
+} */
 
 
 /* ==========================================================================
