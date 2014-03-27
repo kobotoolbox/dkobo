@@ -16,6 +16,7 @@ urlpatterns = patterns(
     url(r'^api/', include(router.urls)),
     url(r'^$', 'dkobo.koboform.views.spa', name='spa'),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^csv$', 'dkobo.koboform.views.csv_to_xform'),
     url(r'^accounts/logout/', 'django.contrib.auth.views.logout', {'next_page': '/'}),
     url(r'^accounts/', include('registration.backends.default.urls')),
     url(r'^account/', include('django.contrib.auth.urls')),
