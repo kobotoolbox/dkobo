@@ -12,7 +12,7 @@ function restApiFactory($resource) {
                 };
             }
 
-            return $resource('/koboform/survey_draft/:id', { id: id || 0 }, customMethods);
+            return $resource('/api/survey_drafts/:id', { id: id || 0 }, customMethods);
         },
         create_question_api: function () {
             var info_list_items = [

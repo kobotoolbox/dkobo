@@ -1,5 +1,6 @@
 from django.shortcuts import render_to_response, HttpResponse, get_object_or_404
 from django.http import HttpResponseBadRequest
+from django.core.exceptions import PermissionDenied
 from django.template import RequestContext
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.contrib.auth.decorators import login_required
@@ -63,18 +64,17 @@ def spa(request):
                               context_instance=
                               RequestContext(request, {'user_details': json.dumps(user_details)}))
 
-
-@login_required
-def survey_drafts(request, sdid=0):
-    if request.method == 'GET':
-        if sdid > 0:
-            return read_survey_draft(request, sdid)
-        else:
-            return list_survey_drafts(request)
-    elif request.method == 'POST':
-        return create_survey_draft(request)
-    elif request.method == 'PUT':
-        return update_survey_draft(request, sdid)
+# @login_required
+# def survey_drafts(request, sdid=0):
+#     if request.method == 'GET':
+#         if sdid > 0:
+#             return read_survey_draft(request, sdid)
+#         else:
+#             return list_survey_drafts(request)
+#     elif request.method == 'POST':
+#         return create_survey_draft(request)
+#     elif request.method == 'PUT':
+#         return update_survey_draft(request, sdid)
 
 
 @csrf_exempt
@@ -111,11 +111,11 @@ def get_survey_preview(request, unique_string):
         content_type="application/xml")
 
 
-@login_required
-def list_survey_drafts(request):
-    ids = [dd['id']
-           for dd in SurveyDraft.objects.filter(user=request.user).values("id")]
-    return HttpResponse(json.dumps(ids))
+# @login_required
+# def list_survey_drafts(request):
+#     ids = [dd['id']
+#            for dd in SurveyDraft.objects.filter(user=request.user).values("id")]
+#     return HttpResponse(json.dumps(ids))
 
 
 @login_required
@@ -149,39 +149,37 @@ def update_survey_draft(request, sdid):
     return HttpResponse(json.dumps(model_to_dict(survey_draft)))
 
 
-@login_required
-def read_survey_draft(request, sdid):
-    survey_draft = SurveyDraft.objects.get(id=sdid)
-    return HttpResponse(json.dumps(model_to_dict(survey_draft)))
+# @login_required
+# def read_survey_draft(request, sdid):
+#     survey_draft = SurveyDraft.objects.get(id=sdid)
+#     return HttpResponse(json.dumps(model_to_dict(survey_draft)))
 
 # unrestful, but works.
 
 
-def list_forms_for_user(request):
-    survey_drafts = []
-    if request.user.is_authenticated():
-        for sd in request.user.survey_drafts.all():
-            survey_drafts.append({u'title': sd.name,
-                                  u'info': sd.description,
-                                  u'icon': 'fa-file-o',
-                                  u'iconBgColor': 'green',
-                                  u'id': sd.id})
-    return HttpResponse(json.dumps(survey_drafts))
-
-
-def list_forms_in_library(request):
-    '''
-    This is a placeholder for the accessor of surveys
-    in the question library.
-    '''
-    library_forms = []
-    for sd in SurveyDraft.objects.filter(in_question_library=True):
-        library_forms.append({u'name': sd.name,
-                              u'description': sd.description,
-                              u'tags': [],
-                              u'id': sd.id,
-                              })
-    return HttpResponse(json.dumps(library_forms))
+# def list_forms_for_user(request):
+#     survey_drafts = []
+#     if request.user.is_authenticated():
+#         for sd in request.user.survey_drafts.all():
+#             survey_drafts.append({u'title': sd.name,
+#                                   u'info': sd.description,
+#                                   u'icon': 'fa-file-o',
+#                                   u'iconBgColor': 'green',
+#                                   u'id': sd.id})
+#     return HttpResponse(json.dumps(survey_drafts))
+# def list_forms_in_library(request):
+#     '''
+#     This is a placeholder for the accessor of surveys
+#     in the question library.
+#     '''
+#     library_forms = []
+#     for sd in SurveyDraft.objects.filter(in_question_library=True):
+#         library_forms.append({u'name': sd.name,
+#                               u'description': sd.description,
+#                               u'tags': [],
+#                               u'id': sd.id,
+#                               })
+#     return HttpResponse(json.dumps(library_forms))
 
 
 def jasmine_spec(request):
@@ -230,23 +228,3 @@ def import_survey_draft(request):
         response_code = 204  # Error 204: No input
         output[u'error'] = "No file posted"
     return HttpResponse(json.dumps(output), content_type="application/json", status=response_code)
-
-class SurveyDraftViewSet(viewsets.ModelViewSet):
-    model = SurveyDraft
-    serializer_class = ListSurveyDraftSerializer
-
-    def get_queryset(self):
-        user = self.request.user
-        return SurveyDraft.objects.filter(user=user)
-
-    def retrieve(self, request, pk=None):
-        user = request.user
-        queryset = SurveyDraft.objects.filter(user=user)
-        survey_draft = get_object_or_404(queryset, pk=pk)
-        serializer = DetailSurveyDraftSerializer(survey_draft)
-        return Response(serializer.data)
-
-    @action(methods=['DELETE'])
-    def delete_survey_draft(self, request, pk=None):
-        draft = self.get_object()
-        draft.delete()

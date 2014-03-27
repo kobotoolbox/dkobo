@@ -4,7 +4,7 @@ from models import SurveyDraft
 class ListSurveyDraftSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = SurveyDraft
-        fields = ('id', 'name', 'description', 'date_modified')
+        fields = ('id', 'name', 'asset_type', 'description', 'date_modified')
 
 class DetailSurveyDraftSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
