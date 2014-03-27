@@ -15,14 +15,15 @@ class XLF.RowDetail extends XLF.BaseModel
     if @key of XLF.RowDetailMixins
       _.extend(@, XLF.RowDetailMixins[@key])
     super()
-    vals2set = {}
-    if _.isString(value) || _.isNumber(value)
-      vals2set.value = value
-    else if "value" of value
-      _.extend vals2set, value
-    else
-      vals2set.value = value
-    @set(vals2set)
+    if value isnt undefined
+      vals2set = {}
+      if _.isString(value) || _.isNumber(value)
+        vals2set.value = value
+      else if "value" of value
+        _.extend vals2set, value
+      else
+        vals2set.value = value
+      @set(vals2set)
     @_order = XLF.columnOrder(@key)
     @postInitialize()
 
