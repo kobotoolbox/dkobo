@@ -9,12 +9,18 @@ from django.shortcuts import render_to_response, HttpResponse, get_object_or_404
 class SurveyAssetViewset(viewsets.ModelViewSet):
     model = SurveyDraft
     serializer_class = ListSurveyDraftSerializer
+    exclude_asset_type = False
 
     def get_queryset(self):
         user = self.request.user
         if user.is_anonymous():
             raise PermissionDenied
-        return SurveyDraft.objects.filter(user=user)
+        queryset = SurveyDraft.objects.filter(user=user)
+        if self.exclude_asset_type:
+            queryset = queryset.exclude(asset_type=None)
+        else:
+            queryset = queryset.filter(asset_type=None)
+        return queryset
 
     def create(self, request):
         user = self.request.user
@@ -36,15 +42,7 @@ class SurveyAssetViewset(viewsets.ModelViewSet):
         draft.delete()
 
 class LibraryAssetViewset(SurveyAssetViewset):
-    def get_queryset(self):
-        user = self.request.user
-        if user.is_anonymous():
-            raise PermissionDenied
-        return SurveyDraft.objects.filter(user=user).exclude(asset_type=None)
+    exclude_asset_type = True
 
 class SurveyDraftViewSet(SurveyAssetViewset):
-    def get_queryset(self):
-        user = self.request.user
-        if user.is_anonymous():
-            raise PermissionDenied
-        return SurveyDraft.objects.filter(user=user)
+    exclude_asset_type = False
