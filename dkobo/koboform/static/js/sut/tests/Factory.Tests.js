@@ -33,7 +33,7 @@ describe('restApi Factory', function () {
             factory.createSurveyDraftApi(1);
 
             expect(resourceSpy).toHaveBeenCalledWith(
-                '/koboform/survey_draft/:id',
+                '/api/survey_drafts/:id',
                 { id: 1 },
                 { save: { method: 'PUT' } });
         });
