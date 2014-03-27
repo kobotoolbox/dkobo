@@ -85,6 +85,8 @@ INSTALLED_APPS = (
 # around before purging it.
 KOBO_SURVEY_PREVIEW_EXPIRATION = 24
 
+LOGIN_REDIRECT_URL = '/'
+
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
