@@ -7,7 +7,8 @@ function AssetsController($scope, $rootScope, $resource, $restApi) {
     assets.query(function (results) {
 
         for (var i = 0; i < results.length; i++) {
-            results[i].meta = {
+            var current = results[i];
+            current.meta = {
                 show_responses: false,
                 is_selected: false,
                 question_class: 'questions__question',
@@ -15,6 +16,20 @@ function AssetsController($scope, $rootScope, $resource, $restApi) {
                 question_type_icon: 'fa fa-caret-right',
                 question_type_icon_class: 'question__type-icon'
             }
+
+            var backbone_survey = XLF.createSurveyFromCsv(current.body);
+            var row = backbone_survey.rows.at(0);
+
+            current.label = row.getValue('label');
+            current.type = row.get("type").get("typeId");
+
+            var list = row.getList();
+            if (list) {
+                current.responses = list.options.map(function(option) {
+                    return option.get("label");
+                });
+            }
+
 
             // for demo purposes
 

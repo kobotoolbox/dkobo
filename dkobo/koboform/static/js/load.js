@@ -30,6 +30,8 @@ kobo.service('$routeTo', RouteToService);
 kobo.service('$configuration', ConfigurationService);
 kobo.service('$miscUtils', MiscUtilsService);
 
+kobo.filter('titlecase', TitlecaseFilter);
+
 
 kobo.config(function ($routeProvider, $locationProvider, $httpProvider) {
 
