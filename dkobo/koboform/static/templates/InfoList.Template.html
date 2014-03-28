@@ -11,7 +11,9 @@
   <table class="info-list" style="width:100%">
       <tr ng-repeat="item in items|orderBy:'-date_modified'">
           <td class="info-list__date">
-              {{item.date_modified.getMonth()+1}}/{{item.date_modified.getDate()}}/{{item.date_modified.getYear() + 1900}}
+              <a href="#{{ getHashLink(item) }}">
+                  {{item.date_modified.getMonth()+1}}/{{item.date_modified.getDate()}}/{{item.date_modified.getYear() + 1900}}
+              </a>
           </td>
           <td class="info-list__title">
               <a href="#{{ getHashLink(item) }}">{{ item.name }}</a>

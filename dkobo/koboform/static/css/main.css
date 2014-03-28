@@ -724,6 +724,9 @@ input[type="button"].btn--block {
    Info list
    ========================================================================== */
 
+.info-list__date, .info-list__links {
+    width: 200px;
+}
 .info-list td {
     border-bottom: 1px solid #e9ecee;
     text-align: left;
@@ -736,7 +739,9 @@ input[type="button"].btn--block {
     display: block;
 }
 .info-list .info-list__links a {
+    width: 40px;
     display: inline-block;
+    margin-right: 6px;
 }
 
 /*
