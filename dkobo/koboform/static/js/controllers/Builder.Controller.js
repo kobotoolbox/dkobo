@@ -16,4 +16,8 @@ function BuilderController($scope, $rootScope, $routeParams, $miscUtils, $locati
     $(window).bind('beforeunload', function(){
         return 'Are you sure you want to leave?';
     });
+
+    $scope.add_item = function (item) {
+        //add item.backbone_model contains the survey representing the question
+    }
 }

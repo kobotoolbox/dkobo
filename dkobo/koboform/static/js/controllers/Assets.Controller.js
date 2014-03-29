@@ -22,6 +22,7 @@ function AssetsController($scope, $rootScope, $resource, $restApi) {
 
             current.label = row.getValue('label');
             current.type = row.get("type").get("typeId");
+            current.backbone_model = backbone_survey;
 
             var list = row.getList();
             if (list) {
