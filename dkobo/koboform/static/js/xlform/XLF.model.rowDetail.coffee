@@ -15,7 +15,7 @@ class XLF.RowDetail extends XLF.BaseModel
     if @key of XLF.RowDetailMixins
       _.extend(@, XLF.RowDetailMixins[@key])
     super()
-    if value isnt undefined
+    if value not in [undefined, false, null]
       vals2set = {}
       if _.isString(value) || _.isNumber(value)
         vals2set.value = value

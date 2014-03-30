@@ -38,6 +38,15 @@ describe "xlform survey model (XLF.Survey)", ->
   it "ensures every node has access to the parent survey", ->
     @pizzaSurvey.getSurvey
 
+  it "can append a survey to another", ->
+    dead_simple = @createSurvey(['text,q1,Question1,q1hint', 'text,q2,Question2,q2hint'])
+    expect(dead_simple.rows.length).toBe(2)
+    expect(@pizzaSurvey.rows.length).toBe(1)
+    dead_simple.insertSurvey(@pizzaSurvey)
+
+    expect(dead_simple.rows.length).toBe(3)
+    expect(dead_simple.rows.at(2).getValue("name")).toBe("likes_pizza")
+
   it "can import from csv_repr", ->
     expect(@pizzaSurvey.rows.length).toBe(1)
     firstRow = @pizzaSurvey.rows.at(0)
