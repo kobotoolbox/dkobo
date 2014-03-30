@@ -390,11 +390,12 @@ describe "testing the view", ->
     slList = $(".skiplogic__criterialist", lastRowEl)
     select = $("select.skiplogic__rowselect", slList).eq(0)
     opt1 = select.find("option").eq(1)
-    expect(opt1.prop("value")).toBe("likes_pizza")
-    row1 = @pizzaSurvey.rows.at(0)
-    row1.get("name").set("value", "different_name")
-    row1.get("label").set("value", "A different label")
-    expect($("select.skiplogic__rowselect", slList).find("option").eq(1).prop("value")).toBe("different_name")
+    # label changing is no longer done this way:
+    # expect(opt1.prop("value")).toBe("likes_pizza")
+    # row1 = @pizzaSurvey.rows.at(0)
+    # row1.get("name").set("value", "different_name")
+    # row1.get("label").set("value", "A different label")
+    # expect($("select.skiplogic__rowselect", slList).find("option").eq(1).prop("value")).toBe("different_name")
 
 
 describe "reorder items by id", ->
