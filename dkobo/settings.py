@@ -57,6 +57,8 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Application definition
 
 COMPRESS_ENABLED = (not DEBUG)
+COMPRESS_OFFLINE = True
+COMPRESS_ROOT = os.path.join(BASE_DIR, 'dkobo', 'static')
 
 COMPRESS_PRECOMPILERS = (
     ('text/coffeescript', 'coffee --compile --stdio'),

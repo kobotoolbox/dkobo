@@ -9,7 +9,8 @@ import StringIO
 import pyxform
 import csv
 
-import pdb
+LIMIT_IMPORTS = 25
+ASSET_TYPE = "question"
 
 def _dict_to_csv(imported_sheets):
     foo = StringIO.StringIO()
@@ -38,7 +39,7 @@ def _convert_xls_file_to_individual_surveys(filename):
     survey = imported_sheets.get("survey", [])
     choices = imported_sheets.get("choices", [])
     # for row in survey:
-    for row in survey[0:25]:
+    for row in survey[0:LIMIT_IMPORTS]:
         if len(row.keys()) == 0:
             continue
         name = row.get("name")
@@ -61,8 +62,15 @@ class Command(BaseCommand):
         except User.DoesNotExist, e:
             sys.exit(1)
         print user.survey_drafts.count()
-        user.survey_drafts.filter().delete()
-        # csvs = _convert_xls_file_to_individual_surveys(filename)
+
+        ### goes with survey_drafts
+        user.survey_drafts.filter(asset_type=ASSET_TYPE).delete()
+        asset_type = None
+        ##
+
         for (name, csvstr) in _convert_xls_file_to_individual_surveys(filename):
-            SurveyDraft.objects.create(user=user, name=name, body=csvstr, asset_type="question")
+            try:
+                SurveyDraft.objects.create(user=user, name=name, body=csvstr, asset_type=ASSET_TYPE)
+            except Exception, e:
+                print "Couldn't import asset"
         print user.survey_drafts.count()

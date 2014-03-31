@@ -27,7 +27,7 @@ class SurveyAssetViewset(viewsets.ModelViewSet):
         user = self.request.user
         if user.is_anonymous():
             raise PermissionDenied
-        contents = request.POST
+        contents = request.DATA
         survey_draft = request.user.survey_drafts.create(**contents)
         return Response(ListSurveyDraftSerializer(survey_draft).data)
 

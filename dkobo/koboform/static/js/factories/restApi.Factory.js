@@ -6,13 +6,16 @@ function restApiFactory($resource) {
         createSurveyDraftApi: function (id) {
             var customMethods = {};
             id = id === 'new' ? null : id;
-            if (id) {
-                customMethods = {
-                    save: { method: 'PUT' }
-                };
+            if (id === null) {
+                return $resource('/api/survey_drafts', {}, {
+                    save: { method: 'POST' }
+                });
+            } else {
+                return $resource('/api/survey_drafts/:id', { id: id }, {
+                    save: { method: 'PATCH' }
+                });
             }
 
-            return $resource('/api/survey_drafts/:id', { id: id || 0 }, customMethods);
         },
         create_question_api: function () {
             return $resource('/api/library_assets');
