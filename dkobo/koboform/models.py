@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 import md5
+import json
 
 class SurveyDraft(models.Model):
     '''
@@ -13,6 +14,7 @@ class SurveyDraft(models.Model):
     description = models.CharField(max_length=255, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
+    summary = models.TextField()
     asset_type = models.CharField(max_length=32, null=True)
 
     @property
@@ -29,12 +31,20 @@ class SurveyDraft(models.Model):
         # and this method of finding the id_string is (at least) consistent.
         return self._pyxform_survey.id_string
 
+    def summarize_survey(self):
+        # return json.dumps(self._pyxform_survey.to_json())
+        return "{}"
+
     def to_xml(self):
         return self._pyxform_survey.to_xml()
 
     def to_xls(self):
         import pyxform_utils
         return pyxform_utils.convert_csv_to_xls(self.body)
+
+    def save(self, *args, **kwargs):
+        self.summary = self.summarize_survey()
+        super(SurveyDraft, self).save(*args, **kwargs)
 
 class SurveyPreview(models.Model):
     unique_string = models.CharField(max_length=64, null=False, unique=True)
