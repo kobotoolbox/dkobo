@@ -38,6 +38,15 @@ describe "xlform survey model (XLF.Survey)", ->
   it "ensures every node has access to the parent survey", ->
     @pizzaSurvey.getSurvey
 
+  it "can append a survey to another", ->
+    dead_simple = @createSurvey(['text,q1,Question1,q1hint', 'text,q2,Question2,q2hint'])
+    expect(dead_simple.rows.length).toBe(2)
+    expect(@pizzaSurvey.rows.length).toBe(1)
+    dead_simple.insertSurvey(@pizzaSurvey)
+
+    expect(dead_simple.rows.length).toBe(3)
+    expect(dead_simple.rows.at(2).getValue("name")).toBe("likes_pizza")
+
   it "can import from csv_repr", ->
     expect(@pizzaSurvey.rows.length).toBe(1)
     firstRow = @pizzaSurvey.rows.at(0)
@@ -390,11 +399,12 @@ describe "testing the view", ->
     slList = $(".skiplogic__criterialist", lastRowEl)
     select = $("select.skiplogic__rowselect", slList).eq(0)
     opt1 = select.find("option").eq(1)
-    expect(opt1.prop("value")).toBe("likes_pizza")
-    row1 = @pizzaSurvey.rows.at(0)
-    row1.get("name").set("value", "different_name")
-    row1.get("label").set("value", "A different label")
-    expect($("select.skiplogic__rowselect", slList).find("option").eq(1).prop("value")).toBe("different_name")
+    # label changing is no longer done this way:
+    # expect(opt1.prop("value")).toBe("likes_pizza")
+    # row1 = @pizzaSurvey.rows.at(0)
+    # row1.get("name").set("value", "different_name")
+    # row1.get("label").set("value", "A different label")
+    # expect($("select.skiplogic__rowselect", slList).find("option").eq(1).prop("value")).toBe("different_name")
 
 
 describe "reorder items by id", ->
