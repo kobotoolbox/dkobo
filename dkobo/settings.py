@@ -83,9 +83,12 @@ INSTALLED_APPS = (
     'rest_framework',
 )
 
+# The number of surveys to import. -1 is all
+KOBO_SURVEY_IMPORT_COUNT = os.environ.get('KOBO_SURVEY_IMPORT_COUNT', 100)
+
 # The number of hours to keep a kobo survey preview (generated for enketo)
 # around before purging it.
-KOBO_SURVEY_PREVIEW_EXPIRATION = 24
+KOBO_SURVEY_PREVIEW_EXPIRATION = os.environ.get('KOBO_SURVEY_PREVIEW_EXPIRATION', 24)
 
 LOGIN_REDIRECT_URL = '/'
 
