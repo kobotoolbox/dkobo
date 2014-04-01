@@ -52,6 +52,7 @@ function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo,
         });
     } else {
         // url points to new survey_draft
+        $scope.xlfSurvey = new XLF.Survey()
         new SurveyApp({el: element, survey: $scope.xlfSurvey, ngScope: $scope, save: saveCallback}).render();
     }
 }
