@@ -1,7 +1,7 @@
 /*exported BuilderController*/
 'use strict';
 
-function BuilderController($scope, $rootScope, $routeParams, $miscUtils, $location) {
+function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo, $miscUtils, $location) {
     $rootScope.activeTab = 'Forms';
     $scope.routeParams = $routeParams;
     $rootScope.deregisterLocationChangeStart = $rootScope.$on('$locationChangeStart', handleUnload);
@@ -16,4 +16,43 @@ function BuilderController($scope, $rootScope, $routeParams, $miscUtils, $locati
     $(window).bind('beforeunload', function(){
         return 'Are you sure you want to leave?';
     });
+
+    $scope.add_item = function (item) {
+        //add item.backbone_model contains the survey representing the question
+        $scope.xlfSurvey.insertSurvey(item.backbone_model, $("section.koboform__questionlibrary").data("rowIndex") || -1);
+    }
+
+    /*jshint validthis: true */
+    var surveyDraftApi = $restApi.createSurveyDraftApi($scope.routeParams.id);
+
+    function saveCallback() {
+        if (this.validateSurvey()) {
+            surveyDraftApi.save({
+                    body: this.survey.toCSV(),
+                    description: this.survey.get('description'),
+                    name: this.survey.settings.get('form_title')
+                }, function () {
+                    $rootScope.deregisterLocationChangeStart && $rootScope.deregisterLocationChangeStart()
+                    $(window).unbind('beforeunload');
+                    $routeTo.forms()
+                });
+        }
+    }
+
+    var element = $("section.form-builder").get(0);
+    $scope.displayQlib = false
+
+    if ($scope.routeParams.id && $scope.routeParams.id !== 'new'){
+        // url points to existing survey_draft
+        surveyDraftApi.get({id: $scope.routeParams.id}, function builder_get_callback(response) {
+            $scope.xlfSurvey = XLF.createSurveyFromCsv(response.body);
+            // temporarily saving response in __djangoModelDetails
+            $scope.xlfSurvey.__djangoModelDetails = response;
+            new SurveyApp({el: element, survey: $scope.xlfSurvey, ngScope: $scope, save: saveCallback}).render();
+        });
+    } else {
+        // url points to new survey_draft
+        $scope.xlfSurvey = new XLF.Survey()
+        new SurveyApp({el: element, survey: $scope.xlfSurvey, ngScope: $scope, save: saveCallback}).render();
+    }
 }

@@ -67,6 +67,18 @@ viewUtils.debugFrame = do ->
       $div = false
   showFn
 
+XLF.launchQuestionLibrary = do ->
+  launch = (opts={})->
+    wrap = $("<div>", class: "js-click-remove-iframe iframe-bg-shade")
+    $("<div>").text("""
+      Launch question library in this element
+      <section koboform-question-library=""></section>
+    """).appendTo(wrap)
+    wrap.click ()-> wrap.remove()
+    wrap
+
+  launch
+
 XLF.enketoIframe = do ->
 
   buildUrl = (previewUrl)->

@@ -22,6 +22,7 @@ var kobo = angular.module('dkobo', [
 kobo.directive('topLevelMenu', TopLevelMenuDirective);
 kobo.directive('infoList', InfoListDirective);
 kobo.directive('koboformBuilder', BuilderDirective);
+kobo.directive('koboformQuestionLibrary', QuestionLibraryDirective)
 
 kobo.factory('$userDetails', userDetailsFactory);
 kobo.factory('$restApi', restApiFactory);
@@ -29,6 +30,8 @@ kobo.factory('$restApi', restApiFactory);
 kobo.service('$routeTo', RouteToService);
 kobo.service('$configuration', ConfigurationService);
 kobo.service('$miscUtils', MiscUtilsService);
+
+kobo.filter('titlecase', TitlecaseFilter);
 
 
 kobo.config(function ($routeProvider, $locationProvider, $httpProvider) {
@@ -43,7 +46,7 @@ kobo.config(function ($routeProvider, $locationProvider, $httpProvider) {
         });
 
         $routeProvider.when('/builder/:id', {
-            template: "<section koboform-builder class='form-builder'></section>",
+            template: '<section koboform-builder class="form-builder"></section><section koboform-question-library class="koboform__questionlibrary" ng-show="displayQlib" click-handler="add_item(item)"></section>',
             controller: 'BuilderController'
         });
 

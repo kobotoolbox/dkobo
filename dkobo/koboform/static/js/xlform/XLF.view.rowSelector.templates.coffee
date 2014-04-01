@@ -10,6 +10,11 @@ viewTemplates.xlfRowSelector.line = () ->
         <div class="well row-fluid clearfix">
           #{closeRowSelectorButton}
           <h4 class="menu-title">Choose question type</h4>
+          <div class="rowselector__questiontypes"></div>
+          <p style="clear:both">
+            Or
+            <button class="menu-title btn rowselector_openlibrary">Add from Question Library</button>
+          </p>
         </div>
       </div>
     """

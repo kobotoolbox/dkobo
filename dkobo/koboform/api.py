@@ -6,6 +6,7 @@ from models import SurveyDraft, SurveyPreview
 from serializers import ListSurveyDraftSerializer, DetailSurveyDraftSerializer
 from django.shortcuts import render_to_response, HttpResponse, get_object_or_404
 
+
 class SurveyAssetViewset(viewsets.ModelViewSet):
     model = SurveyDraft
     serializer_class = ListSurveyDraftSerializer
@@ -26,7 +27,7 @@ class SurveyAssetViewset(viewsets.ModelViewSet):
         user = self.request.user
         if user.is_anonymous():
             raise PermissionDenied
-        contents = request.POST
+        contents = request.DATA
         survey_draft = request.user.survey_drafts.create(**contents)
         return Response(ListSurveyDraftSerializer(survey_draft).data)
 
@@ -41,8 +42,11 @@ class SurveyAssetViewset(viewsets.ModelViewSet):
         draft = self.get_object()
         draft.delete()
 
+
 class LibraryAssetViewset(SurveyAssetViewset):
     exclude_asset_type = True
+    serializer_class = DetailSurveyDraftSerializer
+
 
 class SurveyDraftViewSet(SurveyAssetViewset):
     exclude_asset_type = False

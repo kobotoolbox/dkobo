@@ -35,6 +35,15 @@ class XLF.Survey extends XLF.SurveyFragment
       @surveyDetails.importDefaults()
     @rows.invoke('linkUp')
 
+  insertSurvey: (survey, index=-1)->
+    index = @rows.length  if index is -1
+    for row, row_i in survey.rows.models
+      if rowlist = row.getList()
+        @choices.add(name: rowlist.get("name"), options: rowlist.options.toJSON())
+      index_incr = index + row_i
+      @rows.add(row.toJSON(), at: index_incr)
+    ``
+
   toCsvJson: ()->
     # build an object that can be easily passed to the "csv" library
     # to generate the XL(S)Form spreadsheet

@@ -19,6 +19,8 @@ class @SurveyApp extends Backbone.View
 
     @rowViews = new Backbone.Model()
 
+    @ngScope = options.ngScope
+
     @survey.rows.on "add", @reset, @
     @survey.rows.on "remove", @reset, @
     @survey.on "row-detail-change", (row, key, val, ctxt)=>
@@ -54,7 +56,7 @@ class @SurveyApp extends Backbone.View
     @formEditorEl = @$(".-form-editor")
     @$(".editor-message .expanding-spacer-between-rows .add-row-btn").click (evt)=>
       if !@emptySurveyXlfRowSelector
-        @emptySurveyXlfRowSelector = new XLF.RowSelector(el: @$el.find(".expanding-spacer-between-rows").get(0), survey: @survey)
+        @emptySurveyXlfRowSelector = new XLF.RowSelector(el: @$el.find(".expanding-spacer-between-rows").get(0), survey: @survey, ngScope: @ngScope)
       @emptySurveyXlfRowSelector.expand()
 
     viewUtils.makeEditable @, @survey.settings, '.form-title', property:'form_title'
@@ -106,13 +108,15 @@ class @SurveyApp extends Backbone.View
     fn = (row)=>
       isEmpty = false
       unless (xlfrv = @rowViews.get(row.cid))
-        @rowViews.set(row.cid, new XLF.RowView(model: row, surveyView: @))
+        @rowViews.set(row.cid, new XLF.RowView(model: row, ngScope: @ngScope, surveyView: @))
         xlfrv = @rowViews.get(row.cid)
 
       $el = xlfrv.render().$el
       if $el.parents(@$el).length is 0
         @formEditorEl.append($el)
 
+    @ngScope.displayQlib = false
+    @ngScope.$apply()
     @survey.forEachRow(fn, includeErrors: true)
 
     @formEditorEl.find(".empty").css("display", if isEmpty then "" else "none")

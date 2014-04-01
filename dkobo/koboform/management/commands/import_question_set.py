@@ -1,16 +1,14 @@
 from django.core.management.base import BaseCommand, CommandError
 from dkobo.koboform.models import SurveyDraft
 from django.contrib.auth.models import User
-from django.conf import settings
-import datetime
-import sys
-
 import StringIO
+import tempfile
 import pyxform
+import urllib
 import csv
-
-LIMIT_IMPORTS = 25
-ASSET_TYPE = "question"
+import sys
+import re
+from dkobo.koboform.xlform import Xlform
 
 def _dict_to_csv(imported_sheets):
     foo = StringIO.StringIO()
@@ -39,7 +37,7 @@ def _convert_xls_file_to_individual_surveys(filename):
     survey = imported_sheets.get("survey", [])
     choices = imported_sheets.get("choices", [])
     # for row in survey:
-    for row in survey[0:LIMIT_IMPORTS]:
+    for row in survey[0:25]:
         if len(row.keys()) == 0:
             continue
         name = row.get("name")
@@ -57,20 +55,17 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         username = args[0]
         filename = args[1]
+        if re.match(r'^https?:', filename):
+            tmp = tempfile.NamedTemporaryFile(suffix="xls")
+            tmp.write(urllib.request.urlopen(filename).read())
+            filename = tmp.name
         try:
             user = User.objects.get(username=username)
         except User.DoesNotExist, e:
             sys.exit(1)
         print user.survey_drafts.count()
-
-        ### goes with survey_drafts
-        user.survey_drafts.filter(asset_type=ASSET_TYPE).delete()
-        asset_type = None
-        ##
-
+        user.survey_drafts.filter().delete()
+        # csvs = _convert_xls_file_to_individual_surveys(filename)
         for (name, csvstr) in _convert_xls_file_to_individual_surveys(filename):
-            try:
-                SurveyDraft.objects.create(user=user, name=name, body=csvstr, asset_type=ASSET_TYPE)
-            except Exception, e:
-                print "Couldn't import asset"
+            SurveyDraft.objects.create(user=user, name=name, body=Xlform(csvstr)._shrunk, asset_type="question")
         print user.survey_drafts.count()

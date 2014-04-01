@@ -103,8 +103,8 @@
     <li ng-class="item.meta.question_class" ng-repeat="item in info_list_items|filter:text_search|orderBy:sort_criteria">
       <h4 class="question__name">{{ item.label }}</h4>
       <a href="" ng-click="toggle_response_list(item)" ng-class="item.meta.question_type_class">
-        <i ng-class="item.meta.question_type_icon_class + ' ' + item.meta.question_type_icon" ng-show="item.type === 'Select One' || item.type === 'Select Many'"></i>
-        {{item.type}}
+        <i ng-class="item.meta.question_type_icon_class + ' ' + item.meta.question_type_icon" ng-show="item.type === 'select_one' || item.type === 'select_many'"></i>
+        {{item.type | titlecase}}
       </a>
       <ul class="question__responses" ng-show="item.meta.show_responses">
         <li class="question__response-option" ng-repeat="response in item.responses">{{response}}</li>

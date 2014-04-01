@@ -18,9 +18,6 @@ describe ('Controllers', function () {
 
 
     function initializeController($controller, name, $rootScope) {
-        if (typeof $rootScope === 'undefined') {
-            throw 'no root scope';
-        }
         $rs = $rootScope;
         $scope = $rootScope;
 
@@ -125,6 +122,103 @@ describe ('Controllers', function () {
 
             expect($scope.info_list_items).toBe(hello);
         }));
+
+        describe('$scope.toggle_response_list', function () {
+            it('shows responses when they are hidden', inject(function ($controller, $rootScope) {
+                initializeController($controller, 'Assets', $rootScope);
+                var item = {
+                    meta: {
+                        show_responses: false
+                    }
+                }
+
+                $rootScope.toggle_response_list(item);
+
+                expect(item.meta.question_type_class).toBe('question__type question__type--expanded');
+                expect(item.meta.question_type_icon_class).toBe('question__type-icon question__type--expanded-icon');
+                expect(item.meta.question_type_icon).toBe('fa fa-caret-down');
+                expect(item.meta.show_responses).toBe(true);
+            }));
+            it('hides responses when they are visible', inject(function ($controller, $rootScope) {
+                initializeController($controller, 'Assets', $rootScope);
+                var item = {
+                    meta: {
+                        show_responses: true
+                    }
+                }
+
+                $rootScope.toggle_response_list(item);
+
+                expect(item.meta.show_responses).toBe(false);
+                expect(item.meta.question_type_class).toBe('question__type');
+                expect(item.meta.question_type_icon).toBe('fa fa-caret-right');
+                expect(item.meta.question_type_icon_class).toBe('question__type-icon');
+            }));
+        });
+
+        describe('scope.watch select_all', function () {
+            var _items;
+
+            beforeEach(function () {
+                _items = [
+                    { label: 'Currently, what is your main priority or concern?', type: 'Select Many', meta: {} },
+                    { label: 'If you have a dispute in your community, to whom do you take it first?', type: 'Select Many', meta: {} },
+                    { label: 'Why do you take it first to that person or institution?', type: 'Select Many', meta: {} }
+                ];
+
+                resourceStub = {
+                    query: function (fn) { fn(_items)}
+                };
+            });
+
+            it('sets selected properties to selected on all objects when select_all is true', inject(function ($controller, $rootScope) {
+                initializeController($controller, 'Assets', $rootScope);
+
+                $rootScope.select_all = true;
+                $rootScope.$apply();
+
+
+                expect(_items[0].meta.is_selected).toBeTruthy();
+                expect(_items[0].meta.question_class).toBe('questions__question questions__question--selected');
+                expect(_items[1].meta.is_selected).toBeTruthy();
+                expect(_items[1].meta.question_class).toBe('questions__question questions__question--selected');
+                expect(_items[2].meta.is_selected).toBeTruthy();
+                expect(_items[2].meta.question_class).toBe('questions__question questions__question--selected');
+            }));
+
+            it('sets selected properties to deselected on all objects when select_all is false', inject(function ($controller, $rootScope) {
+                initializeController($controller, 'Assets', $rootScope);
+
+                $rootScope.select_all = false;
+                $rootScope.$apply();
+
+
+                expect(_items[0].meta.is_selected).toBeFalsy();
+                expect(_items[0].meta.question_class).toBe('questions__question');
+                expect(_items[1].meta.is_selected).toBeFalsy();
+                expect(_items[1].meta.question_class).toBe('questions__question');
+                expect(_items[2].meta.is_selected).toBeFalsy();
+                expect(_items[2].meta.question_class).toBe('questions__question');
+            }));
+
+            it('no-ops when select_all is null', inject(function ($controller, $rootScope) {
+                initializeController($controller, 'Assets', $rootScope);
+
+                $rootScope.select_all = true;
+                $rootScope.$apply();
+
+                $rootScope.select_all = null;
+                $rootScope.$apply();
+
+
+                expect(_items[0].meta.is_selected).toBeTruthy();
+                expect(_items[0].meta.question_class).toBe('questions__question questions__question--selected');
+                expect(_items[1].meta.is_selected).toBeTruthy();
+                expect(_items[1].meta.question_class).toBe('questions__question questions__question--selected');
+                expect(_items[2].meta.is_selected).toBeTruthy();
+                expect(_items[2].meta.question_class).toBe('questions__question questions__question--selected');
+            }));
+        });
     });
 
     describe('Header Controller', function () {

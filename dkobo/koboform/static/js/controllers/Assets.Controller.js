@@ -4,10 +4,11 @@ function AssetsController($scope, $rootScope, $resource, $restApi) {
     var assets = $restApi.create_question_api();
     $scope.sort_criteria = '-date';
 
-    assets.query(function (results) {
-
-        for (var i = 0; i < results.length; i++) {
-            results[i].meta = {
+    assets.query(function (inputs) {
+        var results = [];
+        for (var i = 0; i < inputs.length; i++) {
+            var current = inputs[i];
+            current.meta = {
                 show_responses: false,
                 is_selected: false,
                 question_class: 'questions__question',
@@ -16,11 +17,30 @@ function AssetsController($scope, $rootScope, $resource, $restApi) {
                 question_type_icon_class: 'question__type-icon'
             }
 
-            // for demo purposes
+            var backbone_survey = XLF.createSurveyFromCsv(current.body);
+            var row = backbone_survey.rows.at(0);
 
-            results[i].date = new Date().setDate(new Date().getDate() - i);
+            if(!row) {
+                // log("Why is there no row here?", backbone_survey);
+            } else {
+                current.label = row.getValue('label');
+                current.type = row.get("type").get("typeId");
+                current.backbone_model = backbone_survey;
+
+                var list = row.getList();
+                if (list) {
+                    current.responses = list.options.map(function(option) {
+                        return option.get("label");
+                    });
+                }
+                results.push(row);
+
+                // for demo purposes
+                row.date = new Date().setDate(new Date().getDate() - i);
+            }
+
         }
-        $scope.info_list_items = results;
+        $scope.info_list_items = inputs;
     });
 
     $scope.toggle_response_list = function (item) {

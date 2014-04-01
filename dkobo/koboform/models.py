@@ -32,8 +32,11 @@ class SurveyDraft(models.Model):
         return self._pyxform_survey.id_string
 
     def summarize_survey(self):
-        # return json.dumps(self._pyxform_survey.to_json())
-        return "{}"
+        try:
+            json_summary = self._pyxform_survey.to_json()
+        except Exception, e:
+            json_summary = {u'summary_error': str(e)}
+        return json.dumps(json_summary)
 
     def to_xml(self):
         return self._pyxform_survey.to_xml()
