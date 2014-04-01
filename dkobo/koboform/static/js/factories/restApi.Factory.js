@@ -5,8 +5,7 @@ function restApiFactory($resource) {
     return {
         createSurveyDraftApi: function (id) {
             var customMethods = {};
-            id = id === 'new' ? null : id;
-            if (id === null) {
+            if (id === 'new') {
                 return $resource('/api/survey_drafts', {}, {
                     save: { method: 'POST' }
                 });
