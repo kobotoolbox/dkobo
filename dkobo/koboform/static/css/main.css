@@ -888,7 +888,6 @@ input[type="button"].btn--block {
     margin-left: auto;
     margin-right: auto;
 }
-
 .questions__header {
     position: fixed;
     top: 64px;
@@ -932,6 +931,22 @@ input[type="button"].btn--block {
     padding-left: 10px;
     border-bottom: 2px solid #cbd0d7;
     display: inline-block;
+}
+.question-filter--short {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 54px;
+    background-color: #e3e8ec;
+    padding: 10px 12px;
+    border-bottom: 2px solid #cbd0d7;
+}
+.question-filter__close {
+    position: absolute;
+    top: 8px;
+    right: 16px;
+    font-size: 24px;
 }
 
 .question-filter__filters {
@@ -1032,6 +1047,11 @@ input[type="button"].btn--block {
     top: 169px;
     width: 100%;
 }
+.questions__container--scrolling {
+    height: 318px;
+    padding-top: 50px;
+    overflow: auto;
+}
 
 .questions__question {
     min-height: 66px;
@@ -1056,6 +1076,7 @@ input[type="button"].btn--block {
     margin-top: 22px;
     border-bottom: 1px solid #e9ecee;
     padding-bottom: 9px;
+    padding-left: 1em;
     margin-bottom: 0;
 }
 
@@ -1064,21 +1085,21 @@ input[type="button"].btn--block {
 }
 
 .question__type {
-    height: 22px;
-    min-width: 107px;
+    display: inline-block;
+    min-width: 92px;
     border-right: 2px solid #e9ecee;
     font-family: LatoBold;
     color: #3f454c;
     font-size: 10px;
     margin-left: 3px;
-    padding: 7px 2px 2px 7px;
+    padding: 7px 2px 2px 20px;
 }
 
 .question__type-icon {
     height: 8px;
     width: 8px;
     color: #d9dde1;
-    margin-right: 7px;
+    margin-left: -12px;
 }
 
 .question__type--expanded {
@@ -1120,6 +1141,18 @@ input[type="button"].btn--block {
     color: #3f454c;
     font-size: 10px;
 }
+
+.koboform__questionlibrary {
+    position: fixed;
+    top: 92px;
+    left: 10%;
+    width: 80%;
+    height: 320px;
+    border: 1px solid #cbd0d7;
+    background-color: #fff;
+    overflow: hidden;
+}
+
 
 /* ==========================================================================
    Pulls

@@ -80,7 +80,7 @@
   <div class="question-filter">
     <div class="question-filter__filters">
       <i class="question-filter__searchbox-icon fa fa-search"></i>
-      <input class="question-filter__searchbox" ng-model="text_search" placeholder="Search questions" value="example of typing a very long question" />
+      <input class="question-filter__searchbox" ng-model="filters.label" placeholder="Search questions" value="example of typing a very long question" />
       <select class="question-filter__sorter" ng-model="sort_criteria">
         <option value="-date_modified">Newest First</option>
         <option value="date_modified">Oldest First</option>
@@ -100,7 +100,7 @@
 
   </div>
   <ul class="questions__container">
-    <li ng-class="item.meta.question_class" ng-repeat="item in info_list_items|filter:text_search|orderBy:sort_criteria">
+    <li ng-class="item.meta.question_class" ng-repeat="item in info_list_items|filter:filters|orderBy:sort_criteria">
       <h4 class="question__name">{{ item.label }}</h4>
       <a href="" ng-click="toggle_response_list(item)" ng-class="item.meta.question_type_class">
         <i ng-class="item.meta.question_type_icon_class + ' ' + item.meta.question_type_icon" ng-show="item.type === 'select_one' || item.type === 'select_many'"></i>
