@@ -34,7 +34,7 @@ function restApiFactory($resource, $timeout) {
                                 is_selected: false,
                                 question_class: 'questions__question',
                                 question_type_class: 'question__type',
-                                question_type_icon: 'fa fa-caret-right',
+                                question_type_icon: 'fa fa-caret-right fa-fw',
                                 question_type_icon_class: 'question__type-icon'
                             };
                         }
