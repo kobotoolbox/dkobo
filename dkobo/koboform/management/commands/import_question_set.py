@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 from dkobo.koboform.models import SurveyDraft
 from django.contrib.auth.models import User
+from django.conf import settings
 import StringIO
 import tempfile
 import pyxform
@@ -36,8 +37,13 @@ def _convert_xls_file_to_individual_surveys(filename):
     out_array = []
     survey = imported_sheets.get("survey", [])
     choices = imported_sheets.get("choices", [])
-    # for row in survey:
-    for row in survey[0:25]:
+    count = settings.KOBO_SURVEY_IMPORT_COUNT
+    if count is -1:
+        survey_rows = survey
+    else:
+        survey_rows = survey[0:count]
+
+    for row in survey_rows:
         if len(row.keys()) == 0:
             continue
         name = row.get("name")

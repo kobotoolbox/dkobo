@@ -132,6 +132,11 @@ def create_survey_draft(request):
     survey_draft = SurveyDraft.objects.create(**csv_details)
     return HttpResponse(json.dumps(model_to_dict(survey_draft)))
 
+def survey_draft_placeholder(request, sdid):
+    if request.method in ["PATCH", "PUT"]:
+        return update_survey_draft(request, sdid)
+    sd = SurveyDraft.objects.get(id=sdid)
+    return HttpResponse(json.dumps(model_to_dict(sd)))
 
 def update_survey_draft(request, sdid):
     raw_draft = json.loads(request.body)
