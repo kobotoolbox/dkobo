@@ -2,7 +2,9 @@
 'use strict';
 function AssetsController($scope, $rootScope, $resource, $restApi) {
     var assets = $restApi.create_question_api();
-    $scope.sort_criteria = '-date';
+    $scope.sort_criteria = '-date_modified';
+    $scope.showImportButton = false;
+    $scope.showCreateButton = false;
 
     assets.query(function (inputs) {
         var results = [];
@@ -44,6 +46,10 @@ function AssetsController($scope, $rootScope, $resource, $restApi) {
     });
 
     $scope.toggle_response_list = function (item) {
+        if (item.type !== 'select_one' && item.type !== 'select_all') {
+            return;
+        }
+
         if (item.meta.show_responses) {
             item.meta.show_responses = false;
             item.meta.question_type_class = 'question__type'
@@ -75,26 +81,9 @@ function AssetsController($scope, $rootScope, $resource, $restApi) {
         if (typeof $scope.show_responses === 'undefined') {
             return;
         }
-        var show_responses = $scope.show_responses,
-            new_question_type_class,
-            new_question_type_icon,
-            new_question_type_icon_class;
-
-        if (show_responses) {
-            new_question_type_class = 'question__type question__type--expanded';
-            new_question_type_icon = 'fa fa-caret-down';
-            new_question_type_icon_class = 'question__type-icon question__type--expanded-icon';
-        } else {
-            new_question_type_class = 'question__type';
-            new_question_type_icon = 'fa fa-caret-right';
-            new_question_type_icon_class = 'question__type-icon';
-        }
 
         _.each($scope.info_list_items, function (item) {
-            item.meta.show_responses = show_responses;
-            item.meta.question_type_class = new_question_type_class;
-            item.meta.question_type_icon = new_question_type_icon;
-            item.meta.question_type_icon_class = new_question_type_icon_class;
+            $scope.toggle_response_list(item);
         });
     });
 
