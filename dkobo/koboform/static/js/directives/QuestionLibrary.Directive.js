@@ -9,6 +9,9 @@ function QuestionLibraryDirective($restApi) {
             scope.handle_click = function (item) {
                 scope.clickHandler({ item: item });
             };
+            scope.hide_library_popup = function () {
+                scope.$parent.displayQlib = false;
+            };
         }
     };
 }

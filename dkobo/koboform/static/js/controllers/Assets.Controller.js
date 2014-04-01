@@ -29,10 +29,6 @@ function AssetsController($scope, $rootScope, $resource, $restApi, $timeout, $fi
         }
     };
 
-    $scope.hide_library_popup = function () {
-        this.$parent.displayQlib = false;
-    };
-
     $scope.select_all = null;
 
     function select_all() {
