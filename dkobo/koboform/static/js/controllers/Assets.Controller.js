@@ -2,7 +2,7 @@
 /*global XLF*/
 /*global _*/
 'use strict';
-function AssetsController($scope, $rootScope, $resource, $restApi, $timeout) {
+function AssetsController($scope, $rootScope, $resource, $restApi, $timeout, $filter) {
     var assets = $restApi.create_question_api();
     $scope.sort_criteria = 'date_modified';
     $rootScope.showImportButton = false;
@@ -90,21 +90,35 @@ function AssetsController($scope, $rootScope, $resource, $restApi, $timeout) {
 
     $scope.select_all = null;
 
+    function select_all() {
+        var new_class = $scope.select_all ? 'questions__question questions__question--selected' : 'questions__question';
+        var filter = $filter('filter');
+
+        _.each($scope.info_list_items, function (item) {
+            item.meta.is_selected = false;
+            item.meta.question_class = 'questions__question';
+        });
+
+        _.each(filter($scope.info_list_items, $scope.filters), function (item) {
+            item.meta.is_selected = $scope.select_all;
+            item.meta.question_class = new_class;
+        });
+    }
+
+    $scope.$watch('filters.label', function () {
+        select_all();
+    });
+
     $scope.$watch('select_all', function () {
         if ($scope.select_all === null) {
             return;
         }
-        var new_class = $scope.select_all ? 'questions__question questions__question--selected' : 'questions__question';
-
-        _.each($scope.info_list_items, function (item) {
-            item.meta.is_selected = $scope.select_all;
-            item.meta.question_class = new_class;
-        });
+        select_all();
     });
 
     $scope.$watch('show_responses', function () {
         if (typeof $scope.show_responses === 'undefined') {
-            return;
+            return;e
         }
 
         _.each($scope.info_list_items, function (item) {
