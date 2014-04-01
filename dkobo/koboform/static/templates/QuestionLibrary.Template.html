@@ -76,14 +76,14 @@
 
 <div class="questions">
   <h2 class="questions__title">Questions <span class="questions__question-count">{{info_list_items.length}} questions</span></h2>
-  <a class="question__create-new" href="">+ Add New question</a>
+  <a class="question__create-new" ng-show="false" href="">+ Add New question</a>
   <div class="question-filter">
     <div class="question-filter__filters">
       <i class="question-filter__searchbox-icon fa fa-search"></i>
       <input class="question-filter__searchbox" ng-model="text_search" placeholder="Search questions" value="example of typing a very long question" />
       <select class="question-filter__sorter" ng-model="sort_criteria">
-        <option value="-date">Newest First</option>
-        <option value="date">Oldest First</option>
+        <option value="-date_modified">Newest First</option>
+        <option value="date_modified">Oldest First</option>
         <option value="label">A - Z</option>
         <option value="-label">Z - A</option>
       </select>
@@ -93,9 +93,9 @@
 
     <div class="question-filter__actions">
       <div class="question-filter__selected-count">{{get_selected_amount()}} selected</div>
-      <a class="question-filter__add-to-new" href=""><i class="question-filter__add-to-new-icon"></i>Add to new form</a>
-      <a class="question-filter__add-to-block" href=""><i class="question-filter__add-to-block-icon"></i>Add to block</a>
-      <a class="question-filter__delete" href=""><i class="question-filter__delete-icon"></i>Delete</a>
+      <a class="question-filter__add-to-new" ng-show="false" href=""><i class="question-filter__add-to-new-icon"></i>Add to new form</a>
+      <a class="question-filter__add-to-block" ng-show="false" href=""><i class="question-filter__add-to-block-icon"></i>Add to block</a>
+      <a class="question-filter__delete" ng-show="false" href=""><i class="question-filter__delete-icon"></i>Delete</a>
     </div>
 
   </div>
