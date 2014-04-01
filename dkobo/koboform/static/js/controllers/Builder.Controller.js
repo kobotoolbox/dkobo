@@ -1,7 +1,7 @@
 /*exported BuilderController*/
 'use strict';
 
-function BuilderController($scope, $rootScope, $routeParams, $miscUtils, $location) {
+function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo, $miscUtils, $location) {
     $rootScope.activeTab = 'Forms';
     $scope.routeParams = $routeParams;
     $rootScope.deregisterLocationChangeStart = $rootScope.$on('$locationChangeStart', handleUnload);
@@ -22,7 +22,7 @@ function BuilderController($scope, $rootScope, $routeParams, $miscUtils, $locati
     }
 
     /*jshint validthis: true */
-    var surveyDraftApi = $restApi.createSurveyDraftApi(scope.routeParams.id);
+    var surveyDraftApi = $restApi.createSurveyDraftApi($scope.routeParams.id);
 
     function saveCallback() {
         if (this.validateSurvey()) {
@@ -38,14 +38,17 @@ function BuilderController($scope, $rootScope, $routeParams, $miscUtils, $locati
         }
     }
 
-    if (scope.routeParams.id && scope.routeParams.id != 'new'){
-        surveyDraftApi.get({id: scope.routeParams.id}, function builder_get_callback(response) {
-            scope.xlfSurvey = XLF.createSurveyFromCsv(response.body);
+    var element = $("section.form-builder").get(0);
+    if ($scope.routeParams.id && $scope.routeParams.id !== 'new'){
+        // url points to existing survey_draft
+        surveyDraftApi.get({id: $scope.routeParams.id}, function builder_get_callback(response) {
+            $scope.xlfSurvey = XLF.createSurveyFromCsv(response.body);
             // temporarily saving response in __djangoModelDetails
-            scope.xlfSurvey.__djangoModelDetails = response;
-            new SurveyApp({el: element, survey: scope.xlfSurvey, save: saveCallback}).render();
+            $scope.xlfSurvey.__djangoModelDetails = response;
+            new SurveyApp({el: element, survey: $scope.xlfSurvey, save: saveCallback}).render();
         });
     } else {
-        new SurveyApp({el: element, survey: scope.xlfSurvey, save: saveCallback}).render();
+        // url points to new survey_draft
+        new SurveyApp({el: element, survey: $scope.xlfSurvey, save: saveCallback}).render();
     }
 }
