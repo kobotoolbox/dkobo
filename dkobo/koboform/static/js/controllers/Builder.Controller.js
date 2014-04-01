@@ -39,16 +39,18 @@ function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo,
     }
 
     var element = $("section.form-builder").get(0);
+    $scope.displayQlib = false
+
     if ($scope.routeParams.id && $scope.routeParams.id !== 'new'){
         // url points to existing survey_draft
         surveyDraftApi.get({id: $scope.routeParams.id}, function builder_get_callback(response) {
             $scope.xlfSurvey = XLF.createSurveyFromCsv(response.body);
             // temporarily saving response in __djangoModelDetails
             $scope.xlfSurvey.__djangoModelDetails = response;
-            new SurveyApp({el: element, survey: $scope.xlfSurvey, save: saveCallback}).render();
+            new SurveyApp({el: element, survey: $scope.xlfSurvey, ngScope: $scope, save: saveCallback}).render();
         });
     } else {
         // url points to new survey_draft
-        new SurveyApp({el: element, survey: $scope.xlfSurvey, save: saveCallback}).render();
+        new SurveyApp({el: element, survey: $scope.xlfSurvey, ngScope: $scope, save: saveCallback}).render();
     }
 }

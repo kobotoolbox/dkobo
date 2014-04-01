@@ -4,6 +4,7 @@ class XLF.RowSelector extends Backbone.View
     "click .rowselector_openlibrary": "openLibrary"
   initialize: (opts)->
     @options = opts
+    @ngScope = opts.ngScope
     @button = @$el.find(".btn")
     @line = @$el.find(".line")
     if opts.action is "click-add-row"
@@ -35,9 +36,9 @@ class XLF.RowSelector extends Backbone.View
 
   openLibrary: ()->
     log "XLF.RowSelector::openLibrary()"
-    $(".librarywrap").remove()
-    # XLF.launchQuestionLibrary is in XLF.view.utils.coffee
-    XLF.launchQuestionLibrary().addClass("librarywrap").appendTo("body")
+    @ngScope.displayQlib = true
+    @ngScope.$digest()
+    ``
 
   selectMenuItem: (evt)->
     $('select.skiplogic__rowselect').select2('destroy')

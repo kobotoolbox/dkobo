@@ -12,6 +12,7 @@ class XLF.RowView extends Backbone.View
     @options = opts
     typeDetail = @model.get("type")
     @$el.attr("data-row-id", @model.cid)
+    @ngScope = opts.ngScope
     # @model.on "change", @render, @
     # typeDetail.on "change:value", _.bind(@render, @)
     # typeDetail.on "change:listName", _.bind(@render, @)
@@ -29,7 +30,7 @@ class XLF.RowView extends Backbone.View
       $(".xlf-selected").trigger("xlf-blur")
       @$el.addClass("xlf-selected")
   expandRowSelector: ->
-    new XLF.RowSelector(el: @$el.find(".expanding-spacer-between-rows").get(0), spawnedFromView: @).expand()
+    new XLF.RowSelector(el: @$el.find(".expanding-spacer-between-rows").get(0), ngScope: @ngScope, spawnedFromView: @).expand()
   render: ->
     if @model instanceof XLF.RowError
       @_renderError()
