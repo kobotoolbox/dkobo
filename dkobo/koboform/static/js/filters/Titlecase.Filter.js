@@ -1,5 +1,7 @@
 function TitlecaseFilter() {
     return function (text) {
+        if (text === undefined) { return ''; }
+
         text = text.replace('_', ' ');
         text = text.split(' ');
         for (var i = 0; i < text.length; i++) {

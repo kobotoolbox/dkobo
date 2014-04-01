@@ -37,7 +37,10 @@ class XLF.RowSelector extends Backbone.View
   openLibrary: ()->
     log "XLF.RowSelector::openLibrary()"
     @ngScope.displayQlib = true
-    @ngScope.$digest()
+    @ngScope.$apply()
+    model = @options.spawnedFromView.model
+    rowIndex = model.collection.indexOf(model)
+    $("section.koboform__questionlibrary").data("rowIndex", rowIndex)
     ``
 
   selectMenuItem: (evt)->

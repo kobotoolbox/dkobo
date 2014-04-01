@@ -115,6 +115,8 @@ class @SurveyApp extends Backbone.View
       if $el.parents(@$el).length is 0
         @formEditorEl.append($el)
 
+    @ngScope.displayQlib = false
+    @ngScope.$apply()
     @survey.forEachRow(fn, includeErrors: true)
 
     @formEditorEl.find(".empty").css("display", if isEmpty then "" else "none")

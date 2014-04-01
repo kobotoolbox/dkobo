@@ -11,7 +11,7 @@
 
 
 .koboform__questionlibrary {
-    position: absolute;
+    position: fixed;
     top: 92px;
     left: 10%;
     width: 80%;
@@ -19,7 +19,7 @@
     border: 1px solid #444;
     background-color: #fff;
     border-radius: 3px;
-    oveflow: auto;
+    overflow: auto;
 }
 
 
