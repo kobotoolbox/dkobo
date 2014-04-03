@@ -68,10 +68,10 @@ class Command(BaseCommand):
         try:
             user = User.objects.get(username=username)
         except User.DoesNotExist, e:
+            print "User '%s' does not exist" % username
             sys.exit(1)
-        print user.survey_drafts.count()
-        user.survey_drafts.filter().delete()
-        # csvs = _convert_xls_file_to_individual_surveys(filename)
+        print "Count [before import]: %d" % user.survey_drafts.count()
+        user.survey_drafts.filter(asset_type="question").delete()
         for (name, csvstr) in _convert_xls_file_to_individual_surveys(filename):
             SurveyDraft.objects.create(user=user, name=name, body=Xlform(csvstr)._shrunk, asset_type="question")
-        print user.survey_drafts.count()
+        print "Count [after import]:  %d" % user.survey_drafts.count()
