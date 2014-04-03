@@ -716,10 +716,6 @@ input[type="button"].btn--block {
 }
 
 
-
-
-
-
 /* ==========================================================================
    Info list
    ========================================================================== */
@@ -743,58 +739,6 @@ input[type="button"].btn--block {
     display: inline-block;
     margin-right: 6px;
 }
-
-/*
-.info-list__item {
-    padding: 15px 5px;
-    border-top: 1px solid #ccc;
-    cursor: pointer;
-}
-
-.info-list__item:hover,
-.info-list__item:focus,
-.info-list__item.is-selected {
-    background-color: #f7fad4;
-}
-
-.info-list__item:first-child {
-    border-top: 0;
-}
-
-.info-list-item__checkbox,
-.info-list-item__icon,
-.info-list-item__details {
-    margin-right: 15px;
-}
-
-.info-list-item__details {
-    display: inline-block;
-    vertical-align: middle;
-}
-
-.info-list-item__title,
-.info-list-item__info {
-    margin-top: 0;
-    margin-bottom: 0;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
-
-.info-list-item__title {
-    font-size: 16px;
-    color: #444;
-}
-
-.info-list-item__info {
-    font-size: 13px;
-    color: #bbb;
-}
-
-.info-list-item__tags {
-    display: inline-block;
-} */
-
 
 /* ==========================================================================
    Tags
@@ -1233,7 +1177,9 @@ input[type="button"].btn--block {
     *zoom: 1;
 }
 
-
+.row-extras__cog-faded {
+    cursor: pointer;
+}
 
 
 
@@ -1248,3 +1194,5 @@ input[type="button"].btn--block {
        (-o-min-device-pixel-ratio: 5/4),
        (-webkit-min-device-pixel-ratio: 1.25),
        (min-resolution: 120dpi) {}
+
+
