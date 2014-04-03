@@ -136,6 +136,9 @@ def survey_draft_placeholder(request, sdid):
     if request.method in ["PATCH", "PUT"]:
         return update_survey_draft(request, sdid)
     sd = SurveyDraft.objects.get(id=sdid)
+    if request.method == "DELETE":
+        sd.delete()
+        return HttpResponse("", status=204)
     return HttpResponse(json.dumps(model_to_dict(sd)))
 
 def update_survey_draft(request, sdid):
