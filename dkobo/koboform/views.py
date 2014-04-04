@@ -6,9 +6,11 @@ from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.contrib.auth.decorators import login_required
 from models import SurveyDraft, SurveyPreview
 from django.forms.models import model_to_dict
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.decorators import action
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
+
 from serializers import ListSurveyDraftSerializer, DetailSurveyDraftSerializer
 import json
 import utils
@@ -110,14 +112,6 @@ def get_survey_preview(request, unique_string):
         SurveyPreview.objects.get(unique_string=unique_string).xml,
         content_type="application/xml")
 
-
-# @login_required
-# def list_survey_drafts(request):
-#     ids = [dd['id']
-#            for dd in SurveyDraft.objects.filter(user=request.user).values("id")]
-#     return HttpResponse(json.dumps(ids))
-
-
 @login_required
 def create_survey_draft(request):
 
@@ -132,62 +126,28 @@ def create_survey_draft(request):
     survey_draft = SurveyDraft.objects.create(**csv_details)
     return HttpResponse(json.dumps(model_to_dict(survey_draft)))
 
-def survey_draft_placeholder(request, sdid):
-    if request.method in ["PATCH", "PUT"]:
-        return update_survey_draft(request, sdid)
-    sd = SurveyDraft.objects.get(id=sdid)
-    if request.method == "DELETE":
-        sd.delete()
-        return HttpResponse("", status=204)
-    return HttpResponse(json.dumps(model_to_dict(sd)))
+@login_required
+@api_view(['GET', 'PUT', 'DELETE'])
+def survey_draft_detail(request, pk, format=None):
+    try:
+        survey_draft = SurveyDraft.objects.get(pk=pk, user=request.user)
+    except SurveyDraft.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
-def update_survey_draft(request, sdid):
-    raw_draft = json.loads(request.body)
+    if request.method == 'GET':
+        serializer = DetailSurveyDraftSerializer(survey_draft)
+        return Response(serializer.data)
 
-    name = raw_draft.get('title', raw_draft.get('name'))
+    elif request.method == 'PUT':
+        serializer = DetailSurveyDraftSerializer(survey_draft, data=request.DATA)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    survey_draft = SurveyDraft.objects.get(pk=sdid)
-
-    survey_draft.body = raw_draft.get("body")
-    survey_draft.description = raw_draft.get("description")
-    survey_draft.name = name
-
-    survey_draft.save()
-
-    return HttpResponse(json.dumps(model_to_dict(survey_draft)))
-
-
-# @login_required
-# def read_survey_draft(request, sdid):
-#     survey_draft = SurveyDraft.objects.get(id=sdid)
-#     return HttpResponse(json.dumps(model_to_dict(survey_draft)))
-
-# unrestful, but works.
-
-
-# def list_forms_for_user(request):
-#     survey_drafts = []
-#     if request.user.is_authenticated():
-#         for sd in request.user.survey_drafts.all():
-#             survey_drafts.append({u'title': sd.name,
-#                                   u'info': sd.description,
-#                                   u'icon': 'fa-file-o',
-#                                   u'iconBgColor': 'green',
-#                                   u'id': sd.id})
-#     return HttpResponse(json.dumps(survey_drafts))
-# def list_forms_in_library(request):
-#     '''
-#     This is a placeholder for the accessor of surveys
-#     in the question library.
-#     '''
-#     library_forms = []
-#     for sd in SurveyDraft.objects.filter(in_question_library=True):
-#         library_forms.append({u'name': sd.name,
-#                               u'description': sd.description,
-#                               u'tags': [],
-#                               u'id': sd.id,
-#                               })
-#     return HttpResponse(json.dumps(library_forms))
+    elif request.method == 'DELETE':
+        survey_draft.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 def jasmine_spec(request):
