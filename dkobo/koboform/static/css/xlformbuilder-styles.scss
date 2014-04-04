@@ -135,12 +135,20 @@
 .survey-editor {
   padding-bottom: 36px;
 }
-
+    .survey-editor__null-top-row {
+        &.expanded {
+            .survey-editor__message {
+                display: none;
+            }
+        }
+        &.hidden {
+            display: none;
+        }
+    }
     .survey-editor__message {
         text-align: center;
         color: #888;
     }
-
 
 
 

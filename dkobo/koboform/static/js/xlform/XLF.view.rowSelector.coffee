@@ -12,6 +12,7 @@ class XLF.RowSelector extends Backbone.View
   expand: ->
     @button.fadeOut 150
     @line.addClass "expanded"
+    @line.parents(".survey-editor__null-top-row").addClass "expanded"
     @line.css "height", "inherit"
     @line.html viewTemplates.xlfRowSelector.line()
     $menu = @line.find(".rowselector__questiontypes")
@@ -25,6 +26,7 @@ class XLF.RowSelector extends Backbone.View
     # click .js-close-row-selector
     @line.find("div").eq(0).fadeOut 250, =>
       @line.empty()
+    @line.parents(".survey-editor__null-top-row").removeClass "expanded"
     @button.fadeIn 200
     @line.removeClass "expanded"
     @line.animate height: "0"
