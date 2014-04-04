@@ -117,8 +117,7 @@ class @SurveyApp extends Backbone.View
 
     @ngScope.displayQlib = false
     @survey.forEachRow(fn, includeErrors: true)
-
-    @formEditorEl.find(".empty").css("display", if isEmpty then "" else "none")
+    @formEditorEl.find(".survey-editor__message").css("display", if isEmpty then "" else "none")
     viewUtils.reorderElemsByData(".xlf-row-view", @$el, "row-index")
     ``
 
@@ -134,9 +133,9 @@ class @SurveyApp extends Backbone.View
       if !matchingRow
         throw new Error("Matching row was not found.")
 
-      @survey.rows.remove matchingRow
       # this slideUp is for add/remove row animation
-      rowEl.slideUp 175, "swing"
+      rowEl.slideUp 175, "swing", ()=>
+        @survey.rows.remove matchingRow
 
   onEscapeKeydown: -> #noop. to be overridden
   previewButtonClick: (evt)->

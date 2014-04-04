@@ -10,7 +10,6 @@ class XLF.RowSelector extends Backbone.View
     if opts.action is "click-add-row"
       @expand()
   expand: ->
-    $(".-form-editor .empty .survey-editor__message").css("display", "none")
     @button.fadeOut 150
     @line.addClass "expanded"
     @line.css "height", "inherit"
@@ -24,7 +23,6 @@ class XLF.RowSelector extends Backbone.View
 
   shrink: ->
     # click .js-close-row-selector
-    $(".-form-editor .empty .survey-editor__message").css("display", "")
     @line.find("div").eq(0).fadeOut 250, =>
       @line.empty()
     @button.fadeIn 200
