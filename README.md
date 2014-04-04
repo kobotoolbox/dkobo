@@ -1,4 +1,7 @@
 # Dkobo.
+
+[![Build Status](https://travis-ci.org/kobotoolbox/dkobo.svg)](https://travis-ci.org/kobotoolbox/dkobo)
+
 #### A django project for developing components of the kobotoolbox.
 ------------------------------
 
