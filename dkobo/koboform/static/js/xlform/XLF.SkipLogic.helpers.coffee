@@ -42,6 +42,11 @@ class XLF.SkipLogicPresenter
     @view.question_picker_view.fill_value(@model.get('question_cid'))
     @view.operator_picker_view.fill_value(@model.get('operator').get_value())
     @view.response_value_view.fill_value(@model.get('response_value')?.get('value'))
+
+    @builder.survey.on 'row-detail-change', (row, key) =>
+      if key == 'label'
+        @render(destination)
+
   serialize: () ->
     @model.serialize()
 

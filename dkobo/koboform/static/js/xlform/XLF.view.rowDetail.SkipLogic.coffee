@@ -101,10 +101,6 @@ class XLF.Views.QuestionPicker extends XLF.Views.Base
     @$el.on 'change', () =>
       @$el.children(':first').prop('disabled', true)
 
-    @survey.on 'row-detail-change', (row, key) =>
-      if key == 'label'
-        @render()
-
     @
 
   constructor: (@questions, @survey) ->
