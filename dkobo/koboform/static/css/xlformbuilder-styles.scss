@@ -136,6 +136,8 @@
   padding-bottom: 36px;
 }
     .survey-editor__null-top-row {
+        position: relative;
+
         &.expanded {
             .survey-editor__message {
                 display: none;
@@ -297,9 +299,6 @@
     border-radius: 4px;
 }
 
-.editor-message {
-  position: relative;
-}
 .row-type-col {
   float: left;
   width: 20%;
