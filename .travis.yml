@@ -11,9 +11,7 @@ before_install:
   - gem install sass
   - npm install
 env:
-  - PIP_DOWNLOAD_CACHE=$HOME/.pip-download-cache
-  - DJANGO_DEBUG=False
-  - DJANGO_SECRET_KEY=ZGtvYm90cmF2aXM
+  - PIP_DOWNLOAD_CACHE=$HOME/.pip-download-cache DJANGO_DEBUG=False DJANGO_SECRET_KEY=ZGtvYm90cmF2aXM
 install:
   - pip install -r requirements.txt --use-mirrors
   - python manage.py syncdb --noinput --settings=dkobo.settings
