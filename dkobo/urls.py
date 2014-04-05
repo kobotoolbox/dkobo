@@ -13,7 +13,7 @@ admin.autodiscover()
 
 urlpatterns = patterns(
     '',
-    url(r'^api/survey_drafts/(?P<sdid>\d+)', 'dkobo.koboform.views.survey_draft_placeholder'),
+    url(r'^api/survey_drafts/(?P<pk>\d+)$', 'dkobo.koboform.views.survey_draft_detail'),
     url(r'^api/', include(router.urls)),
     url(r'^$', 'dkobo.koboform.views.spa', name='spa'),
     url(r'^admin/', include(admin.site.urls)),
