@@ -10,7 +10,7 @@ cache:
 before_install:
   - gem install sass
   - npm install
-key:
+script:
   - python manage.py test
 env:
   - PIP_DOWNLOAD_CACHE=$HOME/.pip-download-cache DJANGO_DEBUG=False DJANGO_SECRET_KEY=ZGtvYm90cmF2aXM
