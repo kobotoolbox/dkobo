@@ -54,7 +54,7 @@ class @SurveyApp extends Backbone.View
           break
 
     @formEditorEl = @$(".-form-editor")
-    @$(".editor-message .expanding-spacer-between-rows .add-row-btn").click (evt)=>
+    @$(".survey-editor__null-top-row .expanding-spacer-between-rows .add-row-btn").click (evt)=>
       if !@emptySurveyXlfRowSelector
         @emptySurveyXlfRowSelector = new XLF.RowSelector(el: @$el.find(".expanding-spacer-between-rows").get(0), survey: @survey, ngScope: @ngScope)
       @emptySurveyXlfRowSelector.expand()
@@ -118,7 +118,11 @@ class @SurveyApp extends Backbone.View
     @ngScope.displayQlib = false
     @survey.forEachRow(fn, includeErrors: true)
 
-    @formEditorEl.find(".empty").css("display", if isEmpty then "" else "none")
+    null_top_row = @formEditorEl.find(".survey-editor__null-top-row, .survey-editor__message").removeClass("expanded")
+    if isEmpty
+      null_top_row.removeClass("hidden")
+    else
+      null_top_row.addClass("hidden")
     viewUtils.reorderElemsByData(".xlf-row-view", @$el, "row-index")
     ``
 
@@ -134,9 +138,9 @@ class @SurveyApp extends Backbone.View
       if !matchingRow
         throw new Error("Matching row was not found.")
 
-      @survey.rows.remove matchingRow
       # this slideUp is for add/remove row animation
-      rowEl.slideUp 175, "swing"
+      rowEl.slideUp 175, "swing", ()=>
+        @survey.rows.remove matchingRow
 
   onEscapeKeydown: -> #noop. to be overridden
   previewButtonClick: (evt)->
