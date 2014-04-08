@@ -138,8 +138,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'django.kobo@gmail.com'
-EMAIL_HOST_PASSWORD = 'djkobo2013!'
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'django.kobo@gmail.com')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'djkobo2013!')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
