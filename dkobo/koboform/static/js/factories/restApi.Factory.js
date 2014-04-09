@@ -80,7 +80,9 @@ function restApiFactory($resource, $timeout) {
                             });
                         }
 
-                        timed_execution($scope.info_list_items[i]);
+                        if ($scope.info_list_items.length > 0) {
+                            timed_execution($scope.info_list_items[i]);
+                        }
 
                     }
                 }
