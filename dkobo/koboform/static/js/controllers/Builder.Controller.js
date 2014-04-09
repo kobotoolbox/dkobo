@@ -47,11 +47,13 @@ function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo,
             $scope.xlfSurvey = XLF.createSurveyFromCsv(response.body);
             // temporarily saving response in __djangoModelDetails
             $scope.xlfSurvey.__djangoModelDetails = response;
+            $scope.xlfSurveyApp = SurveyApp.create({el: 'section.form-builder', survey: $scope.xlfSurvey, ngScope: $scope, save: saveCallback});
+            $scope.xlfSurveyApp.render();
         });
     } else {
         // url points to new survey_draft
         $scope.xlfSurvey = new XLF.Survey()
+        $scope.xlfSurveyApp = SurveyApp.create({el: 'section.form-builder', survey: $scope.xlfSurvey, ngScope: $scope, save: saveCallback});
+        $scope.xlfSurveyApp.render();
     }
-    $scope.xlfSurveyApp = SurveyApp.create({el: 'section.form-builder', survey: $scope.xlfSurvey, ngScope: $scope, save: saveCallback});
-    $scope.xlfSurveyApp.render();
 }
