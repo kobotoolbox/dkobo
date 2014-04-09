@@ -146,10 +146,10 @@ def survey_draft_detail(request, pk, format=None):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'PATCH':
-        serializer = DetailSurveyDraftSerializer(survey_draft, data=request.DATA)
-        # serializer.is_valid() checks for required fields, which we don't want to do here
-        serializer.save()
-        return Response(serializer.data)
+        for key, value in request.DATA.items():
+            survey_draft.__setattr__(key, value)
+        survey_draft.save()
+        return Response(DetailSurveyDraftSerializer(survey_draft).data)
 
     elif request.method == 'DELETE':
         survey_draft.delete()
