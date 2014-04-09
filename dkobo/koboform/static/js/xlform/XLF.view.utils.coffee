@@ -5,11 +5,12 @@ viewUtils.makeEditable = (that, model, selector, {property, transformFunction, o
     transformFunction = (value) -> value
   if !property?
     property = 'value'
-  
-  opts = 
+
+  opts =
     type: 'text'
     success: _.bind (uu, ent) ->
         ent = transformFunction ent
+        ent = ent.replace(/\t/g, '')
         model.set(property, ent, validate: true)
         if(model.validationError && model.validationError[property])
           return model.validationError[property]

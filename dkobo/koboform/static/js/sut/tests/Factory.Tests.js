@@ -22,7 +22,7 @@ describe('restApi Factory', function () {
 
             factory.createSurveyDraftApi();
 
-            expect(resourceSpy).toHaveBeenCalledWith('/koboform/survey_draft/:id', { id: 0 }, {});
+            expect(resourceSpy).toHaveBeenCalledWith('/api/survey_drafts');
         });
 
         it ('should invoke $resource with a custom save object when an id is provided', function () {
@@ -35,7 +35,7 @@ describe('restApi Factory', function () {
             expect(resourceSpy).toHaveBeenCalledWith(
                 '/api/survey_drafts/:id',
                 { id: 1 },
-                { save: { method: 'PUT' } });
+                { save: { method: 'PATCH' } });
         });
     });
 });

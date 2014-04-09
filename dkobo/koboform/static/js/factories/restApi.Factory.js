@@ -1,14 +1,16 @@
 /* exported restApiFactory */
+/* global XLF */
 'use strict';
 
 function restApiFactory($resource, $timeout) {
     return {
         createSurveyDraftApi: function (id) {
-            var customMethods = {};
+            if (id === undefined) {
+                id = 'new';
+            }
+
             if (id === 'new') {
-                return $resource('/api/survey_drafts', {}, {
-                    save: { method: 'POST' }
-                });
+                return $resource('/api/survey_drafts');
             } else {
                 return $resource('/api/survey_drafts/:id', { id: id }, {
                     save: { method: 'PATCH' }
@@ -82,7 +84,7 @@ function restApiFactory($resource, $timeout) {
 
                     }
                 }
-            }
+            };
             return $resource('/api/library_assets', null, custom_methods);
         }
     };
