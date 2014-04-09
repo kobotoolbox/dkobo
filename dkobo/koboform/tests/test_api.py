@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.test.client import Client
 import json
 
+from dkobo.koboform.models import SurveyDraft
 
 class CreateReadUpdateDeleteSurveyDraftsTests(TestCase):
     def setUp(self):
@@ -25,7 +26,8 @@ class CreateReadUpdateDeleteSurveyDraftsTests(TestCase):
                         u'body': 'body',
                         u'description': 'description'}
         survey_dict.update(survey)
-        return self.client.post('/api/survey_drafts', survey_dict)
+        return self.client.post('/api/survey_drafts', json.dumps(survey_dict), \
+                                content_type='application/json')
 
     def test_anonymous_list(self):
         resp = self.anonymousClient.get('/api/survey_drafts')
@@ -49,6 +51,19 @@ class CreateReadUpdateDeleteSurveyDraftsTests(TestCase):
 
         resp = self.client.get('/api/survey_drafts/1')
         self.assertEqual(resp.data.get('id'), 1)
+
+    def test_patch_survey(self):
+        def make_body(question_label):
+            return """survey,,,\n,type,name,label\n,text,q1,%s""" % question_label
+        self.post_survey(self.client, {
+            u'body': make_body("Question1")
+        })
+        resp = self.client.get('/api/survey_drafts')
+        self.assertEqual(resp.data[0]['id'], 1)
+        resp2 = self.client.patch('/api/survey_drafts/1', json.dumps({
+            u'body': make_body("Question2")
+        }), content_type='application/json')
+        self.assertEqual(SurveyDraft.objects.get(id=1).body, make_body("Question2"))
 
     def test_library_assets(self):
         # post a library_asset (question)
