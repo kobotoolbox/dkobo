@@ -13,7 +13,7 @@ class @SurveyApp extends Backbone.View
   @create: (params = {}) ->
     if _.isString params.el
       params.el = $(params.el).get 0
-    returns new @SurveryApp(params)
+    return new SurveyApp(params)
 
   initialize: (options)->
     if options.survey and (options.survey instanceof XLF.Survey)
