@@ -127,7 +127,7 @@ def create_survey_draft(request):
     return HttpResponse(json.dumps(model_to_dict(survey_draft)))
 
 @login_required
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view(['GET', 'PUT', 'DELETE', 'PATCH'])
 def survey_draft_detail(request, pk, format=None):
     try:
         survey_draft = SurveyDraft.objects.get(pk=pk, user=request.user)
@@ -144,6 +144,12 @@ def survey_draft_detail(request, pk, format=None):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'PATCH':
+        serializer = DetailSurveyDraftSerializer(survey_draft, data=request.DATA)
+        # serializer.is_valid() checks for required fields, which we don't want to do here
+        serializer.save()
+        return Response(serializer.data)
 
     elif request.method == 'DELETE':
         survey_draft.delete()
