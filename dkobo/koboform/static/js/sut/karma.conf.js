@@ -23,6 +23,7 @@ module.exports = function(config) {
             '../directives/*.js',
             '../factories/*.js',
             '../services/*.js',
+            '../filters/*.js',
             'lib/*.js',
             'init.js',
             '../*.js',

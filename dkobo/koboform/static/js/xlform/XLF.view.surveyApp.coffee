@@ -10,6 +10,10 @@ class @SurveyApp extends Backbone.View
     "click #save": "saveButtonClick"
     "click #publish": "publishButtonClick"
     "update-sort": "updateSort"
+  @create: (params = {}) ->
+    if _.isString params.el
+      params.el = $(params.el).get 0
+    returns new @SurveryApp(params)
 
   initialize: (options)->
     if options.survey and (options.survey instanceof XLF.Survey)

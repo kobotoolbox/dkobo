@@ -14,8 +14,24 @@ describe ('Controllers', function () {
                         return resourceStub;
                     },
         miscServiceStub = function () {this.changeFileUploaderSuccess = sinon.spy();},
-        resourceStub;
+        resourceStub,
+        __original_survey_app_create_method;
 
+
+    beforeEach(function () {
+        __original_survey_app_create_method = SurveyApp.create;
+        SurveyApp.create = sinon.stub().returns({render: function () {}});
+    });
+
+    afterEach(function () {
+        SurveyApp.create = __original_survey_app_create_method;
+    });
+
+    beforeEach(function () {
+        window.$ = sinon.stub();
+        $.withArgs(window).returns({bind: sinon.stub(), unbind: sinon.stub()});
+        $.withArgs('section.form-builder').returns({get: sinon.stub()});
+    });
 
     function initializeController($controller, name, $rootScope) {
         $rs = $rootScope;
@@ -28,8 +44,10 @@ describe ('Controllers', function () {
             $routeParams: hello,
             $cookies: {csrftoken: 'test token'},
             $miscUtils: new miscServiceStub(),
+            $routeTo: sinon.stubObject(RouteToService),
             $restApi: {
-                create_question_api: function () { return resourceStub; }
+                create_question_api: function () { return resourceStub; },
+                createSurveyDraftApi: function () { return resourceStub; }
             }
         });
     }
@@ -111,8 +129,8 @@ describe ('Controllers', function () {
     describe('Assets Controller', function () {
         beforeEach(function () {
             resourceStub = {
-                    query: function (fn) { fn(hello); }
-                };
+                list: function () { $rs.info_list_items = hello;}
+            };
         });
         it('should initialize $scope and $rootScope correctly', inject(function ($controller, $rootScope) {
             initializeController($controller, 'Assets', $rootScope);
@@ -127,6 +145,7 @@ describe ('Controllers', function () {
             it('shows responses when they are hidden', inject(function ($controller, $rootScope) {
                 initializeController($controller, 'Assets', $rootScope);
                 var item = {
+                    type: 'select_one',
                     meta: {
                         show_responses: false
                     }
@@ -142,6 +161,7 @@ describe ('Controllers', function () {
             it('hides responses when they are visible', inject(function ($controller, $rootScope) {
                 initializeController($controller, 'Assets', $rootScope);
                 var item = {
+                    type: 'select_one',
                     meta: {
                         show_responses: true
                     }
@@ -167,7 +187,7 @@ describe ('Controllers', function () {
                 ];
 
                 resourceStub = {
-                    query: function (fn) { fn(_items)}
+                    list: function () { $rs.info_list_items = _items;}
                 };
             });
 
@@ -266,10 +286,6 @@ describe ('Controllers', function () {
     });
 
     describe('Builder Controller', function () {
-        beforeEach(function () {
-            window.$ = sinon.stub();
-            $.withArgs(window).returns({bind: sinon.stub(), unbind: sinon.stub()});
-        });
 
         it('should initialize $scope and $rootScope correctly', inject(function ($controller, $rootScope) {
             initializeController($controller, 'Builder', $rootScope);
