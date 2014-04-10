@@ -186,4 +186,13 @@ describe('XLF.skipLogicParser', function () {
     it('throws an error when the passed clause is invalid', function () {
         expect(function() { XLF.skipLogicParser("invalid clause");}).toThrow(new Error('criterion not recognized: "invalid clause"'));
     });
+
+    it('bug #751', function () {
+        expect(XLF.skipLogicParser("${For_how_many_years_have_you_be} != ''")).toEqual({
+            criteria: [{
+                name: "For_how_many_years_have_you_be",
+                operator: "ans_notnull"
+            }]
+        });
+    })
 });
