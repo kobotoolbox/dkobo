@@ -4,7 +4,7 @@
 XLF.skipLogicParser = (function () {
     var equalityCriterionPattern = /\${(\w+)}\s*(=|!=|<|>|<=|>=)\s*\'?((?:date\(\'\d{4}-\d{2}-\d{2}\'\)|\w+|-?\d+)\.?\d*)\'?/,
         existenceCriterionPattern = /\${(\w+)}\s*((?:=|!=)\s*(?:NULL|''))/i,
-        criteriaJoinPattern = /and|or/gi;
+        criteriaJoinPattern = / and | or /gi;
 
     function parseCriterion(text) {
         var matches = text.match(equalityCriterionPattern);
@@ -74,7 +74,7 @@ XLF.skipLogicParser = (function () {
                 criteria: _.map(criteria, function (criterion) {
                     return parseCriterion(criterion);
                 }),
-                operator: joinOperators[0].toUpperCase()
+                operator: joinOperators[0].replace(/ /g, '').toUpperCase()
             };
         }
     };
