@@ -20,10 +20,11 @@ viewUtils.makeEditable = (that, model, selector, {property, transformFunction, o
 
   editableOpts = _.extend(opts, options)
 
-  if selector instanceof jQuery
-    selector.editable editableOpts
-  else
-    that.$el.find(selector).editable editableOpts
+  if !(selector instanceof jQuery)
+    selector =that.$el.find(selector)
+
+  selector.on 'shown', (e, obj) -> obj.input.$input.on 'paste', (e) -> e.stopPropagation()
+  selector.editable editableOpts
 
 
 viewUtils.reorderElemsByData = (selector, parent, dataAttribute)->
