@@ -1,3 +1,11 @@
+class XLF.SkipLogicHelperFactory
+  create_presenter: () ->
+  create_criterion_builder_facade: (presenters, delimiter, builder) ->
+    return new XLF.SkipLogicCriterionBuilderFacade presenters, delimiter, builder, @view_factory
+  create_hand_code_facade: () ->
+  create_builder: () ->
+  constructor: (@view_factory) ->
+
 class XLF.SkipLogicPresenter
   change_question: (question_name) ->
     @model.change_question question_name
@@ -78,8 +86,8 @@ class XLF.SkipLogicCriterionBuilderFacade
     _.each @presenters, (presenter, index) =>
       if presenter.model.cid == id
         @presenters.splice(index, 1)
-  constructor: (@presenters, separator, @builder) ->
-    @view = new XLF.SkipLogicCriterionBuilderView
+  constructor: (@presenters, separator, @builder, @view_factory) ->
+    @view = @view_factory.create_criterion_builder_view()
     @view.criterion_delimiter = (separator || 'and').toLowerCase()
     @view.facade = @
   switch_editing_mode: () ->
@@ -106,16 +114,14 @@ class XLF.SkipLogicBuilder
 
   build_criterion_builder: (serialized_criteria) ->
     if serialized_criteria == ''
-      return new XLF.SkipLogicCriterionBuilderFacade [@build_empty_criterion_logic()], 'and', @
-#    try
-    parsed = XLF.skipLogicParser serialized_criteria
+      return @helper_factory.create_criterion_builder_facade [@build_empty_criterion_logic()], 'and', @
 
-    if parsed.criteria.length > 1
-      new XLF.SkipLogicCriterionBuilderFacade _.map(parsed.criteria, @build_criterion_logic), parsed.operator, @
-    else
-      new XLF.SkipLogicCriterionBuilderFacade [@build_criterion_logic parsed.criteria[0]], parsed.operator, @
-#   catch e
-#     @build_hand_code_criteria serialized_criteria
+    parsed = XLF.skipLogicParser serialized_criteria
+    criteria = _.filter(_.map(parsed.criteria, @build_criterion_logic), (item) -> !!item)
+    if criteria.length == 0
+      criteria.push @build_empty_criterion_logic()
+
+    @helper_factory.create_criterion_builder_facade criteria, parsed.operator, @
 
   build_operator_logic: (question_type, operator_type, criterion) =>
     return [@build_operator_model(question_type, operator_type, operator_type.symbol[criterion.operator]), @build_operator_view(question_type)]
@@ -147,6 +153,9 @@ class XLF.SkipLogicBuilder
         criterion.operator in op_type.parser_name
 
     question = @survey.findRowByName criterion.name
+    if !question
+      return false
+
     @question_type = question.get_type()
 
     [operator_model, operator_picker_view] = @build_operator_logic @question_type, @operator_type, criterion
@@ -194,7 +203,7 @@ class XLF.SkipLogicBuilder
 
     questions
 
-  constructor: (@model_factory, @view_factory, @survey, @current_question) ->
+  constructor: (@model_factory, @view_factory, @survey, @current_question, @helper_factory) ->
 
 
 XLF.question_types =

@@ -10,7 +10,7 @@ SkipLogicDetailMixin =
     survey = @getSurvey()
     current_question = @_parent
 
-    @builder = new XLF.SkipLogicBuilder model_factory, view_factory, survey, current_question
+    @builder = new XLF.SkipLogicBuilder model_factory, view_factory, survey, current_question, new XLF.SkipLogicHelperFactory view_factory
 
   serialize: ()->
     # @hidden = false
