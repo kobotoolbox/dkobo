@@ -72,7 +72,7 @@ viewTemplates.surveyApp = (survey) ->
         <ul class="-form-editor">
           <li class="survey-editor__null-top-row empty">
             <p class="survey-editor__message well">
-              <b>This survey is currently empty.</b><br>
+              <b>This form is currently empty.</b><br>
               You can add questions, notes, prompts, or other fields by clicking on the "+" sign below.
             </p>
             <div class="expanding-spacer-between-rows">
