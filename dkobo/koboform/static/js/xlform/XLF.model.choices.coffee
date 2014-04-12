@@ -1,5 +1,4 @@
 class XLF.Option extends XLF.BaseModel
-  idAttribute: "name"
   initialize: -> @unset("list name")
   destroy: ->
     log "destroy me", @

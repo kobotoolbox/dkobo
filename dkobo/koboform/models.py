@@ -33,7 +33,8 @@ class SurveyDraft(models.Model):
 
     def summarize_survey(self):
         try:
-            json_summary = self._pyxform_survey.to_json()
+            # json_summary = self._pyxform_survey.to_json()
+            json_summary = "{}" # todo: populate this field with an xlform summary
         except Exception, e:
             json_summary = {u'summary_error': str(e)}
         return json.dumps(json_summary)

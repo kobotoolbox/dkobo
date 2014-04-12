@@ -624,9 +624,10 @@ describe 'skip logic helpers', () ->
 
     describe 'change response value', () ->
       it 'changes the response value on the model', () ->
-    describe 'constructor', () ->
-      it 'binds itself to the criterion view', () ->
-      it 'binds the question to itself', () ->
+        _presenter.change_response 'test'
+
+        expect(_model.change_response).toHaveBeenCalledWith 'test'
+
     describe 'render', () ->
       it 'attaches the view to the provided destination and fills in the defaults from the model', () ->
 
@@ -658,8 +659,82 @@ describe 'skip logic helpers', () ->
     describe 'skip logic builder', () ->
     describe 'build', () ->
 
+    describe 'build criterion builder', () ->
+      _helper_factory = sinon.stubObject XLF.SkipLogicHelperFactory
+      _model_factory = sinon.stubObject XLF.Model.SkipLogicFactory
+      _view_factory = sinon.stubObject XLF.Views.SkipLogicViewFactory
+      _question = sinon.stubObject XLF.Row
+      _survey = sinon.stubObject XLF.Survey
+      _parser_stub = null
+      _builder = null
+
+      beforeEach () ->
+        _builder = new XLF.SkipLogicBuilder _model_factory, _view_factory, _survey, _question, _helper_factory
+        _parser_stub = sinon.stub XLF, 'skipLogicParser'
+
+        _builder.build_criterion_logic = sinon.stub()
+        _builder.build_criterion_logic.onFirstCall().returns true
+        _builder.build_criterion_logic.onSecondCall().returns 'test'
+
+      afterEach () ->
+        _parser_stub.restore()
+
+      it 'returns facade with empty criterion logic presenter when no criteria are passed', () ->
+        _builder.build_empty_criterion_logic = sinon.stub().returns('test')
+        _builder.build_criterion_builder ''
+
+        expect(_helper_factory.create_criterion_builder_facade).toHaveBeenCalledWith ['test'], 'and', _builder
+      it 'returns facade with criterion logic presenter array when multiple criteria are passed', () ->
+        _parser_stub.returns
+          operator: 'and'
+          criteria: [
+            true
+            'test'
+          ]
+
+        _builder.build_criterion_builder 'asdf'
+
+        expect(_helper_factory.create_criterion_builder_facade).toHaveBeenCalledWith [true, 'test'], 'and', _builder
+      it 'filters out falsey criteria', () ->
+        _parser_stub.returns
+          operator: 'and'
+          criteria: [
+            true
+            'test'
+            false
+          ]
+
+        _builder.build_criterion_logic.onThirdCall().returns false
+
+        _builder.build_criterion_builder 'asdf'
+
+        expect(_helper_factory.create_criterion_builder_facade).toHaveBeenCalledWith [true, 'test'], 'and', _builder
+      it 'returns facade with one criterion logic presenter when one criterion is passed', () ->
+        _parser_stub.returns
+          operator: 'and'
+          criteria: [
+            true
+          ]
+
+        _builder.build_criterion_builder 'asdf'
+
+        expect(_helper_factory.create_criterion_builder_facade).toHaveBeenCalledWith [true], 'and', _builder
+      it 'returns facade with empty criterion logic presenter when no passed criteria are valid', () ->
+        _parser_stub.returns
+          operator: 'and'
+          criteria: [
+            false
+          ]
+        _builder.build_empty_criterion_logic = sinon.stub().returns('empty')
+        _builder.build_criterion_logic.onFirstCall().returns false
+
+        _builder.build_criterion_builder 'asdf'
+
+        expect(_helper_factory.create_criterion_builder_facade).toHaveBeenCalledWith ['empty'], 'and', _builder
+
     describe 'build empty criterion logic', () ->
     describe 'build criterion logic', () ->
+      it 'returns false when question no longer exists', () ->
 
     describe 'build hand code criteria', () ->
     describe 'build criterion builder', () ->
@@ -671,3 +746,23 @@ describe 'skip logic helpers', () ->
     describe 'build response view', () ->
     describe 'build response model', () ->
     describe 'questions', () ->
+  describe 'helper factory', () ->
+    _view_factory = sinon.stubObject XLF.Views.SkipLogicViewFactory
+    beforeEach () ->
+      @addMatchers toBeInstanceOf: (expectedInstance) ->
+        actual = @actual
+        notText = (if @isNot then " not" else "")
+        @message = ->
+          "Expected " + actual.constructor.name + notText + " is instance of " + expectedInstance.name
+
+        actual instanceof expectedInstance
+
+    it 'creates a criterion builder facade', () ->
+      _view_factory.create_criterion_builder_view.returns({})
+      _helper_factory = new XLF.SkipLogicHelperFactory _view_factory
+      facade = _helper_factory.create_criterion_builder_facade 'test presenter', 'and', 'test builder'
+
+      expect(facade).toBeInstanceOf XLF.SkipLogicCriterionBuilderFacade
+      expect(facade.presenters).toBe 'test presenter'
+      expect(facade.view.criterion_delimiter).toBe 'and'
+      expect(facade.builder).toBe 'test builder'
