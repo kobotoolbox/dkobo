@@ -115,7 +115,7 @@ class XLF.Settings extends XLF.BaseModel
       required: true
       invalidChars: '`'
   defaults:
-    form_title: "New survey"
+    form_title: "New Form"
     form_id: "new_survey"
   toCsvJson: ->
     columns = _.keys(@attributes)
