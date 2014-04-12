@@ -44,19 +44,13 @@ STATICFILES_FINDERS = (
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-if DEBUG:
-    STATICFILES_DIRS = (
-        os.path.join(BASE_DIR, 'dkobo', 'static'),
-        )
-else:
-    STATICFILES_DIRS = ()
-
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'dkobo', 'static'),)
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Application definition
 
-COMPRESS_ENABLED = (not DEBUG)
+COMPRESS_ENABLED = os.environ.get('COMPRESS_ENABLED', 'True') == 'True'
 COMPRESS_OFFLINE = True
 COMPRESS_ROOT = os.path.join(BASE_DIR, 'dkobo', 'static')
 
