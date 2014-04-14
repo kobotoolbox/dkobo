@@ -69,10 +69,18 @@
 
 ### Production environment variables
 
+    DJANGO_DEBUG=False
+    DJANGO_SECRET_KEY=<use a unique django secret key here>
+    
     The server should run in development / debug mode by default, but if you want to change it you can run the command
 
     `source scripts/set_debug.sh true` #sets development mode<br>
     or<br>
+    
+    LOCAL:  source scripts/set_debug.sh true
+    LOCAL:  source scripts/set_debug.sh false
+    HEROKU: sh scripts/set_debug.sh --heroku true
+    HEROKU: sh scripts/set_debug.sh --heroku false
     `source scripts/set_debug.sh false` #sets production mode
 
 ### Grunt commands
