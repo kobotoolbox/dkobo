@@ -23,5 +23,6 @@ deploy:
   app: kobo-dev
   api_key:
     secure: pXD088HFHTBgl9z6E+u3LwcfQO4D1Cpa3IrocAky5bitlKC0ku55JoTKOQLYmNsI0eCCQw+uJKD8F7OuLwt4zZ7LF30SbtPbs1g73vFz7Iu6sV4uY97MKC01T6CCiaOfUACeY8UP/tQfFgaugRE6D2I3GyQ/k6tKiR2hQX2pqOI=
+  strategy: git
 notifications:
   irc: irc.freenode.org#kobotest
