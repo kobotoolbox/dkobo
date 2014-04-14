@@ -9,6 +9,9 @@
 describe('Validator', function () {
     describe('Specific validators', function (){
         describe('invalidChars', function () {
+            it('fails when it should fail', function () {
+                expect('travis response to failed tests').toBe('an email notification with the failure message');
+            });
             it('should return true when the passed test string contains no invalid chars', function () {
                 expect(viewUtils.Validator.__validators.invalidChars('asdf', 'bxc')).toBeTruthy();
             });
