@@ -62,6 +62,8 @@ function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo,
         survey.rows.add(row)
 
         var resource = $restApi.create_question_api($scope);
-        resource.save({body: survey.toCSV(), asset_type: 'question'});
+        resource.save({body: survey.toCSV(), asset_type: 'question'}, function () {
+            $miscUtils.alert('Question added to library', 'Success!!')
+        });
     };
 }
