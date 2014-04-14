@@ -26,6 +26,7 @@ else
     if [ "$2" = "true" ]; then
       echo "# heroku configs:set DJANGO_DEBUG=True --app=<your-heroku-app-name-here>"
       echo "# heroku configs:set DJANGO_SECRET_KEY=<secret-key-here> --app=<your-heroku-app-name-here>"
+      echo "# heroku configs:set COMPRESS_ENABLED= --app=<your-heroku-app-name-here>"
     else
       echo "# heroku configs:set DJANGO_DEBUG=False --app=<your-heroku-app-name-here>"
     fi
@@ -33,10 +34,12 @@ else
     if [ "$1" = "true" ]; then
     	export DJANGO_DEBUG=True
     	export DJANGO_SECRET_KEY=AnOtSoSeCrEtKeY
+    	export COMPRESS_ENABLED=False
     	echo "local debug mode set to true"
     else
     	export DJANGO_DEBUG=False
     	export DJANGO_SECRET_KEY=AnOtSoSeCrEtKeY
+    	export COMPRESS_ENABLED=True
     	echo "local debug mode set to false"
     fi
   fi

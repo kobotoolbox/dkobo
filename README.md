@@ -54,5 +54,7 @@
 
 ### Production environment variables
 
-    DJANGO_DEBUG=False
-    DJANGO_SECRET_KEY=<use a unique django secret key here>
+    LOCAL:  source scripts/set_debug.sh true
+    LOCAL:  source scripts/set_debug.sh false
+    HEROKU: sh scripts/set_debug.sh --heroku true
+    HEROKU: sh scripts/set_debug.sh --heroku false
