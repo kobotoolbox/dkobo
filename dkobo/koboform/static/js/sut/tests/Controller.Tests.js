@@ -339,6 +339,31 @@ describe ('Controllers', function () {
             }));
 
         });
+
+        describe('$scope.add_row_to_question_library', function () {
+            it('posts a survey object to the server', inject(function ($controller, $rootScope) {
+                var survey_stub = {
+                        rows: {
+                            add: sinon.spy()
+                        },
+                        toCSV: sinon.stub()
+                    },
+                    survey_factory_stub = sinon.stub(XLF.Survey, 'create');
+
+                survey_factory_stub.returns(survey_stub);
+                survey_stub.toCSV.returns('test survey');
+
+                resourceStub = {
+                    save: sinon.spy()
+                };
+
+                initializeController($controller, 'Builder', $rootScope);
+
+                $rootScope.add_row_to_question_library('test row')
+                expect(resourceStub.save).toHaveBeenCalledWith({body: 'test survey', asset_type: 'question'});
+                expect(survey_stub.rows.add).toHaveBeenCalledWith('test row')
+            }));
+        });
     });
 
     describe('Import Controller', function () {

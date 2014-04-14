@@ -68,7 +68,7 @@ function restApiFactory($resource, $timeout) {
                         function timed_execution(item) {
                             return $timeout(function () {
                                 set_defaults(item);
-                            }, 50).then(function () {
+                            }, 10).then(function () {
                                 create_survey(item);
                             }).then(function () {
                                 get_props_from_row(item);

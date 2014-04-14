@@ -31,6 +31,10 @@ viewTemplates.xlfRowView = () ->
           <span class="adv-details-txt">Advanced question details</span>
         </div>
       </div>
+      <div class="pull-right row-extras__add-to-question-library">
+        <span class="fa fa-plus-square-o fa-fw"></span>
+        <span class="row-extras__add-to-question-library--text">Copy to Library</span>
+      </div>
     </div>
     #{expandingSpacerHtml}
     """

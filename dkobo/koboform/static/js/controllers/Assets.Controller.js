@@ -12,7 +12,7 @@ function AssetsController($scope, $rootScope, $resource, $restApi, $timeout, $fi
     assets.list();
 
     $scope.toggle_response_list = function (item) {
-        if (item.type !== 'select_one' && item.type !== 'select_all') {
+        if (item.type !== 'select_one' && item.type !== 'select_all' && item.type !== 'select_multiple') {
             return;
         }
 
