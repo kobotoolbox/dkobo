@@ -283,11 +283,6 @@ describe "xlform survey model (XLF.Survey)", ->
       ynm.options.add [{name: "yes", label: "Yes"}, {name: "no", label: "No"}]
       expect(ynm.options.length).toBe(3)
 
-      # don't allow duplicate options
-      ynm.options.add name: "maybe", label: "Maybe2"
-      expect(ynm.options.length).toBe(3)
-      expect(ynm.options.first().get("label")).toBe("Maybe")
-
   describe "census xlform", ->
     beforeEach ->
       @census = XLF.createSurveyFromCsv(CENSUS_SURVEY)
