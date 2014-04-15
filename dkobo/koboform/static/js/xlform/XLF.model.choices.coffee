@@ -20,6 +20,9 @@ class XLF.ChoiceList extends XLF.BaseModel
   summaryObj: ->
     name: @get("name")
     options: @options.models.map("toJSON")
+  getNames: ()->
+    names = @options.map (opt)-> opt.get("name")
+    _.compact names
 
 class XLF.ChoiceLists extends XLF.BaseCollection
   model: XLF.ChoiceList

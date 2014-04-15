@@ -78,7 +78,8 @@ class XLF.OptionView extends Backbone.View
 
     @p.editable success: _.bind @saveValue, @
     $('span', @c).editable success: (ev, val) =>
-      val = XLF.sluggify val
+      other_names = @options.cl.getNames()
+      val = XLF.sluggifyLabel val, other_names
       @model.set('name', val)
       @model.set('setManually', true)
       @$el.trigger("choice-list-update", @options.cl.cid)
@@ -103,7 +104,8 @@ class XLF.OptionView extends Backbone.View
       @model.destroy()
     else
       @model.set("label", nval, silent: true)
+      other_names = @options.cl.getNames()
       if !@model.get('setManually')
-        @model.set("name", XLF.sluggify(nval))
+        @model.set("name", XLF.sluggifyLabel(nval, other_names))
       @$el.trigger("choice-list-update", @options.cl.cid)
     ``
