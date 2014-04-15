@@ -4,7 +4,11 @@
 /*global inject*/
 /*global sinon*/
 /*global beforeEach*/
+/*global afterEach*/
 /*global $*/
+/*global SurveyApp*/
+/*global RouteToService*/
+/*global XLF*/
 'use strict';
 
 describe ('Controllers', function () {
@@ -13,8 +17,12 @@ describe ('Controllers', function () {
         $resource = function () {
                         return resourceStub;
                     },
-        miscServiceStub = function () {this.changeFileUploaderSuccess = sinon.spy();},
+        miscServiceStub = function () {
+            this.changeFileUploaderSuccess = sinon.spy();
+            this.confirm = _confirmStub;
+        },
         resourceStub,
+        _confirmStub,
         __original_survey_app_create_method;
 
 
@@ -53,144 +61,136 @@ describe ('Controllers', function () {
     }
 
     describe ('Forms Controller', function () {
-        beforeEach(function () {
-            resourceStub = {
-                    query: function (fn) { fn(hello); }
-                };
-        });
-        it('should initialize $rootScope and $scope correctly', inject(function ($controller, $rootScope) {
-            initializeController($controller, 'Forms', $rootScope);
+        var _confirmStub, _deleteSpy;
 
+        beforeEach(inject(function ($controller, $rootScope) {
+            resourceStub = {
+                query: function (fn) { fn(hello); }
+            };
+
+            _confirmStub = sinon.stub();
+            _deleteSpy = sinon.spy();
+
+            miscServiceStub = function () {
+                this.confirm = _confirmStub;
+                this.changeFileUploaderSuccess = sinon.spy();
+            };
+
+            initializeController($controller, 'Forms', $rootScope);
+        }));
+
+        it('should initialize $rootScope and $scope correctly', function () {
             expect($rs.canAddNew).toBe(true);
             expect($rs.activeTab).toBe('Forms');
 
             expect($scope.infoListItems).toBe(hello);
-        }));
+        });
 
         describe('$scope.deleteSurvey', function () {
-            it('should delete survey when user confirms deletion', inject(function ($controller, $rootScope) {
-                var confirmStub = sinon.stub(),
-                    deleteSpy = sinon.spy();
+            it('should delete survey when user confirms deletion', function () {
+                _confirmStub.returns(true);
 
-                miscServiceStub = function () {
-                    this.confirm = confirmStub;
-                    this.changeFileUploaderSuccess = sinon.spy();
-                };
-                confirmStub.returns(true);
+                $scope.deleteSurvey({ id:0, $delete: _deleteSpy });
 
-                initializeController($controller, 'Forms', $rootScope);
+                expect(_confirmStub).toHaveBeenCalledOnce();
+                expect(_deleteSpy).toHaveBeenCalledOnce();
+            });
 
-                $scope.deleteSurvey({ id:0, $delete: deleteSpy });
+            it('should not delete survey when user cancels deletion', function () {
+                _confirmStub.returns(false);
 
-                expect(confirmStub).toHaveBeenCalledOnce();
-                expect(deleteSpy).toHaveBeenCalledOnce();
-            }));
+                $scope.deleteSurvey({ id:0, $delete: _deleteSpy });
 
-            it('should not delete survey when user cancels deletion', inject(function ($controller, $rootScope) {
-                var confirmStub = sinon.stub(),
-                    deleteSpy = sinon.spy();
-
-                miscServiceStub = function () {
-                    this.confirm = confirmStub;
-                    this.changeFileUploaderSuccess = sinon.spy();
-                };
-                confirmStub.returns(false);
-
-                initializeController($controller, 'Forms', $rootScope);
-
-                $scope.deleteSurvey({ id:0, $delete: deleteSpy });
-
-                expect(confirmStub).toHaveBeenCalledOnce();
-                expect(deleteSpy).not.toHaveBeenCalled();
-            }));
+                expect(_confirmStub).toHaveBeenCalledOnce();
+                expect(_deleteSpy).not.toHaveBeenCalled();
+            });
         });
 
         describe('$scope.$watch("infoListItems")', function () {
-            it('should set additionalClasses = content-centered when infoListItems is empty', inject (function ($controller, $rootScope) {
-                initializeController($controller, 'Forms', $rootScope);
-
+            it('should set additionalClasses = content-centered when infoListItems is empty', function () {
                 $rs.infoListItems = [];
                 $rs.$apply();
 
                 expect($rs.additionalClasses).toBe('content--centered');
-            }));
+            });
 
-            it('should set additionalClasses = "" when infoListItems contains elements', inject (function ($controller, $rootScope) {
-                initializeController($controller, 'Forms', $rootScope);
-
+            it('should set additionalClasses = "" when infoListItems contains elements', function () {
                 $rs.infoListItems = [1];
                 $rs.$apply();
 
                 expect($rs.additionalClasses).toBe('');
-            }));
-        })
+            });
+        });
     });
 
     describe('Assets Controller', function () {
-        beforeEach(function () {
+        var _items;
+
+        beforeEach(inject(function ($controller, $rootScope) {
+            _items = [
+                { id: 1, label: 'Currently, what is your main priority or concern?', type: 'Select Many', meta: {} },
+                { id: 2, label: 'If you have a dispute in your community, to whom do you take it first?', type: 'Select Many', meta: {} },
+                { id: 3, label: 'Why do you take it first to that person or institution?', type: 'Select Many', meta: {} }
+            ];
+
+            _confirmStub = sinon.stub();
+
+            miscServiceStub = function () {
+                this.changeFileUploaderSuccess = sinon.spy();
+                this.confirm = _confirmStub;
+            }
+
             resourceStub = {
-                list: function () { $rs.info_list_items = hello;}
+                list: function () { $rs.info_list_items = _items;},
+                remove: sinon.spy()
             };
-        });
+
+            initializeController($controller, 'Assets', $rootScope);
+        }));
+
         it('should initialize $scope and $rootScope correctly', inject(function ($controller, $rootScope) {
             initializeController($controller, 'Assets', $rootScope);
 
             expect($rs.canAddNew).toBe(true);
             expect($rs.activeTab).toBe('Question Library');
 
-            expect($scope.info_list_items).toBe(hello);
+            expect($scope.info_list_items).toBe(_items);
         }));
 
         describe('$scope.toggle_response_list', function () {
-            it('shows responses when they are hidden', inject(function ($controller, $rootScope) {
-                initializeController($controller, 'Assets', $rootScope);
+            it('shows responses when they are hidden', function () {
                 var item = {
                     type: 'select_one',
                     meta: {
                         show_responses: false
                     }
-                }
+                };
 
-                $rootScope.toggle_response_list(item);
+                $rs.toggle_response_list(item);
 
                 expect(item.meta.question_type_class).toBe('question__type question__type--expanded');
                 expect(item.meta.question_type_icon_class).toBe('question__type-icon question__type--expanded-icon');
                 expect(item.meta.question_type_icon).toBe('fa fa-caret-down');
                 expect(item.meta.show_responses).toBe(true);
-            }));
-            it('hides responses when they are visible', inject(function ($controller, $rootScope) {
-                initializeController($controller, 'Assets', $rootScope);
+            });
+            it('hides responses when they are visible', function () {
                 var item = {
                     type: 'select_one',
                     meta: {
                         show_responses: true
                     }
-                }
+                };
 
-                $rootScope.toggle_response_list(item);
+                $rs.toggle_response_list(item);
 
                 expect(item.meta.show_responses).toBe(false);
                 expect(item.meta.question_type_class).toBe('question__type');
                 expect(item.meta.question_type_icon).toBe('fa fa-caret-right');
                 expect(item.meta.question_type_icon_class).toBe('question__type-icon');
-            }));
+            });
         });
 
         describe('scope.toggle_selected', function () {
-            var _items;
-            beforeEach(inject(function ($controller, $rootScope) {
-                _items = [
-                    { label: 'Currently, what is your main priority or concern?', type: 'Select Many', meta: {} },
-                    { label: 'If you have a dispute in your community, to whom do you take it first?', type: 'Select Many', meta: {} },
-                    { label: 'Why do you take it first to that person or institution?', type: 'Select Many', meta: {} }
-                ];
-
-                resourceStub = {
-                    list: function () { $rs.info_list_items = _items;}
-                };
-
-                initializeController($controller, 'Assets', $rootScope);
-            }));
 
             it('selects a deselected question', function () {
                 $rs.toggle_selected(_items[1], {ctrlKey: false});
@@ -251,7 +251,7 @@ describe ('Controllers', function () {
                 $rs.toggle_selected(_items[1], {ctrlKey: true});
 
                 expect($rs.select_all).toBeTruthy();
-            })
+            });
             it('clears select_all switch when not all questions selected', function () {
                 _items[0].meta.is_selected = true;
                 _items[1].meta.is_selected = true;
@@ -260,29 +260,14 @@ describe ('Controllers', function () {
                 $rs.toggle_selected(_items[1], {ctrlKey: true});
 
                 expect($rs.select_all).toBeFalsy();
-            })
+            });
         });
 
         describe('scope.watch select_all', function () {
-            var _items;
+            it('sets selected properties to selected on all objects when select_all is true', function () {
 
-            beforeEach(function () {
-                _items = [
-                    { label: 'Currently, what is your main priority or concern?', type: 'Select Many', meta: {} },
-                    { label: 'If you have a dispute in your community, to whom do you take it first?', type: 'Select Many', meta: {} },
-                    { label: 'Why do you take it first to that person or institution?', type: 'Select Many', meta: {} }
-                ];
-
-                resourceStub = {
-                    list: function () { $rs.info_list_items = _items;}
-                };
-            });
-
-            it('sets selected properties to selected on all objects when select_all is true', inject(function ($controller, $rootScope) {
-                initializeController($controller, 'Assets', $rootScope);
-
-                $rootScope.select_all = true;
-                $rootScope.$apply();
+                $rs.select_all = true;
+                $rs.$apply();
 
 
                 expect(_items[0].meta.is_selected).toBeTruthy();
@@ -291,13 +276,12 @@ describe ('Controllers', function () {
                 expect(_items[1].meta.question_class).toBe('questions__question questions__question--selected');
                 expect(_items[2].meta.is_selected).toBeTruthy();
                 expect(_items[2].meta.question_class).toBe('questions__question questions__question--selected');
-            }));
+            });
 
-            it('sets selected properties to deselected on all objects when select_all is false', inject(function ($controller, $rootScope) {
-                initializeController($controller, 'Assets', $rootScope);
+            it('sets selected properties to deselected on all objects when select_all is false', function () {
 
-                $rootScope.select_all = false;
-                $rootScope.$apply();
+                $rs.select_all = false;
+                $rs.$apply();
 
 
                 expect(_items[0].meta.is_selected).toBeFalsy();
@@ -306,16 +290,15 @@ describe ('Controllers', function () {
                 expect(_items[1].meta.question_class).toBe('questions__question');
                 expect(_items[2].meta.is_selected).toBeFalsy();
                 expect(_items[2].meta.question_class).toBe('questions__question');
-            }));
+            });
 
-            it('no-ops when select_all is null', inject(function ($controller, $rootScope) {
-                initializeController($controller, 'Assets', $rootScope);
+            it('no-ops when select_all is null', function () {
 
-                $rootScope.select_all = true;
-                $rootScope.$apply();
+                $rs.select_all = true;
+                $rs.$apply();
 
-                $rootScope.select_all = null;
-                $rootScope.$apply();
+                $rs.select_all = null;
+                $rs.$apply();
 
 
                 expect(_items[0].meta.is_selected).toBeTruthy();
@@ -324,111 +307,122 @@ describe ('Controllers', function () {
                 expect(_items[1].meta.question_class).toBe('questions__question questions__question--selected');
                 expect(_items[2].meta.is_selected).toBeTruthy();
                 expect(_items[2].meta.question_class).toBe('questions__question questions__question--selected');
-            }));
+            });
+        });
+
+        describe("$scope.delete_selected", function () {
+            it("deletes all selected items", function () {
+                _items[1].meta.is_selected = true;
+
+                _confirmStub.returns(true);
+                $scope.delete_selected();
+
+                expect(resourceStub.remove).toHaveBeenCalledWith({id: 2});
+
+                expect($rs.info_list_items.length).toBe(2);
+                expect($rs.info_list_items[0].id).toBe(1);
+                expect($rs.info_list_items[1].id).toBe(3);
+            });
+
+            it("no ops when confirmation returns false", function () {
+                _items[1].meta.is_selected = true;
+
+                _confirmStub.returns(false);
+                $scope.delete_selected();
+
+                expect($rs.info_list_items.length).toBe(3);
+                expect($rs.info_list_items[0].id).toBe(1);
+                expect($rs.info_list_items[1].id).toBe(2);
+                expect($rs.info_list_items[2].id).toBe(3);
+            });
         });
     });
 
     describe('Header Controller', function () {
-        beforeEach(function () {
+        beforeEach(inject(function ($controller, $rootScope) {
             miscServiceStub = function () {
                 this.bootstrapFileUploader = function () {};
                 this.changeFileUploaderSuccess = sinon.spy();
             };
-        });
-
-
-        it('should initialize $scope and $rootScope correctly', inject(function ($controller, $rootScope) {
             initializeController($controller, 'Header', $rootScope);
+        }));
 
+
+        it('should initialize $scope and $rootScope correctly', function () {
             expect($scope.pageIconColor).toBe('teal');
             expect($scope.pageTitle).toBe('Forms');
             expect($scope.pageIcon).toBe('fa-file-text-o');
             expect($scope.topLevelMenuActive).toBe('');
             expect($rs.activeTab).toBe('Forms');
-        }));
+        });
 
         describe('$scope.toggleTopMenu', function () {
-            it('should set the value of $scope.topLevelMenuActive to "is-active" when its value is an empty string',
-                inject(function ($controller, $rootScope) {
-                    initializeController($controller, 'Header', $rootScope);
+            it('should set the value of $scope.topLevelMenuActive to "is-active" when its value is an empty string', function () {
+                $rs.topLevelMenuActive = '';
+                $scope.toggleTopMenu();
 
-                    $rs.topLevelMenuActive = '';
-                    $scope.toggleTopMenu();
+                expect($rs.topLevelMenuActive).toBe('is-active');
+            });
 
-                    expect($rs.topLevelMenuActive).toBe('is-active');
-                })
-            );
+            it('should set the value of $scope.topLevelMenuActive to an empty string when its value is "is-active"', function () {
+                $rs.topLevelMenuActive = 'is-active';
+                $scope.toggleTopMenu();
 
-            it('should set the value of $scope.topLevelMenuActive to an empty string when its value is "is-active"',
-                inject(function ($controller, $rootScope) {
-                    initializeController($controller, 'Header', $rootScope);
-
-                    $rs.topLevelMenuActive = 'is-active';
-                    $scope.toggleTopMenu();
-
-                    expect($rs.topLevelMenuActive).toBe('');
-                })
-            );
+                expect($rs.topLevelMenuActive).toBe('');
+            });
         });
     });
 
     describe('Builder Controller', function () {
+        var _confirmStub, _preventDefaultSpy;
 
-        it('should initialize $scope and $rootScope correctly', inject(function ($controller, $rootScope) {
+        beforeEach(inject(function ($controller, $rootScope) {
+            _confirmStub = sinon.stub();
+            _preventDefaultSpy = sinon.spy();
+
+            miscServiceStub = function () {
+                this.confirm = _confirmStub;
+                this.preventDefault = _preventDefaultSpy;
+                this.changeFileUploaderSuccess = sinon.spy();
+            };
             initializeController($controller, 'Builder', $rootScope);
-
-            expect($rs.activeTab).toBe('Forms');
-            expect($scope.routeParams).toBe(hello);
         }));
 
+        afterEach(function () {
+            miscServiceStub = function (){};
+        });
+
+        it('should initialize $scope and $rootScope correctly', function () {
+            expect($rs.activeTab).toBe('Forms');
+            expect($scope.routeParams).toBe(hello);
+        });
+
         describe('Location Change Confirmation', function () {
-            it('Should change location when user accepts confirmation', inject(function ($controller, $rootScope) {
-                var confirmStub = sinon.stub();
+            it('Should change location when user accepts confirmation', function () {
+                _confirmStub.returns(true);
 
-                miscServiceStub = function () {
-                    this.confirm = confirmStub;
-                    this.changeFileUploaderSuccess = sinon.spy();
-                };
-                confirmStub.returns(true);
-
-                initializeController($controller, 'Builder', $rootScope);
-                $rootScope.deregisterLocationChangeStart = sinon.spy();
+                $rs.deregisterLocationChangeStart = sinon.spy();
 
                 $rs.$broadcast('$locationChangeStart');
-                expect(confirmStub).toHaveBeenCalledOnce();
-                expect(confirmStub).toHaveBeenCalledWith('Are you sure you want to leave? you will lose any unsaved changes.');
-                expect($rootScope.deregisterLocationChangeStart).toHaveBeenCalledOnce();
+                expect(_confirmStub).toHaveBeenCalledOnce();
+                expect(_confirmStub).toHaveBeenCalledWith('Are you sure you want to leave? you will lose any unsaved changes.');
+                expect($rs.deregisterLocationChangeStart).toHaveBeenCalledOnce();
+            });
 
-                miscServiceStub = function (){};
-            }));
-
-            it('Should keep location when user rejects confirmation', inject(function ($controller, $rootScope) {
-                var confirmStub = sinon.stub(),
-                    preventDefaultSpy = sinon.spy();
-
-                miscServiceStub = function () {
-                    this.confirm = confirmStub;
-                    this.preventDefault = preventDefaultSpy;
-                    this.changeFileUploaderSuccess = sinon.spy();
-                };
-
-                confirmStub.returns(false);
-
-                initializeController($controller, 'Builder', $rootScope);
+            it('Should keep location when user rejects confirmation', function () {
+                _confirmStub.returns(false);
 
                 $rs.$broadcast('$locationChangeStart');
 
-                expect(confirmStub).toHaveBeenCalledOnce();
-                expect(confirmStub).toHaveBeenCalledWith('Are you sure you want to leave? you will lose any unsaved changes.');
-                expect(preventDefaultSpy).toHaveBeenCalledOnce();
-
-                miscServiceStub = function () {};
-            }));
+                expect(_confirmStub).toHaveBeenCalledOnce();
+                expect(_confirmStub).toHaveBeenCalledWith('Are you sure you want to leave? you will lose any unsaved changes.');
+                expect(_preventDefaultSpy).toHaveBeenCalledOnce();
+            });
 
         });
 
         describe('$scope.add_row_to_question_library', function () {
-            it('posts a survey object to the server', inject(function ($controller, $rootScope) {
+            it('posts a survey object to the server', function () {
                 var survey_stub = {
                         rows: {
                             add: sinon.spy()
@@ -444,12 +438,10 @@ describe ('Controllers', function () {
                     save: sinon.spy()
                 };
 
-                initializeController($controller, 'Builder', $rootScope);
-
-                $rootScope.add_row_to_question_library('test row')
+                $rs.add_row_to_question_library('test row');
                 expect(resourceStub.save).toHaveBeenCalledWith({body: 'test survey', asset_type: 'question'});
-                expect(survey_stub.rows.add).toHaveBeenCalledWith('test row')
-            }));
+                expect(survey_stub.rows.add).toHaveBeenCalledWith('test row');
+            });
         });
     });
 

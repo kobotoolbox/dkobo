@@ -73,7 +73,7 @@ function restApiFactory($resource, $timeout) {
                         function timed_execution(item) {
                             return $timeout(function () {
                                 create_survey(item);
-                            }, 50).then(function () {
+                            }, 10).then(function () {
                                 get_props_from_row(item);
                             }).then(function () {
                                 i++;
@@ -90,7 +90,7 @@ function restApiFactory($resource, $timeout) {
                     }
                 }
             };
-            return $resource('/api/library_assets', null, custom_methods);
+            return $resource('/api/library_assets/:id', {id: '@id'}, custom_methods);
         }
     };
 }

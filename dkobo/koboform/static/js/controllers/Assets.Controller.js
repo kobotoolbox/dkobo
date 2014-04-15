@@ -2,7 +2,7 @@
 /*global XLF*/
 /*global _*/
 'use strict';
-function AssetsController($scope, $rootScope, $resource, $restApi, $timeout, $filter) {
+function AssetsController($scope, $rootScope, $resource, $restApi, $timeout, $filter, $miscUtils) {
     var assets = $restApi.create_question_api($scope);
     $scope.sort_criteria = 'date_modified';
     $rootScope.showImportButton = false;
@@ -86,6 +86,21 @@ function AssetsController($scope, $rootScope, $resource, $restApi, $timeout, $fi
         $scope.is_updating_select_all = false;
     }
 
+    $scope.delete_selected = function () {
+        if (!$miscUtils.confirm('are you sure you want to delete ' + $scope.get_selected_amount() + '?')) {
+            return;
+        }
+        _.each($scope.info_list_items, function (item) {
+            if (item.meta.is_selected) {
+                assets.remove({id: item.id});
+            }
+        });
+
+        $scope.info_list_items = _.filter($scope.info_list_items, function (item) {
+            return !item.meta.is_selected
+        });
+    };
+
     $scope.$watch('filters.label', function () {
         select_all();
     });
@@ -107,10 +122,14 @@ function AssetsController($scope, $rootScope, $resource, $restApi, $timeout, $fi
         });
     });
 
-    $scope.get_selected_amount = function () {
-        var amount = _.filter($scope.info_list_items, function (item) {
+    $scope.get_selected_count = function () {
+        return _.filter($scope.info_list_items, function (item) {
             return item.meta ? item.meta.is_selected : false;
         }).length;
+    }
+
+    $scope.get_selected_amount = function () {
+        var amount = $scope.get_selected_count();
 
         if (amount > 1 || amount === 0) {
             return amount + ' questions';
