@@ -671,7 +671,11 @@ describe 'skip logic helpers', () ->
     describe 'switch editing mode', () ->
     describe 'constructor', () ->
 
-    describe 'skip logic builder', () ->
+  describe 'skip logic mode selector facade', () ->
+    describe 'render', () ->
+
+
+  describe 'skip logic builder', () ->
     describe 'build', () ->
 
     describe 'build criterion builder', () ->

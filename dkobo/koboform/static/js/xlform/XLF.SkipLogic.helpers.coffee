@@ -104,6 +104,12 @@ class XLF.SkipLogicHandCodeFacade
   switch_editing_mode: () ->
     @builder.build_criterion_builder @serialize()
 
+class XLF.SkipLogicModeSelectorFacade
+  render: (destination) ->
+  serialize: () ->
+  constructor: () ->
+  switch_editing_mode: () ->
+
 class XLF.SkipLogicBuilder
   build_hand_code_criteria: (criteria) ->
     new XLF.SkipLogicHandCodeFacade criteria, @
