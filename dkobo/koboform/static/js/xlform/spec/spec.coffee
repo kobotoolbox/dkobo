@@ -351,6 +351,7 @@ describe "testing the view", ->
     $(".test-div").remove()
     @pizzaSurvey = XLF.createSurveyFromCsv(PIZZA_SURVEY)
     @xlv = new SurveyApp survey: @pizzaSurvey
+    mockNgScope(@xlv)
     @$el = @xlv.render().$el
     @_div = $("<div>", class: "test-div", html: @$el).appendTo("body")
 
@@ -424,7 +425,13 @@ ERRONEOUS_CSV = """
 
 setupView = (survey)->
   xlv = new SurveyApp(survey: @survey).render()
+  mockNgScope(xlv)
   $("<div>", class: "test-div", html: xlv.$el).appendTo("body")
+
+mockNgScope = (surveyApp)->
+  surveyApp.ngScope = do ->
+    # mock ngScope
+    displayQlib: false
 
 teardownView = ->
   $(".test-div").remove()
