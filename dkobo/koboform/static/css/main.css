@@ -1177,10 +1177,27 @@ input[type="button"].btn--block {
     *zoom: 1;
 }
 
-.row-extras__cog-faded {
+.row-extras__cog-faded, .row-extras__add-to-question-library {
     cursor: pointer;
 }
 
+.card .row-extras__add-to-question-library {
+    display: none;
+    position: absolute;
+    right: -200px;
+    width: 200px;
+    top: 6px;
+    height: 100%;
+    opacity: .6;
+}
+
+.card:hover .row-extras__add-to-question-library {
+    display: inline-block;
+}
+
+.row-extras__add-to-question-library:hover {
+    opacity: 1;
+}
 
 
 

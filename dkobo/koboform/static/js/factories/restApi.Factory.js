@@ -64,13 +64,16 @@ function restApiFactory($resource, $timeout) {
                         var results = [];
                         var i = 0;
 
+                        for (i = 0; i < $scope.info_list_items.length; i++) {
+                            set_defaults($scope.info_list_items[i]);
+                        }
+
+                        i = 0;
 
                         function timed_execution(item) {
                             return $timeout(function () {
-                                set_defaults(item);
-                            }, 50).then(function () {
                                 create_survey(item);
-                            }).then(function () {
+                            }, 50).then(function () {
                                 get_props_from_row(item);
                             }).then(function () {
                                 i++;

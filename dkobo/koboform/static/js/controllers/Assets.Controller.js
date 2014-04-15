@@ -11,8 +11,44 @@ function AssetsController($scope, $rootScope, $resource, $restApi, $timeout, $fi
 
     assets.list();
 
+    $scope.toggle_selected = function (item, $event) {
+        var i,
+            currently_selected = item.meta.is_selected,
+            more_than_one_selected = false,
+            current,
+            select_question,
+            select_all = true;
+
+        if (!$event.ctrlKey) {
+            for (i = 0; i < $scope.info_list_items.length; i++) {
+                current = $scope.info_list_items[i];
+                if (current != item) {
+                    more_than_one_selected = more_than_one_selected || (currently_selected && current.meta.is_selected);
+                }
+                current.meta.question_class = 'questions__question';
+                current.meta.is_selected = false;
+            }
+        }
+
+        select_question = more_than_one_selected || !currently_selected;
+        item.meta.is_selected = select_question
+        item.meta.question_class = select_question ? 'questions__question questions__question--selected' : 'questions__question';
+
+        for (i = 0; i < $scope.info_list_items.length; i++) {
+            select_all = select_all && $scope.info_list_items[i].meta.is_selected;
+        }
+
+        $scope.is_updating_select_all = true;
+        if ($scope.select_all === select_all) {
+            $scope.is_updating_select_all = false;
+        } else {
+            $scope.select_all = select_all
+        }
+
+    };
+
     $scope.toggle_response_list = function (item) {
-        if (item.type !== 'select_one' && item.type !== 'select_all') {
+        if (item.type !== 'select_one' && item.type !== 'select_all' && item.type !== 'select_multiple') {
             return;
         }
 
@@ -35,15 +71,19 @@ function AssetsController($scope, $rootScope, $resource, $restApi, $timeout, $fi
         var new_class = $scope.select_all ? 'questions__question questions__question--selected' : 'questions__question';
         var filter = $filter('filter');
 
-        _.each($scope.info_list_items, function (item) {
-            item.meta.is_selected = false;
-            item.meta.question_class = 'questions__question';
-        });
+        if (!$scope.is_updating_select_all) {
+            _.each($scope.info_list_items, function (item) {
+                item.meta.is_selected = false;
+                item.meta.question_class = 'questions__question';
+            });
 
-        _.each(filter($scope.info_list_items, $scope.filters), function (item) {
-            item.meta.is_selected = $scope.select_all;
-            item.meta.question_class = new_class;
-        });
+            _.each(filter($scope.info_list_items, $scope.filters), function (item) {
+                item.meta.is_selected = $scope.select_all;
+                item.meta.question_class = new_class;
+            });
+        }
+
+        $scope.is_updating_select_all = false;
     }
 
     $scope.$watch('filters.label', function () {

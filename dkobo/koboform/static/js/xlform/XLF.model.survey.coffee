@@ -35,6 +35,9 @@ class XLF.Survey extends XLF.SurveyFragment
       @surveyDetails.importDefaults()
     @rows.invoke('linkUp')
 
+  @create: (options={}, addlOpts) ->
+    return new XLF.Survey(options, addlOpts)
+
   insertSurvey: (survey, index=-1)->
     index = @rows.length  if index is -1
     for row, row_i in survey.rows.models

@@ -8,6 +8,7 @@ class XLF.RowView extends Backbone.View
    "click .js-expand-row-selector": "expandRowSelector"
    "drop": "drop"
    "click .js-advanced-toggle": "expandCog"
+   "click .row-extras__add-to-question-library": "add_row_to_question_library"
   initialize: (opts)->
     @options = opts
     typeDetail = @model.get("type")
@@ -93,3 +94,6 @@ class XLF.RowView extends Backbone.View
     @rowExtras.parent().toggleClass("activated")
     @rowExtrasSummary.toggleClass("hidden")
     @rowExtras.toggleClass("hidden")
+  add_row_to_question_library: (evt) ->
+    evt.stopPropagation()
+    @ngScope.add_row_to_question_library @model

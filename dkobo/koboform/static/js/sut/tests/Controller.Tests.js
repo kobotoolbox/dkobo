@@ -176,6 +176,93 @@ describe ('Controllers', function () {
             }));
         });
 
+        describe('scope.toggle_selected', function () {
+            var _items;
+            beforeEach(inject(function ($controller, $rootScope) {
+                _items = [
+                    { label: 'Currently, what is your main priority or concern?', type: 'Select Many', meta: {} },
+                    { label: 'If you have a dispute in your community, to whom do you take it first?', type: 'Select Many', meta: {} },
+                    { label: 'Why do you take it first to that person or institution?', type: 'Select Many', meta: {} }
+                ];
+
+                resourceStub = {
+                    list: function () { $rs.info_list_items = _items;}
+                };
+
+                initializeController($controller, 'Assets', $rootScope);
+            }));
+
+            it('selects a deselected question', function () {
+                $rs.toggle_selected(_items[1], {ctrlKey: false});
+
+                expect(_items[1].meta.is_selected).toBeTruthy();
+                expect(_items[1].meta.question_class).toBe('questions__question questions__question--selected');
+            });
+            it('deselects a selected question', function () {
+                _items[1].meta.is_selected = true;
+                $rs.toggle_selected(_items[1], {ctrlKey: false});
+
+                expect(_items[1].meta.is_selected).toBeFalsy();
+                expect(_items[1].meta.question_class).toBe('questions__question');
+            });
+            it('deselects all previously selected questions', function () {
+                _items[0].meta.is_selected = true;
+                _items[2].meta.is_selected = true;
+                $rs.toggle_selected(_items[1], {ctrlKey: false});
+
+                expect(_items[0].meta.question_class).toBe('questions__question');
+                expect(_items[0].meta.is_selected).toBeFalsy();
+                expect(_items[1].meta.is_selected).toBeTruthy();
+                expect(_items[2].meta.question_class).toBe('questions__question');
+                expect(_items[2].meta.is_selected).toBeFalsy();
+            });
+            it('keeps previously selected questions when ctrl is pressed', function () {
+                _items[0].meta.is_selected = true;
+                _items[2].meta.is_selected = true;
+                $rs.toggle_selected(_items[1], {ctrlKey: true});
+
+                expect(_items[0].meta.is_selected).toBeTruthy();
+                expect(_items[1].meta.is_selected).toBeTruthy();
+                expect(_items[2].meta.is_selected).toBeTruthy();
+            });
+            it('deselects all questions except clicked question when multiple questions selected, current question selected and ctrl isnt pressed', function () {
+                _items[0].meta.is_selected = true;
+                _items[1].meta.is_selected = true;
+                _items[2].meta.is_selected = true;
+                $rs.toggle_selected(_items[1], {ctrlKey: false});
+
+                expect(_items[0].meta.is_selected).toBeFalsy();
+                expect(_items[1].meta.is_selected).toBeTruthy();
+                expect(_items[2].meta.is_selected).toBeFalsy();
+            });
+            it('deselects a selected question when multiple questions selected and ctrl is pressed', function () {
+                _items[0].meta.is_selected = true;
+                _items[1].meta.is_selected = true;
+                _items[2].meta.is_selected = true;
+                $rs.toggle_selected(_items[1], {ctrlKey: true});
+
+                expect(_items[0].meta.is_selected).toBeTruthy();
+                expect(_items[1].meta.is_selected).toBeFalsy();
+                expect(_items[2].meta.is_selected).toBeTruthy();
+            });
+            it('sets select_all switch when all questions selected', function () {
+                _items[0].meta.is_selected = true;
+                _items[2].meta.is_selected = true;
+                $rs.toggle_selected(_items[1], {ctrlKey: true});
+
+                expect($rs.select_all).toBeTruthy();
+            })
+            it('clears select_all switch when not all questions selected', function () {
+                _items[0].meta.is_selected = true;
+                _items[1].meta.is_selected = true;
+                _items[2].meta.is_selected = true;
+                $rs.select_all = true;
+                $rs.toggle_selected(_items[1], {ctrlKey: true});
+
+                expect($rs.select_all).toBeFalsy();
+            })
+        });
+
         describe('scope.watch select_all', function () {
             var _items;
 
@@ -338,6 +425,31 @@ describe ('Controllers', function () {
                 miscServiceStub = function () {};
             }));
 
+        });
+
+        describe('$scope.add_row_to_question_library', function () {
+            it('posts a survey object to the server', inject(function ($controller, $rootScope) {
+                var survey_stub = {
+                        rows: {
+                            add: sinon.spy()
+                        },
+                        toCSV: sinon.stub()
+                    },
+                    survey_factory_stub = sinon.stub(XLF.Survey, 'create');
+
+                survey_factory_stub.returns(survey_stub);
+                survey_stub.toCSV.returns('test survey');
+
+                resourceStub = {
+                    save: sinon.spy()
+                };
+
+                initializeController($controller, 'Builder', $rootScope);
+
+                $rootScope.add_row_to_question_library('test row')
+                expect(resourceStub.save).toHaveBeenCalledWith({body: 'test survey', asset_type: 'question'});
+                expect(survey_stub.rows.add).toHaveBeenCalledWith('test row')
+            }));
         });
     });
 

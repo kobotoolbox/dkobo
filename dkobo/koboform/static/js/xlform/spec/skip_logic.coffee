@@ -634,9 +634,24 @@ describe 'skip logic helpers', () ->
     describe 'serialize', () ->
 
   describe 'criterion builder facade', () ->
-    describe 'render', () ->
-      it 'attaches the root view to the provided destination', () ->
+    _helper_factory = sinon.stubObject XLF.SkipLogicHelperFactory
+    _model_factory = sinon.stubObject XLF.Model.SkipLogicFactory
+    _view_factory = sinon.stubObject XLF.Views.SkipLogicViewFactory
+    _question = sinon.stubObject XLF.Row
+    _survey = sinon.stubObject XLF.Survey
+    _parser_stub = null
+    _builder = null
+    _view = sinon.stubObject XLF.SkipLogicCriterionBuilderView
 
+    describe 'render', () ->
+      ###it 'attaches root view to provided destination', () ->
+        _view_factory.create_criterion_builder_view.returns _view
+        _view.render.returns _view
+
+        facade = new XLF.CriterionBuilderFacade ['test presenter'], 'and', _builder, _view_factory
+        facade.render 'test'
+
+        expect(_view.attach_to).toHaveBeenCalledWith 'test'###
       it 'sets visibility of criterion delimiter', () ->
 
     describe 'serialize', () ->

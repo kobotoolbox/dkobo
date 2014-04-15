@@ -56,4 +56,14 @@ function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo,
         $scope.xlfSurveyApp = SurveyApp.create({el: 'section.form-builder', survey: $scope.xlfSurvey, ngScope: $scope, save: saveCallback});
         $scope.xlfSurveyApp.render();
     }
+
+    $scope.add_row_to_question_library = function (row) {
+        var survey = XLF.Survey.create()
+        survey.rows.add(row)
+
+        var resource = $restApi.create_question_api($scope);
+        resource.save({body: survey.toCSV(), asset_type: 'question'}, function () {
+            $miscUtils.alert('Question added to library', 'Success!!')
+        });
+    };
 }
