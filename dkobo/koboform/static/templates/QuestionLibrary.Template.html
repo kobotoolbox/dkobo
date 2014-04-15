@@ -100,7 +100,7 @@
 
   </div>
   <ul class="questions__container">
-    <li ng-class="item.meta.question_class" ng-repeat="item in info_list_items|filter:filters|orderBy:sort_criteria">
+    <li ng-class="item.meta.question_class" ng-repeat="item in info_list_items|filter:filters|orderBy:sort_criteria" ng-click="toggle_selected(item, $event)">
       <h4 class="question__name">{{ item.label }}</h4>
       <a href="" ng-click="toggle_response_list(item)" ng-class="item.meta.question_type_class">
         <i ng-class="item.meta.question_type_icon_class + ' ' + item.meta.question_type_icon" ng-show="item.type === 'select_one' || item.type === 'select_many' || item.type === 'select_multiple'"></i>
