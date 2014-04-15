@@ -117,10 +117,7 @@ class XLF.Row extends XLF.BaseModel
     @get("type")?.get("list")
 
   setList: (list)->
-    listName = list.get("name")
-    listToSet = false
-    for list_ in @getSurvey().choices.models when list_.get("name") is listName
-      listToSet = list_
+    listToSet = @getSurvey().choices.get(list)
     unless listToSet
       @getSurvey().choices.add(list)
       listToSet = @getSurvey().choices.get(list)
