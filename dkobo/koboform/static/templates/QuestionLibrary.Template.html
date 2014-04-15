@@ -95,7 +95,7 @@
       <div class="question-filter__selected-count">{{get_selected_amount()}} selected</div>
       <a class="question-filter__add-to-new" ng-show="false" href=""><i class="question-filter__add-to-new-icon"></i>Add to new form</a>
       <a class="question-filter__add-to-block" ng-show="false" href=""><i class="question-filter__add-to-block-icon"></i>Add to block</a>
-      <a class="question-filter__delete" ng-show="false" href=""><i class="question-filter__delete-icon"></i>Delete</a>
+      <a class="question-filter__delete" ng-show="get_selected_count() > 0" href="" ng-click="delete_selected()"><i class="question-filter__delete-icon"></i>Delete</a>
     </div>
 
   </div>
