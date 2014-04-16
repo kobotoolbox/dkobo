@@ -233,6 +233,29 @@ describe "xlform survey model (XLF.Survey)", ->
       expect(survey.rows.at(0)?.get("name").getValue()).toBe("question_one")
       # incremented from other question
       expect(survey.finalize().rows.at(1)?.get("name").getValue()).toBe("question_one_001")
+
+    it "options automatically named", ->
+      options_survey = @createSurvey([
+              "text,question_one,\"already named question_one\"",
+              "\"select_one abc\",abc,\"alphabet question\""
+              ], [
+                "abc,,\"Letter A\"",
+                "abc,,\"Letter A\"",
+                "abc,,\"Letter A\""
+              ])
+      rr = options_survey.rows.at(1)
+      list = rr.getList()
+      expect(list).toBeDefined()
+
+      # automatic option names are triggered / set in "finalize()"
+      list.finalize()
+
+      [opt1, opt2, opt3] = list.options.models
+
+      expect(opt1.get("name")).toBe("Letter_A")
+      expect(opt2.get("name")).toBe("Letter_A_1")
+      expect(opt3.get("name")).toBe("Letter_A_2")
+
     it "uses a proper name sluggification", ->
       expect(XLF.sluggifyLabel("asdf jkl")).toBe("asdf_jkl")
       expect(XLF.sluggifyLabel("asdf", ["asdf"])).toBe("asdf_001")
