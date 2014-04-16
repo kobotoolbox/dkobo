@@ -54,25 +54,76 @@ XLF.parseHelper =
       collection.parseable = false
 
 XLF.sluggifyLabel = (str, other_names=[])->
-  attempt_base = str.slice(0,30)
-                  .replace(/\s+$/, "")
-                  .replace(/^\s+/, "")
-                  .replace(/\s/g, "_")
-                  .replace(/\W/g, "")
-                  .replace(/[_]+/g, "_")
-  names_lc = (name.toLowerCase()  for name in other_names)
-  if attempt_base.length is 0
-    return false
-  else if attempt_base[0].match(/\d/)
-    attempt_base = "_#{attempt_base}"
-  attempt = attempt_base
-  increment = 0
-  while attempt.toLowerCase() in names_lc
-    increment++
-    increment_str = if increment < 1000 then ("00"+increment).slice(-4) else increment_str
-    attempt = "#{attempt_base}_#{increment_str}"
-  attempt
+  XLF.sluggify(str, {
+      preventDuplicates: other_names
+      lowerCase: false
+      stripSpaces: true
+      lrstrip: true
+      incrementorPadding: 3
+      validXmlTag: true
+    })
 
-XLF.sluggify = (str)->
-  # Convert text to a slug/xml friendly format.
-  str.toLowerCase().replace(/\s/g, '_').replace(/\W/g, '').replace(/[_]+/g, "_")
+XLF.sluggify = (str, opts={})->
+  # Convert text to a friendly format. Rules are passed as options
+  opts = _.defaults(opts, {
+      # l/r strip: strip spaces from begin/end of string
+      lrstrip: false
+      lstrip: false
+      rstrip: false
+      # descriptor: used in error messages
+      descriptor: "slug"
+      lowerCase: true
+      removeNonWordChars: true
+      validXmlTag: false
+      underscores: true
+      characterLimit: 30
+      # preventDuplicates: an array with a list of values that should be avoided
+      preventDuplicates: false
+      incrementorPadding: false
+    })
+
+  if opts.lrstrip
+    opts.lstrip = true
+    opts.rstrip = true
+
+  if opts.lstrip
+    str = str.replace(/^\s+/, "")
+
+  if opts.rstrip
+    str = str.replace(/\s+$/, "")
+
+  if opts.lowerCase
+    str = str.toLowerCase()
+
+  if opts.underscores
+    str = str.replace(/\s/g, "_").replace(/[_]+/g, "_")
+
+  if opts.removeNonWordChars
+    str = str.replace(/\W/g, '')
+
+  if _.isNumber opts.characterLimit
+    str = str.slice(0, opts.characterLimit)
+
+  if opts.validXmlTag
+    if str[0].match(/\d/)
+      str = "_" + str
+
+  if _.isArray(opts.preventDuplicates)
+    str = do ->
+      names_lc = (name.toLowerCase()  for name in opts.preventDuplicates)
+      attempt_base = str
+
+      if attempt_base.length is 0
+        throw new Error("Renaming Error: #{opts.descriptor} is empty")
+
+      attempt = attempt_base
+      increment = 0
+      while attempt.toLowerCase() in names_lc
+        increment++
+        increment_str = "#{increment}"
+        if opts.incrementorPadding and increment < Math.pow(10, opts.incrementorPadding)
+          increment_str = ("000000000000" + increment).slice(-1 * opts.incrementorPadding)
+        attempt = "#{attempt_base}_#{increment_str}"
+      attempt
+
+  str
