@@ -79,7 +79,13 @@ class XLF.OptionView extends Backbone.View
     @p.editable success: _.bind @saveValue, @
     $('span', @c).editable success: (ev, val) =>
       other_names = @options.cl.getNames()
-      val = XLF.sluggifyLabel val, other_names
+      val = XLF.sluggify(val, {
+                preventDuplicates: other_names
+                lowerCase: false,
+                lrstrip: true,
+                incrementorPadding: false,
+                validXmlTag: false
+              })
       @model.set('name', val)
       @model.set('setManually', true)
       @$el.trigger("choice-list-update", @options.cl.cid)
