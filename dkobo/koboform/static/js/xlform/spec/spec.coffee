@@ -248,13 +248,13 @@ describe "xlform survey model (XLF.Survey)", ->
       expect(list).toBeDefined()
 
       # automatic option names are triggered / set in "finalize()"
-      options_survey.finalize()
+      list.finalize()
 
       [opt1, opt2, opt3] = list.options.models
 
       expect(opt1.get("name")).toBe("Letter_A")
-      expect(opt2.get("name")).toBe("Letter_A_001")
-      expect(opt3.get("name")).toBe("Letter_A_002")
+      expect(opt2.get("name")).toBe("Letter_A_1")
+      expect(opt3.get("name")).toBe("Letter_A_2")
 
     it "uses a proper name sluggification", ->
       expect(XLF.sluggifyLabel("asdf jkl")).toBe("asdf_jkl")

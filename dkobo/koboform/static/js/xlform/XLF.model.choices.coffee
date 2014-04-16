@@ -25,7 +25,13 @@ class XLF.ChoiceList extends XLF.BaseModel
       label = option.get("label")
       name = option.get("name")
       if not name
-        name = XLF.sluggifyLabel(label, names)
+        name = XLF.sluggify(label, {
+          preventDuplicates: names
+          lowerCase: false
+          lrstrip: true
+          incrementorPadding: false
+          validXmlTag: false
+        })
         option.set("name", name)
       names.push name
     ``
