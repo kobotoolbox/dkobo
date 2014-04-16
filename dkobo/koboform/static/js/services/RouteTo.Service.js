@@ -12,4 +12,8 @@ function RouteToService($location) {
     this.builder = function () {
         $$path('/builder/new')
     }
+
+    this.question_library = function () {
+        $$path('/library/questions')
+    }
 }
