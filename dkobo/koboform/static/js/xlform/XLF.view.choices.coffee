@@ -81,9 +81,10 @@ class XLF.OptionView extends Backbone.View
       other_names = @options.cl.getNames()
       val = XLF.sluggify(val, {
                 preventDuplicates: other_names
-                lowerCase: false,
-                lrstrip: true,
-                incrementorPadding: false,
+                lowerCase: false
+                lrstrip: true
+                incrementorPadding: false
+                characterLimit: 14
                 validXmlTag: false
               })
       @model.set('name', val)

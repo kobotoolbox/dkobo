@@ -29,6 +29,7 @@ class XLF.ChoiceList extends XLF.BaseModel
           preventDuplicates: names
           lowerCase: false
           lrstrip: true
+          characterLimit: 14
           incrementorPadding: false
           validXmlTag: false
         })
