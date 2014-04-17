@@ -306,6 +306,8 @@ describe "Controllers", ->
 
   describe "Asset Editor Controller", ->
     beforeEach inject(($controller, $rootScope) ->
+      resourceStub =
+        get: sinon.spy()
 
       initializeController $controller, "AssetEditor", $rootScope
     )
