@@ -1002,6 +1002,7 @@ input[type="button"].btn--block {
     display: none;
     margin-top: 15px;
     opacity: .6;
+    color: grey;
 }
 
 .questions__question:hover .question__edit-link {
@@ -1010,6 +1011,7 @@ input[type="button"].btn--block {
 
 .question__edit-link:hover {
     opacity: 1;
+    color: #1daee3;
 }
 
 .question__name {
