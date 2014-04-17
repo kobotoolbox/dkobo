@@ -81,9 +81,12 @@ class XLF.Survey extends XLF.SurveyFragment
       cols = ["list name", "name", "label"]
       for choiceList in lists.models
         choiceList.set("name", XLF.txtid(), silent: true)  unless choiceList.get("name")
-        clName = choiceList.get("name")
-        for option in choiceList.options.models
-          rows.push _.extend {}, option.toJSON(), "list name": choiceList.get("name")
+        choiceList.finalize()
+        clAtts = choiceList.toJSON()
+        clName = clAtts.name
+        for option in clAtts.options
+          rows.push _.extend {}, option, "list name": clName
+
       if rows.length > 0
         columns: cols
         rowObjects: rows
