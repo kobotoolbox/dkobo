@@ -3,7 +3,7 @@
 /* global SurveyApp */
 'use strict';
 function AssetEditorController($scope, $rootScope, $routeParams, $restApi, $routeTo) {
-    var surveyDraftApi = $restApi.create_question_api($routeParams.id);
+    var surveyDraftApi = $restApi.create_question_api($scope, $routeParams.id);
     $rootScope.activeTab = 'Question Library > Edit question';
     surveyDraftApi.get({id: $routeParams.id}, function builder_get_callback(response) {
         $scope.xlfSurvey = XLF.createSurveyFromCsv(response.body);
