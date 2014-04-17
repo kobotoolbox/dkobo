@@ -63,9 +63,9 @@ describe 'skip logic model', () ->
     it 'creates a decimal response model', () ->
       expect(_factory.create_response_model 'decimal').toBeInstanceOf XLF.Model.DecimalResponseModel
 
-  ###******************************************************************************************************************************
-  ***---------------------------------------------------------------------------------------------------------------------------***
-  ******************************************************************************************************************************###
+  ###*******************************************************************************************************************
+  ***----------------------------------------------------------------------------------------------------------------***
+  *******************************************************************************************************************###
 
   describe 'skip logic criterion', () ->
     _criterion = null
@@ -637,33 +637,123 @@ describe 'skip logic helpers', () ->
     _helper_factory = sinon.stubObject XLF.SkipLogicHelperFactory
     _model_factory = sinon.stubObject XLF.Model.SkipLogicFactory
     _view_factory = sinon.stubObject XLF.Views.SkipLogicViewFactory
-    _question = sinon.stubObject XLF.Row
-    _survey = sinon.stubObject XLF.Survey
+    _question = null
+    _survey = null
     _parser_stub = null
     _builder = null
-    _view = sinon.stubObject XLF.SkipLogicCriterionBuilderView
+    _view = null
+    _presenter_stubs = null
+    _delimiter_spy = null
+    _facade = null
+
+    beforeEach () ->
+      _question = sinon.stubObject XLF.Row
+      _survey = sinon.stubObject XLF.Survey
+      _parser_stub = null
+      _builder = sinon.stubObject(XLF.SkipLogicBuilder)
+      _view = sinon.stubObject XLF.SkipLogicCriterionBuilderView
+      _delimiter_spy =
+        show: sinon.spy()
+        hide: sinon.spy()
+
+      _view_factory.create_criterion_builder_view.returns _view
+      _view.render.returns _view
+      _presenter_stubs = [
+        sinon.stubObject XLF.SkipLogicPresenter
+        sinon.stubObject XLF.SkipLogicPresenter
+      ]
+
+      _facade = new XLF.SkipLogicCriterionBuilderFacade(
+        _presenter_stubs
+        'and'
+        _builder
+        _view_factory
+      )
+
 
     describe 'render', () ->
-      ###it 'attaches root view to provided destination', () ->
-        _view_factory.create_criterion_builder_view.returns _view
-        _view.render.returns _view
+      _determine_criterion_visibility_spy = null
+      beforeEach () ->
+        _determine_criterion_visibility_spy = sinon.spy()
+        _facade.determine_criterion_delimiter_visibility = _determine_criterion_visibility_spy
+        _view.$.withArgs('.skiplogic__criterialist').returns 'test destination'
+        _view.$.withArgs('.skiplogic__delimselect').returns _delimiter_spy
+        _facade.render 'test'
 
-        facade = new XLF.CriterionBuilderFacade ['test presenter'], 'and', _builder, _view_factory
-        facade.render 'test'
-
-        expect(_view.attach_to).toHaveBeenCalledWith 'test'###
+      it 'renders the view', () ->
+        expect(_view.render).toHaveBeenCalledOnce()
+      it 'attaches root view to provided destination', () ->
+        expect(_view.attach_to).toHaveBeenCalledWith 'test'
       it 'sets visibility of criterion delimiter', () ->
+        expect(_determine_criterion_visibility_spy).toHaveBeenCalledOnce()
+      it 'sets destination to views .skiplogic__criterialist element', () ->
+        expect(_facade.destination).toBe 'test destination'
+      it 'renders each presenter with destination taken from view', () ->
+        expect(_presenter_stubs[0].render).toHaveBeenCalledWith 'test destination'
+        expect(_presenter_stubs[1].render).toHaveBeenCalledWith 'test destination'
+      it "sets $criterion_delimiter to view's .skiplogic__delimselect element", () ->
+        expect(_facade.$criterion_delimiter).toBe _delimiter_spy
 
+    describe 'determine_criterion_delimiter_visibility', () ->
+      beforeEach () ->
+        _facade.$criterion_delimiter = _delimiter_spy
+      it 'shows the criterion delimiter when there is more than one presenter', () ->
+        _facade.determine_criterion_delimiter_visibility()
+
+        expect(_delimiter_spy.show).toHaveBeenCalledOnce()
+
+      it 'hides the criterion delimiter when there is one presenter', () ->
+        _facade.presenters = ['']
+        _facade.determine_criterion_delimiter_visibility()
+
+        expect(_delimiter_spy.hide).toHaveBeenCalledOnce()
     describe 'serialize', () ->
-    describe 'switch editing mode', () ->
-    describe 'constructor', () ->
+      it 'returns serialized criteria', () ->
+        _presenter_stubs[0].serialize.returns 'one'
+        _presenter_stubs[1].serialize.returns 'two'
 
-    describe 'add empty', () ->
+        expect(_facade.serialize()).toBe 'one and two'
+      it 'removes empty criteria', () ->
+        _presenter_stubs[0].serialize.returns 'one'
+        _presenter_stubs[1].serialize.returns ''
+
+        expect(_facade.serialize()).toBe 'one'
+
+    describe 'add_empty', () ->
+      _empty_presenter_stub = null
+
+      beforeEach () ->
+        _empty_presenter_stub = sinon.stubObject XLF.SkipLogicPresenter
+        _builder.build_empty_criterion_logic.returns _empty_presenter_stub
+        _facade.presenters.push = sinon.spy()
+        _facade.determine_criterion_delimiter_visibility = sinon.spy()
+        _facade.destination = 'test detination'
+        _facade.add_empty()
+
+      it 'adds an empty presenter to the presenters object', () ->
+        expect(_facade.presenters.push).toHaveBeenCalledWith _empty_presenter_stub
+
+      it 'renders the empty presenter to the destination', () ->
+        expect(_empty_presenter_stub.render).toHaveBeenCalledWith 'test detination'
+
+      it 'calls determine_criterion_visibility', () ->
+        expect(_facade.determine_criterion_delimiter_visibility).toHaveBeenCalledOnce()
+
     describe 'remove', () ->
+      it 'removes presenter with model with passed id', () ->
+        _presenter_stubs[0].model = cid: 1
+        _presenter_stubs[1].model = cid: 2
+        _facade.remove(1)
 
-    describe 'determine criterion delimiter visibility', () ->
-      it 'shows the criterion delimiter picker when there is more than 1 criteria in the list', () ->
-      it 'hides the criterion delimiter picker when there is 1 or less criteria in the list', () ->
+        expect(_presenter_stubs.length).toBe 1
+        expect(_presenter_stubs[0].model.cid).toBe 2
+    describe 'switch editing mode', () ->
+      it 'returns a hand coded criteria with serialized version of criteria', () ->
+        _builder.build_hand_code_criteria.withArgs('one and two').returns 'test hand coded criteria'
+        _facade.serialize = sinon.stub().returns 'one and two'
+
+        expect(_facade.switch_editing_mode()).toBe 'test hand coded criteria'
+
 
   describe 'hand code facade', () ->
     describe 'render', () ->

@@ -84,7 +84,7 @@ class XLF.SkipLogicCriterionBuilderFacade
     @determine_criterion_delimiter_visibility()
   remove: (id) ->
     _.each @presenters, (presenter, index) =>
-      if presenter.model.cid == id
+      if presenter? && presenter.model.cid == id
         @presenters.splice(index, 1)
   constructor: (@presenters, separator, @builder, @view_factory) ->
     @view = @view_factory.create_criterion_builder_view()
@@ -107,7 +107,8 @@ class XLF.SkipLogicHandCodeFacade
 class XLF.SkipLogicModeSelectorFacade
   render: (destination) ->
   serialize: () ->
-  constructor: () ->
+  constructor: (@view_factory) ->
+    @view = @view_factory.create_skip_logic_picker_view()
   switch_editing_mode: () ->
 
 class XLF.SkipLogicBuilder
@@ -130,10 +131,16 @@ class XLF.SkipLogicBuilder
     @helper_factory.create_criterion_builder_facade criteria, parsed.operator, @
 
   build_operator_logic: (question_type, operator_type, criterion) =>
-    return [@build_operator_model(question_type, operator_type, operator_type.symbol[criterion.operator]), @build_operator_view(question_type)]
+    return [
+      @build_operator_model(question_type, operator_type, operator_type.symbol[criterion.operator]),
+      @build_operator_view(question_type)
+    ]
 
   build_operator_model: (question_type, operator_type, symbol) ->
-    return @model_factory.create_operator((if operator_type.type == 'existence' then 'existence' else question_type.equality_operator_type), symbol, operator_type.id)
+    return @model_factory.create_operator(
+      (if operator_type.type == 'existence' then 'existence' else question_type.equality_operator_type),
+      symbol,
+      operator_type.id)
 
   build_operator_view: (question_type) ->
     operators = _.filter(XLF.operator_types, (op_type) -> op_type.id in question_type.operators)
