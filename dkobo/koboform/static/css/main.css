@@ -998,6 +998,20 @@ input[type="button"].btn--block {
     background-color: #dbeefc;
 }
 
+.questions__question .question__edit-link {
+    display: none;
+    margin-top: 15px;
+    opacity: .6;
+}
+
+.questions__question:hover .question__edit-link {
+    display: inline-block;
+}
+
+.question__edit-link:hover {
+    opacity: 1;
+}
+
 .question__name {
     font-family: Lato;
     font-size: 13px;
@@ -1007,6 +1021,7 @@ input[type="button"].btn--block {
     padding-bottom: 9px;
     padding-left: 1em;
     margin-bottom: 0;
+    display: inline-block;
 }
 
 .question__name--selected {
