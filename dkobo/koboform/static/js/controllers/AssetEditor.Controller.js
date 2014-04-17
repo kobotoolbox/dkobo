@@ -9,8 +9,8 @@ function AssetEditorController($scope, $rootScope, $routeParams, $restApi, $rout
         $scope.xlfSurvey = XLF.createSurveyFromCsv(response.body);
         // temporarily saving response in __djangoModelDetails
         $scope.xlfSurvey.__djangoModelDetails = response;
-        $scope.xlfSurveyApp = SurveyApp.create({el: 'section.form-builder', survey: $scope.xlfSurvey, ngScope: $scope, save: saveCallback});
-        $scope.xlfSurveyApp.render();
+        $scope.xlfQuestionApp = QuestionApp.create({el: 'section.form-builder', survey: $scope.xlfSurvey, ngScope: $scope, save: saveCallback});
+        $scope.xlfQuestionApp.render();
     });
 
     /*jshint validthis: true */

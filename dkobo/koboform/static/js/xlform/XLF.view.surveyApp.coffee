@@ -15,7 +15,7 @@ class SurveyFragmentView extends Backbone.View
   @create: (params = {}) ->
     if _.isString params.el
       params.el = $(params.el).get 0
-    return new SurveyApp(params)
+    return new @(params)
 
   initialize: (options)->
     if options.survey and (options.survey instanceof XLF.Survey)
