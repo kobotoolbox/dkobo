@@ -69,7 +69,10 @@ class SurveyFragmentView extends Backbone.View
         @emptySurveyXlfRowSelector = new XLF.RowSelector(el: @$el.find(".expanding-spacer-between-rows").get(0), survey: @survey, ngScope: @ngScope)
       @emptySurveyXlfRowSelector.expand()
 
-    viewUtils.makeEditable @, @survey.settings, '.form-title', property:'form_title'
+    if @features.displayTitle
+      viewUtils.makeEditable @, @survey.settings, '.form-title', property:'form_title'
+    else
+      @$(".survey-header__inner").hide()
 
     # see this page for info on what should be in a form_id
     # http://opendatakit.org/help/form-design/guidelines/
@@ -198,6 +201,7 @@ class @SurveyApp extends SurveyFragmentView
   features:
     multipleQuestions: true
     skipLogic: true
+    displayTitle: true
     copyToLibrary: false
     surveySettings: true
 
@@ -205,6 +209,7 @@ class @QuestionApp extends SurveyFragmentView
   features:
     multipleQuestions: false
     skipLogic: false
+    displayTitle: false
     copyToLibrary: false
     surveySettings: false
 
