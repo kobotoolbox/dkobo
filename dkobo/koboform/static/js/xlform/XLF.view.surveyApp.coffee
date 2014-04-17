@@ -202,7 +202,7 @@ class @SurveyApp extends SurveyFragmentApp
     multipleQuestions: true
     skipLogic: true
     displayTitle: true
-    copyToLibrary: false
+    copyToLibrary: true
     surveySettings: true
 
 class @QuestionApp extends SurveyFragmentApp
