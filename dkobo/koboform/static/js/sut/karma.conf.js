@@ -28,6 +28,7 @@ module.exports = function(config) {
             'init.js',
             '../*.js',
             '../../templates/*.html',
+            'tests/*.coffee',
             'tests/*.js',
             '../../../../static/js/backbone.js',
             '../../../../static/js/Backbone.Validation.js',
