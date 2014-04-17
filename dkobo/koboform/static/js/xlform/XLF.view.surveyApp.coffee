@@ -1,7 +1,8 @@
 # class @SurveyApp extends Backbone.View
 
-class @SurveyApp extends Backbone.View
+class SurveyFragmentView extends Backbone.View
   className: "formbuilder-wrap container"
+  features: {}
   events:
     "click .js-delete-row": "clickRemoveRow"
     "click #xlf-preview": "previewButtonClick"
@@ -9,6 +10,7 @@ class @SurveyApp extends Backbone.View
     "click #xlf-download": "downloadButtonClick"
     "click #save": "saveButtonClick"
     "click #publish": "publishButtonClick"
+    "click .survey-header__options-toggle": "toggleSurveyOptions"
     "update-sort": "updateSort"
   @create: (params = {}) ->
     if _.isString params.el
@@ -49,6 +51,10 @@ class @SurveyApp extends Backbone.View
     @survey.rows.add(model, at: position)
     ``
 
+  toggleSurveyOptions: ->
+    if @features.surveySettings
+      @$(".survey-header__options").toggle()
+
   render: ()->
     @$el.removeClass("content--centered").removeClass("content")
     @$el.html viewTemplates.surveyApp @survey
@@ -76,25 +82,36 @@ class @SurveyApp extends Backbone.View
 
     @reset()
 
-    @formEditorEl.sortable({
-        axis: "y"
-        cancel: "button,div.add-row-btn,.well,ul.list-view,li.editor-message, .editableform, .row-extras"
-        cursor: "move"
-        distance: 5
-        items: "> li"
-        placeholder: "placeholder"
-        opacity: 0.9
-        scroll: false
-        stop: (evt, ui)->
-          itemSet = ui.item.parent().find("> .xlf-row-view")
-          ui.item.trigger "drop", itemSet.index(ui.item)
-        activate: (evt, ui)=>
-          @formEditorEl.addClass("insort")
-          ui.item.addClass("sortable-active")
-        deactivate: (evt,ui)=>
-          @formEditorEl.removeClass("insort")
-          ui.item.removeClass("sortable-active")
-      })
+    if not @features.surveySettings
+      @$(".survey-header__options-toggle").hide()
+
+    if @features.multipleQuestions
+      @formEditorEl.sortable({
+          axis: "y"
+          cancel: "button,div.add-row-btn,.well,ul.list-view,li.editor-message, .editableform, .row-extras"
+          cursor: "move"
+          distance: 5
+          items: "> li"
+          placeholder: "placeholder"
+          opacity: 0.9
+          scroll: false
+          stop: (evt, ui)->
+            itemSet = ui.item.parent().find("> .xlf-row-view")
+            ui.item.trigger "drop", itemSet.index(ui.item)
+          activate: (evt, ui)=>
+            @formEditorEl.addClass("insort")
+            ui.item.addClass("sortable-active")
+          deactivate: (evt,ui)=>
+            @formEditorEl.removeClass("insort")
+            ui.item.removeClass("sortable-active")
+        })
+    else
+      @$(".delete-row").hide()
+      @$(".expanding-spacer-between-rows").hide()
+
+    if not @features.copyToLibrary
+      @$(".row-extras__add-to-question-library").hide()
+
     @
 
   validateSurvey: ()->
@@ -176,6 +193,20 @@ class @SurveyApp extends Backbone.View
   publishButtonClick: (evt)->
     # Publish = trigger publish action (ie. post to formhub)
     @onPublish.apply(@, arguments)
+
+class @SurveyApp extends SurveyFragmentView
+  features:
+    multipleQuestions: true
+    skipLogic: true
+    copyToLibrary: false
+    surveySettings: true
+
+class @QuestionApp extends SurveyFragmentView
+  features:
+    multipleQuestions: false
+    skipLogic: false
+    copyToLibrary: false
+    surveySettings: false
 
 class @SurveyTemplateApp extends Backbone.View
   events:
