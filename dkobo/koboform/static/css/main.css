@@ -999,14 +999,15 @@ input[type="button"].btn--block {
 }
 
 .questions__question .question__edit-link {
-    display: none;
-    margin-top: 15px;
-    opacity: .6;
-    color: grey;
+    opacity: 0;
+    position: absolute;
+    padding: 10px;
+    top: 0px;
+    right: 0px;
 }
 
 .questions__question:hover .question__edit-link {
-    display: inline-block;
+    opacity: 0.6;
 }
 
 .question__edit-link:hover {
@@ -1023,7 +1024,6 @@ input[type="button"].btn--block {
     padding-bottom: 9px;
     padding-left: 1em;
     margin-bottom: 0;
-    display: inline-block;
 }
 
 .question__name--selected {
