@@ -30,7 +30,7 @@ class SurveyFragmentApp extends Backbone.View
     @survey.on "row-detail-change", (row, key, val, ctxt)=>
       evtCode = "row-detail-change-#{key}"
       @$(".on-#{evtCode}").trigger(evtCode, row, key, val, ctxt)
-    @$el.on "choice-list-update", (evt, clId) =>
+    @$el.on "choice-list-update", (evt, clId) ->
       $(".on-choice-list-update[data-choice-list-cid='#{clId}']").trigger("rebuild-choice-list")
 
     @onPublish = options.publish || $.noop
@@ -128,6 +128,8 @@ class SurveyFragmentApp extends Backbone.View
     fe = @formEditorEl
     isEmpty = true
     fn = (row)=>
+      if !@features.skipLogic
+        row.unset 'relevant'
       isEmpty = false
       unless (xlfrv = @rowViews.get(row.cid))
         @rowViews.set(row.cid, new XLF.RowView(model: row, ngScope: @ngScope, surveyView: @))
