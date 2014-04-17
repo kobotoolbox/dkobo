@@ -1,6 +1,4 @@
-# class @SurveyApp extends Backbone.View
-
-class SurveyFragmentView extends Backbone.View
+class SurveyFragmentApp extends Backbone.View
   className: "formbuilder-wrap container"
   features: {}
   events:
@@ -197,7 +195,7 @@ class SurveyFragmentView extends Backbone.View
     # Publish = trigger publish action (ie. post to formhub)
     @onPublish.apply(@, arguments)
 
-class @SurveyApp extends SurveyFragmentView
+class @SurveyApp extends SurveyFragmentApp
   features:
     multipleQuestions: true
     skipLogic: true
@@ -205,7 +203,7 @@ class @SurveyApp extends SurveyFragmentView
     copyToLibrary: false
     surveySettings: true
 
-class @QuestionApp extends SurveyFragmentView
+class @QuestionApp extends SurveyFragmentApp
   features:
     multipleQuestions: false
     skipLogic: false
