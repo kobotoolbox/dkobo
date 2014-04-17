@@ -18,7 +18,7 @@ function restApiFactory($resource, $timeout) {
             }
 
         },
-        create_question_api: function ($scope) {
+        create_question_api: function ($scope, id) {
             var custom_methods = {
                 list: {
                     method: 'GET',
@@ -90,7 +90,15 @@ function restApiFactory($resource, $timeout) {
                     }
                 }
             };
-            return $resource('/api/library_assets/:id', {id: '@id'}, custom_methods);
+
+            if (id !== undefined) {
+                custom_methods.save = {
+                    method: 'PATCH'
+                };
+            } else {
+                id = '';
+            }
+            return $resource('/api/library_assets/:id', {id: id}, custom_methods);
         }
     };
 }
