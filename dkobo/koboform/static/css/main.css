@@ -986,6 +986,7 @@ input[type="button"].btn--block {
     min-height: 66px;
     width: 100%;
     border-top: 2px solid #d9dde1;
+    position: relative;
 }
 
 .questions__question:last-child {
