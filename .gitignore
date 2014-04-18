@@ -20,3 +20,4 @@ dkobo/koboform/templates/sandbox.html
 dkobo/koboform/templates/sandbox-stub.html
 
 .sass-cache/
+jsapp/components

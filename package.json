@@ -1,17 +1,35 @@
 {
-    "name": "dkobo",
-    "version": "0.0.1",
-    "dependencies": {
-        "coffee-script": "1.6.3",
-        "less": "1.4.2"
-    },
-    "devDependencies": {
-        "karma": "~0.10",
-        "karma-ng-html2js-preprocessor": "~0.1.0",
-        "karma-coverage": "~0.2.1"
-    },
-    "engines": {
-        "node": "0.10.x",
-        "npm": "1.3.x"
-    }
+  "name": "dkobo",
+  "private": true,
+  "version": "0.0.1",
+  "dependencies": {
+    "coffee-script": "1.6.3",
+    "less": "1.4.2"
+  },
+  "devDependencies": {
+    "karma": "~0.10",
+    "bower": "~1.3.2",
+    "karma-ng-html2js-preprocessor": "~0.1.0",
+    "karma-coverage": "~0.2.1",
+    "grunt": "~0.4.4"
+  },
+  "engines": {
+    "node": "0.10.x",
+    "npm": "1.3.x"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "description": "[![Build Status](https://travis-ci.org/kobotoolbox/dkobo.svg)](https://travis-ci.org/kobotoolbox/dkobo)",
+  "main": "Gruntfile.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/kobotoolbox/dkobo.git"
+  },
+  "author": "",
+  "license": "LGPL",
+  "bugs": {
+    "url": "https://github.com/kobotoolbox/dkobo/issues"
+  },
+  "homepage": "https://github.com/kobotoolbox/dkobo"
 }
