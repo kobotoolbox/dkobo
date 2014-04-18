@@ -44,7 +44,10 @@ STATICFILES_FINDERS = (
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'dkobo', 'static'),)
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'dkobo', 'static'),
+    os.path.join(BASE_DIR, 'jsapp'),
+    )
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 

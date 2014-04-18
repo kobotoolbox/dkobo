@@ -39,6 +39,18 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-route.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-cookies.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-resource.js"></script>
+    <script src="{% static 'dkobo_xlform.js' %}"></script>
+
+    {% if DEBUG %}
+    <script type="text/javascript" charset="utf-8">
+
+    /* ensuring file is loading */
+    if(typeof dkobo_xlform === "undefined") {
+      console.error("Static file is not loading properly.");
+    }
+
+    </script>
+    {% endif %}
 
     <script type="text/javascript">
       window.staticFilesUri = "{% static '' %}";

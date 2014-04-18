@@ -10,6 +10,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.conf import settings
 
 from serializers import ListSurveyDraftSerializer, DetailSurveyDraftSerializer
 import json
@@ -57,14 +58,14 @@ def export_form(request, id):
 @login_required
 @ensure_csrf_cookie
 def spa(request):
+    context = RequestContext(request)
     if request.user.is_authenticated():
-        user_details = {u'name': request.user.email,
-                        u'gravatar': utils.gravatar_url(request.user.email)}
+        context['user_details'] = json.dumps({u'name': request.user.email,
+                        u'gravatar': utils.gravatar_url(request.user.email)})
     else:
-        user_details = {}
-    return render_to_response("index.html",
-                              context_instance=
-                              RequestContext(request, {'user_details': json.dumps(user_details)}))
+        context['user_details'] = "{}"
+    context['DEBUG'] = settings.DEBUG
+    return render_to_response("index.html", context_instance=context)
 
 # @login_required
 # def survey_drafts(request, sdid=0):
