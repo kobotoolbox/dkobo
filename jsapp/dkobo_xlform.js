@@ -1,1 +1,0 @@
-window.dkobo_xlform = true;
