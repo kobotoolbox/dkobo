@@ -1,18 +1,22 @@
 #!/usr/bin/env node
 
-/**
- * Module dependencies.
- */
-
 var require = require('requirejs'),
     program = require('commander'),
+    path = require('path'),
     xlform;
 
-// needs configuration
-require.config({});
+require.config({
+  baseUrl: path.resolve(__dirname, '..'),
+  paths: {
+    'jquery': 'components/jquery/dist/jquery',
+    'cs' :'components/require-cs/cs',
+    'backbone': 'components/backbone/backbone',
+    'underscore': 'components/underscore/underscore',
+    'coffee-script': 'components/require-cs/coffee-script',
+  }
+});
 
-require('xlform/xlform_model_amd')
-xlform = require('cs!models/model');
+xlform = require('cs!xlform_model_view/model');
 
 program
   .version('0.0.1')
@@ -24,9 +28,10 @@ program
   .parse(process.argv);
 
 function with_xlform(csv_repr, opts) {
-  var survey = new xlform.Survey.Survey.load(csv_repr)
   var stype = opts.type || 'survey';
-  var outStr = JSON.stringify(survey.rows.at(0).getList().options.models[0]);
+  var outStr = xlform.reverse(csv_repr);
+  // var survey = new xlform.Survey.load(csv_repr)
+  // var outStr = JSON.stringify(survey.rows.at(0).getList().options.models[0]);
   process.stdout.write(''+outStr);
 }
 

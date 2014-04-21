@@ -1,9 +1,11 @@
-define('dkobo_xlform', ['cs!xlform_model/model', 'cs!xlform_views/view'], function(model, view){
-  var XLF = {
-    view: view,
-    model: model
-  };
-  if (!window.dkobo_xlform) {
-    window.dkobo_xlform = XLF;
+// tells the r.js loader to include these modules
+require(['cs!xlform_model_view/model', 'cs!xlform_model_view/view']);
+
+(function(){
+  if ( !this.dkobo_xlform ) {
+    this.dkobo_xlform = {
+      view: require('cs!xlform_model_view/view'),
+      model: require('cs!xlform_model_view/model')
+    };
   }
-});
+})();

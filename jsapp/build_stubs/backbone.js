@@ -1,6 +1,6 @@
 define('backbone', [], function(){
-  if(!window.Backbone) {
+  if(!this.Backbone) {
     console && console.error("Backbone has not been loaded into the page. Library will not work properly.")
   }
-  return window.Backbone;
+  return this.Backbone;
 });
