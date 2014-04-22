@@ -22,7 +22,13 @@
     "underscore": "~1.6.0",
     "backbone": "~1.1.2",
     "requirejs": "~2.1.11",
-    "require-cs": "~0.4.4"
+    "require-cs": "~0.4.4",
+    "almond": "~0.2.9",
+    "angular": "~1.2.16",
+    "angular-cookies": "~1.2.16",
+    "angular-mocks": "~1.2.16",
+    "angular-resource": "~1.2.16",
+    "angular-route": "~1.2.16"
   },
   "devDependencies": {
     "jasmine-sinon": "~0.3.1",
