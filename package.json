@@ -41,7 +41,7 @@
     "type": "git",
     "url": "git://github.com/kobotoolbox/dkobo.git"
   },
-  "author": "Alex Dorey <alex.dorey@kobotoolbox.org>; Nicolas Straub <nicolas.straub@kobotoolbox.org>",
+  "author": "Alex Dorey <alex.dorey@kobotoolbox.org>; Nicolás Straub <nicolas.straub@kobotoolbox.org>",
   "license": "LGPL",
   "bugs": {
     "url": "https://github.com/kobotoolbox/dkobo/issues"
