@@ -10,6 +10,7 @@ cache:
 before_install:
 - gem install sass
 - npm install --save-dev
+- bower install
 script:
 - python manage.py test
 - grunt test
