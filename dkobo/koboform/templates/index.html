@@ -39,7 +39,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-route.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-cookies.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-resource.js"></script>
-    <script src="{% static 'run/dkobo_xlform.js' %}"></script>
+    <script src="{% static 'kobo.compiled/dkobo_xlform.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'kobo.compiled/kobo.css' %}">
 
     {% if DEBUG %}
     <script type="text/javascript" charset="utf-8">
@@ -52,6 +53,7 @@
     }
 
     </script>
+    <script src="http://localhost:35729/livereload.js"></script>
     {% endif %}
 
     <script type="text/javascript">
