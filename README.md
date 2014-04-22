@@ -22,7 +22,14 @@
 
 1. **If in production**, set production environment variables. (See below)
 
-1. Install sass (ruby) and coffee-script (node/npm)
+1. Install javascript dependencies
+
+    `npm install --save-dev`
+    `bower install`
+
+1. Build javascript and stylesheet dependencies
+
+    `grunt build`
 
 1. Continue with "launching the server" (optionally skipping any repeated steps)
 
@@ -32,10 +39,14 @@
 
     `git pull origin master`
 
+1. In development, you'll want to start the javascript and stylesheet compilation watcher and tester
+
+    `grunt`
+
 1. Activate the virtualenvironment
 
     _example virtualenv named kobo_<br>
-    `workon kobo`
+    `source kobo/bin/activate`
 
 1. Install any requirements that have not been installed
 
