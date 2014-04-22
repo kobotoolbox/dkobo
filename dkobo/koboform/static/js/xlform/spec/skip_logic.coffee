@@ -756,9 +756,52 @@ describe 'skip logic helpers', () ->
 
 
   describe 'hand code facade', () ->
+    _view_factory = sinon.stubObject XLF.Views.SkipLogicViewFactory
+    _builder = null
+    _facade = null
+    _view = null
+
+    beforeEach () ->
+      _view = sinon.stubObject XLF.SkipLogicHandCodeView
+      _builder = sinon.stubObject(XLF.SkipLogicBuilder)
+      _view_factory.create_hand_code_view.returns _view
+      _view.render.returns _view
+      _facade = new XLF.SkipLogicHandCodeFacade(
+        'test criteria'
+        _builder
+        _view_factory
+      )
+
+
     describe 'render', () ->
+      _textarea_spy = null
+
+      beforeEach () ->
+        _textarea_spy = val: sinon.spy()
+
+        _view.$.withArgs('textarea').returns _textarea_spy
+        _facade.render 'test'
+
+      it 'renders the view', () ->
+        expect(_view.render).toHaveBeenCalledOnce()
+      it 'attaches root view to provided destination', () ->
+        expect(_view.attach_to).toHaveBeenCalledWith 'test'
+      it "set the view's text area to the passed criteria", () ->
+        expect(_textarea_spy.val).toHaveBeenCalledWith 'test criteria'
     describe 'serialize', () ->
+      it "returns the value of the view's text area", ->
+        textarea_stub = val: sinon.stub()
+        _view.$.withArgs('textarea').returns textarea_stub
+        textarea_stub.val.returns 'test criteria'
+        expect(_facade.render()).toBe 'test criteria'
+
     describe 'switch editing mode', () ->
+      it "returns an instance of a criterion builder facade", () ->
+        _builder.build_criterion_builder.withArgs('test criteria').returns 'test facade'
+        _facade.serialize = () -> 'test criteria'
+
+        expect(_facade.switch_editing_mode()).toBe 'test facade'
+
     describe 'constructor', () ->
 
   describe 'skip logic mode selector facade', () ->
@@ -766,19 +809,33 @@ describe 'skip logic helpers', () ->
 
 
   describe 'skip logic builder', () ->
+    initialize_builder = () ->
+      model_factory = sinon.stubObject XLF.Model.SkipLogicFactory
+      view_factory = sinon.stubObject XLF.Views.SkipLogicViewFactory
+      survey = sinon.stubObject XLF.Survey
+      current_question = sinon.stubObject XLF.Row
+      helper_factory = sinon.stubObject XLF.SkipLogicHelperFactory
+
+      new XLF.SkipLogicBuilder(model_factory, view_factory, survey, current_question, helper_factory)
     describe 'build', () ->
+      it "returns a criterion builder facade", () ->
+        relevant_stub = get: sinon.stub()
+        relevant_stub.get.withArgs('value').returns('test criteria')
+
+        builder = initialize_builder()
+
+        builder.build_criterion_builder = sinon.stub()
+        builder.build_criterion_builder.withArgs('test criteria').returns('test criterion builder')
+
+        builder.current_question.get.withArgs('relevant').returns(relevant_stub)
+
+        expect(builder.build()).toBe 'test criterion builder'
 
     describe 'build criterion builder', () ->
-      _helper_factory = sinon.stubObject XLF.SkipLogicHelperFactory
-      _model_factory = sinon.stubObject XLF.Model.SkipLogicFactory
-      _view_factory = sinon.stubObject XLF.Views.SkipLogicViewFactory
-      _question = sinon.stubObject XLF.Row
-      _survey = sinon.stubObject XLF.Survey
-      _parser_stub = null
       _builder = null
-
+      _parser_stub = null
       beforeEach () ->
-        _builder = new XLF.SkipLogicBuilder _model_factory, _view_factory, _survey, _question, _helper_factory
+        _builder = initialize_builder()
         _parser_stub = sinon.stub XLF, 'skipLogicParser'
 
         _builder.build_criterion_logic = sinon.stub()
@@ -792,7 +849,7 @@ describe 'skip logic helpers', () ->
         _builder.build_empty_criterion_logic = sinon.stub().returns('test')
         _builder.build_criterion_builder ''
 
-        expect(_helper_factory.create_criterion_builder_facade).toHaveBeenCalledWith ['test'], 'and', _builder
+        expect(_builder.helper_factory.create_criterion_builder_facade).toHaveBeenCalledWith ['test'], 'and', _builder
       it 'returns facade with criterion logic presenter array when multiple criteria are passed', () ->
         _parser_stub.returns
           operator: 'and'
@@ -803,7 +860,7 @@ describe 'skip logic helpers', () ->
 
         _builder.build_criterion_builder 'asdf'
 
-        expect(_helper_factory.create_criterion_builder_facade).toHaveBeenCalledWith [true, 'test'], 'and', _builder
+        expect(_builder.helper_factory.create_criterion_builder_facade).toHaveBeenCalledWith [true, 'test'], 'and', _builder
       it 'filters out falsey criteria', () ->
         _parser_stub.returns
           operator: 'and'
@@ -817,7 +874,7 @@ describe 'skip logic helpers', () ->
 
         _builder.build_criterion_builder 'asdf'
 
-        expect(_helper_factory.create_criterion_builder_facade).toHaveBeenCalledWith [true, 'test'], 'and', _builder
+        expect(_builder.helper_factory.create_criterion_builder_facade).toHaveBeenCalledWith [true, 'test'], 'and', _builder
       it 'returns facade with one criterion logic presenter when one criterion is passed', () ->
         _parser_stub.returns
           operator: 'and'
@@ -827,7 +884,7 @@ describe 'skip logic helpers', () ->
 
         _builder.build_criterion_builder 'asdf'
 
-        expect(_helper_factory.create_criterion_builder_facade).toHaveBeenCalledWith [true], 'and', _builder
+        expect(_builder.helper_factory.create_criterion_builder_facade).toHaveBeenCalledWith [true], 'and', _builder
       it 'returns facade with empty criterion logic presenter when no passed criteria are valid', () ->
         _parser_stub.returns
           operator: 'and'
@@ -839,9 +896,38 @@ describe 'skip logic helpers', () ->
 
         _builder.build_criterion_builder 'asdf'
 
-        expect(_helper_factory.create_criterion_builder_facade).toHaveBeenCalledWith ['empty'], 'and', _builder
+        expect(_builder.helper_factory.create_criterion_builder_facade).toHaveBeenCalledWith ['empty'], 'and', _builder
+
+      it 'returns a hand code facade when skip logic parser can`t parse criteria', () ->
+        _parser_stub.throws ''
+        _builder.helper_factory.create_hand_code_facade.withArgs('asdf', _builder).returns 'test hand code facade'
+
+        expect(_builder.build_criterion_builder 'asdf').toBe 'test hand code facade'
 
     describe 'build empty criterion logic', () ->
+      it 'returns an empty criterion logic model', () ->
+        builder = initialize_builder()
+
+        criterion_model = new Backbone.Model()
+
+        builder.model_factory.create_criterion_model.returns criterion_model
+
+        builder.model_factory.create_operator.withArgs('empty').returns 'empty operator'
+
+        builder.build_question_view = sinon.stub().returns 'question view'
+
+
+        builder.view_factory.create_operator_picker.withArgs([]).returns 'operator picker'
+        builder.view_factory.create_response_value_view.withArgs('empty').returns 'response value'
+
+        builder.view_factory.create_criterion_view.withArgs('question view', 'operator picker', 'response value').returns 'criterion view'
+
+        builder.helper_factory.create_presenter.withArgs(criterion_model, 'criterion view', builder).returns 'empty criterion presenter'
+
+        result = builder.build_empty_criterion_logic()
+
+        expect(result).toBe 'empty criterion presenter'
+
     describe 'build criterion logic', () ->
       it 'returns false when question no longer exists', () ->
 
@@ -868,8 +954,8 @@ describe 'skip logic helpers', () ->
 
     it 'creates a criterion builder facade', () ->
       _view_factory.create_criterion_builder_view.returns({})
-      _helper_factory = new XLF.SkipLogicHelperFactory _view_factory
-      facade = _helper_factory.create_criterion_builder_facade 'test presenter', 'and', 'test builder'
+      helper_factory = new XLF.SkipLogicHelperFactory _view_factory
+      facade = helper_factory.create_criterion_builder_facade 'test presenter', 'and', 'test builder'
 
       expect(facade).toBeInstanceOf XLF.SkipLogicCriterionBuilderFacade
       expect(facade.presenters).toBe 'test presenter'

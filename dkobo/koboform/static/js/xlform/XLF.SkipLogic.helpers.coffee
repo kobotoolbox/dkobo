@@ -1,8 +1,10 @@
 class XLF.SkipLogicHelperFactory
-  create_presenter: () ->
+  create_presenter: (criterion_model, criterion_view, builder) ->
+    return new XLF.SkipLogicPresenter criterion_model, criterion_view, builder
   create_criterion_builder_facade: (presenters, delimiter, builder) ->
     return new XLF.SkipLogicCriterionBuilderFacade presenters, delimiter, builder, @view_factory
-  create_hand_code_facade: () ->
+  create_hand_code_facade: (criteria, builder) ->
+    return new XLF.SkipLogicHandCodeFacade criteria, builder, @view_factory
   create_builder: () ->
   constructor: (@view_factory) ->
 
@@ -98,9 +100,9 @@ class XLF.SkipLogicHandCodeFacade
     @view.render().attach_to(destination)
     @view.$('textarea').val(@criteria)
   serialize: () ->
-    @view.$('textarea').val()
-  constructor: (@criteria, @builder) ->
-    @view = new XLF.SkipLogicHandCodeView
+    @view.$('textarea').val() || @criteria
+  constructor: (@criteria, @builder, @view_factory) ->
+    @view = @view_factory.create_hand_code_view()
   switch_editing_mode: () ->
     @builder.build_criterion_builder @serialize()
 
@@ -113,7 +115,7 @@ class XLF.SkipLogicModeSelectorFacade
 
 class XLF.SkipLogicBuilder
   build_hand_code_criteria: (criteria) ->
-    new XLF.SkipLogicHandCodeFacade criteria, @
+    new XLF.SkipLogicHandCodeFacade criteria, @, @view_factory
   build: () ->
     serialized_criteria = @current_question.get('relevant').get('value')
 
@@ -123,7 +125,11 @@ class XLF.SkipLogicBuilder
     if serialized_criteria == ''
       return @helper_factory.create_criterion_builder_facade [@build_empty_criterion_logic()], 'and', @
 
-    parsed = XLF.skipLogicParser serialized_criteria
+    try
+      parsed = XLF.skipLogicParser serialized_criteria
+    catch e
+      return @helper_factory.create_hand_code_facade serialized_criteria, @
+
     criteria = _.filter(_.map(parsed.criteria, @build_criterion_logic), (item) -> !!item)
     if criteria.length == 0
       criteria.push @build_empty_criterion_logic()
@@ -198,10 +204,15 @@ class XLF.SkipLogicBuilder
     question_picker_view = @build_question_view()
 
 
-    criterion_view = @view_factory.create_criterion_view question_picker_view, @view_factory.create_operator_picker([]), @view_factory.create_response_value_view('empty')
+    criterion_view = @view_factory.create_criterion_view(
+      question_picker_view,
+      @view_factory.create_operator_picker([]),
+      @view_factory.create_response_value_view('empty')
+    )
+
     criterion_view.model = criterion_model
 
-    new XLF.SkipLogicPresenter(criterion_model, criterion_view, @)
+    @helper_factory.create_presenter criterion_model, criterion_view, @
 
   questions: () ->
     questions = []

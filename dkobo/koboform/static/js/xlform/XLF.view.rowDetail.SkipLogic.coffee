@@ -242,4 +242,6 @@ class XLF.Views.SkipLogicViewFactory
     return new XLF.Views.SkipLogicCriterion question_picker_view, operator_picker_view, response_value_view, presenter
   constructor: (@survey) ->
   create_criterion_builder_view: () ->
-    return new XLF.SkipLogicCriterionBuilderView
+    return new XLF.SkipLogicCriterionBuilderView()
+  create_hand_code_view: () ->
+    return new XLF.SkipLogicHandCodeView()
