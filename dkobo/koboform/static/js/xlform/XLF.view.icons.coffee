@@ -1,82 +1,90 @@
 XLF.iconDetails = [
-    label: "Upload photo"
-    faClass: "camera"
-    grouping: "media"
-    id: "image"
-  ,
-    label: "Record audio"
-    faClass: "microphone"
-    grouping: "media"
-    id: "audio"
-  ,
-    label: "Record video"
-    faClass: "video-camera"
-    grouping: "media"
-    id: "video"
-  ,
-    label: "Scan barcode"
-    faClass: "barcode"
-    grouping: "media"
-    id: "barcode"
-  ,
-    label: "Text"
-    faClass: "font"
-    grouping: "text"
-    id: "text"
-  ,
-    label: "Integer"
-    faClass: "sort-numeric-asc"
-    grouping: "text"
-    id: "integer"
-  ,
-    label: "Decimal"
-    faClass: "money"
-    grouping: "text"
-    id: "decimal"
-  ,
-    label: "Read a note"
-    grouping: "text"
-    id: "note"
-  ,
-    label: "Acknowledge"
-    faClass: "check-square-o"
-    grouping: "text"
-    id: "acknowledge"
-  ,
+  # row 1
     label: "Select one"
     faClass: "check-square-o"
-    grouping: "choice"
+    grouping: "r1"
     id: "select_one"
   ,
     label: "Select many"
     faClass: "list-alt"
-    grouping: "choice"
+    grouping: "r1"
     id: "select_multiple"
+  ,
+    label: "Text"
+    faClass: "font"
+    grouping: "r1"
+    id: "text"
+  ,
+    label: "Integer"
+    faClass: "sort-numeric-asc"
+    grouping: "r1"
+    id: "integer"
+  ,
+
+  # row 2
+    label: "Decimal"
+    faClass: "money"
+    grouping: "r2"
+    id: "decimal"
   ,
     label: "Date"
     faClass: "calendar-o"
-    grouping: "choice"
+    grouping: "r2"
     id: "date"
-  ,
-    label: "Date + time"
-    faClass: "calendar"
-    grouping: "choice"
-    id: "datetime"
   ,
     label: "Time"
     faClass: "clock-o"
-    grouping: "choice"
+    grouping: "r2"
     id: "time"
   ,
+    label: "Date + time"
+    faClass: "calendar"
+    grouping: "r2"
+    id: "datetime"
+  ,
+
+  # r3
     label: "GPS Location"
     faClass: "map-marker"
-    grouping: "misc"
+    grouping: "r3"
     id: "geopoint"
+  ,
+    label: "Upload photo"
+    faClass: "camera"
+    grouping: "r3"
+    id: "image"
+  ,
+    label: "Record audio"
+    faClass: "microphone"
+    grouping: "r3"
+    id: "audio"
+  ,
+    label: "Record video"
+    faClass: "video-camera"
+    grouping: "r3"
+    id: "video"
+  ,
+
+  # r4
+    label: "Read a note"
+    grouping: "r4"
+    id: "note"
+  ,
+    label: "Scan barcode"
+    faClass: "barcode"
+    grouping: "r4"
+    id: "barcode"
+  ,
+    label: "Acknowledge"
+    faClass: "check-square-o"
+    grouping: "r4"
+    id: "acknowledge"
   ,
     label: "Calculate value"
     faClass: "superscript"
-    grouping: "misc"
+    grouping: "r4"
     id: "calculate"
+  ,
   ]
 
 class QtypeIcon extends Backbone.Model
