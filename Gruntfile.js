@@ -1,21 +1,4 @@
 module.exports = function(grunt) {
-    var _ = require('underscore');
-
-    var stubbedPaths = {
-        'backbone': 'build_stubs/backbone',
-        'underscore': 'build_stubs/underscore',
-    };
-    var paths = {
-        'almond': 'components/almond/almond',
-        'jquery': 'components/jquery/dist/jquery.min',
-        'cs' :'components/require-cs/cs',
-        'backbone': 'components/backbone/backbone',
-        'underscore': 'components/underscore/underscore',
-        'coffee-script': 'components/require-cs/coffee-script',
-    };
-    var projectPaths = {
-        'xlform_model_view': 'xlform_model_view',
-    };
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -89,7 +72,19 @@ module.exports = function(grunt) {
                     name: 'almond',
                     include: 'build_configs/dkobo_xlform',
                     out: 'jsapp/kobo.compiled/dkobo_xlform.js',
-                    paths: _.extend({}, paths, projectPaths, stubbedPaths),
+                    paths: {
+                        'almond': 'components/almond/almond',
+                        'jquery': 'components/jquery/dist/jquery.min',
+                        'cs' :'components/require-cs/cs',
+                        // stubbed paths for almond build
+                        'backbone': 'build_stubs/backbone',
+                        'underscore': 'build_stubs/underscore',
+                        // 'backbone': 'components/backbone/backbone',
+                        // 'underscore': 'components/underscore/underscore',
+                        'coffee-script': 'components/require-cs/coffee-script',
+                        // project paths
+                        'xlform_model_view': 'xlform_model_view',
+                    },
                 },
             },
         },
