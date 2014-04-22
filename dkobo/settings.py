@@ -51,7 +51,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Application definition
 
 COMPRESS_ENABLED = os.environ.get('COMPRESS_ENABLED', 'True') == 'True'
-COMPRESS_OFFLINE = True
+COMPRESS_OFFLINE = not DEBUG
 COMPRESS_ROOT = os.path.join(BASE_DIR, 'dkobo', 'static')
 
 COMPRESS_PRECOMPILERS = (
@@ -75,6 +75,7 @@ INSTALLED_APPS = (
     'gunicorn',
     'south',
     'rest_framework',
+    'django_extensions',
 )
 
 # The number of surveys to import. -1 is all
