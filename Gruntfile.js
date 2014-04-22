@@ -66,7 +66,6 @@ module.exports = function(grunt) {
                     // uglify-minimization/optimization--
                     optimize: 'none',
                     stubModules: ['cs'],
-                    paths: paths,
                     wrap: true,
                     exclude: ['coffee-script'],
                     name: 'almond',
