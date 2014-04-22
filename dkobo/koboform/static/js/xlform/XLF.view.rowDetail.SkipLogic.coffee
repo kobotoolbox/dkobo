@@ -245,3 +245,4 @@ class XLF.Views.SkipLogicViewFactory
     return new XLF.SkipLogicCriterionBuilderView()
   create_hand_code_view: () ->
     return new XLF.SkipLogicHandCodeView()
+  create_skip_logic_picker_view: () ->
