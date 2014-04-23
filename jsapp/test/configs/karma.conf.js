@@ -21,12 +21,12 @@ module.exports = function(config) {
 
             // kobo jsapp source files
             'kobo/**/*.js',
-            'kobo/**/*.coffee',
-            'kobo/**/*.html',
+            // 'kobo/**/*.coffee',
+            // 'kobo/**/*.html',
 
             // kobo jsapp compiled files
             'kobo.compiled/**/*.js',
-            'kobo.compiled/**/*.html',
+            // 'kobo.compiled/**/*.html',
 
             // jsapp/test files
             'test/**/*.js',
