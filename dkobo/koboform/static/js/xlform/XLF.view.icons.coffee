@@ -103,6 +103,6 @@ class QtypeIconCollection extends Backbone.Collection
         ii = grp_keys.indexOf(grping)
         @_groups[ii] or @_groups[ii] = []
         @_groups[ii].push model
-    @_groups
+    _.zip.apply(null, @_groups)
 
 XLF.icons = new QtypeIconCollection(XLF.iconDetails)
