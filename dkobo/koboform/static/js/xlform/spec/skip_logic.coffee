@@ -775,10 +775,12 @@ describe 'skip logic helpers', () ->
       _builder = sinon.stubObject(XLF.SkipLogicBuilder)
       _view_factory.create_hand_code_view.returns _view
       _view.render.returns _view
+      _view.$.withArgs('.skiplogic-handcode__cancel').returns(click: sinon.spy())
       _facade = new XLF.SkipLogicHandCodeHelper(
         'test criteria'
         _builder
         _view_factory
+        sinon.stubObject(XLF.SkipLogicHelperContext)
       )
 
 
@@ -802,7 +804,7 @@ describe 'skip logic helpers', () ->
         textarea_stub = val: sinon.stub()
         _view.$.withArgs('textarea').returns textarea_stub
         textarea_stub.val.returns 'test criteria'
-        expect(_facade.render()).toBe 'test criteria'
+        expect(_facade.serialize()).toBe 'test criteria'
 
     describe 'switch editing mode', () ->
       it "returns an instance of a criterion builder facade", () ->
