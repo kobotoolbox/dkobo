@@ -813,13 +813,36 @@ describe 'skip logic helpers', () ->
 
     describe 'constructor', () ->
 
-  describe 'mode selector facade', () ->
+  describe 'mode selector helper', () ->
     describe 'render', () ->
-      it 'renders the view and attaches it to the destination', () ->
+      initialize_mode_selector_helper = () ->
+
+        view_factory_stub = sinon.stubObject(XLF.Views.SkipLogicViewFactory)
+        view_stub = sinon.stubObject(XLF.Views.SkipLogicPickerView)
+
+        view_stub.render.returns view_stub
+        view_factory_stub.create_skip_logic_picker_view.returns view_stub
+
+
+        return new XLF.SkipLogicModeSelectorHelper(view_factory_stub)
+
+      it 'renders the view', () ->
+        helper = initialize_mode_selector_helper()
+        helper.render('destination')
+
+        expect(helper.view.render).toHaveBeenCalledOnce()
+      it 'attaches the view to passed destination', () ->
+        helper = initialize_mode_selector_helper()
+        helper.render('destination')
+        expect(helper.view.attach_to).toHaveBeenCalledWith('destination')
+
     describe 'serialize', () ->
       it 'returns an empty string', () ->
-    describe 'switch editing mode', () ->
-      it 'switches to the requested view', () ->
+        helper = new XLF.SkipLogicModeSelectorHelper(sinon.stubObject(XLF.Views.SkipLogicViewFactory))
+
+        result = helper.serialize()
+
+        expect(result).toBe ''
 
   describe 'helper context', () ->
     initialize_helper_context = (serialized_criteria) ->
@@ -831,9 +854,12 @@ describe 'skip logic helpers', () ->
         state_spy = render: sinon.spy()
 
         context.state = state_spy
-        context.render('destination')
 
-        expect(state_spy.render).toHaveBeenCalledWith 'destination'
+        destination_stub = empty: () ->
+
+        context.render(destination_stub)
+
+        expect(state_spy.render).toHaveBeenCalledWith destination_stub
     describe 'serialize', () ->
       it 'calls serialize on inner state', () ->
         context = initialize_helper_context()

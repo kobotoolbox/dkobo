@@ -57,8 +57,11 @@ class XLF.SkipLogicPresenter
     @model.serialize()
 
 class XLF.SkipLogicHelperContext
-  render: (destination) ->
-    return @state.render destination
+  render: (@destination) ->
+    if @destination?
+      @destination.empty()
+      @state.render destination
+    return
   serialize: () ->
     return @state.serialize()
   use_criterion_builder_helper: () ->
@@ -67,13 +70,16 @@ class XLF.SkipLogicHelperContext
     if presenters == false
       @state = null
     else
-      @state = new XLF.SkipLogicCriterionBuilderHelper(presenters[0], presenters[1], @builder, @view_factory)
+      @state = new XLF.SkipLogicCriterionBuilderHelper(presenters[0], presenters[1], @builder, @view_factory, @)
+      @render @destination
     return
   use_hand_code_helper: () ->
-    @state = new XLF.SkipLogicHandCodeHelper(@state.serialize(), @builder, @view_factory)
+    @state = new XLF.SkipLogicHandCodeHelper(@state.serialize(), @builder, @view_factory, @)
+    @render @destination
     return
   use_mode_selector_helper : () ->
-    @use_criterion_builder_helper()
+    @state = new XLF.SkipLogicModeSelectorHelper(@view_factory, @)
+    @render @destination
     return
   constructor: (@model_factory, @view_factory, @builder, serialized_criteria) ->
     @state = serialize: () -> return serialized_criteria
@@ -86,7 +92,6 @@ class XLF.SkipLogicHelperContext
     if !@state?
       @state = serialize: () -> return serialized_criteria
       @use_hand_code_helper()
-
 
 class XLF.SkipLogicCriterionBuilderHelper
   determine_criterion_delimiter_visibility: () ->
@@ -116,7 +121,10 @@ class XLF.SkipLogicCriterionBuilderHelper
     _.each @presenters, (presenter, index) =>
       if presenter? && presenter.model.cid == id
         @presenters.splice(index, 1)
-  constructor: (@presenters, separator, @builder, @view_factory) ->
+
+    if @presenters.length == 0
+      @context.use_mode_selector_helper()
+  constructor: (@presenters, separator, @builder, @view_factory, @context) ->
     @view = @view_factory.create_criterion_builder_view()
     @view.criterion_delimiter = (separator || 'and').toLowerCase()
     @view.facade = @
@@ -127,18 +135,21 @@ class XLF.SkipLogicHandCodeHelper
   render: (destination) ->
     @view.render().attach_to(destination)
     @view.$('textarea').val(@criteria)
+    @view.$('.skiplogic-handcode__cancel').click(() => @context.use_mode_selector_helper())
   serialize: () ->
     @view.$('textarea').val() || @criteria
-  constructor: (@criteria, @builder, @view_factory) ->
+  constructor: (@criteria, @builder, @view_factory, @context) ->
     @view = @view_factory.create_hand_code_view()
   switch_editing_mode: () ->
     @builder.build_criterion_builder @serialize()
 
 class XLF.SkipLogicModeSelectorHelper
   render: (destination) ->
+    @view.render().attach_to(destination)
   serialize: () ->
-  constructor: (@view_factory) ->
-    @view = @view_factory.create_skip_logic_picker_view()
+    return ''
+  constructor: (@view_factory, context) ->
+    @view = @view_factory.create_skip_logic_picker_view(context)
   switch_editing_mode: () ->
 
 class XLF.SkipLogicBuilder
