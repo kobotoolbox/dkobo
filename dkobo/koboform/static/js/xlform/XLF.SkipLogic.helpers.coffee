@@ -276,22 +276,22 @@ XLF.question_types =
     response_type: 'text'
     name: 'default'
   select_one:
-    operators: [1, 2]
+    operators: [2, 1]
     equality_operator_type: 'text'
     response_type: 'dropdown'
     name: 'select_one'
   select_multiple:
-    operators: [1, 2]
+    operators: [2, 1]
     equality_operator_type: 'select_multiple'
     response_type: 'dropdown'
     name: 'select_multiple'
   integer:
-    operators: [1, 2, 3, 4]
+    operators: [3, 1, 2, 4]
     equality_operator_type: 'basic'
     response_type: 'integer'
     name: 'integer'
   barcode:
-    operators: [1, 2, 3, 4]
+    operators: [3, 1, 2, 4]
     equality_operator_type: 'basic'
     response_type: 'integer'
     name: 'barcode'
