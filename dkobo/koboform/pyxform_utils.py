@@ -60,9 +60,6 @@ def convert_xls_to_csv_string(xls_file_object, strip_empty_rows=True):
             #https://github.com/modilabs/pyxform/issues/83
             return unicode(value).replace(unichr(160), ' ')
 
-    def _escape_newline_chars(cell):
-        return re.sub(r'\r', '\\\\r', re.sub(r'\n', '\\\\n', cell))
-
     def _sheet_to_lists(sheet):
         result = []
         for row in range(0, sheet.nrows):
@@ -71,7 +68,7 @@ def convert_xls_to_csv_string(xls_file_object, strip_empty_rows=True):
             for col in range(0, sheet.ncols):
                 value = sheet.cell_value(row, col)
                 if isinstance(value, basestring):
-                    value = _escape_newline_chars(value.strip())
+                    value = value.strip().encode('string_escape')
                 if (value is not None) and (not _iswhitespace(value)):
                     value = xls_value_to_unicode(value, sheet.cell_type(row, col))
                 if value != "":

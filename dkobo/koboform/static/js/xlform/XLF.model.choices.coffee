@@ -27,7 +27,7 @@ class XLF.ChoiceList extends XLF.BaseModel
       if not name
         name = XLF.sluggify(label, {
           preventDuplicates: names
-          lowerCase: false
+          lowerCase: true
           lrstrip: true
           characterLimit: 14
           incrementorPadding: false
