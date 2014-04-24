@@ -1,12 +1,12 @@
 global = @
 
 describe "modules have been loaded into karma", ->
-  it "including dkobo_xlform.js", ->
-    expect(global.dkobo_xlform).toBeDefined()
+  expect_defined = (attribute, name=false)->
+    it "including #{name or attribute}", ->
+      expect(global[attribute]).toBeDefined()
 
-  it "inlcuding angular", ->
-    expect(global.angular).toBeDefined()
-
-  it "inlcuding sinon", ->
-    expect(global.sinon).toBeDefined()
+  expect_defined("dkobo_xlform")
+  expect_defined("angular")
+  expect_defined("sinon")
+  expect_defined("_")
 
