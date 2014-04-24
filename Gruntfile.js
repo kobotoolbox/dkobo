@@ -113,7 +113,10 @@ module.exports = function(grunt) {
         'sass:dist'
     ]);
 
-    grunt.registerTask('test', ['karma:travis']);
+    grunt.registerTask('test', [
+        'build',
+        'karma:travis'
+    ]);
     grunt.registerTask('default', [
         'requirejs:compile_xlform',
         'sass:dist',
