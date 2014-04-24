@@ -23,6 +23,11 @@ function TopLevelMenuDirective ($userDetails, $configuration) {
                 };
             }
 
+            scope.kobocatLink = {
+              url: 'http://kobocat.dev.kobotoolbox.org/',
+              name: 'KoBoCat'
+            };
+
             scope.sections = $configuration.sections();
 
             scope.isActive = function (name) {

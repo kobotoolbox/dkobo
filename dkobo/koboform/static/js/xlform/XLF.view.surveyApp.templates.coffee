@@ -84,11 +84,4 @@ viewTemplates.surveyApp = (survey) ->
           </li>
         </ul>
       </div>
-
-      <!-- Ugly inline jQuery for quick options toggle - demo purposes only, needs to be removed -->
-      <script>
-        $( '.survey-header' ).on( 'click', '.survey-header__options-toggle', function() {
-          $( '.survey-header__options' ).toggle();
-        });
-      </script>
     """

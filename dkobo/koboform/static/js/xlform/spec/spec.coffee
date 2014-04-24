@@ -233,6 +233,29 @@ describe "xlform survey model (XLF.Survey)", ->
       expect(survey.rows.at(0)?.get("name").getValue()).toBe("question_one")
       # incremented from other question
       expect(survey.finalize().rows.at(1)?.get("name").getValue()).toBe("question_one_001")
+
+    it "options automatically named", ->
+      options_survey = @createSurvey([
+              "text,question_one,\"already named question_one\"",
+              "\"select_one abc\",abc,\"alphabet question\""
+              ], [
+                "abc,,\"Letter A\"",
+                "abc,,\"Letter A\"",
+                "abc,,\"Letter A\""
+              ])
+      rr = options_survey.rows.at(1)
+      list = rr.getList()
+      expect(list).toBeDefined()
+
+      # automatic option names are triggered / set in "finalize()"
+      list.finalize()
+
+      [opt1, opt2, opt3] = list.options.models
+
+      expect(opt1.get("name")).toBe("Letter_A")
+      expect(opt2.get("name")).toBe("Letter_A_1")
+      expect(opt3.get("name")).toBe("Letter_A_2")
+
     it "uses a proper name sluggification", ->
       expect(XLF.sluggifyLabel("asdf jkl")).toBe("asdf_jkl")
       expect(XLF.sluggifyLabel("asdf", ["asdf"])).toBe("asdf_001")
@@ -282,11 +305,6 @@ describe "xlform survey model (XLF.Survey)", ->
       ynm.options.add name: "maybe", label: "Maybe"
       ynm.options.add [{name: "yes", label: "Yes"}, {name: "no", label: "No"}]
       expect(ynm.options.length).toBe(3)
-
-      # don't allow duplicate options
-      ynm.options.add name: "maybe", label: "Maybe2"
-      expect(ynm.options.length).toBe(3)
-      expect(ynm.options.first().get("label")).toBe("Maybe")
 
   describe "census xlform", ->
     beforeEach ->
@@ -356,6 +374,7 @@ describe "testing the view", ->
     $(".test-div").remove()
     @pizzaSurvey = XLF.createSurveyFromCsv(PIZZA_SURVEY)
     @xlv = new SurveyApp survey: @pizzaSurvey
+    mockNgScope(@xlv)
     @$el = @xlv.render().$el
     @_div = $("<div>", class: "test-div", html: @$el).appendTo("body")
 
@@ -429,7 +448,13 @@ ERRONEOUS_CSV = """
 
 setupView = (survey)->
   xlv = new SurveyApp(survey: @survey).render()
+  mockNgScope(xlv)
   $("<div>", class: "test-div", html: xlv.$el).appendTo("body")
+
+mockNgScope = (surveyApp)->
+  surveyApp.ngScope = do ->
+    # mock ngScope
+    displayQlib: false
 
 teardownView = ->
   $(".test-div").remove()

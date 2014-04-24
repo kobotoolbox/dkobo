@@ -4,9 +4,8 @@ class XLF.Option extends XLF.BaseModel
     log "destroy me", @
   list: -> @collection
   toJSON: ()->
-    label = @get("label")
-    name = @get("name") || XLF.sluggify(label)
-    {name: name, label: label}
+    name: @get("name")
+    label: @get("label")
 
 class XLF.Options extends XLF.BaseCollection
   model: XLF.Option
@@ -18,8 +17,36 @@ class XLF.ChoiceList extends XLF.BaseModel
     super name: opts.name, context
     @options = new XLF.Options(options || [], _parent: @)
   summaryObj: ->
+    @toJSON()
+  finalize: ->
+    # ensure that all options have names
+    names = []
+    for option in @options.models
+      label = option.get("label")
+      name = option.get("name")
+      if not name
+        name = XLF.sluggify(label, {
+          preventDuplicates: names
+          lowerCase: false
+          lrstrip: true
+          characterLimit: 14
+          incrementorPadding: false
+          validXmlTag: false
+        })
+        option.set("name", name)
+      names.push name
+    ``
+
+  toJSON: ()->
+    @finalize()
+
+    # Returns {name: '', options: []}
     name: @get("name")
-    options: @options.models.map("toJSON")
+    options: @options.invoke("toJSON")
+
+  getNames: ()->
+    names = @options.map (opt)-> opt.get("name")
+    _.compact names
 
 class XLF.ChoiceLists extends XLF.BaseCollection
   model: XLF.ChoiceList
