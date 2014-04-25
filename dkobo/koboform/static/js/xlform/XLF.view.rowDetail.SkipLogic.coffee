@@ -54,6 +54,7 @@ class XLF.SkipLogicCriterionBuilderView extends XLF.Views.Base
 class XLF.SkipLogicHandCodeView extends XLF.Views.Base
   render: () ->
     @$el.html('<textarea class="skiplogic__handcode-edit"></textarea><button class="skiplogic-handcode__cancel">x</button>')
+    @$el.on 'paste', (e) -> e.stopPropagation()
     @
 
 ###
