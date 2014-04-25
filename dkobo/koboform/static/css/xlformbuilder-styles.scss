@@ -441,6 +441,13 @@
     background-color: #eee;
 }
 
+.skiplogic__criterialist.skiplogic__criterialist--unspecified-question .skiplogic__expressionselect {
+  display: none;
+}
+.skiplogic__criterialist.skiplogic__criterialist--unspecified-question .skiplogic__rowselect {
+  width: 100%;
+}
+
 button.skiplogic__deletecriterion {
     height: auto;
     margin: 0;
