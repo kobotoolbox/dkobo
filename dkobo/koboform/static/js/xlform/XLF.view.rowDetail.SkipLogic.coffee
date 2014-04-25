@@ -30,6 +30,9 @@ class XLF.SkipLogicCriterionBuilderView extends XLF.Views.Base
           Any
         </label>
       </p>
+      <p>
+        Only show this question if...
+      </p>
       <div class="skiplogic__criterialist"></div>
     """)
 
