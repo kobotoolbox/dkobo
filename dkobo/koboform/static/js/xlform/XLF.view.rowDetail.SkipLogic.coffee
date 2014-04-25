@@ -176,6 +176,7 @@ class XLF.Views.SkipLogicDropDownResponse extends XLF.Views.Base
 
 class XLF.Views.SkipLogicCriterion extends XLF.Views.Base
   tagName: 'div'
+  className: 'skiplogic__criterion'
   render: () ->
 
     @question_picker_view.render().attach_to @$el
