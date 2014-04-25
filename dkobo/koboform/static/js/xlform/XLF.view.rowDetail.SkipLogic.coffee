@@ -53,7 +53,7 @@ class XLF.SkipLogicCriterionBuilderView extends XLF.Views.Base
 
 class XLF.SkipLogicHandCodeView extends XLF.Views.Base
   render: () ->
-    @$el.html('<textarea class="skiplogic__handcode-edit"></textarea>')
+    @$el.html('<textarea class="skiplogic__handcode-edit"></textarea><button class="skiplogic-handcode__cancel">x</button>')
     @$el.on 'paste', (e) -> e.stopPropagation()
     @
 
@@ -65,7 +65,6 @@ class XLF.SkipLogicCollectionView extends Backbone.View
     @$el.html("""
       <div class="skiplogic__main"></div>
       <p class="skiplogic__extras">
-        <button class="skiplogic__handcode">Hand code</button>
       </p>
     """)
 
@@ -243,4 +242,32 @@ class XLF.Views.SkipLogicViewFactory
     return new XLF.Views.SkipLogicCriterion question_picker_view, operator_picker_view, response_value_view, presenter
   constructor: (@survey) ->
   create_criterion_builder_view: () ->
-    return new XLF.SkipLogicCriterionBuilderView
+    return new XLF.SkipLogicCriterionBuilderView()
+  create_hand_code_view: () ->
+    return new XLF.SkipLogicHandCodeView()
+  create_skip_logic_picker_view: (context) ->
+    return new XLF.Views.SkipLogicPickerView(context)
+
+class XLF.Views.SkipLogicPickerView extends XLF.Views.Base
+  tagName: 'div'
+  events:
+    'click .skiplogic__select-builder' : 'use_criterion_builder_helper'
+    'click .skiplogic__select-handcode' : 'use_hand_code_helper'
+  render: () ->
+    @$el.html(
+      """
+        <button class="skiplogic__select-builder">Add a condition</button>
+          or
+        <button class="skiplogic__select-handcode">Manually enter your skip logic in XLSForm code</button>
+      """
+      )
+    return @
+
+  constructor: (@context) ->
+    super()
+
+  use_hand_code_helper: () ->
+    @context.use_hand_code_helper()
+
+  use_criterion_builder_helper: () ->
+    @context.use_criterion_builder_helper()
