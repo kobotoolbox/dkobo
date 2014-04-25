@@ -18,7 +18,7 @@ class Command(StaticfilesRunserverCommand):
     def start_grunt(self):
         self.stdout.write('>>> Starting grunt')
         self.grunt_process = subprocess.Popen(
-            ['grunt --gruntfile={0}/Gruntfile.js --base=.'.format(settings.PROJECT_PATH)],
+            ['grunt --gruntfile={0}/Gruntfile.js --base=.'.format(settings.BASE_DIR)],
             shell=True,
             stdin=subprocess.PIPE,
             stdout=self.stdout,
