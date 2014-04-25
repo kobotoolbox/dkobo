@@ -76,8 +76,11 @@ class XLF.OptionView extends Backbone.View
       @options.cl.options.add(@model)
       @p.html("Option #{1+@options.i}").addClass("preliminary")
 
+    @p.on 'shown', (e, obj) -> obj.input.$input.on 'paste', (e) -> e.stopPropagation()
     @p.editable success: _.bind @saveValue, @
-    $('span', @c).editable success: (ev, val) =>
+    @n = $('span', @c)
+    @n.on 'shown', (e, obj) -> obj.input.$input.on 'paste', (e) -> e.stopPropagation()
+    @n.editable success: (ev, val) =>
       other_names = @options.cl.getNames()
       val = XLF.sluggify(val, {
                 preventDuplicates: other_names
