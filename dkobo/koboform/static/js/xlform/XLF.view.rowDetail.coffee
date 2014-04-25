@@ -117,6 +117,6 @@ XLF.DetailViewMixins.required =
   afterRender: ->
     inp = @$el.find("input")
     # to be moved into the model when XLF.configs.truthyValues is refactored
-    isTrueValue = (@model.get("value") || "") in XLF.configs.truthyValues
+    isTrueValue = (@model.get("value") || "").toLowerCase() in XLF.configs.truthyValues
     inp.prop("checked", isTrueValue)
     inp.change ()=> @model.set("value", inp.prop("checked"))
