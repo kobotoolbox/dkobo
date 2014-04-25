@@ -11,6 +11,7 @@ survey.
 Details pulled from ODK documents / google docs. Notably this one:
   https://docs.google.com/spreadsheet/ccc?key=0AgpC5gsTSm_4dDRVOEprRkVuSFZUWTlvclJ6UFRvdFE#gid=0
 ###
+
 XLF.defaultSurveyDetails =
   start_time:
     name: "start"
@@ -197,3 +198,21 @@ XLF.newRowDetails =
   constraint:
     value: ""
     _hideUnlessChanged: true
+
+XLF.configs = {}
+
+###
+String representations of boolean values which are accepted as true from the XLSForm.
+###
+
+XLF.configs.truthyValues = [
+  "true",
+  "yes",
+]
+XLF.configs.falsyValues = [
+  "false",
+  "no",
+]
+
+# Alternative: XLF.configs.boolOutputs = {"true": "yes", "false": "no"}
+XLF.configs.boolOutputs = {"true": "true", "false": "false"}

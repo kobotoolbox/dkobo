@@ -15,6 +15,11 @@ class XLF.RowDetail extends XLF.BaseModel
     if @key of XLF.RowDetailMixins
       _.extend(@, XLF.RowDetailMixins[@key])
     super()
+    # We should consider pulling the value from the CSV at this stage
+    # depending on the question type. truthy-CSV values should be set here
+    # In the quick fix, this is done in the view for 'required' rowDetails
+    # (grep: XLF.configs.truthyValues)
+
     if value not in [undefined, false, null]
       vals2set = {}
       if _.isString(value) || _.isNumber(value)
@@ -29,6 +34,8 @@ class XLF.RowDetail extends XLF.BaseModel
 
   postInitialize: ()->
   initialize: ()->
+    # todo: change "_hideUnlessChanged" to describe something about the form, not the representation of the form.
+    # E.g. undefinedUnlessChanged or definedIffChanged
     if @get("_hideUnlessChanged")
       @hidden = true
       @_oValue = @get("value")

@@ -138,7 +138,11 @@ class XLF.Row extends XLF.BaseModel
     outObj = {}
     for [key, val] in @attributesArray()
       result = @getValue(key)
-      outObj[key] = result  unless @hidden
+      unless @hidden
+        if _.isBoolean(result)
+          outObj[key] = XLF.configs.boolOutputs[if result then "true" else "false"]
+        else
+          outObj[key] = result
     outObj
 
 
