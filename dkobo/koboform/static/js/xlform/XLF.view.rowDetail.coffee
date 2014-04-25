@@ -116,5 +116,7 @@ XLF.DetailViewMixins.required =
     """<label><input type="checkbox"> Required?</label>"""
   afterRender: ->
     inp = @$el.find("input")
-    inp.prop("checked", @model.get("value"))
+    # to be moved into the model when XLF.configs.truthyValues is refactored
+    isTrueValue = (@model.get("value") || "") in XLF.configs.truthyValues
+    inp.prop("checked", isTrueValue)
     inp.change ()=> @model.set("value", inp.prop("checked"))
