@@ -195,8 +195,14 @@ class XLF.Views.SkipLogicCriterion extends XLF.Views.Base
 
     @
 
+  mark_question_specified: (is_specified=false) ->
+    @$el.toggleClass("skiplogic__criterion--unspecified-question", is_specified)
+
   bind_question_picker: () ->
+    @mark_question_specified false
+
     @$question_picker.on 'change', () =>
+      @mark_question_specified true
       @presenter.change_question @$question_picker.val()
 
   bind_operator_picker: () ->
