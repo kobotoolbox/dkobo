@@ -37,10 +37,23 @@
     <script src="{% static 'js/Backbone.Validation.js' %}"></script>
     <script src="{% static 'js/select2.min.js' %}"></script>
 
-    {% compress js %}
-      <script type="text/coffeescript" src="{% static 'js/log.coffee' %}"></script>
-      <script type="text/coffeescript" src="{% static 'js/csv.coffee' %}"></script>
-    {% endcompress %}
+    <script src="{% static 'kobo.compiled/dkobo_xlform.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'kobo.compiled/kobo.css' %}">
+
+    {% if DEBUG %}
+    <script type="text/javascript" charset="utf-8">
+
+    /* ensuring file is loading */
+    if(typeof window.dkobo_xlform === "undefined") {
+      console.error("Static file is not loading properly.");
+    } else {
+      console.log(dkobo_xlform.model.reverse("YAY !dedaol tI"))
+    }
+
+    </script>
+    <script src="http://localhost:35729/livereload.js"></script>
+    {% endif %}
+
     {% block foot %}{% endblock %}
   </body>
 </html>

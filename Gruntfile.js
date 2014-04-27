@@ -37,8 +37,8 @@ module.exports = function(grunt) {
              */
             scssChanged: {
                 files: ['jsapp/**/*.scss'],
-                tasks: ['sass:dist'],
-                options: { spawn: false },
+                tasks: ['buildcss'],
+                options: { spawn: false, livereload: false },
             },
 
             cssChanged: {
@@ -91,13 +91,24 @@ module.exports = function(grunt) {
         sass: {
             dist: {
                 options: {
-                    style: 'expanded'
+                    style: 'compact',
                 },
                 files: {
-                    /*
-                    'destinationFile.css' :          'originSourceFile.scss'
-                    */
-                    'jsapp/kobo.compiled/kobo.css' : 'jsapp/kobo/kobo.scss',
+                    // scss does not get rid of duplicate rules and the style_modules has lots
+                    // of duplicates so we must use cssmin afterwards.
+                    'jsapp/kobo.compiled/kobo.verbose.css' : 'jsapp/kobo/kobo.scss',
+                },
+            },
+        },
+        cssmin: {
+            dist: {
+                options: {
+                    banner: "/* compiled from 'kobo/kobo.scss' and 'kobo/style_modules' */",
+                    report: ['min', 'gzip'],
+                    keepBreaks: true,
+                },
+                files: {
+                    'jsapp/kobo.compiled/kobo.css': ['jsapp/kobo.compiled/kobo.verbose.css'],
                 },
             },
         },
@@ -107,19 +118,25 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-contrib-sass');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
 
     grunt.registerTask('build', [
         'requirejs:compile_xlform',
-        'sass:dist'
+        'buildcss',
+    ]);
+
+    grunt.registerTask('buildcss', [
+        'sass:dist',
+        'cssmin:dist',
     ]);
 
     grunt.registerTask('test', [
         'build',
-        'karma:travis'
+        'karma:travis',
     ]);
     grunt.registerTask('default', [
         'requirejs:compile_xlform',
-        'sass:dist',
+        'buildcss',
         'watch',
     ]);
 };
