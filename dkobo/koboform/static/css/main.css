@@ -1009,9 +1009,10 @@ input[type="button"].btn--block {
 
 .questions__question:hover .question__edit-link {
     opacity: 0.6;
+    color: gray;
 }
 
-.question__edit-link:hover {
+.questions__question .question__edit-link:hover {
     opacity: 1;
     color: #1daee3;
 }

@@ -15,7 +15,10 @@ SkipLogicDetailMixin =
   serialize: ()->
     # @hidden = false
     # note: reimplement "hidden" if response is invalid
-    @facade?.serialize()
+    if @facade?
+      @facade.serialize()
+    else
+      @builder.build().serialize()
 
   parse: ()->
 

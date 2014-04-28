@@ -1,0 +1,5 @@
+#!/bin/bash
+source ~/.virtualenvs/$1/bin/activate
+export COMPRESS_ENABLED=false
+source scripts/set_debug.sh true
+python manage.py runserver
