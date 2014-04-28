@@ -67,3 +67,23 @@
 
     DJANGO_DEBUG=False
     DJANGO_SECRET_KEY=<use a unique django secret key here>
+
+
+### Grunt commands
+
+###### grunt (no arguments)
+  _default task: triggers `requirejs:compile_xlform`, `buildcss`, `watch`_
+
+###### grunt build
+  _triggers `requirejs:compile_xlform`, `buildcss`_
+  * Creates js and css dependencies
+
+###### grunt build_all
+  * Used when launching production
+  * Runs `build` and generates modernizr.js file for use when django is not in debug mode.
+
+###### grunt build_css
+  * Runs `sass:dist`, `cssmin:strip_duplicates`, `cssmin:dist`
+
+###### grunt test
+  * Runs `build`, `karma:unit`

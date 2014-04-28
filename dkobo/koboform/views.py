@@ -158,7 +158,11 @@ def survey_draft_detail(request, pk, format=None):
 
 
 def jasmine_spec(request):
-    return render_to_response("jasmine_spec.html")
+    context = RequestContext(request)
+    context['DEBUG'] = settings.DEBUG
+    context['include_xlform_scripts_files'] = True
+    context['include_coffeefile'] = "kobo/stylesheets/pages/form_builder.coffee"
+    return render_to_response("jasmine_spec.html", context_instance=context)
 
 XLS_CONTENT_TYPES = [
     "application/vnd.ms-excel",

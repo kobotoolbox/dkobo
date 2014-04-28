@@ -1,11 +1,14 @@
 {% extends "base.html" %}
 {% block title %}Jasmine Spec{% endblock %}
 {% load staticfiles %}
+{% load compress %}
 {% block head %}
   <link rel="stylesheet" href="{% static 'js/sut/jasmine/jasmine.css' %}" />
   <script type="text/javascript" src="{% static 'js/sut/jasmine/jasmine.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/sut/jasmine/jasmine-html.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/sut/jasmine/boot.js' %}"></script>
+
+  <link rel="stylesheet" href="{% static 'kobo.compiled/kobo.css' %}">
 
 {% endblock %}
 {% block foot %}
@@ -15,9 +18,21 @@
   <script src="//cdn.jsdelivr.net/poshytip/1.1/jquery.poshytip.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/jquery-editable/js/jquery-editable-poshytip.min.js"></script>
 
-  {% load compress %}
+  {% if include_xlform_scripts_files %}
+    {% compress js %}
+      <script src="{% static 'js/csv.coffee' %}" type="text/coffeescript"></script>
+      {% include 'xlform_scripts.html' %}
+      <script type="text/coffeescript" src="{% static 'js/xlform/spec/spec.coffee' %}"></script>
+    {% endcompress %}
+  {% endif %}
+
   {% compress js %}
-    {% include 'xlform_scripts.html' %}
-    <script type="text/coffeescript" src="{% static 'js/xlform/spec/spec.coffee' %}"></script>
+    {% if include_coffeefile %}
+      <script src="{% static include_coffeefile %}" type="text/coffeescript"></script>
+    {% endif %}
   {% endcompress %}
+  <script type="text/javascript" charset="utf-8">
+  sandbox('#sandbox');
+  </script>
+
 {% endblock %}

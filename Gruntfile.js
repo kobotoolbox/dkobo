@@ -7,7 +7,12 @@ module.exports = function(grunt) {
              */
             sourceChanged: {
                 files: ['jsapp/kobo/**/*.js', 'jsapp/kobo/**/*.coffee', 'jsapp/kobo/**/*.html'],
-                tasks: ['karma:unit:run'],
+                tasks: ['karma:unit'],
+            },
+
+            htmlChanged: {
+                options: { livereload: true },
+                files: ['dkobo/koboform/templates/jasmine_spec.html'],
             },
 
             /** changes to the tests trigger a karma retest
@@ -18,7 +23,7 @@ module.exports = function(grunt) {
                     'jsapp/test/**/*.js',
                     'jsapp/test/**/*.coffee'
                 ],
-                tasks: ['karma:unit:run'],
+                tasks: ['karma:unit'],
             },
 
             /** dkobo_xlform.js is build with and AMD packaging module
@@ -37,14 +42,14 @@ module.exports = function(grunt) {
              */
             scssChanged: {
                 files: ['jsapp/**/*.scss'],
-                tasks: ['buildcss'],
+                tasks: ['build_css'],
                 options: { spawn: false, livereload: false },
             },
 
             cssChanged: {
-                files: ['jsapp/**/*.css'],
+                files: ['jsapp/**/*.css', '!jsapp/**/*.verbose.css'],
                 options: { livereload: true },
-            }
+            },
         },
         karma: {
             unit: {
@@ -101,17 +106,59 @@ module.exports = function(grunt) {
             },
         },
         cssmin: {
-            dist: {
+            strip_duplicates: {
                 options: {
-                    banner: "/* compiled from 'kobo/kobo.scss' and 'kobo/style_modules' */",
-                    report: ['min', 'gzip'],
+                    banner: "/* compiled from 'kobo/kobo.scss' and 'kobo/stylesheets' */",
                     keepBreaks: true,
                 },
                 files: {
                     'jsapp/kobo.compiled/kobo.css': ['jsapp/kobo.compiled/kobo.verbose.css'],
                 },
             },
+            dist: {
+                options: {
+                    banner: "/* kobo.css minified. scss source available on github: https://github.com/kobotoolbox/dkobo/ */",
+                    report: ['min', 'gzip'],
+                },
+                files: {
+                    'jsapp/kobo.compiled/kobo.min.css': ['jsapp/kobo.compiled/kobo.css'],
+                },
+            },
         },
+        modernizr: {
+
+            dist: {
+                // [REQUIRED] Path to the build you're using for development.
+                "devFile" : "jsapp/components/modernizr/modernizr.js",
+                // [REQUIRED] Path to save out the built file.
+                "outputFile" : "jsapp/kobo.compiled/modernizr.js",
+                // Based on default settings on http://modernizr.com/download/
+                "extra" : {
+                    "shiv" : true,
+                    "printshiv" : false,
+                    "load" : true,
+                    "mq" : false,
+                    "cssclasses" : true
+                },
+                "extensibility" : {
+                    "addtest" : false,
+                    "prefixed" : false,
+                    "teststyles" : false,
+                    "testprops" : false,
+                    "testallprops" : false,
+                    "hasevents" : false,
+                    "prefixes" : false,
+                    "domprefixes" : false
+                },
+                "uglify" : true,
+                // Define any tests you want to implicitly include.
+                "tests" : [],
+                "files" : {
+                    "src": ["jsapp", "!jsapp/components"]
+                },
+            }
+
+        }
     });
 
     grunt.loadNpmTasks('grunt-contrib-watch');
@@ -119,34 +166,34 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks("grunt-modernizr");
 
     grunt.registerTask('build', [
         'requirejs:compile_xlform',
-        'buildcss',
+        'build_css',
     ]);
-
-    grunt.registerTask('buildcss', [
+    grunt.registerTask('build_all', [
+        'build',
+        'modernizr',
+    ]);
+    grunt.registerTask('build_css', [
         'sass:dist',
+        'cssmin:strip_duplicates',
         'cssmin:dist',
     ]);
 
     grunt.registerTask('test', [
         'build',
-        'karma:travis',
+        'karma:unit',
     ]);
-    grunt.registerTask('default', [
+
+    grunt.registerTask('develop', [
         'requirejs:compile_xlform',
-        'buildcss',
+        'build_css',
         'watch',
     ]);
+
+    grunt.registerTask('default', [
+        'develop',
+    ]);
 };
-
-/*
-http://stackoverflow.com/questions/22319397/running-yeoman-angular-generator-karma-dependency-error
-npm install karma@0.11.14 grunt-karma@0.7.2
-
-'karma-junit-reporter',
-'karma-chrome-launcher',
-'karma-firefox-launcher',
-'karma-phantomjs-launcher',
-*/

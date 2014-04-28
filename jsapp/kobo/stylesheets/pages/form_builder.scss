@@ -1,0 +1,264 @@
+// ==========================================================================
+// Dependencies
+// ==========================================================================
+
+// ==========================================================================
+// Color Settings
+// ==========================================================================
+$cardBorderColor: #d9dde1;
+$cardInSortBorderColor: #38a1f1;
+$cardBorderStyle: 1px solid $cardBorderColor;
+$cardInSortBorderStyle: 2px solid $cardInSortBorderColor;
+$cardInSortThinBorderStyle: 1px solid $cardInSortBorderColor;
+
+body.planned-formbuilder-bg-color {
+  background-color: #e9edf0;
+}
+
+.-form-builder {
+  .survey-header {
+    display: none;
+  }
+
+  // ==========================================================================
+  // Card
+  // ==========================================================================
+
+  .card {
+      border: $cardBorderStyle;
+      min-height: 67px;
+
+      padding: 10px 20px 10px 48px;
+      display: block;
+      font-size: 14px;
+      background: white;
+      margin-bottom: 2px;
+
+      cursor: not-allowed; // TODO: add card--movable to sortable cards.
+      &.card--movable {
+        cursor: move;
+      }
+
+      &.card--error {
+          background-color: rgb(255, 176, 176);
+      }
+      &.card--insort {
+          border: $cardInSortBorderStyle;
+      }
+      //for vertical text align:
+      // position: relative;
+  }
+
+  // ==========================================================================
+  // Card Header
+  // ==========================================================================
+
+  h4.card__header {
+    margin: 0;
+    font-weight: normal;
+  }
+  .card__header {
+      //for vertical text align:
+      // position: absolute;
+      // top: 50%;
+      // -webkit-transform: translateY(-50%);
+      // -ms-transform: translateY(-50%);
+      // transform: translateY(-50%);
+  }
+
+  
+  // ==========================================================================
+  // Advanced details
+  // ==========================================================================
+
+  .advanced-details {
+      display: none;
+      position: relative;
+      border: 1px solid #E8E1E1;
+      border-radius: 3px;
+  }
+
+  .advanced-details .dt-view {
+      margin-bottom: 10px;
+      // .card
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      padding: 10px;
+      display: block;
+      font-size: 14px;
+      cursor: pointer;
+      background: white;
+  }
+  
+  // ==========================================================================
+  // Row-Extras (aka advanced details)
+  // ==========================================================================
+
+  .row-extras, .row-extras-summary {
+      margin: 0;
+      padding: 10px;
+      color: #777;
+      background-color: #f8f8f8;
+
+      .adv-details-txt {
+          font-size: 14px;
+      }
+
+      &:hover > *,
+      &:focus > * {
+          color: #222;
+      }
+
+  }
+
+  .row-extras {
+      padding-left: 36px;
+  }
+
+  .row-extras__cog {
+      position: absolute;
+      top: 12px;
+      left: 10px;
+      color: #222;
+  }
+
+  .row-extras__cog-faded {
+      color: #777;
+  }
+  
+  
+  // ==========================================================================
+  // Card indicator
+  // ==========================================================================
+
+  $cardIndicatorWidth: 42px;
+  $cardIndicatorIconHeight: 20px;
+  $cardIndicatorIconWidth: 22px;
+  
+  .card__indicator {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: $cardIndicatorWidth;
+      height: 100%;
+      border-right: $cardBorderStyle;
+  }
+  .card--insort {
+      .card__indicator {
+          border-right: $cardInSortThinBorderStyle;
+      }
+  }
+
+  .card__indicator__icon {
+      background-color: $cardBorderColor;
+      position: absolute;
+      top: 50%;
+      margin-top: -($cardIndicatorIconWidth/2);
+      left: ($cardIndicatorWidth/2) - ($cardIndicatorIconWidth / 2);
+      width: $cardIndicatorIconWidth;
+      height: $cardIndicatorIconHeight;
+  }
+  
+  // ==========================================================================
+  // Card quick buttons
+  // ==========================================================================
+  .card__buttons {
+      border: $cardBorderStyle;
+      border-width: 0 0 0 1px;
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 22px;
+      height: 100%;
+  }
+  .card--insort {
+      .card__buttons {
+          border-left: $cardInSortThinBorderStyle;
+      }
+  }
+  .card__buttons__button {
+      display: block;
+      border-bottom: 1px transparent;
+      position: relative;
+      text-align: center;
+      height: 22px;
+      line-height: 22px;
+
+      .linkhelpertext {
+          display: none;
+          position: absolute;
+          top: 2px;
+          left: 24px;
+          background-color: rgba(0,0,0,0.5);
+          padding: 4px 12px;
+          width: 150px;
+          color: #fff;
+          font-size: 12px;
+      }
+
+      &:hover {
+          border-bottom: $cardBorderStyle;
+
+          .linkhelpertext {
+              display: block;
+          }
+      }
+  }
+  
+  // ==========================================================================
+  // Advanced details
+  // ==========================================================================
+
+  .expanding-spacer-between-rows {
+      display: none;
+  }
+
+  .expanding-spacer-between-rows > .line {
+      height: 0;
+      position: relative;
+  }
+
+  .editable-input > input {
+      width: 180px;
+  }
+  
+  // ==========================================================================
+  // Add row button
+  // ==========================================================================
+
+  .btn.add-row-btn {
+      width: 100px;
+      height: 20px;
+      line-height: 20px;
+      margin-right: auto;
+      margin-left: auto;
+      // transition: opacity .25s ease-in-out;
+      // -moz-transition: opacity .25s ease-in-out;
+      // -webkit-transition: opacity .25s ease-in-out;
+  }
+  .insort {
+      .btn.add-row-btn {
+          opacity: 0;
+      }
+  }
+
+
+  // ==========================================================================
+  // Individual row details
+  // ==========================================================================
+
+  .xlf-dv-name,
+  .xlf-dv-hint {
+      text-transform: capitalize;
+  }
+
+  .xlf-dv-name > code,
+  .xlf-dv-hint > code {
+      text-transform: none;
+  }
+
+  // ==========================================================================
+  // Sub modules
+  // ==========================================================================
+  @import '../partials/add_question_to_library';
+}

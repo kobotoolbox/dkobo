@@ -1,0 +1,29 @@
+/* ==========================================================================
+   Content
+   ========================================================================== */
+
+.content {
+    padding: 20px;
+}
+
+.content > .content {
+    padding: 0;
+}
+
+.content--centered {
+    text-align: center;
+}
+
+.content__message {
+    width: 300px;
+    padding-top: 150px;
+    display: inline-block;
+}
+
+.content__message-text {
+    color: #cdcdcd;
+}
+
+.content__message-action {
+
+}

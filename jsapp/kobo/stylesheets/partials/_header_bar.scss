@@ -1,0 +1,44 @@
+/* ==========================================================================
+   Header bar
+   ========================================================================== */
+
+.header-bar {
+    width: 100%;
+    height: 40px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    line-height: 40px;
+    background-color: #666;
+    transition: width 150ms, left 150ms;
+}
+
+.header-bar__page-icon {
+    left: 1px;
+    top: -2px;
+}
+
+.header-bar__title {
+    margin-top: 0;
+    margin-right: 10px;
+    margin-bottom: 0;
+    display: inline-block;
+    font-size: 17px;
+}
+
+.header-bar__title-text {
+    color: white;
+}
+
+.header-bar .btn {
+    margin-top: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    background-color: #3f3f3f;
+}
+
+.header-bar .btn:hover,
+.header-bar .btn:focus {
+    background-color: #4d4d4d;
+}

@@ -431,14 +431,23 @@
 // Skip logic
 // ==========================================================================
 
-.skiplogic__criterialist > div {
-    // .well
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 10px 14px;
-    position: relative;
-    background-color: #eee;
+.skiplogic__criterion {
+  // @extend .well;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px 14px;
+  position: relative;
+  background-color: #eee;
+
+  &.skiplogic__criterion--unspecified-question {
+    .skiplogic__expressionselect {
+      display: none;
+    }
+    .skiplogic__rowselect {
+      width: 100%;
+    }
+  }
 }
 
 button.skiplogic__deletecriterion {
