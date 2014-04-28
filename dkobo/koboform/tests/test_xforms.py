@@ -11,6 +11,7 @@ from dkobo.koboform.models import SurveyDraft, SurveyPreview
 from dkobo.koboform import pyxform_utils
 from dkobo.koboform import utils
 import json
+import os
 
 
 text = """"survey",,,,,
@@ -26,6 +27,24 @@ class CreateSurveyFromCsvTextTests(TestCase):
     def test_parses_survey_passed_in_as_csv_and_returns_xml_representation(self):
         xml = utils.create_survey_from_csv_text(text).to_xml()
         etree.fromstring(xml)
+
+class ConvertXlsToCsvTests(TestCase):
+    def test_converts_sheeted_xls(self):
+        base_dir = os.path.join("dkobo", "koboform", "tests", "example_xls")
+        with_accents = os.path.join(base_dir, "with_accents.xls")
+        with_accents_csv = os.path.join(base_dir, "with_accents.csv")
+        without_accents = os.path.join(base_dir, "without_accents.xls")
+        without_accents_csv = os.path.join(base_dir, "without_accents.csv")
+        with open(without_accents_csv, 'r') as ff:
+            expected = ff.read()
+        with open(without_accents, 'rb') as fff:
+            out_csv = pyxform_utils.convert_xls_to_csv_string(fff)
+            self.assertEqual(expected, out_csv)
+        with open(with_accents_csv, 'rb') as ff:
+            expected = ff.read()
+        with open(with_accents, 'rb') as fff:
+            out_csv = pyxform_utils.convert_xls_to_csv_string(fff)
+            self.assertEqual(expected, out_csv)
 
 class Views_CsvToXformTests(TestCase):
     def test_parses_passed_csv_data(self):
