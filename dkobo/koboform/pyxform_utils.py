@@ -68,7 +68,7 @@ def convert_xls_to_csv_string(xls_file_object, strip_empty_rows=True):
             for col in range(0, sheet.ncols):
                 value = sheet.cell_value(row, col)
                 if isinstance(value, basestring):
-                    value = value.strip().encode('string_escape')
+                    value = value.strip().encode('unicode_escape')
                 if (value is not None) and (not _iswhitespace(value)):
                     value = xls_value_to_unicode(value, sheet.cell_type(row, col))
                 if value != "":
