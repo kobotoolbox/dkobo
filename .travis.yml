@@ -4,9 +4,9 @@ python:
 addons:
   postgresql: 9.3
 cache:
-  apt: true
   directories:
-  - $HOME/.pip-cache/
+  - $HOME/.pip-download-cache
+  - node_modules
 before_install:
 - gem install sass
 - npm install --save-dev
