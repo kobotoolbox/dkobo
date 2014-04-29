@@ -21,10 +21,16 @@ module.exports = function(config) {
             'components/underscore/underscore.js',
             'components/backbone/backbone.js',
 
+            'kobo/test/init.js',
+
             // kobo jsapp source files
+            'kobo/controllers/*.js',
+            'kobo/directives/*.js',
+            'kobo/factories/*.js',
+            'kobo/filters/*.js',
+            'kobo/services/*.js',
+            'kobo/**/*.html',
             'kobo/**/*.js',
-            // 'kobo/**/*.coffee',
-            // 'kobo/**/*.html',
 
             // kobo jsapp compiled files
             'kobo.compiled/**/*.js',
@@ -33,6 +39,7 @@ module.exports = function(config) {
             // jsapp/test files
             'test/**/*.js',
             'test/**/*.coffee',
+            'test/runner.js',
         ],
         plugins: [
             // jasmine + reporters
