@@ -21,7 +21,7 @@ module.exports = function(config) {
             'components/underscore/underscore.js',
             'components/backbone/backbone.js',
 
-            'kobo/test/init.js',
+            'test/init.js',
 
             // kobo jsapp source files
             'kobo/controllers/*.js',
@@ -39,7 +39,6 @@ module.exports = function(config) {
             // jsapp/test files
             'test/**/*.js',
             'test/**/*.coffee',
-            'test/runner.js',
         ],
         plugins: [
             // jasmine + reporters
