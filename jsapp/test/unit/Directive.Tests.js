@@ -11,6 +11,10 @@ describe ('Directives', function () {
     beforeEach(module('templates/TopLevelMenu.Template.html'));
     beforeEach(module('templates/InfoList.Template.html'));
 
+    beforeEach(function () {
+        window.$ = sinon.stub();
+    })
+
     function mockUserDetails(mockObject) {
         return module(function ($provide) {
             $provide.provider('$userDetails', function () {
