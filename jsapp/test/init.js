@@ -6,6 +6,8 @@ var XLF = {Survey:function(){}};
 var SurveyApp = {
     create: function(){}
 };
+
+XLF.Survey.create = function () {};
 // Taken from http://stackoverflow.com/questions/12025035/use-sinon-js-to-create-a-spy-object-with-spy-methods-based-on-a-real-construct
 sinon.stubObject = function (obj, target) {
     var cls = (typeof obj == 'function') ? obj.prototype : obj;
