@@ -5,6 +5,9 @@
 'use strict';
 
 describe('XLF.skipLogicParser', function () {
+    // to get tests passing as they were, wrap the skipLogicParser in XLF object.
+    var XLF = { skipLogicParser: dkobo_xlform.model.skipLogicParser };
+
     it('parses a single not-equals clause', function () {
         expect(XLF.skipLogicParser("${question_name}   !=   'value')")).toEqual({
             criteria: [{
