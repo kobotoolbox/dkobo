@@ -5,8 +5,6 @@ module.exports = function(config) {
         basePath: path.resolve(__dirname, '../..'),
         frameworks: ['jasmine'],
         files: [
-            // require-js
-            'components/requirejs/require.js',
             // angular
             'components/angular/angular.js',
             // formerly: '../dkobo/static/js/angular-*.js',
@@ -22,6 +20,9 @@ module.exports = function(config) {
             'components/backbone/backbone.js',
 
             'test/init.js',
+
+            // require-js
+            'components/requirejs/require.js',
 
             // kobo jsapp source files
             'kobo/controllers/*.js',
