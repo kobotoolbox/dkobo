@@ -1,5 +1,7 @@
-define 'cs!xlform_model_view/view_utils', [], ()->
+define 'cs!xlform_model_view/view_utils', ['xlform_model_view/view_utils_validator'], (Validator)->
   viewUtils = {}
+  viewUtils.Validator = Validator
+
   viewUtils.makeEditable = (that, model, selector, {property, transformFunction, options}) ->
     if !transformFunction?
       transformFunction = (value) -> value

@@ -8,7 +8,9 @@
             failureMessage:string - the message passed to the callback when validation fails
             args:array - additional arguments to pass into the validation function
 */
-viewUtils.Validator = (function () {
+define('xlform_model_view/view_utils_validator', [], function(){
+
+return (function () {
     var singleton = {
             create: function (options) {
                 return new Validator(options);
@@ -50,3 +52,5 @@ viewUtils.Validator = (function () {
     return singleton;
     
 } ());
+
+});

@@ -6,11 +6,9 @@
 /* global sinon */
 
 'use strict';
-define(
-    [
-        'cs!xlform_model_view/view_utils'
-    ],
-    function (viewUtils) {
+(function(){
+        var viewUtils = dkobo_xlform.view.utils;
+
         describe('Validator', function () {
             describe('Specific validators', function (){
                 describe('invalidChars', function () {
@@ -104,5 +102,5 @@ define(
             });
 
         });
-    }
-);
+
+})();
