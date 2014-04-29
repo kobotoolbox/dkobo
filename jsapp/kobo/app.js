@@ -60,6 +60,11 @@ kobo.config(function ($routeProvider, $locationProvider, $httpProvider) {
             controller: 'AssetsController'
         });
 
+        $routeProvider.when('/library/questions/:id', {
+            template: '<section koboform-builder class="form-builder"></section>',
+            controller: 'AssetEditorController'
+        });
+
         $routeProvider.when('/admin', {
             templateUrl: staticFilesUri + 'templates/Admin.Template.html',
             controller: 'AdminController'

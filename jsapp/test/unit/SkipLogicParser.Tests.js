@@ -190,12 +190,22 @@ describe('XLF.skipLogicParser', function () {
         expect(function() { XLF.skipLogicParser("invalid clause");}).toThrow(new Error('criterion not recognized: "invalid clause"'));
     });
 
-    it('bug #751', function () {
+    it('doesn`t match and and or in names', function () {
         expect(XLF.skipLogicParser("${For_how_many_years_have_you_be} != ''")).toEqual({
             criteria: [{
                 name: "For_how_many_years_have_you_be",
                 operator: "ans_notnull"
             }]
         });
-    })
+    });
+
+    it('matches untrimmed responses', function () {
+        expect(XLF.skipLogicParser("${what_for} = ' hello'")).toEqual({
+            criteria: [{
+                name: "what_for",
+                operator: "resp_equals",
+                response_value: " hello"
+            }]
+        });
+    });
 });

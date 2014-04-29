@@ -78,6 +78,7 @@ INSTALLED_APPS = (
     'gunicorn',
     'south',
     'rest_framework',
+    'django_extensions',
 )
 
 # The number of surveys to import. -1 is all

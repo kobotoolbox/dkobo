@@ -8,6 +8,7 @@ function AssetsController($scope, $rootScope, $resource, $restApi, $timeout, $fi
     $rootScope.showImportButton = false;
     $rootScope.showCreateButton = false;
     $scope.filters = {};
+    $rootScope.icon_link = 'library/questions';
 
     assets.list();
 

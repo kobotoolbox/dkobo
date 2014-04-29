@@ -4,14 +4,14 @@
 define('xlform_model_view/model_skipLogicParser', [], function(){
 
 var skipLogicParser = (function () {
-    var equalityCriterionPattern = /\${(\w+)}\s*(=|!=|<|>|<=|>=)\s*\'?((?:date\(\'\d{4}-\d{2}-\d{2}\'\)|\w+|-?\d+)\.?\d*)\'?/,
+    var equalityCriterionPattern = /\${(\w+)}\s*(=|!=|<|>|<=|>=)\s*\'?((?:date\(\'\d{4}-\d{2}-\d{2}\'\)|[\s\w]+|-?\d+)\.?\d*)\'?/,
         existenceCriterionPattern = /\${(\w+)}\s*((?:=|!=)\s*(?:NULL|''))/i,
         criteriaJoinPattern = / and | or /gi;
 
     function parseCriterion(text) {
-        var matches = text.match(equalityCriterionPattern);
+        var matches = text.match(existenceCriterionPattern);
         if (matches === null) {
-            matches = text.match(existenceCriterionPattern);
+            matches = text.match(equalityCriterionPattern);
         }
 
         if(!!matches) {
