@@ -57,7 +57,7 @@
     {% endif %}
 
     <script type="text/javascript">
-      window.staticFilesUri = "{% static '' %}";
+      window.staticFilesUri = "{% static 'kobo/' %}";
       $.fn.editable.defaults.mode = 'inline';
       $.fn.editable.defaults.onblur = 'submit';
     </script>
@@ -104,7 +104,7 @@
       <script src="{% static 'js/jquery.fileupload-angular.js' %}"></script>
       {# -------------------------------------------------------------- #}
 
-      <script src="{% static 'jsapp/app.js' %}"></script>
+      <script src="{% static 'kobo/app.js' %}"></script>
     {% endcompress %}
   </head>
 
