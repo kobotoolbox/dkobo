@@ -18,14 +18,6 @@
   <script src="//cdn.jsdelivr.net/poshytip/1.1/jquery.poshytip.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/jquery-editable/js/jquery-editable-poshytip.min.js"></script>
 
-  {% if include_xlform_scripts_files %}
-    {% compress js %}
-      <script src="{% static 'js/csv.coffee' %}" type="text/coffeescript"></script>
-      {% include 'xlform_scripts.html' %}
-      <script type="text/coffeescript" src="{% static 'js/xlform/spec/spec.coffee' %}"></script>
-    {% endcompress %}
-  {% endif %}
-
   {% compress js %}
     {% if include_coffeefile %}
       <script src="{% static include_coffeefile %}" type="text/coffeescript"></script>
