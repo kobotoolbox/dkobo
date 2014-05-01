@@ -5,24 +5,8 @@ controller_tests = ->
   afterEach ->
     SurveyApp.create.restore()
 
-  beforeEach ->
-    window.$ = sinon.stub()
-    $.withArgs(window).returns
-      bind: sinon.stub()
-      unbind: sinon.stub()
-
-    $.withArgs("section.form-builder").returns get: sinon.stub()
-
   describe "Forms Controller", ->
-    _confirmStub = null
-    _deleteSpy = null
     beforeEach inject(($controller, $rootScope) ->
-      resourceStub = query: (fn) ->
-        fn hello
-
-      _confirmStub = sinon.stub()
-      _deleteSpy = sinon.spy()
-
       test_helper.initializeController $controller, "Forms", $rootScope
     )
     it "should initialize $rootScope and $scope correctly", ->
@@ -30,6 +14,8 @@ controller_tests = ->
       expect(test_helper.$rs.activeTab).toBe "Forms"
 
     describe "$scope.deleteSurvey", ->
+      _deleteSpy = null
+      beforeEach () -> _deleteSpy = sinon.spy()
       it "should delete survey when user confirms deletion", ->
         test_helper.miscUtils.confirm.returns true
         test_helper.$scope.deleteSurvey

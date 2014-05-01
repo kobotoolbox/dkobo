@@ -68,7 +68,11 @@ test_helper =
 describe '', () ->
   beforeEach ->
     window.$ = sinon.stub()
-    return
+    $.withArgs(window).returns
+      bind: sinon.stub()
+      unbind: sinon.stub()
+
+    $.withArgs("section.form-builder").returns get: sinon.stub()
 
   describe 'Controllers', controller_tests
   describe 'Directives', directive_tests
