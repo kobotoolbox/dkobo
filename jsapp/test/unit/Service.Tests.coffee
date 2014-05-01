@@ -7,10 +7,3 @@ service_tests = ->
         router.forms()
         expect(location.path).toHaveBeenCalledOn location
         expect(location.path).toHaveBeenCalledWith "/forms"
-        return
-
-      return
-
-    return
-
-  return

@@ -3,9 +3,6 @@ factory_tests = ->
     it "should return the value of window.userDetails", ->
       window.userDetails = {}
       expect(userDetailsFactory()).toBe window.userDetails
-      return
-
-    return
 
   describe "restApi Factory", ->
     describe "createSurveyDraftApi", ->
@@ -14,7 +11,6 @@ factory_tests = ->
         factory = restApiFactory(resourceSpy)
         factory.createSurveyDraftApi()
         expect(resourceSpy).toHaveBeenCalledWith "/api/survey_drafts"
-        return
 
       it "should invoke $resource with a custom save object when an id is provided", ->
         resourceSpy = sinon.spy()
@@ -25,11 +21,3 @@ factory_tests = ->
         ,
           save:
             method: "PATCH"
-
-        return
-
-      return
-
-    return
-
-  return
