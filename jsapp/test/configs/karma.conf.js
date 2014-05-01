@@ -16,7 +16,7 @@ module.exports = function(config) {
             // formerly contents of 'sut/lib/*.js',
             'components/sinonjs/sinon.js',
             'components/jasmine-sinon/lib/jasmine-sinon.js',
-            'components/underscore/underscore.js',
+            'components/lodash/dist/lodash.js',
             'components/backbone/backbone.js',
 
             'test/init.js',
@@ -38,8 +38,9 @@ module.exports = function(config) {
             // 'kobo.compiled/**/*.html',
 
             // jsapp/test files
-            'test/**/*.js',
-            'test/**/*.coffee',
+            //'test/unit/*.js',
+            'test/unit/*.coffee',
+            'test/runner.coffee',
         ],
         plugins: [
             // jasmine + reporters
