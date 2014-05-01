@@ -1065,7 +1065,7 @@ describe 'skip logic helpers', () ->
     describe 'build criterion builder', () ->
 
     describe 'build operator logic', () ->
-    describe 'build operator model, () ->', () ->
+    describe 'build operator model', () ->
     describe 'build operator view', () ->
     describe 'build question view', () ->
     describe 'build response view', () ->
