@@ -41,7 +41,7 @@ module.exports = function(config) {
 
             // jsapp/test files
             //'test/unit/*.js',
-            'test/unit/*.coffee',
+            'test/unit/**/*.coffee',
             'test/runner.coffee',
         ],
         plugins: [
