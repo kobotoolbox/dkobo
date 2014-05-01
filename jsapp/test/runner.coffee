@@ -68,6 +68,7 @@ test_helper =
 describe '', () ->
   beforeEach ->
     window.$ = sinon.stub()
+    $.returns sinon.stubObject(jQuery(window))
     $.withArgs(window).returns
       bind: sinon.stub()
       unbind: sinon.stub()
