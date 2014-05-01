@@ -18,6 +18,8 @@ module.exports = function(config) {
             'components/jasmine-sinon/lib/jasmine-sinon.js',
             'components/lodash/dist/lodash.js',
             'components/backbone/backbone.js',
+            'components/jquery/dist/jquery.js',
+
 
             'test/init.js',
 
