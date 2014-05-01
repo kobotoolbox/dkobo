@@ -11,9 +11,20 @@ $cardBorderStyle: 1px solid $cardBorderColor;
 $cardInSortBorderStyle: 2px solid $cardInSortBorderColor;
 $cardInSortThinBorderStyle: 1px solid $cardInSortBorderColor;
 
-body.planned-formbuilder-bg-color {
-  background-color: #e9edf0;
+$bodyBackgroundColor: #E9EDF0;
+
+// ==========================================================================
+// TEST Styling, by Penar Musaraj
+// ==========================================================================
+
+body {
+  background-color: $bodyBackgroundColor;
+  padding:30px;
 }
+
+
+// End Test
+// ==========================================================================
 
 .-form-builder {
   .survey-header {

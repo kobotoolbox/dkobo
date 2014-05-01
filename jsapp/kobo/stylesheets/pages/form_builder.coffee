@@ -58,7 +58,7 @@ CENSUS_TEXTS =
 
 ###
 loremipsum = """
-  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
 """
 
 li_row = (variation='text') ->
@@ -102,9 +102,9 @@ standard_row = (variation='text', {note}) ->
   """
   card__butons = """
     <div class="card__buttons">
-      <a href="#" class="card__buttons__button">A</a>
-      <a href="#" class="card__buttons__button">B</a>
-      <a href="#" class="card__buttons__button">C</a>
+      <a href="#" class="card__buttons__button"><i class="fa fa-cog"></i></a>
+      <a href="#" class="card__buttons__button"><i class="fa fa-trash-o"></i></a>
+      <a href="#" class="card__buttons__button"><i class="fa fa-copy"></i></a>
     </div>
   """
 
