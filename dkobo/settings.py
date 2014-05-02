@@ -53,7 +53,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Application definition
 
-COMPRESS_ENABLED = os.environ.get('COMPRESS_ENABLED', 'True').lower() == 'true'
+COMPRESS_ENABLED = str(os.environ.get('COMPRESS_ENABLED', not DEBUG)).lower() == 'true'
 COMPRESS_OFFLINE = str(os.environ.get('COMPRESS_OFFLINE', not DEBUG)).lower() == 'true'
 COMPRESS_ROOT = os.path.join(BASE_DIR, 'dkobo', 'static')
 

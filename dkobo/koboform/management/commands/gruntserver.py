@@ -1,4 +1,5 @@
 import os
+import sys
 import subprocess
 import atexit
 import signal
@@ -10,6 +11,20 @@ from django.contrib.staticfiles.management.commands.runserver import Command\
 class Command(StaticfilesRunserverCommand):
     # As described in this blog post:
     # http://lincolnloop.com/blog/simplifying-your-django-frontend-tasks-grunt/
+
+    def handle(self, *args, **kwargs):
+        messages = []
+        if not settings.DEBUG:
+            messages.append("You cannot have `settings.DEBUG = False` when trying to run the 'gruntserver' management command")
+            quit = True
+        if settings.COMPRESS_ENABLED:
+            messages.append("You cannot have `settings.COMPRESS_ENABLED = True` while running 'gruntserver' management command")
+            quit = True
+        if quit:
+            messages.append("Consider setting environment variables for debug mode. Run: `source scripts/set_debug.sh true`")
+            print '\n'.join(messages)
+            sys.exit(1)
+        return super(Command, self).handle(*args, **kwargs)
 
     def inner_run(self, *args, **options):
         self.start_grunt()
