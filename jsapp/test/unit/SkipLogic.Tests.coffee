@@ -663,7 +663,7 @@ describe 'skip logic helpers', () ->
       _survey = sinon.stubObject $model.Survey
       _parser_stub = null
       _builder = sinon.stubObject($slh.SkipLogicBuilder)
-      _view = sinon.stubObject $slh.SkipLogicCriterionBuilderView
+      _view = sinon.stubObject $vRdsl.SkipLogicCriterionBuilderView
       _delimiter_spy =
         show: sinon.spy()
         hide: sinon.spy()
@@ -756,12 +756,6 @@ describe 'skip logic helpers', () ->
 
         expect(_presenter_stubs.length).toBe 1
         expect(_presenter_stubs[0].model.cid).toBe 2
-    describe 'switch editing mode', () ->
-      it 'returns a hand coded criteria with serialized version of criteria', () ->
-        _builder.build_hand_code_criteria.withArgs('one and two').returns 'test hand coded criteria'
-        _facade.serialize = sinon.stub().returns 'one and two'
-
-        expect(_facade.switch_editing_mode()).toBe 'test hand coded criteria'
 
   describe 'hand code helper', () ->
     _view_factory = sinon.stubObject $vRdsl.SkipLogicViewFactory
@@ -804,13 +798,6 @@ describe 'skip logic helpers', () ->
         _view.$.withArgs('textarea').returns textarea_stub
         textarea_stub.val.returns 'test criteria'
         expect(_facade.serialize()).toBe 'test criteria'
-
-    describe 'switch editing mode', () ->
-      it "returns an instance of a criterion builder facade", () ->
-        _builder.build_criterion_builder.withArgs('test criteria').returns 'test facade'
-        _facade.serialize = () -> 'test criteria'
-
-        expect(_facade.switch_editing_mode()).toBe 'test facade'
 
     describe 'constructor', () ->
 
