@@ -949,7 +949,7 @@ describe 'skip logic helpers', () ->
       _parser_stub = null
       beforeEach () ->
         _builder = initialize_builder()
-        _parser_stub = sinon.stub $model.utils, 'skipLogicParser'
+        _parser_stub = sinon.stub _builder, 'parse_skip_logic_criteria'
 
         _builder.build_criterion_logic = sinon.stub()
         _builder.build_criterion_logic.onFirstCall().returns true

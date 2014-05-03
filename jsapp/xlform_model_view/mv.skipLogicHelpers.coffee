@@ -168,12 +168,15 @@ define [
 
       return new skipLogicHelpers.SkipLogicHelperContext @model_factory, @view_factory, @, serialized_criteria
 
+    parse_skip_logic_criteria: (criteria) ->
+      return $skipLogicParser criteria
+
     build_criterion_builder: (serialized_criteria) ->
       if serialized_criteria == ''
         return [[@build_empty_criterion_logic()], 'and']
 
       try
-        parsed = $skipLogicParser serialized_criteria
+        parsed = @parse_skip_logic_criteria serialized_criteria
       catch e
         return false
 
