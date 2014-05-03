@@ -16,11 +16,9 @@ class Command(StaticfilesRunserverCommand):
         messages = []
         if not settings.DEBUG:
             messages.append("You cannot have `settings.DEBUG = False` when trying to run the 'gruntserver' management command")
-            quit = True
         if settings.COMPRESS_ENABLED:
             messages.append("You cannot have `settings.COMPRESS_ENABLED = True` while running 'gruntserver' management command")
-            quit = True
-        if quit:
+        if len(messages) > 0:
             messages.append("Consider setting environment variables for debug mode. Run: `source scripts/set_debug.sh true`")
             print '\n'.join(messages)
             sys.exit(1)
