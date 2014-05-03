@@ -83,11 +83,13 @@ module.exports = function(grunt) {
                         // stubbed paths for almond build
                         'backbone': 'build_stubs/backbone',
                         'underscore': 'build_stubs/underscore',
+                        'jquery': 'build_stubs/jquery',
+                        'backbone-validation': 'components/backbone-validation/dist/backbone-validation-amd',
                         // 'backbone': 'components/backbone/backbone',
                         // 'underscore': 'components/underscore/underscore',
                         'coffee-script': 'components/require-cs/coffee-script',
                         // project paths
-                        'xlform_model_view': 'xlform_model_view',
+                        'xlform': 'xlform_model_view',
                     },
                 },
             },

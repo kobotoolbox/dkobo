@@ -8,7 +8,7 @@
 skip_logic_parser_tests = ->
 
   # to get tests passing as they were, wrap the skipLogicParser in XLF object.
-  XLF = skipLogicParser: dkobo_xlform.model.skipLogicParser
+  XLF = skipLogicParser: dkobo_xlform.model.utils.skipLogicParser
   it "parses a single not-equals clause", ->
     expect(XLF.skipLogicParser("${question_name}   !=   'value')")).toEqual criteria: [
       name: "question_name"

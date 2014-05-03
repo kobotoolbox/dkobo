@@ -1,7 +1,5 @@
 /* exported BuilderDirective */
-/* global SurveyTemplateApp */
-/* global SurveyApp */
-/* global XLF */
+/* global dkobo_xlform */
 'use strict';
 
 function BuilderDirective($rootScope, $restApi, $routeTo) {

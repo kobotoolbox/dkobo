@@ -1,6 +1,6 @@
-/*exported AssetsController*/
-/*global XLF*/
-/*global _*/
+/* exported AssetsController */
+/* global dkobo_xlform */
+/* global _ */
 'use strict';
 function AssetsController($scope, $rootScope, $resource, $restApi, $timeout, $filter, $miscUtils) {
     var assets = $restApi.create_question_api($scope);

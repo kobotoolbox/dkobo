@@ -7,19 +7,19 @@ module.exports = function(config) {
         files: [
             // angular
             'components/angular/angular.js',
-            // formerly: '../dkobo/static/js/angular-*.js',
             'components/angular-cookies/angular-cookies.js',
             'components/angular-mocks/angular-mocks.js',
             'components/angular-resource/angular-resource.js',
             'components/angular-route/angular-route.js',
 
-            // formerly contents of 'sut/lib/*.js',
             'components/sinonjs/sinon.js',
             'components/jasmine-sinon/lib/jasmine-sinon.js',
+
+            'components/jquery/dist/jquery.js',
             'components/lodash/dist/lodash.js',
             'components/backbone/backbone.js',
-            'components/jquery/dist/jquery.js',
 
+            '../dkobo/static/js/Backbone.Validation.js',
 
             'test/init.js',
 

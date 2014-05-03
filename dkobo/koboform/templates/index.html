@@ -15,8 +15,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{csrf_token}}">
 
+    {% compress css %}
     <link rel="stylesheet" href="{% static 'css/jquery-ui-1.10.4.custom.css' %}">
+    <link rel="stylesheet" href="{% static 'kobo.compiled/kobo.css' %}" media="all">
+    {% endcompress %}
 
+    <script type="text/javascript" src="{% static 'components/underscore/underscore.js' %}"></script>
+    <script type="text/javascript" src="{% static 'components/backbone/backbone.js' %}"></script>
     <script src="{% static 'kobo.compiled/modernizr.js' %}"></script>
     <script src="{% static 'components/jquery/dist/jquery.js' %}"></script>
     <script src="{% static 'components/jquery-migrate/jquery-migrate.js' %}"></script>
@@ -24,33 +29,12 @@
     <script src="{% static 'js/jquery.poshytip.js' %}"></script>
     <script src="{% static 'components/x-editable/dist/jquery-editable/js/jquery-editable-poshytip.js' %}"></script>
 
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-route.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-cookies.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-resource.js"></script>
-    <script src="{% static 'kobo.compiled/dkobo_xlform.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'kobo.compiled/kobo.css' %}" media="all">
-
     {% if DEBUG %}
-    <script type="text/javascript" charset="utf-8">
-
-    /* ensuring file is loading */
-    if(typeof window.dkobo_xlform === "undefined") {
-      console.error("Static file is not loading properly.");
-    } else {
-      console.log(dkobo_xlform.model.reverse("YAY !dedaol tI"))
-    }
-
-    </script>
     <script src="http://localhost:35729/livereload.js"></script>
     {% endif %}
 
-    <script type="text/javascript">
-      window.staticFilesUri = "{% static 'kobo/' %}";
-      $.fn.editable.defaults.mode = 'inline';
-      $.fn.editable.defaults.onblur = 'submit';
+    <script type="text/javascript" charset="utf-8">
+    window.staticFilesUri = "{% static 'kobo/' %}";
     </script>
     <script type="text/javascript">
       window.userDetails = {{user_details|safe}};
@@ -61,6 +45,12 @@
     <script src="http://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>
 
     {% compress js %}
+      <script src="{% static 'components/angular/angular.js' %}"></script>
+      <script src="{% static 'components/angular-cookies/angular-cookies.js' %}"></script>
+      <script src="{% static 'components/angular-mocks/angular-mocks.js' %}"></script>
+      <script src="{% static 'components/angular-resource/angular-resource.js' %}"></script>
+      <script src="{% static 'components/angular-route/angular-route.js' %}"></script>
+
       <script src="{% static 'js/select2.min.js' %}"></script>
       <script src="{% static 'js/Backbone.Validation.js' %}"></script>
       <script src="{% static 'kobo/controllers/Builder.Controller.js' %}"></script>
@@ -81,7 +71,6 @@
       <script src="{% static 'kobo/services/Configuration.Service.js' %}"></script>
       <script src="{% static 'js/modal.js' %}"></script>
       <script src="{% static 'js/jquery-ui-1.10.4.custom.js' %}"></script>
-      <script type="text/coffeescript" src="{% static 'js/csv.coffee' %}"></script>
 
       {# ---------------------- File Upload --------------------------- #}
       <script src="{% static 'js/vendor/jquery.ui.widget.js' %}"></script>
@@ -95,7 +84,9 @@
       <script src="{% static 'js/jquery.fileupload-angular.js' %}"></script>
       {# -------------------------------------------------------------- #}
 
+      <script src="{% static 'kobo.compiled/dkobo_xlform.js' %}"></script>
       <script src="{% static 'kobo/app.js' %}"></script>
+
     {% endcompress %}
   </head>
 
