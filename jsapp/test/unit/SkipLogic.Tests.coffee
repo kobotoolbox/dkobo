@@ -565,7 +565,7 @@ describe 'skip logic helpers', () ->
       _model.get.withArgs('operator').returns(sinon.stubObject $mRdsl.Operator)
       _model.get.withArgs('response_value').returns(sinon.stubObject $mRdsl.ResponseModel)
 
-      _view = sinon.stubObject $slh.SkipLogicCriterion
+      _view = sinon.stubObject $mRdsl.SkipLogicCriterion
       _view.operator_picker_view = sinon.stubObject $vRdsl.OperatorPicker
       _view.response_value_view = sinon.stubObject $vRdsl.SkipLogicEmptyResponse
 

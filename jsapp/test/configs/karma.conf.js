@@ -12,7 +12,7 @@ module.exports = function(config) {
             'components/angular-resource/angular-resource.js',
             'components/angular-route/angular-route.js',
 
-            'components/sinonjs/sinon.js',
+            'components/sinon/index.js',
             'components/jasmine-sinon/lib/jasmine-sinon.js',
 
             'components/jquery/dist/jquery.js',
