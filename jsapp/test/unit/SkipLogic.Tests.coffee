@@ -1,9 +1,9 @@
-$model  = dkobo_xlform.model
-$mRdsl  = $modelRowDetailsSkipLogic = $model.rowDetailsSkipLogic
-$vRdsl  = $viewRowDetailSkipLogic   = dkobo_xlform.view.rowDetailSkipLogic
-$slh    = $skipLogicHelpers         = dkobo_xlform.helper.skipLogic
+skip_logic_model = (dkobo_xlform)->
+  $model  = dkobo_xlform.model
+  $mRdsl  = $modelRowDetailsSkipLogic = $model.rowDetailsSkipLogic
+  $vRdsl  = $viewRowDetailSkipLogic   = dkobo_xlform.view.rowDetailSkipLogic
+  $slh    = $skipLogicHelpers         = dkobo_xlform.helper.skipLogic
 
-describe 'skip logic model', () ->
   describe 'skip logic factory', () ->
     _factory = new $mRdsl.SkipLogicFactory()
 
@@ -543,7 +543,12 @@ describe 'skip logic model', () ->
 #**----------------------------------------------------------------***
 #********************************************************************#
 
-describe 'skip logic helpers', () ->
+skip_logic_helpers = (dkobo_xlform) ->
+  $model  = dkobo_xlform.model
+  $mRdsl  = $modelRowDetailsSkipLogic = $model.rowDetailsSkipLogic
+  $vRdsl  = $viewRowDetailSkipLogic   = dkobo_xlform.view.rowDetailSkipLogic
+  $slh    = $skipLogicHelpers         = dkobo_xlform.helper.skipLogic
+
   beforeEach () ->
     @addMatchers toBeInstanceOf: (expectedInstance) ->
       actual = @actual
@@ -1067,3 +1072,12 @@ describe 'skip logic helpers', () ->
           "Expected " + actual.constructor.name + notText + " is instance of " + expectedInstance.name
 
         actual instanceof expectedInstance
+
+define 'skip_logic_tests', [
+        'cs!xlform/_xlform.init',
+        ], (
+            dkobo_xlform_
+            )->
+
+  describe 'skip logic model', -> skip_logic_model.call(@, dkobo_xlform_)
+  describe 'skip logic helpers', -> skip_logic_helpers.call(@, dkobo_xlform_)

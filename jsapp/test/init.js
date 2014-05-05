@@ -14,3 +14,19 @@ sinon.stubObject = function (obj, target) {
 
     return cls.__proto__ ? sinon.stubObject(cls.__proto__, target) : target;
 };
+
+require.config({
+    baseUrl: '/base/',
+    paths: {
+        'almond': 'components/almond/almond',
+        'cs' :'components/require-cs/cs',
+        'coffee-script': 'components/require-cs/coffee-script',
+
+        'jquery': 'components/jquery/dist/jquery.min',
+        'backbone': 'components/backbone/backbone',
+        'backbone-validation': 'components/backbone-validation/dist/backbone-validation-amd',
+        'underscore': 'components/underscore/underscore',
+
+        'xlform': 'xlform_model_view',
+    }
+});
