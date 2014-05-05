@@ -1,4 +1,4 @@
-define [
+define 'cs!xlform/view.surveyApp', [
         'backbone',
         'cs!xlform/model.survey',
         'cs!xlform/model.utils',

@@ -1,4 +1,4 @@
-define [
+define 'cs!xlform/model.row', [
         'underscore',
         'cs!xlform/model.base',
         'cs!xlform/model.configs',

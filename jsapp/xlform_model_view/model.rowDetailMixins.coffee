@@ -1,4 +1,4 @@
-define [
+define 'cs!xlform/model.rowDetailMixins', [
         'cs!xlform/mv.skipLogicHelpers',
         'xlform/model.rowDetails.skipLogic',
         'cs!xlform/view.rowDetail.SkipLogic',

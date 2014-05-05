@@ -4,7 +4,7 @@ have access to those plugins and a proper error message is
 displayed.
 ###
 
-define [
+define 'cs!xlform/view.pluggedIn.backboneView', [
         'backbone',
         'jquery',
         ], (

@@ -1,4 +1,4 @@
-define [
+define 'cs!xlform/view.choices', [
         'backbone',
         'cs!xlform/model.choices',
         'cs!xlform/model.utils'

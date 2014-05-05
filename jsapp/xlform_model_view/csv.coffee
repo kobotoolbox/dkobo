@@ -1,4 +1,4 @@
-define ->
+define 'cs!xlform/csv', ->
   # The Csv class is only internally accessible, though easy
   # to instantiate through the `csv` function.
   #

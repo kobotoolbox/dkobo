@@ -1,4 +1,4 @@
-define [
+define 'cs!xlform/model.base', [
         'underscore',
         'backbone',
         'backbone-validation',

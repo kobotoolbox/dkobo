@@ -1,4 +1,4 @@
-define [
+define 'cs!xlform/view', [
         'cs!xlform/view.templates',
         'cs!xlform/view.surveyApp'
         ], (

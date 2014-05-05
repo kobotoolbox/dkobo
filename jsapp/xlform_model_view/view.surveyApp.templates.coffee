@@ -1,4 +1,4 @@
-define [], ()->
+define 'cs!xlform/view.surveyApp.templates', [], ()->
 
   surveyTemplateApp = () ->
       """

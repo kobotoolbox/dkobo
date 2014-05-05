@@ -1,4 +1,4 @@
-define [
+define 'cs!xlform/view.rowDetail.SkipLogic', [
         'backbone',
         'xlform/model.rowDetails.skipLogic'
         ], (

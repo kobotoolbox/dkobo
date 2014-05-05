@@ -1,4 +1,4 @@
-define ->
+define 'cs!xlform/model.aliases', [], ()->
   aliases_dict =
     group: [
         # standard group items

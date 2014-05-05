@@ -1,4 +1,4 @@
-define [
+define 'cs!xlform/model.choices', [
         'cs!xlform/model.base',
         'cs!xlform/model.utils',
         ], (

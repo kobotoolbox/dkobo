@@ -44,7 +44,7 @@ DAMAGE.
 #   Used to create surveys that can be compiled to XForms using the python library: pyxform
 #   ###
 
-define [
+define 'cs!xlform/_xlform.init', [
         'cs!xlform/_model',
         'cs!xlform/_view',
         'cs!xlform/mv.skipLogicHelpers',

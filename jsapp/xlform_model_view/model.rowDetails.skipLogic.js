@@ -1,4 +1,4 @@
-define([
+define('xlform/model.rowDetails.skipLogic', [
         'cs!xlform/model.base',
         'cs!xlform/model.utils',
         'cs!xlform/mv.skipLogicHelpers'

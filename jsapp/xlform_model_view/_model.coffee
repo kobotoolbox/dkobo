@@ -1,7 +1,7 @@
 ###
 dkobo_xlform.model[...]
 ###
-define [
+define 'cs!xlform/_model', [
         'underscore',
         'cs!xlform/model.survey',
         'cs!xlform/model.utils',

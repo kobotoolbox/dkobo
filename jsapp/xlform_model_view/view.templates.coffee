@@ -1,4 +1,4 @@
-define [
+define 'cs!xlform/view.templates', [
         'cs!xlform/view.choices.templates',
         'cs!xlform/view.row.templates',
         'cs!xlform/view.rowDetail.templates',

@@ -1,6 +1,6 @@
 'use strict';
 
-define(["underscore"], function(_) {
+define('xlform/model.skipLogicParser', ["underscore"], function(_) {
     var skipLogicParser = (function () {
         var equalityCriterionPattern = /\${(\w+)}\s*(=|!=|<|>|<=|>=)\s*\'?((?:date\(\'\d{4}-\d{2}-\d{2}\'\)|[\s\w]+|-?\d+)\.?\d*)\'?/,
             existenceCriterionPattern = /\${(\w+)}\s*((?:=|!=)\s*(?:NULL|''))/i,

@@ -1,4 +1,4 @@
-define [
+define 'cs!xlform/_view', [
         'underscore',
         'cs!xlform/view.surveyApp',
         'cs!xlform/view.utils',

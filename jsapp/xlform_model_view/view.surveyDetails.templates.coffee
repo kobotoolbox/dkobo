@@ -1,4 +1,4 @@
-define ->
+define 'cs!xlform/view.surveyDetails.templates', [], ()->
   xlfSurveyDetailView = (model) ->
     """
     <label title="#{model.get("description") || ''}">

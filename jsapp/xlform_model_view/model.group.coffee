@@ -1,4 +1,4 @@
-define ["cs!xlform/model.surveyFragment"], (base)->
+define 'cs!xlform/model.group', ["cs!xlform/model.surveyFragment"], (base)->
 
   class Group extends surveyFragment.SurveyFragment
     initialize: ()->

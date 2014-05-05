@@ -1,4 +1,4 @@
-define [
+define 'cs!xlform/model.surveyDetail', [
         'cs!xlform/model.base',
         ], (
             base,

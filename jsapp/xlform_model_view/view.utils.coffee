@@ -1,4 +1,4 @@
-define ['xlform/view.utils.validator'], (Validator)->
+define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
   viewUtils = {}
   viewUtils.Validator = Validator
 

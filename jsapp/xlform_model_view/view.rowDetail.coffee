@@ -1,4 +1,4 @@
-define [
+define 'cs!xlform/view.rowDetail', [
         'cs!xlform/model.utils',
         'cs!xlform/model.configs',
         'cs!xlform/view.utils',

@@ -1,4 +1,4 @@
-define [
+define 'cs!xlform/model.rowDetail', [
         'cs!xlform/model.base',
         'cs!xlform/model.configs',
         'cs!xlform/model.rowDetailMixins',

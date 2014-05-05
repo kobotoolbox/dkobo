@@ -1,4 +1,4 @@
-define [
+define 'cs!xlform/mv.skipLogicHelpers', [
         'xlform/model.skipLogicParser'
         ], (
             $skipLogicParser,

@@ -11,7 +11,7 @@ survey.
 Details pulled from ODK documents / google docs. Notably this one:
   https://docs.google.com/spreadsheet/ccc?key=0AgpC5gsTSm_4dDRVOEprRkVuSFZUWTlvclJ6UFRvdFE#gid=0
 ###
-define ["underscore", "backbone"], (_, Backbone)->
+define 'cs!xlform/model.configs', ["underscore", "backbone"], (_, Backbone)->
   configs = {}
   configs.defaultSurveyDetails =
     start_time:
