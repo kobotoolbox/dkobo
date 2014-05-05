@@ -17,6 +17,7 @@
 
     {% compress css %}
     <link rel="stylesheet" href="{% static 'css/jquery-ui-1.10.4.custom.css' %}">
+    <link rel="stylesheet" href="{% static 'components/fontawesome/css/font-awesome.css' %}" media="all">
     <link rel="stylesheet" href="{% static 'kobo.compiled/kobo.css' %}" media="all">
     {% endcompress %}
 
@@ -38,6 +39,8 @@
     </script>
     <script type="text/javascript">
       window.userDetails = {{user_details|safe}};
+      $.fn.editable.defaults.mode = 'inline';
+      $.fn.editable.defaults.onblur = 'submit';
     </script>
     <script src="http://blueimp.github.io/JavaScript-Load-Image/js/load-image.min.js"></script>
     <script src="http://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>

@@ -39,6 +39,7 @@
     "jquery-migrate": "~1.2.1",
     "lodash": "~2.4.1",
     "modernizr": "~2.8.1",
-    "backbone-validation": "~0.9.1"
+    "backbone-validation": "~0.9.1",
+    "fontawesome": "~4.0.3"
   }
 }
