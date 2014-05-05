@@ -1,7 +1,10 @@
-define 'cs!xlform_model_view/view', ['cs!xlform_model_view/view_utils'], (view_utils)->
-  class SurveyApp
-    @create: ->
+define 'cs!xlform/view', [
+        'cs!xlform/view.templates',
+        'cs!xlform/view.surveyApp'
+        ], (
+            $viewTemplates,
+            $surveyApp
+            )->
 
-  SurveyApp: SurveyApp
-  utils:
-    view_utils
+  surveyApp: $surveyApp
+  viewTemplates: $viewTemplates

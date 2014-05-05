@@ -1,7 +1,7 @@
 /* exported BuilderCallbacksService */
 /* global surveyDraftApi */
 /* global $routeTo */
-/* global XLF */
+/* global dkobo_xlform */
 
 'use strict';
 
@@ -20,9 +20,9 @@ function BuilderCallbacksService() {
 
     this.get = function (scope) {
         return function (response) {
-            scope.xlfSurvey = XLF.createSurveyFromCsv(response.body);
+            scope.xlfSurvey = dkobo_xlform.model.Survey.load(response.body);
             scope.xlfSurvey.__djangoModelDetails = response;
-            //new SurveyApp({el: element, survey: scope.xlfSurvey, save: saveCallback}).render();
+            //new dkobo_xlform.view.SurveyApp({el: element, survey: scope.xlfSurvey, save: saveCallback}).render();
         };
     };
 }

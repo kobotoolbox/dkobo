@@ -1,11 +1,9 @@
 // tells the r.js loader to include these modules
-require(['cs!xlform_model_view/model', 'cs!xlform_model_view/view']);
+require(['cs!xlform/_xlform.init']);
 
 (function(){
   if ( !this.dkobo_xlform ) {
-    this.dkobo_xlform = {
-      view: require('cs!xlform_model_view/view'),
-      model: require('cs!xlform_model_view/model')
-    };
+    this.dkobo_xlform = require('cs!xlform/_xlform.init');
+    console.log("this.dkobo_xlform", this.dkobo_xlform);
   }
 })();

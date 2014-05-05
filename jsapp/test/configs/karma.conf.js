@@ -7,24 +7,32 @@ module.exports = function(config) {
         files: [
             // angular
             'components/angular/angular.js',
-            // formerly: '../dkobo/static/js/angular-*.js',
             'components/angular-cookies/angular-cookies.js',
             'components/angular-mocks/angular-mocks.js',
             'components/angular-resource/angular-resource.js',
             'components/angular-route/angular-route.js',
 
-            // formerly contents of 'sut/lib/*.js',
-            'components/sinonjs/sinon.js',
+            'components/sinon/index.js',
             'components/jasmine-sinon/lib/jasmine-sinon.js',
+
+            'components/jquery/dist/jquery.js',
             'components/lodash/dist/lodash.js',
             'components/backbone/backbone.js',
-            'components/jquery/dist/jquery.js',
 
-
-            'test/init.js',
+            '../dkobo/static/js/Backbone.Validation.js',
 
             // require-js
             'components/requirejs/require.js',
+            {pattern: 'components/require-cs/cs.js', watched: false, served: true, included: false},
+            {pattern: 'components/require-cs/coffee-script.js', watched: false, served: true, included: false},
+            {pattern: 'components/backbone-validation/dist/backbone-validation-amd.js', watched: false, served: true, included: false},
+
+            'test/init.js',
+
+            {pattern: 'xlform_model_view/*.coffee', watched: false, served: true, included: true},
+            {pattern: 'xlform_model_view/*.js', watched: false, served: true, included: true},
+            {pattern: 'build_stubs/*.js', watched: false, served: true, included: true},
+
 
             // kobo jsapp source files
             'kobo/controllers/*.js',
@@ -74,7 +82,7 @@ module.exports = function(config) {
                 sourceMap: false
             },
             transformPath: function(path) {
-                return path.replace(/\.coffee$/, '.karma.js');
+                return path.replace(/\.coffee$/, '.coffee-karma.js');
             },
         },
         /// https://github.com/vojtajina/ng-directive-testing/commit/7b7a0b8f6b3698868daddc40828da39c3c6b6272#diff-766793014309586429b517112184567d

@@ -1,5 +1,5 @@
 /* exported restApiFactory */
-/* global XLF */
+/* global dkobo_xlform */
 'use strict';
 
 function restApiFactory($resource, $timeout) {
@@ -27,7 +27,7 @@ function restApiFactory($resource, $timeout) {
                         $scope.info_list_items = JSON.parse(inputs);
 
                         function create_survey(item) {
-                            item.backbone_model = XLF.createSurveyFromCsv(item.body);
+                            item.backbone_model = dkobo_xlform.model.Survey.load(item.body);
                         }
 
                         function set_defaults(item) {

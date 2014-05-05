@@ -18,30 +18,8 @@
   </head>
   <body>
     {% block content %}{% endblock %}
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-route.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-cookies.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-resource.js"></script>
-    <script src="{% static 'js/jquery-ui-1.10.4.custom.js' %}"></script>
-    <script src="{% static 'js/Backbone.Validation.js' %}"></script>
-    <script src="{% static 'js/select2.min.js' %}"></script>
-
-    <script src="{% static 'kobo.compiled/dkobo_xlform.js' %}"></script>
 
     {% if DEBUG %}
-    <script type="text/javascript" charset="utf-8">
-
-    /* ensuring file is loading */
-    if(typeof window.dkobo_xlform === "undefined") {
-      console.error("Static file is not loading properly.");
-    } else {
-      console.log(dkobo_xlform.model.reverse("YAY !dedaol tI"))
-    }
-
-    </script>
     <script src="http://localhost:35729/livereload.js"></script>
     {% endif %}
 

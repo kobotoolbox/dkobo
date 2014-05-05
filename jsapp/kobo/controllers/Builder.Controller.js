@@ -1,4 +1,5 @@
-/*exported BuilderController*/
+/* exported BuilderController */
+/* global dkobo_xlform */
 'use strict';
 
 function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo, $miscUtils, $location) {
@@ -44,21 +45,21 @@ function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo,
     if ($scope.routeParams.id && $scope.routeParams.id !== 'new'){
         // url points to existing survey_draft
         surveyDraftApi.get({id: $scope.routeParams.id}, function builder_get_callback(response) {
-            $scope.xlfSurvey = XLF.createSurveyFromCsv(response.body);
+            $scope.xlfSurvey = dkobo_xlform.model.Survey.load(response.body);
             // temporarily saving response in __djangoModelDetails
             $scope.xlfSurvey.__djangoModelDetails = response;
-            $scope.xlfSurveyApp = SurveyApp.create({el: 'section.form-builder', survey: $scope.xlfSurvey, ngScope: $scope, save: saveCallback});
+            $scope.xlfSurveyApp = dkobo_xlform.view.SurveyApp.create({el: 'section.form-builder', survey: $scope.xlfSurvey, ngScope: $scope, save: saveCallback});
             $scope.xlfSurveyApp.render();
         });
     } else {
         // url points to new survey_draft
-        $scope.xlfSurvey = new XLF.Survey()
-        $scope.xlfSurveyApp = SurveyApp.create({el: 'section.form-builder', survey: $scope.xlfSurvey, ngScope: $scope, save: saveCallback});
+        $scope.xlfSurvey = new dkobo_xlform.model.Survey()
+        $scope.xlfSurveyApp = dkobo_xlform.view.SurveyApp.create({el: 'section.form-builder', survey: $scope.xlfSurvey, ngScope: $scope, save: saveCallback});
         $scope.xlfSurveyApp.render();
     }
 
     $scope.add_row_to_question_library = function (row) {
-        var survey = XLF.Survey.create()
+        var survey = dkobo_xlform.model.Survey.create()
         survey.rows.add(row)
 
         var resource = $restApi.create_question_api($scope);

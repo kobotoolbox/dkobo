@@ -37,6 +37,32 @@ test_helper =
     @changeFileUploaderSuccess = sinon.spy()
     @bootstrapFileUploader = sinon.spy()
     return
+  buildDirective: ($compile, $rootScope, element) ->
+    element = $compile(element)($rootScope)
+    $rootScope.$apply()
+    element.isolateScope()
+  buildInfoListDirective: ($compile, $rootScope, canAddNew, linkTo) ->
+    @$rs = $rootScope
+    test_helper.buildDirective $compile, $rootScope, "<div info-list items=\"items\" can-add-new=\"" + canAddNew + "\" name=\"test\" link-to=\"" + linkTo + "\"></div>"
+  buildTopLevelMenuDirective: ($compile, $rootScope) ->
+    @$rs = $rootScope
+    test_helper.buildDirective $compile, $rootScope, "<div top-level-menu></div>"
+  mockUserDetails: (mockObject) ->
+    module ($provide) ->
+      $provide.provider "$userDetails", ->
+        @$get = ->
+          mockObject
+
+        return
+
+      $provide.provider "$miscUtils", ->
+        @$get = ->
+          bootstrapFileUploader: sinon.stub()
+
+        return
+
+      return
+
   resource_stub:
     get: sinon.stub()
     list: sinon.stub()
@@ -84,3 +110,8 @@ describe '', () ->
   describe 'Services', service_tests
   describe 'Skip Logic Parser', skip_logic_parser_tests
   describe 'Validator', validator_tests
+
+require [
+         'skip_logic_tests',
+         # 'xlform_tests',
+         ]

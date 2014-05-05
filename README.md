@@ -14,17 +14,22 @@
 1. Activate a [python virtualenv](https://pypi.python.org/pypi/virtualenv).
 
     _It's suggested that you use virtualenv wrapper, which provides the "mkvirtualenv" and "workon" commands_<br>
-    `mkvirtualenv kobo` 
-
-1. Install python requirements:
-
-    `pip install -r requirements.txt`
+    _However, without that, you can still create a virtualenv e.g. named pykobo_
+    `virtualenv ~/pykobo` 
 
 1. **If in production**, set production environment variables. (See below)
 
-1. Install javascript dependencies
+1. Install python:
 
-    `npm install --save-dev`
+    `pip install -r requirements.txt`
+
+1. Install ruby dependencies:
+
+    `gem install sass`
+
+1. Install javascript dependencies:
+
+    `npm install`<br>
     `bower install`
 
 1. Build javascript and stylesheet dependencies
@@ -39,18 +44,16 @@
 
     `git pull origin master`
 
-1. In development, you'll want to start the javascript and stylesheet compilation watcher and tester
-
-    `grunt`
-
 1. Activate the virtualenvironment
 
-    _example virtualenv named kobo_<br>
-    `source kobo/bin/activate`
+    _example virtualenv named pykobo_<br>
+    `source ~/pykobo/bin/activate`
 
-1. Install any requirements that have not been installed
+1. Consider installing any requirements that have not been installed
 
-    `pip install -r requirements.txt`
+    `pip install -r requirements.txt` _# this installs python dependencies inside the vitualenv_<br>
+    `npm install`<br>
+    `bower install`
 
 1. Migrate the database
 
@@ -59,23 +62,26 @@
 
 1. Run the server on port 8000
 
-    `python manage.py runserver`
+    `python manage.py runserver` OR (when actively developing the application) <br>
+    `python manage.py gruntserver` _This is an alias for running 'grunt' in the background._
 
 ------------
 
 ### Production environment variables
 
-    DJANGO_DEBUG=False
-    DJANGO_SECRET_KEY=<use a unique django secret key here>
+    The server should run in development / debug mode by default, but if you want to change it you can run the command
 
+    `source scripts/set_debug.sh true` #sets development mode<br>
+    or<br>
+    `source scripts/set_debug.sh false` #sets production mode
 
 ### Grunt commands
 
 ###### grunt (no arguments)
-  _default task: triggers `requirejs:compile_xlform`, `buildcss`, `watch`_
+  _default task: triggers `requirejs:compile_xlform`, `build_css`, and `watch` for changes_
 
 ###### grunt build
-  _triggers `requirejs:compile_xlform`, `buildcss`_
+  _triggers `requirejs:compile_xlform`, `build_css`_
   * Creates js and css dependencies
 
 ###### grunt build_all

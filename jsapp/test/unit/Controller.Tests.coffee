@@ -1,9 +1,9 @@
 controller_tests = ->
   beforeEach ->
-    sinon.stub(SurveyApp, "create").returns render: ->
+    sinon.stub(dkobo_xlform.view.SurveyApp, "create").returns render: ->
 
   afterEach ->
-    SurveyApp.create.restore()
+    dkobo_xlform.view.SurveyApp.create.restore()
 
   describe "Forms Controller", ->
     beforeEach inject(($controller, $rootScope) ->
@@ -280,7 +280,7 @@ controller_tests = ->
             add: sinon.spy()
           toCSV: sinon.stub()
 
-        survey_factory_stub = sinon.stub(XLF.Survey, "create")
+        survey_factory_stub = sinon.stub(dkobo_xlform.model.Survey, "create")
         survey_factory_stub.returns survey_stub
         survey_stub.toCSV.returns "test survey"
 

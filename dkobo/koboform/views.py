@@ -160,8 +160,9 @@ def survey_draft_detail(request, pk, format=None):
 def jasmine_spec(request):
     context = RequestContext(request)
     context['DEBUG'] = settings.DEBUG
-    context['include_xlform_scripts_files'] = True
-    context['include_coffeefile'] = "kobo/stylesheets/pages/form_builder.coffee"
+    context['run_jasmine'] = True
+    context['include_coffeefile'] = "test/unit/SkipLogic.Tests.coffee"
+    # context['include_js'] = "test/unit/Validator.Tests.js"
     return render_to_response("jasmine_spec.html", context_instance=context)
 
 XLS_CONTENT_TYPES = [

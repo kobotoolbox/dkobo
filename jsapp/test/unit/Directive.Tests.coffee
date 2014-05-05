@@ -1,52 +1,28 @@
 directive_tests = ->
-  mockUserDetails = (mockObject) ->
-    module ($provide) ->
-      $provide.provider "$userDetails", ->
-        @$get = ->
-          mockObject
-
-        return
-
-      $provide.provider "$miscUtils", ->
-        @$get = ->
-          bootstrapFileUploader: sinon.stub()
-
-        return
-
-      return
-
-  buildDirective = ($compile, $rootScope, element) ->
-    element = $compile(element)($rootScope)
-    $rootScope.$apply()
-    element.isolateScope()
-
   beforeEach test_helper.initialize_angular_modules
 
   describe "Top level menu Directive", ->
-    buildTopLevelMenuDirective = ($compile, $rootScope) ->
-      buildDirective $compile, $rootScope, "<div top-level-menu></div>"
+    _isolateScope = null
     describe "Mocked $userDetails", ->
-      beforeEach mockUserDetails(
+      beforeEach test_helper.mockUserDetails(
         name: "test name"
         gravatar: "test avatar"
       )
-      it "should set $rootScope.user to values passed by $userDetails", inject(($compile, $rootScope) ->
-        isolateScope = buildTopLevelMenuDirective($compile, $rootScope)
-        expect(isolateScope.user.name).toBe "test name"
-        expect(isolateScope.user.avatar).toBe "test avatar"
-        return
+      beforeEach inject (($compile, $rootScope) ->
+        _isolateScope = test_helper.buildTopLevelMenuDirective($compile, $rootScope)
       )
-      return
+      it "should set $rootScope.user to values passed by $userDetails", () ->
+        expect(_isolateScope.user.name).toBe "test name"
+        expect(_isolateScope.user.avatar).toBe "test avatar"
 
     describe "empty $userDetails", ->
-      beforeEach mockUserDetails({})
-      it "should set $rootScope.user to the default values when $userDetails is an empty object", inject(($compile, $rootScope) ->
-        isolateScope = buildTopLevelMenuDirective($compile, $rootScope)
-        expect(isolateScope.user.name).toBe "KoBoForm User"
-        expect(isolateScope.user.avatar).toBe "/img/avatars/example-photo.jpg"
-        return
+      beforeEach test_helper.mockUserDetails({})
+      beforeEach inject (($compile, $rootScope) ->
+        _isolateScope = test_helper.buildTopLevelMenuDirective($compile, $rootScope)
       )
-      return
+      it "should set $rootScope.user to the default values when $userDetails is an empty object", () ->
+        expect(_isolateScope.user.name).toBe "KoBoForm User"
+        expect(_isolateScope.user.avatar).toBe "/img/avatars/example-photo.jpg"
 
     describe "null $userDetails", ->
       mockConfig = [
@@ -54,77 +30,56 @@ directive_tests = ->
         icon: "fa-file-text-o"
         name: "test name"
       ]
-      beforeEach mockUserDetails(null)
+      beforeEach test_helper.mockUserDetails(null)
       beforeEach module(($provide) ->
         $provide.provider "$configuration", ->
           @$get = ->
             sections: ->
               mockConfig
-
           return
+        return
+      )
+      beforeEach inject (($compile, $rootScope) ->
+        _isolateScope = test_helper.buildTopLevelMenuDirective($compile, $rootScope)
+      )
+      it "should set $rootScope.user to the default values when $userDetails is null", () ->
+        expect(_isolateScope.user.name).toBe "KoBoForm User"
+        expect(_isolateScope.user.avatar).toBe "/img/avatars/example-photo.jpg"
 
-        return
-      )
-      it "should set $rootScope.user to the default values when $userDetails is null", inject(($compile, $rootScope) ->
-        isolateScope = buildTopLevelMenuDirective($compile, $rootScope)
-        expect(isolateScope.user.name).toBe "KoBoForm User"
-        expect(isolateScope.user.avatar).toBe "/img/avatars/example-photo.jpg"
-        return
-      )
-      it "should read section information from the config service", inject(($compile, $rootScope) ->
-        isolateScope = buildTopLevelMenuDirective($compile, $rootScope)
-        expect(isolateScope.sections).toBe mockConfig
-        return
-      )
+      it "should read section information from the config service", () ->
+        expect(_isolateScope.sections).toBe mockConfig
+
       describe "scope.isActive", ->
-        it "should return \"is-active\" when passed name equals the active tab", inject(($compile, $rootScope) ->
-          isolateScope = buildTopLevelMenuDirective($compile, $rootScope)
-          isolateScope.activeTab = "test tab"
-          expect(isolateScope.isActive("test tab")).toBe "is-active"
-          return
-        )
-        it "should return an empty string when passed name is different from the active tab", inject(($compile, $rootScope) ->
-          isolateScope = buildTopLevelMenuDirective($compile, $rootScope)
-          isolateScope.activeTab = "test tab 2"
-          expect(isolateScope.isActive("test tab")).toBe ""
-          return
-        )
-        return
+        it "should return \"is-active\" when passed name equals the active tab", () ->
+          _isolateScope.activeTab = "test tab"
+          expect(_isolateScope.isActive("test tab")).toBe "is-active"
 
-      return
-
-    return
+        it "should return an empty string when passed name is different from the active tab", () ->
+          _isolateScope.activeTab = "test tab 2"
+          expect(_isolateScope.isActive("test tab")).toBe ""
 
   describe "InfoList Directive", ->
-    buildInfoListDirective = ($compile, $rootScope, canAddNew, linkTo) ->
-      buildDirective $compile, $rootScope, "<div info-list items=\"items\" can-add-new=\"" + canAddNew + "\" name=\"test\" link-to=\"" + linkTo + "\"></div>"
-    it "should initialize the scope correctly", inject(($compile, $rootScope) ->
+    _build_directive = null
+    beforeEach inject(($compile, $rootScope) ->
       $rootScope.items = [{}]
-      buildInfoListDirective $compile, $rootScope, true
-      expect($rootScope.canAddNew).toBe true
-      expect($rootScope.activeTab).toBe "test"
-      return
+      _build_directive = (canAddNew, linkTo) ->
+        test_helper.buildInfoListDirective $compile, $rootScope, canAddNew, linkTo
     )
-    it "should initialize the scope with canAddNew === false when \"false\" is passed on directives attribute", inject(($compile, $rootScope) ->
-      $rootScope.items = [{}]
-      buildInfoListDirective $compile, $rootScope, false
-      expect($rootScope.canAddNew).toBe false
-      expect($rootScope.activeTab).toBe "test"
-      return
-    )
+
+    it "should initialize the scope correctly", () ->
+      _build_directive true
+      expect(test_helper.$rs.canAddNew).toBe true
+      expect(test_helper.$rs.activeTab).toBe "test"
+
+    it "should initialize the scope with canAddNew === false when \"false\" is passed on directives attribute", () ->
+      _build_directive false
+      expect(test_helper.$rs.canAddNew).toBe false
+
     describe "getHashLink", ->
-      it "should return a URI when linkTo is provided", inject(($compile, $rootScope) ->
-        isolateScope = buildInfoListDirective($compile, $rootScope, false, "test")
+      it "should return a URI when linkTo is provided", () ->
+        isolateScope = _build_directive false, "test"
         expect(isolateScope.getHashLink(id: 1)).toBe "/test/1"
-        return
-      )
-      it "should return a URI when linkTo is provided", inject(($compile, $rootScope) ->
-        isolateScope = buildInfoListDirective($compile, $rootScope, false, "")
+
+      it "should return a URI when linkTo is provided", () ->
+        isolateScope = _build_directive false, ""
         expect(isolateScope.getHashLink(id: 1)).toBe ""
-        return
-      )
-      return
-
-    return
-
-  return
