@@ -1,30 +1,35 @@
 // ==========================================================================
-// Dependencies
-// ==========================================================================
-
-// ==========================================================================
 // Color Settings
 // ==========================================================================
 $cardBorderColor: #d9dde1;
-$cardInSortBorderColor: #38a1f1;
-$cardBorderStyle: 1px solid $cardBorderColor;
+$cardInSortBorderColor: #D9DDE1;
+$cardBorderStyle: 2px solid $cardBorderColor;
 $cardInSortBorderStyle: 2px solid $cardInSortBorderColor;
 $cardInSortThinBorderStyle: 1px solid $cardInSortBorderColor;
 
 $bodyBackgroundColor: #E9EDF0;
+$textColor: #3f3f3f;
 
 // ==========================================================================
-// TEST Styling, by Penar Musaraj
+// General Styling
 // ==========================================================================
 
+@mixin vertical-align {
+  position: relative;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+html, body {
+  height: 100%;
+}
 body {
   background-color: $bodyBackgroundColor;
   padding:30px;
+  color: $textColor;
 }
-
-
-// End Test
-// ==========================================================================
 
 .-form-builder {
   .survey-header {
@@ -37,27 +42,37 @@ body {
 
   .card {
       border: $cardBorderStyle;
-      min-height: 67px;
-
-      padding: 10px 20px 10px 48px;
+      // min-height: 67px;
+      padding: 23px 40px 23px 60px;
       display: block;
-      font-size: 14px;
+      font-size: 13px;
+      line-height: 18px;
       background: white;
       margin-bottom: 2px;
-
-      cursor: not-allowed; // TODO: add card--movable to sortable cards.
+      cursor: pointer; // TODO: add card--movable to sortable cards.
+      border-radius: 0px;
+      font-family: 'LatoBlack', Verdana;
       &.card--movable {
         cursor: move;
       }
-
       &.card--error {
           background-color: rgb(255, 176, 176);
       }
       &.card--insort {
           border: $cardInSortBorderStyle;
       }
-      //for vertical text align:
-      // position: relative;
+      &.card--placeholder {
+          background-color: transparent;
+          color:#8695A5;
+          text-align: center;
+          padding-left: 20px;
+      }
+
+      .card__text {
+          margin:auto;
+          display: inline-block;
+          vertical-align: middle;
+      }
   }
 
   // ==========================================================================
@@ -69,12 +84,6 @@ body {
     font-weight: normal;
   }
   .card__header {
-      //for vertical text align:
-      // position: absolute;
-      // top: 50%;
-      // -webkit-transform: translateY(-50%);
-      // -ms-transform: translateY(-50%);
-      // transform: translateY(-50%);
   }
 
   
@@ -86,7 +95,7 @@ body {
       display: none;
       position: relative;
       border: 1px solid #E8E1E1;
-      border-radius: 3px;
+      background-color: red;
   }
 
   .advanced-details .dt-view {
@@ -161,13 +170,15 @@ body {
   }
 
   .card__indicator__icon {
-      background-color: $cardBorderColor;
       position: absolute;
-      top: 50%;
+      top: 54%;
       margin-top: -($cardIndicatorIconWidth/2);
       left: ($cardIndicatorWidth/2) - ($cardIndicatorIconWidth / 2);
       width: $cardIndicatorIconWidth;
       height: $cardIndicatorIconHeight;
+      font-size: 18px;
+      text-align: center;
+      color: #8595A5;
   }
   
   // ==========================================================================
@@ -175,11 +186,11 @@ body {
   // ==========================================================================
   .card__buttons {
       border: $cardBorderStyle;
-      border-width: 0 0 0 1px;
+      border-width: 0 0 0 2px;
       position: absolute;
-      top: 0;
-      right: 0;
-      width: 22px;
+      top: 0px;
+      right: 2px;
+      width: 26px;
       height: 100%;
   }
   .card--insort {
@@ -188,31 +199,20 @@ body {
       }
   }
   .card__buttons__button {
-      display: block;
-      border-bottom: 1px transparent;
-      position: relative;
-      text-align: center;
       height: 22px;
-      line-height: 22px;
-
-      .linkhelpertext {
-          display: none;
-          position: absolute;
-          top: 2px;
-          left: 24px;
-          background-color: rgba(0,0,0,0.5);
-          padding: 4px 12px;
-          width: 150px;
-          color: #fff;
-          font-size: 12px;
+      width: 20px;
+      position: absolute;
+      right: 2px;
+      bottom: 4px;
+      text-align: center;
+      &.gray {
+        color: #858F98;
+        top:4px;
       }
-
-      &:hover {
-          border-bottom: $cardBorderStyle;
-
-          .linkhelpertext {
-              display: block;
-          }
+      &.red {
+        color: #D08B8C;
+        top:50%;
+        margin-top:-11px;
       }
   }
   
@@ -272,4 +272,5 @@ body {
   // Sub modules
   // ==========================================================================
   @import '../partials/add_question_to_library';
+  // @import '../partials/add_question_to_library';
 }

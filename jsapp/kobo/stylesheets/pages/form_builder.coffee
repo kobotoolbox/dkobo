@@ -75,11 +75,8 @@ drag_placeholder_row = ({note})->
   """
   <li class="xlf-row-view">
     #{sidenote(note, 'absrt')}
-
-    <div class="card">
-      <div class="---placeholder">
+    <div class="card card--placeholder">
         <span>Drag and drop to reorder</span>
-      </div>
     </div>
   </li>
   """
@@ -97,13 +94,13 @@ standard_row = (variation='text', {note}) ->
 
   card__indicator = """
     <div class="card__indicator">
-      <a href="#" class="noop card__indicator__icon"></a>
+      <div class="noop card__indicator__icon"><i class="fa fa-list"></i></div>
     </div>
   """
   card__butons = """
     <div class="card__buttons">
-      <a href="#" class="card__buttons__button"><i class="fa fa-cog"></i></a>
-      <a href="#" class="card__buttons__button"><i class="fa fa-trash-o"></i></a>
+      <a href="#" class="card__buttons__button gray"><i class="fa fa-cog"></i></a>
+      <a href="#" class="card__buttons__button red"><i class="fa fa-trash-o"></i></a>
       <a href="#" class="card__buttons__button"><i class="fa fa-copy"></i></a>
     </div>
   """
@@ -114,7 +111,9 @@ standard_row = (variation='text', {note}) ->
 
     <div class="card">
       #{card__indicator}
-      #{_text}
+      <div class="card__text">
+        #{_text}
+      </div>
       #{card__butons}
     </div>
   </li>
