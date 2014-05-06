@@ -1,3 +1,22 @@
+// Variable declarations
+
+// Colors 
+// ==========================================================================
+$cardBorderColor: #d9dde1;
+$cardInSortBorderColor: red;
+
+$bodyBackgroundColor: #E9EDF0;
+$textColor: #3f3f3f;
+
+$wellTextColor: #7A8692;
+
+// Borders
+// ==========================================================================
+$cardBorderStyle: 2px solid $cardBorderColor;
+$cardInSortBorderStyle: 2px solid $cardInSortBorderColor;
+$cardInSortThinBorderStyle: 1px solid $cardInSortBorderColor;
+
+
 @import "stylesheets/partials/normalize";
 @import "stylesheets/partials/base";
 

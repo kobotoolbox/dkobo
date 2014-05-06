@@ -134,7 +134,7 @@ empty_survey_message = ->
     <p class="survey-editor__message well">
       <b>This form is currently empty.</b>
       <br>
-      You can add questions, notes, prompts, or other fields by clicking on the "+" sign below.
+      <a href="#">Add your first question now</a>
     </p>
   </li>
   """

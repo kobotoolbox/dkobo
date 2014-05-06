@@ -3,10 +3,16 @@
 // ==========================================================================
 
 .well {
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 10px 14px;
-    background-color: #eee;
+  border: $cardBorderStyle;
+  padding: 20px;
+  background: #FFF;
+  color: $wellTextColor;
+  font-family: 'LatoBlack';
+  font-style: italic;
+  font-size: 13px;
+  a {
+    font-family: 'Lato';
+    font-style: normal;
+    text-decoration: underline;
+  }
 }
-
-
