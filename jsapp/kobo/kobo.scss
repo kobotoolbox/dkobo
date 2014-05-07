@@ -3,12 +3,15 @@
 // Colors 
 // ==========================================================================
 $cardBorderColor: #d9dde1;
-$cardInSortBorderColor: red;
+$cardInSortBorderColor: #3FA2EE;
 
 $bodyBackgroundColor: #E9EDF0;
 $textColor: #3f3f3f;
 
 $wellTextColor: #7A8692;
+
+$addButtonColor: #BEC9D0;
+$addButtonColorHover: #5CB2EE;
 
 // Borders
 // ==========================================================================
@@ -16,6 +19,15 @@ $cardBorderStyle: 2px solid $cardBorderColor;
 $cardInSortBorderStyle: 2px solid $cardInSortBorderColor;
 $cardInSortThinBorderStyle: 1px solid $cardInSortBorderColor;
 
+$buttonBorderRadius: 5px;
+
+// Included files
+// ==========================================================================
+
+// import third party libs
+@import '../components/select2/select2.css';
+@import '../components/x-editable/dist/jquery-editable/css/jquery-editable.css';
+@import '../components/fontawesome/css/font-awesome.css';
 
 @import "stylesheets/partials/normalize";
 @import "stylesheets/partials/base";
@@ -42,8 +54,3 @@ $cardInSortThinBorderStyle: 1px solid $cardInSortBorderColor;
 @import "stylesheets/partials/wells";
 
 @import "stylesheets/partials/misc";
-
-// import third party libs
-@import '../components/select2/select2.css';
-@import '../components/x-editable/dist/jquery-editable/css/jquery-editable.css';
-@import '../components/fontawesome/css/font-awesome.css';

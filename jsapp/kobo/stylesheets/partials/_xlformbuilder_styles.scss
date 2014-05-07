@@ -4,7 +4,6 @@
 
 .form-builder {
     max-width: 640px;
-    margin-top: 60px;
     margin-right: auto;
     margin-left: auto;
 }
@@ -477,38 +476,28 @@ button.skiplogic__deletecriterion {
 }
 
 
-
-
-
 // ==========================================================================
 // Add row button
 // ==========================================================================
 
 .add-row-btn {
-    width: 100px;
-    height: 20px;
-    line-height: 20px;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    border-radius: $buttonBorderRadius;
+    padding:0px;
     margin-right: auto;
     margin-left: auto;
-    // transition: opacity .25s ease-in-out;
-    // -moz-transition: opacity .25s ease-in-out;
-    // -webkit-transition: opacity .25s ease-in-out;
+    background-color:$addButtonColor;
+    &:hover {
+        background-color:$addButtonColorHover;
+    }
 }
 .insort {
     .add-row-btn {
         opacity: 0;
     }
 }
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -3,9 +3,21 @@
 // General Styling
 // ==========================================================================
 
-.-form-builder {
-  .survey-header {
-    display: none;
+.form-builder {
+
+  .survey-editor__message {
+    border: $cardBorderStyle;
+    padding: 20px;
+    background: #FFF;
+    color: $wellTextColor;
+    font-family: 'LatoBlack';
+    font-style: italic;
+    font-size: 13px;
+    a {
+      font-family: 'Lato';
+      font-style: normal;
+      text-decoration: underline;
+    }
   }
 
   // ==========================================================================
@@ -29,9 +41,6 @@
       &.card--error {
           background-color: rgb(255, 176, 176);
       }
-      // &.card--insort {
-      //     border: $cardInSortBorderStyle;
-      // }
       &.card--placeholder {
           background-color: transparent;
           color:#8695A5;
@@ -49,20 +58,12 @@
   .sortable-active {
     .card {
       border: $cardInSortBorderStyle;
-      background-color: green !important;
     }
   }
 
   // ==========================================================================
   // Card Header
   // ==========================================================================
-
-  h4.card__header {
-    margin: 0;
-    font-weight: normal;
-  }
-  .card__header {
-  }
 
   
   // ==========================================================================
@@ -198,10 +199,6 @@
   // Advanced details
   // ==========================================================================
 
-  .expanding-spacer-between-rows {
-      display: none;
-  }
-
   .expanding-spacer-between-rows > .line {
       height: 0;
       position: relative;
@@ -212,25 +209,8 @@
   }
   
   // ==========================================================================
-  // Add row button
+  // Add row button (see xlformbuilder_styles.css)
   // ==========================================================================
-
-  .btn.add-row-btn {
-      width: 100px;
-      height: 20px;
-      line-height: 20px;
-      margin-right: auto;
-      margin-left: auto;
-      // transition: opacity .25s ease-in-out;
-      // -moz-transition: opacity .25s ease-in-out;
-      // -webkit-transition: opacity .25s ease-in-out;
-  }
-  .insort {
-      .btn.add-row-btn {
-          opacity: 0;
-      }
-  }
-
 
   // ==========================================================================
   // Individual row details
