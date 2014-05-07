@@ -1,3 +1,4 @@
+// All variables are now in kobo.scss
 
 // ==========================================================================
 // General Styling
@@ -21,20 +22,15 @@
   }
 
   // ==========================================================================
-  // Card
+  // Card (incl. Header and Expanded)
   // ==========================================================================
 
   .card {
-      border: $cardBorderStyle;
-      padding: 23px 40px 23px 60px;
-      display: block;
+      border-radius: 0px;
+      font-family: 'LatoBlack';
       font-size: 13px;
       line-height: 18px;
-      background: white;
       margin-bottom: 2px;
-      cursor: pointer; // TODO: add card--movable to sortable cards.
-      border-radius: 0px;
-      font-family: 'LatoBlack', Verdana;
       &.card--movable {
         cursor: move;
       }
@@ -48,84 +44,69 @@
           padding-left: 20px;
       }
 
-      .card__text {
-          margin:auto;
-          display: inline-block;
-          vertical-align: middle;
+      .card__header {
+          border: $cardBorderStyle;
+          padding: 23px 40px 23px 60px;
+          display: block;
+          background: white;
+          cursor: move;
+          position: relative;
+          .card__text {
+              margin:auto;
+              display: inline-block;
+              vertical-align: middle;
+          }
+      }
+  }
+
+  .card__expanded {
+      border: $cardBorderStyle;
+      border-top-width: 1px;
+      padding: 23px 40px 23px 60px;
+      background: white;
+      margin-top:-2px;
+      position: relative;
+      &:after, &:before {
+        bottom: 100%;
+        left: 50%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+      }
+      &:after {
+        border-color: rgba(255, 255, 255, 0);
+        border-bottom-color: #FFF;
+        border-width: 8px;
+        margin-left: -8px;
+      }
+      &:before {
+        border-color: rgba(217, 221, 225, 0);
+        border-bottom-color: #d9dde1;
+        border-width: 9px;
+        margin-left: -9px;
       }
   }
 
   .sortable-active {
-    .card {
+    .card__header {
       border: $cardInSortBorderStyle;
     }
   }
-
-  // ==========================================================================
-  // Card Header
-  // ==========================================================================
-
+  .card--error {
+      background-color: rgb(255, 176, 176);
+  }
   
   // ==========================================================================
   // Advanced details
   // ==========================================================================
 
   .advanced-details {
-      display: none;
       position: relative;
-      border: 1px solid #E8E1E1;
-      background-color: red;
   }
 
-  .advanced-details .dt-view {
-      margin-bottom: 10px;
-      // .card
-      border: 1px solid #ddd;
-      border-radius: 3px;
-      padding: 10px;
-      display: block;
-      font-size: 14px;
-      cursor: pointer;
-      background: white;
-  }
-  
-  // ==========================================================================
-  // Row-Extras (aka advanced details)
-  // ==========================================================================
-
-  .row-extras, .row-extras-summary {
-      margin: 0;
-      padding: 10px;
-      color: #777;
-      background-color: #f8f8f8;
-
-      .adv-details-txt {
-          font-size: 14px;
-      }
-
-      &:hover > *,
-      &:focus > * {
-          color: #222;
-      }
-
-  }
-
-  .row-extras {
-      padding-left: 36px;
-  }
-
-  .row-extras__cog {
-      position: absolute;
-      top: 12px;
-      left: 10px;
-      color: #222;
-  }
-
-  .row-extras__cog-faded {
-      color: #777;
-  }
-  
-  
   // ==========================================================================
   // Card indicator
   // ==========================================================================
@@ -171,6 +152,7 @@
       right: 2px;
       width: 26px;
       height: 100%;
+      cursor: pointer;
   }
   .card--insort {
       .card__buttons {
@@ -193,11 +175,32 @@
         top:50%;
         margin-top:-11px;
       }
+      &.blue {
+        color:$linkColor;
+      }
+      // Hover effect
+
+      // &:hover {
+      //   &:after {
+      //       content: "Testing";
+      //       height: 20px;
+      //       width: 100px;
+      //       top:0px;
+      //       left:20px;
+      //       background: pink;
+      //       position: absolute;
+      //       font-size:12px;
+      //   }
+      // }
   }
   
   // ==========================================================================
   // Advanced details
   // ==========================================================================
+
+  .advanced-details__content {
+    @extend .card__expanded;
+  }
 
   .expanding-spacer-between-rows > .line {
       height: 0;
@@ -207,7 +210,7 @@
   .editable-input > input {
       width: 180px;
   }
-  
+
   // ==========================================================================
   // Add row button (see xlformbuilder_styles.css)
   // ==========================================================================
@@ -224,6 +227,16 @@
   .xlf-dv-name > code,
   .xlf-dv-hint > code {
       text-transform: none;
+  }
+
+  // ==========================================================================
+  // Add new question
+  // ==========================================================================
+
+  .row__questiontypes {
+      border: $cardInSortBorderStyle;
+      padding: 23px 40px 23px 60px;
+      background: white;
   }
 
 }

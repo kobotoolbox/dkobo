@@ -101,7 +101,7 @@ standard_row = (variation='text', {note}) ->
     <div class="card__buttons">
       <a href="#" class="card__buttons__button gray"><i class="fa fa-cog"></i></a>
       <a href="#" class="card__buttons__button red"><i class="fa fa-trash-o"></i></a>
-      <a href="#" class="card__buttons__button"><i class="fa fa-copy"></i></a>
+      <a href="#" class="card__buttons__button blue"><i class="fa fa-copy"></i></a>
     </div>
   """
 
@@ -110,11 +110,13 @@ standard_row = (variation='text', {note}) ->
     #{sidenote(note, 'absrt')}
 
     <div class="card">
-      #{card__indicator}
-      <div class="card__text">
-        #{_text}
+      <div class="card__header">
+        #{card__indicator}
+        <div class="card__text">
+          #{_text}
+        </div>
+        #{card__butons}
       </div>
-      #{card__butons}
     </div>
   </li>
   """

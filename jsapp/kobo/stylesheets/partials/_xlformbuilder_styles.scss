@@ -173,32 +173,6 @@
 
 
 // ==========================================================================
-// Card
-// ==========================================================================
-
-.card {
-    // border: 1px solid #ddd;
-    // border-radius: 3px;
-    padding: 10px;
-    display: block;
-    font-size: 14px;
-    cursor: move;
-    background: white;
-}
-.card--error {
-    @extend .card;
-    background-color: rgb(255, 176, 176);
-}
-.card__header {
-    margin-top: 0;
-}
-
-
-
-
-
-
-// ==========================================================================
 // Single/multiple select questions
 // ==========================================================================
 
@@ -346,56 +320,6 @@
 // ==========================================================================
 // Advanced details
 // ==========================================================================
-
-.advanced-details {
-    position: relative;
-    border: 1px solid #E8E1E1;
-    border-radius: 3px;
-}
-
-.advanced-details .dt-view {
-    margin-bottom: 10px;
-    // .card
-    border: 1px solid #ddd;
-    border-radius: 3px;
-    padding: 10px;
-    display: block;
-    font-size: 14px;
-    cursor: pointer;
-    background: white;
-}
-
-.row-extras, .row-extras-summary {
-    margin: 0;
-    padding: 10px;
-    color: #777;
-    background-color: #f8f8f8;
-
-    .adv-details-txt {
-        font-size: 14px;
-    }
-
-    &:hover > *,
-    &:focus > * {
-        color: #222;
-    }
-
-}
-
-.row-extras {
-    padding-left: 36px;
-}
-
-.row-extras__cog {
-    position: absolute;
-    top: 12px;
-    left: 10px;
-    color: #222;
-}
-
-.row-extras__cog-faded {
-    color: #777;
-}
 
 .expanding-spacer-between-rows {
     margin-top: 10px;
