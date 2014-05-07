@@ -28,3 +28,4 @@ deploy:
   strategy: git
 notifications:
   irc: irc.freenode.org#kobotest
+  flowdock: ad631fc562736cf87e0c4439f9518f9d
