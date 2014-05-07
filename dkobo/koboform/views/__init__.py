@@ -182,7 +182,7 @@ def import_survey_draft(request):
     posted_file = request.FILES.get(u'files')
     response_code = 200
     if posted_file:
-        import pyxform_utils
+        import dkobo.koboform.pyxform_utils
         try:
             # create and validate the xform but ignore the resultss
             pyxform_utils.convert_xls_to_xform(posted_file)
