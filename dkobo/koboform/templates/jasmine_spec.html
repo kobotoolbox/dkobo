@@ -1,23 +1,77 @@
 {% extends "base.html" %}
 {% block title %}Jasmine Spec{% endblock %}
 {% load staticfiles %}
+{% load compress %}
 {% block head %}
-  <link rel="stylesheet" href="{% static 'js/sut/jasmine/jasmine.css' %}" />
-  <script type="text/javascript" src="{% static 'js/sut/jasmine/jasmine.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/sut/jasmine/jasmine-html.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/sut/jasmine/boot.js' %}"></script>
+  <link rel="stylesheet" href="{% static 'components/jasmine/lib/jasmine-core/jasmine.css' %}" />
+  <script type="text/javascript" src="{% static 'components/jasmine/lib/jasmine-core/jasmine.js' %}"></script>
+  <script type="text/javascript" src="{% static 'components/jasmine/lib/jasmine-core/jasmine-html.js' %}"></script>
+  <script type="text/javascript" src="{% static 'components/sinonjs/sinon.js' %}"></script>
+  <script type="text/javascript" src="{% static 'components/jasmine-sinon/lib/jasmine-sinon.js' %}"></script>
+  <script type="text/javascript" src="{% static 'components/jquery/dist/jquery.js' %}"></script>
+  <script type="text/javascript" src="{% static 'components/jquery-migrate/jquery-migrate.js' %}"></script>
+  <script src="{% static 'js/jquery.poshytip.js' %}"></script>
+  <script type="text/javascript" src="{% static 'components/x-editable/dist/jquery-editable/js/jquery-editable-poshytip.js' %}"></script>
+  <script type="text/javascript" src="{% static 'components/underscore/underscore.js' %}"></script>
+  <script type="text/javascript" src="{% static 'components/backbone/backbone.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/Backbone.Validation.js' %}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-route.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-cookies.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-resource.js"></script>
+  <script src="{% static 'js/vendor/jquery.ui.widget.js' %}"></script>
+  <script src="{% static 'js/jquery-ui-1.10.4.custom.js' %}"></script>
+  <script src="{% static 'js/select2.min.js' %}"></script>
+  <script src="{% static 'kobo.compiled/dkobo_xlform.js' %}"></script>
+  
+
+  <link rel="stylesheet" href="{% static 'kobo.compiled/kobo.css' %}">
 
 {% endblock %}
 {% block foot %}
   <div id="sandbox"></div>
 
-  <script src="http://code.jquery.com/jquery-migrate-1.2.1.js"></script>
-  <script src="//cdn.jsdelivr.net/poshytip/1.1/jquery.poshytip.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/jquery-editable/js/jquery-editable-poshytip.min.js"></script>
-
-  {% load compress %}
   {% compress js %}
-    {% include 'xlform_scripts.html' %}
-    <script type="text/coffeescript" src="{% static 'js/xlform/spec/spec.coffee' %}"></script>
+    {% if include_coffeefile %}
+      <script src="{% static include_coffeefile %}" type="text/coffeescript"></script>
+    {% endif %}
+    {% if include_js %}
+      <script src="{% static include_js %}" type="text/javascript"></script>
+    {% endif %}
   {% endcompress %}
+  <script type="text/javascript" charset="utf-8">
+  // sandbox('#sandbox');
+  </script>
+  
+  {% if run_jasmine %}
+  <script type="text/javascript">
+    (function() {
+      var jasmineEnv = jasmine.getEnv();
+      jasmineEnv.updateInterval = 1000;
+
+      var trivialReporter = new jasmine.TrivialReporter();
+
+      jasmineEnv.addReporter(trivialReporter);
+
+      jasmineEnv.specFilter = function(spec) {
+        return trivialReporter.specFilter(spec);
+      };
+
+      var currentWindowOnload = window.onload;
+
+      window.onload = function() {
+        if (currentWindowOnload) {
+          currentWindowOnload();
+        }
+        execJasmine();
+      };
+
+      function execJasmine() {
+        jasmineEnv.execute();
+      }
+
+    })();
+  </script>
+  {% endif %}
+
 {% endblock %}

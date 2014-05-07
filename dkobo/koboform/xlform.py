@@ -1,4 +1,5 @@
 import re
+import subprocess
 
 select_qtypes = ["select_one (\w+)"]
 
@@ -37,3 +38,10 @@ class Xlform(object):
                     output_rows.append(row)
         self._shrunk = "\n".join(output_rows)
         self._first_list_name = first_list_name
+
+def shrink_csv(pp):
+    stype = 'survey'
+    xlf_proccess = subprocess.Popen(["node", "jsapp/commander/summarize_xlform.js", "--type=%s" % stype], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    xlf_proccess.stdin.write(pp)
+    result = xlf_proccess.communicate()[0]
+    return result

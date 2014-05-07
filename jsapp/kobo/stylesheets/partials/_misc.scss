@@ -1,0 +1,154 @@
+// READ THIS ABOUT THIS FILE
+// -------------------------
+//
+// It contains style elements that have not yet found a home.
+// These styles should be moved or refactored out so that this file is not necessary.
+
+/* ==========================================================================
+   Main
+   ========================================================================== */
+
+.main {
+    margin-top: 40px;
+    transition: padding-left 150ms;
+}
+
+
+/* ==========================================================================
+   Or
+   ========================================================================== */
+
+.or {
+    width: 30px;
+    height: 30px;
+    margin: -36px auto 0;
+    border-bottom: 1px solid;
+    border-radius: 5em;
+    position: relative;
+    top: 65px;
+    display: block;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 30px;
+    text-align: center;
+    text-transform: uppercase;
+    color: white;
+    background-color: #666;
+}
+
+.or + hr {
+    margin-top: 50px;
+    margin-bottom: 40px;
+}
+
+
+/* ==========================================================================
+   Choose template
+   ========================================================================== */
+
+.choose-template {
+    margin-top: 40px;
+}
+
+/* ==========================================================================
+   Editable
+   ========================================================================== */
+
+.editable {
+    cursor: pointer;
+}
+
+
+/* ==========================================================================
+   Filters
+   ========================================================================== */
+
+.filters {
+    margin-bottom: 20px;
+}
+
+.filters__filter {
+    margin-right: 10px;
+}
+
+
+/* ==========================================================================
+   Tags
+   ========================================================================== */
+
+.loader {
+    color: white;
+    background-color: #1daee3;
+    display: inline-block;
+    padding: 0 10px;
+}
+
+/* ==========================================================================
+   Tags
+   ========================================================================== */
+
+.tag {
+    height: 25px;
+    margin-right: 10px;
+    border-radius: 3px;
+    padding-right: 10px;
+    padding-left: 10px;
+    display: inline-block;
+    font-weight: bold;
+    font-size: 13px;
+    line-height: 25px;
+    color: white;
+    background-color: #fd8a25;
+}
+
+/* ==========================================================================
+   Question Library - tags
+   ========================================================================== */
+
+.tags {
+    display: none;
+}
+
+.tags__title {
+
+}
+
+.tag-filter {
+
+}
+
+.tag-filter__searchbox {
+
+}
+
+.tag-filter__sorter {
+
+}
+
+.tag__create-new {
+
+}
+
+.tags__container {
+
+}
+
+.tags__tag {
+
+}
+
+.tags__tag--selected {
+
+}
+
+.tag__name {
+
+}
+
+.tag__question--count {
+
+}
+
+.tag__delete-button {
+
+}

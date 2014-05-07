@@ -13,34 +13,15 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-    <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/jquery-editable/css/jquery-editable.css" rel="stylesheet"/>
-
-    {% compress css %}
-      <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
-      <link rel="stylesheet" href="{% static 'css/main.css' %}">
-      <link rel="stylesheet" href="{% static 'css/select2.css' %}">
-      <link rel="stylesheet" type="text/x-scss" href="{% static 'css/xlformbuilder-styles.scss' %}">
-    {% endcompress %}
     {% block head %}{% endblock %}
   </head>
   <body>
     {% block content %}{% endblock %}
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-route.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-cookies.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-resource.js"></script>
-    <script src="{% static 'js/jquery-ui-1.10.4.custom.js' %}"></script>
-    <script src="{% static 'js/Backbone.Validation.js' %}"></script>
-    <script src="{% static 'js/select2.min.js' %}"></script>
 
-    {% compress js %}
-      <script type="text/coffeescript" src="{% static 'js/log.coffee' %}"></script>
-      <script type="text/coffeescript" src="{% static 'js/csv.coffee' %}"></script>
-    {% endcompress %}
+    {% if DEBUG %}
+    <script src="http://localhost:35729/livereload.js"></script>
+    {% endif %}
+
     {% block foot %}{% endblock %}
   </body>
 </html>

@@ -44,14 +44,17 @@ STATICFILES_FINDERS = (
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'dkobo', 'static'),)
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'dkobo', 'static'),
+    os.path.join(BASE_DIR, 'jsapp'),
+    )
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Application definition
 
-COMPRESS_ENABLED = os.environ.get('COMPRESS_ENABLED', 'True') == 'True'
-COMPRESS_OFFLINE = not DEBUG
+COMPRESS_ENABLED = str(os.environ.get('COMPRESS_ENABLED', not DEBUG)).lower() == 'true'
+COMPRESS_OFFLINE = str(os.environ.get('COMPRESS_OFFLINE', not DEBUG)).lower() == 'true'
 COMPRESS_ROOT = os.path.join(BASE_DIR, 'dkobo', 'static')
 
 COMPRESS_PRECOMPILERS = (

@@ -4,15 +4,16 @@ python:
 addons:
   postgresql: 9.3
 cache:
-  apt: true
   directories:
-  - $HOME/.pip-cache/
+  - $HOME/.pip-download-cache
+  - node_modules
 before_install:
 - gem install sass
 - npm install --save-dev
+- bower install
 script:
 - python manage.py test
-- "cd dkobo/koboform/static/js/sut && ../../../../../node_modules/karma/bin/karma start --browsers PhantomJS --config=karma.conf.js --single-run"
+- grunt test
 env:
 - PIP_DOWNLOAD_CACHE=$HOME/.pip-download-cache DJANGO_DEBUG=False DJANGO_SECRET_KEY=ZGtvYm90cmF2aXM
 install:

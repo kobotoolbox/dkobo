@@ -16,7 +16,12 @@ staticfiles
 local_settings.py
 /.ropeproject
 node_modules
+
 dkobo/koboform/templates/sandbox.html
 dkobo/koboform/templates/sandbox-stub.html
+
+jsapp/components
+jsapp/coverage
+jsapp/kobo.compiled
 
 .sass-cache/
