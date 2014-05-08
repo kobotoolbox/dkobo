@@ -75,7 +75,7 @@ drag_placeholder_row = ({note})->
   """
   <li class="xlf-row-view">
     #{sidenote(note, 'absrt')}
-    <div class="card card--placeholder">
+    <div class="card--placeholder">
         <span>Drag and drop to reorder</span>
     </div>
   </li>

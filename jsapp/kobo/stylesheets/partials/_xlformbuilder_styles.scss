@@ -156,20 +156,61 @@
 
 
 // ==========================================================================
-// Menu row
+// Menu row and item
 // ==========================================================================
 
 .menu-title {
-    margin: 10px 5px 20px;
 }
 
 .menu-row {
     width: 25%;
-    padding-right: 5px;
-    padding-left: 5px;
+    padding-right: 1px;
     float: left;
 }
 
+
+.menu-item {
+    margin-bottom: 1px;
+    padding: 10px 5px;
+    background: $bodyBackgroundColor;
+    font-size: 11px;
+    font-family: 'LatoBlack';
+    border:2px solid $bodyBackgroundColor; 
+    cursor: pointer;
+    color:#35495D;
+    &:hover {
+        border-color: $cardInSortBorderColor;
+        color: $cardInSortBorderColor;
+    }
+    i {
+        margin-right: 10px;
+        font-size: 16px;
+    }
+}
+
+.close-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background-color: #C5CACF;
+    color: white;
+    border: 0 none;
+    border-radius: 3px;
+    font-family: 'LatoBlack';
+    padding:1px 3px;
+    line-height: 1em;
+
+    &:hover,
+    &:focus {
+        background-color: darken(#C5CACF, 20%);
+    }
+}
+
+.delete-row {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+}
 
 
 // ==========================================================================
@@ -197,62 +238,6 @@
     border-radius: 4px;
 }
 
-
-
-
-
-
-// ==========================================================================
-//   Menu item
-// ==========================================================================
-
-.menu-item {
-    margin-bottom: 10px;
-
-    &:hover {
-        border-color: #bbb;
-        background-color: #f8f8f8;
-    }
-
-    > i {
-        color: #1daee3;
-    }
-
-    // &:before {
-    //     content: "";
-    //     width: 1.2857142857142858em;
-    //     display: inline-block;
-    //     font-family: FontAwesome;
-    //     font-style: normal;
-    //     font-weight: normal;
-    //     line-height: 1;
-    //     text-align: center;
-    //     -webkit-font-smoothing: antialiased;
-    //     -moz-osx-font-smoothing: grayscale;
-    //     color: #1daee3;
-    // }
-}
-
-.close-button {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    background-color: transparent;
-    border: 0 none;
-    opacity: 0.6;
-    color: #444;
-
-    &:hover,
-    &:focus {
-        opacity: 1;
-    }
-}
-
-.delete-row {
-    position: absolute;
-    right: 5px;
-    top: 5px;
-}
 
 
 // Quick fixes for KF-96. (Consider chainging HTML and CSS for BEM)

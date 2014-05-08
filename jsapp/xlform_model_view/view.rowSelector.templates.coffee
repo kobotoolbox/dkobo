@@ -10,11 +10,11 @@ define 'cs!xlform/view.rowSelector.templates', [], ()->
           <div class="row__questiontypes row-fluid clearfix">
             #{closeRowSelectorButton}
             <h4 class="menu-title">Choose question type</h4>
-            <div class="rowselector__questiontypes"></div>
-            <p style="clear:both">
+            <div class="rowselector__questiontypes clearfix"></div>
+            <div>
               Or
               <button class="menu-title btn rowselector_openlibrary">Add from Question Library</button>
-            </p>
+            </div>
           </div>
       """
 

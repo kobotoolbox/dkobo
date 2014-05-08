@@ -14,6 +14,7 @@ input,
 select,
 textarea {
     color: #222;
+    font-family: 'Lato';
 }
 
 html, body {
@@ -118,3 +119,6 @@ textarea {
     text-shadow: none;
 }
 
+h1, h2, h3 {
+    font-family: 'LatoBlack';
+}

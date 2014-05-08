@@ -37,13 +37,6 @@
       &.card--error {
           background-color: rgb(255, 176, 176);
       }
-      &.card--placeholder {
-          background-color: transparent;
-          color:#8695A5;
-          text-align: center;
-          padding-left: 20px;
-      }
-
       .card__header {
           border: $cardBorderStyle;
           padding: 23px 40px 23px 60px;
@@ -90,9 +83,22 @@
       }
   }
 
+  .card--placeholder {
+      background-color: transparent;
+      color:#8695A5;
+      border:2px solid #8695A5;
+      text-align: center;
+      font-family: 'LatoBlack';
+      padding: 20px;
+      margin:20px 0px;
+  }
+
   .sortable-active {
     .card__header {
       border: $cardInSortBorderStyle;
+      .card__header-title {
+        color: $cardInSortBorderColor;
+      }
     }
   }
   .card--error {
