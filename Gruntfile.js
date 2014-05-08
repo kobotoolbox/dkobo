@@ -41,13 +41,14 @@ module.exports = function(grunt) {
              *  of the generated css files.
              */
             scssChanged: {
-                files: ['jsapp/**/*.scss'],
+                files: ['jsapp/kobo/stylesheets/**/*.scss'],
                 tasks: ['build_css'],
                 options: { spawn: false, livereload: false },
             },
 
             cssChanged: {
-                files: ['jsapp/**/*.css', '!jsapp/**/*.verbose.css'],
+                files: ['jsapp/kobo.compiled/*.css', '!jsapp/**/*.verbose.css'],
+                tasks: [],
                 options: { livereload: true },
             },
         },
