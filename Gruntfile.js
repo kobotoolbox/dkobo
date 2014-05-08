@@ -43,7 +43,7 @@ module.exports = function(grunt) {
             scssChanged: {
                 files: ['jsapp/kobo/stylesheets/**/*.scss'],
                 tasks: ['build_css'],
-                options: { spawn: false, livereload: false },
+                options: { spawn: true, livereload: false },
             },
 
             cssChanged: {
