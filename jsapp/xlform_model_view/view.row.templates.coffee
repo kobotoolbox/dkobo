@@ -18,6 +18,7 @@ define 'cs!xlform/view.row.templates', [], ()->
             <div class="noop card__indicator__icon"><i class="fa fa-fw card__header-icon"></i></div>
           </div>
           <div class="card__text">
+            <span class="card__buttons__multioptions js-expand-multioptions"><i class="fa fa-caret-right"></i></span>
             <span class="card__header-title"></span>
           </div>
 
@@ -27,16 +28,13 @@ define 'cs!xlform/view.row.templates', [], ()->
             <span class="card__buttons__button blue"><i class="fa fa-copy"></i></span>
           </div>
         </div>
-        <div class="card__expanded">
-          <div class="row list-view hidden">
+        <div class="card__expanded row__multioptions">
+          <div class="list-view">
             <ul></ul>
           </div>
         </div>
         <div class="row-fluid clearfix advanced-details">
           <div class="row-extras advanced-details__content hidden row-fluid">
-            <p class="pull-left">
-              <!-- <span class="fa fa-cog fa-fw row-extras__cog js-advanced-toggle"></span> -->
-            </p>
           </div>
           <div class="row-extras-summary advanced-details__content-summary js-advanced-toggle">
           </div>

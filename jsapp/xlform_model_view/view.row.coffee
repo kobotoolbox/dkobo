@@ -28,6 +28,7 @@ define 'cs!xlform/view.row', [
      "click .js-expand-row-selector": "expandRowSelector"
      "drop": "drop"
      "click .js-advanced-toggle": "expandCog"
+     "click .js-expand-multioptions": "expandMultiOptions"
      "click .row-extras__add-to-question-library": "add_row_to_question_library"
 
     initialize: (opts)->
@@ -74,6 +75,8 @@ define 'cs!xlform/view.row', [
         cl = new $choices.ChoiceList()
         @model.setList(cl)
       @listView = new $viewChoices.ListView(el: @$(".list-view"), model: cl, rowView: @).render()
+      @multiOptions = @$(".row__multioptions")
+      @multiOptions.addClass("hidden")
       @rowExtras = @$(".row-extras")
       @rowExtrasSummary = @$(".row-extras-summary")
       for [key, val] in @model.attributesArray()
@@ -85,6 +88,10 @@ define 'cs!xlform/view.row', [
       @rowExtras.parent().toggleClass("activated")
       @rowExtrasSummary.toggleClass("hidden")
       @rowExtras.toggleClass("hidden")
+
+    expandMultiOptions: (evt)->
+      evt.stopPropagation()
+      @multiOptions.toggleClass("hidden")
 
     add_row_to_question_library: (evt) ->
       evt.stopPropagation()
