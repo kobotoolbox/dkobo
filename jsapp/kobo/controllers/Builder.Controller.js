@@ -20,7 +20,7 @@ function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo,
 
     $scope.add_item = function (item) {
         //add item.backbone_model contains the survey representing the question
-        $scope.xlfSurvey.insertSurvey(item.backbone_model, $("section.koboform__questionlibrary").data("rowIndex") || -1);
+        $scope.xlfSurvey.insertSurvey(item.backbone_model, $("section.koboform__questionlibrary").data("rowIndex") + 1|| -1);
     }
 
     /*jshint validthis: true */
