@@ -11,6 +11,8 @@ before_install:
 - gem install sass
 - npm install --save-dev
 - bower install
+before_deploy:
+- git fetch --unshallow
 script:
 - python manage.py test
 - grunt test
