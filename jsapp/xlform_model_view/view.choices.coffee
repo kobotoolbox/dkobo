@@ -93,7 +93,12 @@ define 'cs!xlform/view.choices', [
       @n.on 'shown', (e, obj) -> obj.input.$input.on 'paste', (e) -> e.stopPropagation()
       @n.editable success: (ev, val) =>
         other_names = @options.cl.getNames()
-        try
+        if val is ''
+          @model.unset('name')
+          @model.set('setManually', false)
+          val = 'Automatic'
+          @$el.trigger("choice-list-update", @options.cl.cid)
+        else
           val = $modelUtils.sluggify(val, {
                     preventDuplicates: other_names
                     lowerCase: false
@@ -105,8 +110,6 @@ define 'cs!xlform/view.choices', [
           @model.set('name', val)
           @model.set('setManually', true)
           @$el.trigger("choice-list-update", @options.cl.cid)
-        catch e
-          val = 'Automatic'
         newValue: val
       @d.append(@p)
       @d.append(@c)
