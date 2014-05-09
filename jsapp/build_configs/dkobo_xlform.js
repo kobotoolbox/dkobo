@@ -4,6 +4,5 @@ require(['cs!xlform/_xlform.init']);
 (function(){
   if ( !this.dkobo_xlform ) {
     this.dkobo_xlform = require('cs!xlform/_xlform.init');
-    console.log("this.dkobo_xlform", this.dkobo_xlform);
   }
 })();
