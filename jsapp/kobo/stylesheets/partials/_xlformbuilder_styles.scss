@@ -215,10 +215,6 @@
 // Single/multiple select questions
 // ==========================================================================
 
-.list-view {
-    padding-bottom: 20px;
-}
-
 .xlf-option-view {
     margin-bottom: 10px;
     cursor: move;
@@ -245,29 +241,29 @@
         margin-left: 3%;
         overflow: hidden;
     }
-
-    div > span.editable-container {
-        display: inline-block;
-        width: 74%;
-        position: relative;
-        .editable-input input {
-            font-family: 'LatoBlack';
-            border-radius: 5px;
-            border:$thinBorderStyle;
-            padding: 5px;
-            font-size: 12px;
-            width: 100%;
-            vertical-align: top;
-        }
-        .editable-buttons {
-            position: absolute;
-            top:-20px;
-            right:0px;
-            font-size: 10px;
-        }
-    }
 }
 
+.editable-container {
+    display: inline-block;
+    width: 74%;
+    position: relative;
+    vertical-align: middle;
+    .editable-input input {
+        font-family: 'LatoBlack';
+        border-radius: 5px;
+        border:$thinBorderStyle;
+        padding: 5px;
+        font-size: 12px;
+        width: 100%;
+        vertical-align: top;
+    }
+    .editable-buttons {
+        position: absolute;
+        top:-20px;
+        right:0px;
+        font-size: 10px;
+    }
+}
 .option-placeholder {
     height: 41px;
     margin-bottom: 10px;

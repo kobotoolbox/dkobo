@@ -33,10 +33,8 @@ define 'cs!xlform/view.row.templates', [], ()->
             <ul></ul>
           </div>
         </div>
-        <div class="card__expanded clearfix advanced-details">
-          <div class="row-extras advanced-details__content hidden row-fluid">
-          </div>
-          <div class="row-extras-summary advanced-details__content-summary js-advanced-toggle">
+        <div class="advanced-details">
+          <div class="card__expanded advanced-details__content hidden">
           </div>
         </div>
         <div class="pull-right row-extras__add-to-question-library">

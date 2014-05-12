@@ -48,8 +48,13 @@
               margin:auto;
               display: inline-block;
               vertical-align: middle;
+              width: 99%;
               &.activated {
                 color: #8595A5;
+              }
+              .card__buttons__multioptions {
+                cursor: pointer;
+                vertical-align: middle;
               }
           }
       }
@@ -208,9 +213,6 @@
       // }
   }
 
-  .card__buttons__multioptions {
-    cursor: pointer;
-  }
   // ==========================================================================
   // Advanced details
   // ==========================================================================
