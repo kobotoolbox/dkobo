@@ -1,1 +1,1 @@
-web: python manage.py collectstatic --noinput --settings=dkobo.settings; grunt build; python manage.py compress --settings=dkobo.settings; python manage.py collectstatic --noinput --settings=dkobo.settings; python manage.py run_gunicorn --settings=dkobo.settings -b 0.0.0.0:$PORT
+web: sh ./scripts/collectstatic.sh; python manage.py run_gunicorn --settings=dkobo.settings -b 0.0.0.0:$PORT

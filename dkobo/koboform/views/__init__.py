@@ -4,7 +4,7 @@ from django.core.exceptions import PermissionDenied
 from django.template import RequestContext
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.contrib.auth.decorators import login_required
-from models import SurveyDraft, SurveyPreview
+from dkobo.koboform.models import SurveyDraft, SurveyPreview
 from django.forms.models import model_to_dict
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
@@ -12,9 +12,11 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.conf import settings
 
-from serializers import ListSurveyDraftSerializer, DetailSurveyDraftSerializer
+from dkobo.koboform.serializers import ListSurveyDraftSerializer, DetailSurveyDraftSerializer
+from dkobo.koboform import utils
+from dkobo.koboform import pyxform_utils
+
 import json
-import utils
 
 
 def csv_to_xform(request):
@@ -181,7 +183,6 @@ def import_survey_draft(request):
     posted_file = request.FILES.get(u'files')
     response_code = 200
     if posted_file:
-        import pyxform_utils
         try:
             # create and validate the xform but ignore the resultss
             pyxform_utils.convert_xls_to_xform(posted_file)
