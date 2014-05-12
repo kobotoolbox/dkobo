@@ -22,8 +22,8 @@
 
 .top-level-menu.is-active ~ .main .header-bar,
 .top-level-menu.is-active ~ .main .sub-header-bar {
-    width: -webkit-calc(100% - 230px);
-    width: -moz-calc(100% - 230px);
+    width: unquote("-webkit-calc(100% - 230px)");
+    width: unquote("-moz-calc(100% - 230px)");
     width: calc(100% - 230px);
     left: 230px;
 }
