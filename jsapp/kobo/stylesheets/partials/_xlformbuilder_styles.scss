@@ -222,11 +222,50 @@
 .xlf-option-view {
     margin-bottom: 10px;
     cursor: move;
-}
+    div > span.editable {
+        font-family: 'LatoBlack';
+        border-radius: 5px;
+        border:$thinBorderStyle;
+        padding: 5px;
+        font-size: 12px;
+        display: inline-block;
+        width: 74%;
+        vertical-align: top;
+    }
 
-.editable:hover,
-.editable:focus {
-    border-bottom-style: solid
+    code {
+        font-family: 'LatoBlack';
+        text-transform: uppercase;
+        font-size: 10px;
+        background-color: #E3E7EC;
+        padding:5px;
+        width: 22%;
+        text-align: center;
+        display: inline-block;
+        margin-left: 3%;
+        overflow: hidden;
+    }
+
+    div > span.editable-container {
+        display: inline-block;
+        width: 74%;
+        position: relative;
+        .editable-input input {
+            font-family: 'LatoBlack';
+            border-radius: 5px;
+            border:$thinBorderStyle;
+            padding: 5px;
+            font-size: 12px;
+            width: 100%;
+            vertical-align: top;
+        }
+        .editable-buttons {
+            position: absolute;
+            top:-20px;
+            right:0px;
+            font-size: 10px;
+        }
+    }
 }
 
 .option-placeholder {
@@ -235,7 +274,6 @@
     border: 2px dashed #ccc;
     border-radius: 4px;
 }
-
 
 
 // Quick fixes for KF-96. (Consider chainging HTML and CSS for BEM)

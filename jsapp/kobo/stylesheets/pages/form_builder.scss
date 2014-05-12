@@ -48,6 +48,9 @@
               margin:auto;
               display: inline-block;
               vertical-align: middle;
+              &.activated {
+                color: #8595A5;
+              }
           }
       }
   }
@@ -167,14 +170,15 @@
   }
   .card__buttons__button {
       height: 22px;
-      width: 20px;
+      line-height: 22px;
+      width: 26px;
       position: absolute;
-      right: 2px;
+      right: -2px;
       bottom: 4px;
       text-align: center;
       &.gray {
         color: #858F98;
-        top:4px;
+        top:0px;
       }
       &.red {
         color: #D08B8C;
@@ -183,6 +187,10 @@
       }
       &.blue {
         color:$linkColor;
+      }
+      &.activated {
+        color: #646D75;
+        background-color: #D9DDE1;
       }
       // Hover effect
 

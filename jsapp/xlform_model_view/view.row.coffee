@@ -86,11 +86,14 @@ define 'cs!xlform/view.row', [
     expandCog: (evt)->
       evt.stopPropagation()
       @rowExtras.parent().toggleClass("activated")
+      @$(evt.currentTarget).toggleClass("activated")
       @rowExtrasSummary.toggleClass("hidden")
       @rowExtras.toggleClass("hidden")
 
     expandMultiOptions: (evt)->
       evt.stopPropagation()
+      @$(evt.currentTarget).parent().toggleClass("activated")
+      @$(evt.currentTarget).children("i").toggleClass("fa-caret-right").toggleClass("fa-caret-down")
       @multiOptions.toggleClass("hidden")
 
     add_row_to_question_library: (evt) ->

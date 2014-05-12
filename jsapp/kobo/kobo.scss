@@ -21,6 +21,8 @@ $cardBorderStyle: 2px solid $cardBorderColor;
 $cardInSortBorderStyle: 2px solid $cardInSortBorderColor;
 $cardInSortThinBorderStyle: 1px solid $cardInSortBorderColor;
 
+$thinBorderStyle: 1px solid $cardBorderColor;
+
 $buttonBorderRadius: 5px;
 
 // Included files
@@ -28,7 +30,8 @@ $buttonBorderRadius: 5px;
 
 // import third party libs
 @import '../components/select2/select2.css';
-@import '../components/x-editable/dist/jquery-editable/css/jquery-editable.css';
+// disabled jquery-editable because new styles don't seem to conform to it
+// @import '../components/x-editable/dist/jquery-editable/css/jquery-editable.css';
 @import '../components/fontawesome/css/font-awesome.css';
 
 @import "stylesheets/partials/normalize";
