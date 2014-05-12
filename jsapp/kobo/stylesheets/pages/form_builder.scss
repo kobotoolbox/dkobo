@@ -30,7 +30,7 @@
       font-family: 'LatoBlack';
       font-size: 13px;
       line-height: 18px;
-      margin-bottom: 2px;
+      margin-bottom: 4px;
       &.card--movable {
         cursor: move;
       }
@@ -215,22 +215,53 @@
   // Advanced details
   // ==========================================================================
 
-  .advanced-details__content {
-    @extend .card__expanded;
-  }
-
-  .expanding-spacer-between-rows > .line {
-      height: 0;
-      position: relative;
-  }
-
-  .editable-input > input {
-      width: 180px;
-  }
 
   // ==========================================================================
-  // Add row button (see xlformbuilder_styles.css)
+  // Add row button
   // ==========================================================================
+
+  .expanding-spacer-between-rows {
+      position: relative; 
+      .line {
+        height: 0px;
+      }
+  }
+
+  .add-row-btn {
+      width: 24px;
+      height: 24px;
+      line-height: 23px;
+      border-radius: $buttonBorderRadius;
+      padding:0px;
+      margin-right: auto;
+      margin-left: auto;
+      background-color:$addButtonColor;
+      // TODO: this below should be for desktop only
+      position: absolute;
+      left: -38px;
+      top: -22px;
+      &:hover {
+          background-color:$addButtonColorHover;
+      }
+  }
+  .insort {
+      .add-row-btn {
+          opacity: 0;
+      }
+  }
+
+
+  // ==========================================================================
+  // Add new question
+  // ==========================================================================
+
+  .row__questiontypes {
+      border: $cardInSortBorderStyle;
+      padding: 23px 40px 23px 60px;
+      background: white;
+      margin:4px 0px;
+  }
+
 
   // ==========================================================================
   // Individual row details
@@ -244,16 +275,6 @@
   .xlf-dv-name > code,
   .xlf-dv-hint > code {
       text-transform: none;
-  }
-
-  // ==========================================================================
-  // Add new question
-  // ==========================================================================
-
-  .row__questiontypes {
-      border: $cardInSortBorderStyle;
-      padding: 23px 40px 23px 60px;
-      background: white;
   }
 
 }

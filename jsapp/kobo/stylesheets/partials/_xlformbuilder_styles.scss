@@ -336,25 +336,9 @@
 
 
 
-
-
 // ==========================================================================
 // Advanced details
 // ==========================================================================
-
-.expanding-spacer-between-rows {
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-.expanding-spacer-between-rows > .line {
-    height: 0;
-    position: relative;
-}
-
-.editable-input > input {
-    width: 180px;
-}
 
 .xlf-dv-name,
 .xlf-dv-hint {
@@ -418,30 +402,6 @@ button.skiplogic__deletecriterion {
 .skiplogic__responseval {
     margin-top: 10px;
     margin-bottom: 10px;
-}
-
-
-// ==========================================================================
-// Add row button
-// ==========================================================================
-
-.add-row-btn {
-    width: 24px;
-    height: 24px;
-    line-height: 23px;
-    border-radius: $buttonBorderRadius;
-    padding:0px;
-    margin-right: auto;
-    margin-left: auto;
-    background-color:$addButtonColor;
-    &:hover {
-        background-color:$addButtonColorHover;
-    }
-}
-.insort {
-    .add-row-btn {
-        opacity: 0;
-    }
 }
 
 

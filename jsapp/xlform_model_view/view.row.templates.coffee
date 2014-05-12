@@ -1,7 +1,7 @@
 define 'cs!xlform/view.row.templates', [], ()->
   expandingSpacerHtml = """
       <div class="row clearfix expanding-spacer-between-rows">
-        <div class="add-row-btn js-expand-row-selector btn  btn--block  btn-xs  btn-default"><i class="fa  fa-plus"></i></div>
+        <div class="add-row-btn js-expand-row-selector btn  btn--block  btn-xs  btn-default"><i class="fa fa-plus"></i></div>
         <div class="line">&nbsp;</div>
       </div>
   """
@@ -33,7 +33,7 @@ define 'cs!xlform/view.row.templates', [], ()->
             <ul></ul>
           </div>
         </div>
-        <div class="row-fluid clearfix advanced-details">
+        <div class="card__expanded clearfix advanced-details">
           <div class="row-extras advanced-details__content hidden row-fluid">
           </div>
           <div class="row-extras-summary advanced-details__content-summary js-advanced-toggle">
