@@ -27,11 +27,6 @@ define 'cs!xlform/view.row.templates', [], ()->
             <span class="card__buttons__button blue"><i class="fa fa-copy"></i></span>
           </div>
         </div>
-        <div class="card__expanded row__multioptions">
-          <div class="list-view">
-            <ul></ul>
-          </div>
-        </div>
         <div class="advanced-details">
           <div class="row-extras card__expanded advanced-details__content hidden">
           </div>
@@ -43,6 +38,15 @@ define 'cs!xlform/view.row.templates', [], ()->
       </div>
       #{expandingSpacerHtml}
       """
+
+  selectQuestionExpansion = ->
+    """
+    <div class="card--selectquestion__expansion row__multioptions">
+      <div class="list-view">
+        <ul></ul>
+      </div>
+    </div>
+    """
 
   expandChoiceList = ()->
     """
@@ -61,4 +65,5 @@ define 'cs!xlform/view.row.templates', [], ()->
 
   xlfRowView: xlfRowView
   expandChoiceList: expandChoiceList
+  selectQuestionExpansion: selectQuestionExpansion
   rowErrorView: rowErrorView

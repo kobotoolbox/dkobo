@@ -16,6 +16,8 @@ define 'cs!xlform/view.choices', [
     initialize: ({@rowView, @model})->
       @list = @model
       @row = @rowView.model
+      $($.parseHTML $viewTemplates.row.selectQuestionExpansion()).insertAfter @rowView.$('.card__header')
+      @$el = @rowView.$(".list-view")
       @ulClasses = @$("ul").prop("className")
     render: ->
       cardText = @rowView.$el.find('.card__text')

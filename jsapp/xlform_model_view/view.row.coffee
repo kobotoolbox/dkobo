@@ -72,7 +72,7 @@ define 'cs!xlform/view.row', [
       @$card = @$el.find('.card')
       if (cl = @model.getList())
         @$card.addClass('card--selectquestion')
-        @listView = new $viewChoices.ListView(el: @$(".list-view"), model: cl, rowView: @).render()
+        @listView = new $viewChoices.ListView(model: cl, rowView: @).render()
 
       # @multiOptions = @$(".row__multioptions")
       # @multiOptions.addClass("hidden")
