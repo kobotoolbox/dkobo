@@ -71,9 +71,6 @@ define 'cs!xlform/view.row', [
       @
     _renderRow: ->
       @$el.html $viewTemplates.$$render('row.xlfRowView')
-      unless (cl = @model.getList())
-        cl = new $choices.ChoiceList()
-        @model.setList(cl)
       @listView = new $viewChoices.ListView(el: @$(".list-view"), model: cl, rowView: @).render()
       @multiOptions = @$(".row__multioptions")
       @multiOptions.addClass("hidden")

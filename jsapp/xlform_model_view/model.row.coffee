@@ -5,7 +5,8 @@ define 'cs!xlform/model.row', [
         'cs!xlform/model.utils',
         'cs!xlform/model.surveyDetail',
         'cs!xlform/model.aliases',
-        'cs!xlform/model.rowDetail'
+        'cs!xlform/model.rowDetail',
+        'cs!xlform/model.choices',
         ], (
             _,
             base,
@@ -13,7 +14,8 @@ define 'cs!xlform/model.row', [
             $utils,
             $surveyDetail,
             $aliases,
-            $rowDetail
+            $rowDetail,
+            $choices,
             )->
 
   row = {}
@@ -133,8 +135,17 @@ define 'cs!xlform/model.row', [
 
     get_type: ->
       $configs.question_types[@get('type').get('typeId')] || $configs.question_types['default']
+
+    _isSelectQuestion: ->
+      # TODO [ald]: pull this from $aliases
+      @get('type').get('typeId') in ['select_one', 'select_multiple']
+
     getList: ->
-      @get("type")?.get("list")
+      _list = @get('type')?.get('list')
+      if (not _list) and @_isSelectQuestion()
+        _list = new $choices.ChoiceList()
+        @setList(_list)
+      _list
 
     setList: (list)->
       listToSet = @getSurvey().choices.get(list)
