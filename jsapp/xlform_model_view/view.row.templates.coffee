@@ -33,7 +33,7 @@ define 'cs!xlform/view.row.templates', [], ()->
           </div>
         </div>
         <div class="advanced-details">
-          <div class="card__expanded advanced-details__content hidden">
+          <div class="row-extras card__expanded advanced-details__content hidden">
           </div>
         </div>
         <div class="pull-right row-extras__add-to-question-library">
