@@ -5,7 +5,6 @@ define 'cs!xlform/view.row', [
         'cs!xlform/model.row',
         'cs!xlform/view.templates',
         'cs!xlform/view.utils',
-        'cs!xlform/model.choices',
         'cs!xlform/view.choices',
         'cs!xlform/view.rowDetail',
         ], (
@@ -15,7 +14,6 @@ define 'cs!xlform/view.row', [
             $row,
             $viewTemplates,
             $viewUtils,
-            $choices,
             $viewChoices,
             $viewRowDetail,
             )->
@@ -27,8 +25,8 @@ define 'cs!xlform/view.row', [
      "click": "select"
      "click .js-expand-row-selector": "expandRowSelector"
      "drop": "drop"
-     "click .js-advanced-toggle": "expandCog"
-     "click .js-expand-multioptions": "expandMultiOptions"
+     "click .js-advanced-toggle": "toggleSettings"
+     "click .js-expand-multioptions": "toggleMultiOptions"
      "click .row-extras__add-to-question-library": "add_row_to_question_library"
 
     initialize: (opts)->
@@ -71,27 +69,42 @@ define 'cs!xlform/view.row', [
       @
     _renderRow: ->
       @$el.html $viewTemplates.$$render('row.xlfRowView')
-      @listView = new $viewChoices.ListView(el: @$(".list-view"), model: cl, rowView: @).render()
-      @multiOptions = @$(".row__multioptions")
-      @multiOptions.addClass("hidden")
+      @$card = @$el.find('.card')
+      if (cl = @model.getList())
+        @$card.addClass('card--selectquestion')
+        @listView = new $viewChoices.ListView(el: @$(".list-view"), model: cl, rowView: @).render()
+
+      # @multiOptions = @$(".row__multioptions")
+      # @multiOptions.addClass("hidden")
+
       @rowExtras = @$(".row-extras")
       @rowExtrasSummary = @$(".row-extras-summary")
       for [key, val] in @model.attributesArray()
         new $viewRowDetail.DetailView(model: val, rowView: @).renderInRowView(@)
       @
 
-    expandCog: (evt)->
+    toggleSettings: (evt)->
       evt.stopPropagation()
-      @rowExtras.parent().toggleClass("activated")
-      @$(evt.currentTarget).toggleClass("activated")
-      @rowExtrasSummary.toggleClass("hidden")
-      @rowExtras.toggleClass("hidden")
 
-    expandMultiOptions: (evt)->
+      # cannot be expandsettings and expandchoices at the same time
+      @$card.removeClass('card--expandedchoices')
+      @$card.toggleClass('card--expandsettings')
+
+      # @rowExtras.parent().toggleClass("activated")
+      # @$(evt.currentTarget).toggleClass("activated")
+      # @rowExtrasSummary.toggleClass("hidden")
+      # @rowExtras.toggleClass("hidden")
+
+    toggleMultiOptions: (evt)->
       evt.stopPropagation()
-      @$(evt.currentTarget).parent().toggleClass("activated")
-      @$(evt.currentTarget).children("i").toggleClass("fa-caret-right").toggleClass("fa-caret-down")
-      @multiOptions.toggleClass("hidden")
+
+      # cannot be expandsettings and expandchoices at the same time
+      @$card.removeClass('card--expandsettings')
+      @$card.toggleClass('card--expandedchoices')
+
+      # @$(evt.currentTarget).parent().toggleClass("activated")
+      # @$(evt.currentTarget).children("i").toggleClass("fa-caret-right").toggleClass("fa-caret-down")
+      # @multiOptions.toggleClass("hidden")
 
     add_row_to_question_library: (evt) ->
       evt.stopPropagation()
