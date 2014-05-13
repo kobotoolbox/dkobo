@@ -60,6 +60,30 @@
       }
   }
 
+  .caret {
+    &:before {
+      // from fa-caret-right
+      content: "\f0da";
+    }
+  }
+  .card.card--selectquestion {
+    .row__multioptions {
+      display: none;
+    }
+
+    &.card--expandedchoices {
+      .caret {
+        &:before {
+          // from fa-caret-down
+          content: "\f0d7";
+        }
+      }
+      .row__multioptions {
+        display: block;
+      }
+    }
+  }
+
   .card__expanded {
       border: $cardBorderStyle;
       border-top-width: 1px;

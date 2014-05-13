@@ -18,7 +18,6 @@ define 'cs!xlform/view.row.templates', [], ()->
             <div class="noop card__indicator__icon"><i class="fa fa-fw card__header-icon"></i></div>
           </div>
           <div class="card__text">
-            <span class="card__buttons__multioptions js-expand-multioptions"><i class="fa fa-caret-right"></i></span>
             <span class="card__header-title"></span>
           </div>
 
@@ -45,6 +44,11 @@ define 'cs!xlform/view.row.templates', [], ()->
       #{expandingSpacerHtml}
       """
 
+  expandChoiceList = ()->
+    """
+    <span class="card__buttons__multioptions js-expand-multioptions"><i class="fa fa-fw caret"></i></span>
+    """
+
   rowErrorView = (atts)->
     """
     <div class="card card--error">
@@ -56,4 +60,5 @@ define 'cs!xlform/view.row.templates', [], ()->
     """
 
   xlfRowView: xlfRowView
+  expandChoiceList: expandChoiceList
   rowErrorView: rowErrorView

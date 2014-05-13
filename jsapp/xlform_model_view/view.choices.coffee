@@ -18,6 +18,9 @@ define 'cs!xlform/view.choices', [
       @row = @rowView.model
       @ulClasses = @$("ul").prop("className")
     render: ->
+      cardText = @rowView.$el.find('.card__text')
+      if cardText.find('.card__buttons__multioptions.js-expand-multioptions').length is 0
+        cardText.prepend $.parseHTML($viewTemplates.row.expandChoiceList())
       @$el.html (@ul = $("<ul>", class: @ulClasses))
       if @row.get("type").get("rowType").specifyChoice
         for option, i in @model.options.models
