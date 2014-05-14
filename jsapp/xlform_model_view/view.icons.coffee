@@ -7,34 +7,34 @@ define 'cs!xlform/view.icons', [
   iconDetails = [
     # row 1
       label: "Select one"
-      faClass: "check-square-o"
+      faClass: "dot-circle-o"
       grouping: "r1"
       id: "select_one"
     ,
       label: "Select many"
-      faClass: "list-alt"
+      faClass: "list-ul"
       grouping: "r1"
       id: "select_multiple"
     ,
       label: "Text"
-      faClass: "font"
+      faClass: "lato-text"
       grouping: "r1"
       id: "text"
     ,
       label: "Integer"
-      faClass: "sort-numeric-asc"
+      faClass: "lato-integer"
       grouping: "r1"
       id: "integer"
     ,
 
     # row 2
       label: "Decimal"
-      faClass: "money"
+      faClass: "lato-decimal"
       grouping: "r2"
       id: "decimal"
     ,
       label: "Date"
-      faClass: "calendar-o"
+      faClass: "calendar"
       grouping: "r2"
       id: "date"
     ,
@@ -44,7 +44,7 @@ define 'cs!xlform/view.icons', [
       id: "time"
     ,
       label: "Date + time"
-      faClass: "calendar"
+      faClass: "calendar clock-over"
       grouping: "r2"
       id: "datetime"
     ,
@@ -56,12 +56,12 @@ define 'cs!xlform/view.icons', [
       id: "geopoint"
     ,
       label: "Upload photo"
-      faClass: "camera"
+      faClass: "picture-o"
       grouping: "r3"
       id: "image"
     ,
       label: "Record audio"
-      faClass: "microphone"
+      faClass: "volume-up"
       grouping: "r3"
       id: "audio"
     ,
@@ -73,6 +73,7 @@ define 'cs!xlform/view.icons', [
 
     # r4
       label: "Read a note"
+      faClass: "bars invert"
       grouping: "r4"
       id: "note"
     ,
@@ -87,7 +88,7 @@ define 'cs!xlform/view.icons', [
       id: "acknowledge"
     ,
       label: "Calculate value"
-      faClass: "superscript"
+      faClass: "superscript invert"
       grouping: "r4"
       id: "calculate"
     ,
