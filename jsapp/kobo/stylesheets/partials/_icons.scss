@@ -87,6 +87,14 @@
     font-size: 0.9em;
 }
 
+.fa.fa-lato-calculate:before {
+    content: "1+1";
+    font-family: 'LatoBlack';
+    font-weight: bold;
+    letter-spacing: -0.02em;
+    font-size: 0.9em;
+}
+
 .fa.clock-over:after {
     content: "";
     position: absolute;

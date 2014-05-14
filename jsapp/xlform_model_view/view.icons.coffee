@@ -88,7 +88,7 @@ define 'cs!xlform/view.icons', [
       id: "acknowledge"
     ,
       label: "Calculate value"
-      faClass: "superscript invert"
+      faClass: "lato-calculate"
       grouping: "r4"
       id: "calculate"
     ,
