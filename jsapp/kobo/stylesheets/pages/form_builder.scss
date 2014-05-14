@@ -55,11 +55,16 @@
               .card__buttons__multioptions {
                 cursor: pointer;
                 vertical-align: middle;
+                .fa {
+                  width: 12px;
+                  font-size: 15px;
+                }
               }
           }
       }
   }
 
+// multi-choice expanded
   .caret {
     &:before {
       // from fa-caret-right
@@ -81,10 +86,26 @@
       .row__multioptions {
         display: block;
       }
+      .card__text {
+        color: $indicatorColor;
+      }
     }
   }
 
-  .card--selectquestion__expansion {
+// card settings
+  .card {
+    .advanced-details {
+      display: none;
+    }
+
+    &.card--expandsettings {
+      .advanced-details {
+        display: block;
+      }
+    }
+  }
+
+  .card--selectquestion__expansion, .card__settings {
       border: $cardBorderStyle;
       border-top-width: 1px;
       padding: 23px 40px 23px 60px;
@@ -176,7 +197,7 @@
       height: $cardIndicatorIconHeight;
       font-size: 18px;
       text-align: center;
-      color: #8595A5;
+      color: $indicatorColor;
   }
   
   // ==========================================================================

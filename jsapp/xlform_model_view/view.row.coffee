@@ -85,26 +85,16 @@ define 'cs!xlform/view.row', [
 
     toggleSettings: (evt)->
       evt.stopPropagation()
-
       # cannot be expandsettings and expandchoices at the same time
       @$card.removeClass('card--expandedchoices')
       @$card.toggleClass('card--expandsettings')
-
-      # @rowExtras.parent().toggleClass("activated")
-      # @$(evt.currentTarget).toggleClass("activated")
-      # @rowExtrasSummary.toggleClass("hidden")
-      # @rowExtras.toggleClass("hidden")
+      @$(evt.currentTarget).toggleClass("activated")
 
     toggleMultiOptions: (evt)->
       evt.stopPropagation()
-
       # cannot be expandsettings and expandchoices at the same time
       @$card.removeClass('card--expandsettings')
       @$card.toggleClass('card--expandedchoices')
-
-      # @$(evt.currentTarget).parent().toggleClass("activated")
-      # @$(evt.currentTarget).children("i").toggleClass("fa-caret-right").toggleClass("fa-caret-down")
-      # @multiOptions.toggleClass("hidden")
 
     add_row_to_question_library: (evt) ->
       evt.stopPropagation()
