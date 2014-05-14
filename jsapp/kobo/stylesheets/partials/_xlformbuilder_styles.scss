@@ -222,6 +222,32 @@
     top: 5px;
 }
 
+// ==========================================================================
+// Editable forms
+// ==========================================================================
+
+.editable-container {
+    display: inline-block;
+    width: 74%;
+    position: relative;
+    vertical-align: top;
+    .editable-input input {
+        font-family: 'LatoBlack';
+        border-radius: 5px;
+        border:$thinBorderStyle;
+        padding: 5px;
+        padding-bottom: 7px;
+        font-size: 12px;
+        width: 100%;
+        height: auto;
+    }
+    .editable-buttons {
+        position: absolute;
+        top:-20px;
+        right:0px;
+        font-size: 10px;
+    }
+}
 
 // ==========================================================================
 // Single/multiple select questions
@@ -230,6 +256,7 @@
 .xlf-option-view {
     margin-bottom: 10px;
     cursor: move;
+    position: relative;
     div > span.editable {
         font-family: 'LatoBlack';
         border-radius: 5px;
@@ -239,6 +266,7 @@
         display: inline-block;
         width: 74%;
         vertical-align: top;
+        height: auto;
     }
 
     code {
@@ -247,35 +275,44 @@
         font-size: 10px;
         background-color: #E3E7EC;
         padding:5px;
-        width: 22%;
-        text-align: center;
+        width: 23%;
+        text-align: left;
         display: inline-block;
-        margin-left: 3%;
+        margin-left: 2%;
         overflow: hidden;
+        label {
+            width: 32%;
+        }
+        span, .editable-container {
+            display: inline-block;
+            float: right;
+            width: 66%;
+        }
+        .editable-buttons {
+            display: none; // TEMPORARY
+        }
+        .editable-container .editable-input input {
+            text-align: right;
+            padding:3px !important;
+            border-radius: 0px;
+            background-color: transparent;
+            border:none;
+            display: inline-block;
+            float: right;
+            color: $linkColor;
+            line-height: 1em;
+            text-transform: uppercase;
+            font-size: 10px;
+        }
+    }
+    i.fa-trash-o {
+        position: absolute;
+        left:-24px;
+        top:8px;
+        color: #D08B8C;
     }
 }
 
-.editable-container {
-    display: inline-block;
-    width: 74%;
-    position: relative;
-    vertical-align: middle;
-    .editable-input input {
-        font-family: 'LatoBlack';
-        border-radius: 5px;
-        border:$thinBorderStyle;
-        padding: 5px;
-        font-size: 12px;
-        width: 100%;
-        vertical-align: top;
-    }
-    .editable-buttons {
-        position: absolute;
-        top:-20px;
-        right:0px;
-        font-size: 10px;
-    }
-}
 .option-placeholder {
     height: 41px;
     margin-bottom: 10px;

@@ -73,13 +73,14 @@ define 'cs!xlform/view.choices', [
 
   class OptionView extends $baseView
     tagName: "li"
-    className: "xlf-option-view well"
+    className: "xlf-option-view"
     events:
       "keyup input": "keyupinput"
     initialize: (@options)->
     render: ->
+      @t = $("<i class=\"fa fa-trash-o\">")
       @p = $("<span>")
-      @c = $("<code> [<span>Automatic</span>]</code>")
+      @c = $("<code><label>Value:</label> <span>Automatic</span></code>")
       @d = $('<div>')
       if @model
         @p.html @model.get("label")
@@ -117,6 +118,7 @@ define 'cs!xlform/view.choices', [
           @$el.trigger("choice-list-update", @options.cl.cid)
         newValue: val
       @d.append(@p)
+      @d.append(@t)
       @d.append(@c)
       @$el.html(@d)
       @

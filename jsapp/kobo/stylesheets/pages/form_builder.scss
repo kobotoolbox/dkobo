@@ -108,7 +108,7 @@
   .card--selectquestion__expansion, .card__settings {
       border: $cardBorderStyle;
       border-top-width: 1px;
-      padding: 23px 40px 23px 60px;
+      padding: 23px 10px 23px 60px;
       background: white;
       margin-top:-2px;
       position: relative;
@@ -157,7 +157,10 @@
   .card--error {
       background-color: rgb(255, 176, 176);
   }
-  
+
+  .card__addoptions {
+    opacity: 0.4;
+  }
   // ==========================================================================
   // Advanced details
   // ==========================================================================
