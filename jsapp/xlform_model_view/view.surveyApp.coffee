@@ -156,7 +156,11 @@ define 'cs!xlform/view.surveyApp', [
           row.unset 'relevant'
         isEmpty = false
         unless (xlfrv = @rowViews.get(row.cid))
-          @rowViews.set(row.cid, new $rowView.RowView(model: row, ngScope: @ngScope, surveyView: @))
+          if row.constructor.kls is 'Group'
+            rv = new $rowView.GroupView(model: row, ngScope: @ngScope, surveyView: @)
+          else
+            rv = new $rowView.RowView(model: row, ngScope: @ngScope, surveyView: @)
+          @rowViews.set(row.cid, rv)
           xlfrv = @rowViews.get(row.cid)
 
         $el = xlfrv.render().$el

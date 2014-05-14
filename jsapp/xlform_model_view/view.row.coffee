@@ -19,8 +19,7 @@ define 'cs!xlform/view.row', [
             $viewChoices,
             $viewRowDetail,
             )->
-
-  class RowView extends Backbone.View
+  class BaseRowView extends Backbone.View
     tagName: "li"
     className: "xlf-row-view"
     events:
@@ -89,5 +88,8 @@ define 'cs!xlform/view.row', [
     add_row_to_question_library: (evt) ->
       evt.stopPropagation()
       @ngScope.add_row_to_question_library @model
+
+  class GroupView extends BaseRowView
+  class RowView extends BaseRowView
 
   RowView: RowView
