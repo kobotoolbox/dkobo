@@ -24,6 +24,13 @@ define 'cs!xlform/model.row', [
       for key, val of attributes when key is ""
         delete attributes[key]
       super(attributes, options)
+    initialize: ->
+      @convertAttributesToRowDetails()
+
+    convertAttributesToRowDetails: ->
+      for key, val of @attributes
+        unless val instanceof $rowDetail.RowDetail
+          @set key, new $rowDetail.RowDetail({key: key, value: val}, {_parent: @}), {silent: true}
 
   class row.Row extends row.BaseRow
     @kls = "Row"
@@ -61,10 +68,7 @@ define 'cs!xlform/model.row', [
             newVals[vk] = if ("function" is typeof vv) then vv() else vv
           @set key, newVals
 
-
-      for key, val of @attributes
-        unless val instanceof $rowDetail.RowDetail
-          @set key, new $rowDetail.RowDetail({key: key, value: val}, {_parent: @}), {silent: true}
+      @convertAttributesToRowDetails()
 
       typeDetail = @get("type")
       tpVal = typeDetail.get("value")

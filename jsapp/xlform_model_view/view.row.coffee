@@ -90,6 +90,17 @@ define 'cs!xlform/view.row', [
       @ngScope.add_row_to_question_library @model
 
   class GroupView extends BaseRowView
+    initialize: (opts)->
+      @options = opts
+    render: ->
+      @$el.html $viewTemplates.row.groupView(@model)
+      @$rows = @$('.group__rows')
+      @model.rows.each (row)=>
+        new RowView(model: row, ngScope: @ngScope, surveyView: @).render().$el.appendTo(@$rows)
+      @$el.data("row-index", @model.getSurvey().rows.indexOf @model)
+      @
+
   class RowView extends BaseRowView
 
   RowView: RowView
+  GroupView: GroupView

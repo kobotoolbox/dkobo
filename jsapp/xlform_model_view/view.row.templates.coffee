@@ -40,6 +40,23 @@ define 'cs!xlform/view.row.templates', [], ()->
       #{expandingSpacerHtml}
       """
 
+  groupView = (g)->
+    group_label = g.getValue('label') or "<em>no label</em>"
+    """
+    <div class="group">
+      <p>
+        <span>Group</span>
+        <code>#{g.getValue('name')}</code>
+      </p>
+      <p class="group__label">
+        #{group_label}
+      </p>
+      <ul class="group__rows">
+      </ul>
+    </div>
+    #{expandingSpacerHtml}
+    """
+
   rowErrorView = (atts)->
     """
     <div class="card--error">
@@ -51,4 +68,5 @@ define 'cs!xlform/view.row.templates', [], ()->
     """
 
   xlfRowView: xlfRowView
+  groupView: groupView
   rowErrorView: rowErrorView

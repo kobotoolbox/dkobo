@@ -67,14 +67,18 @@ define 'cs!xlform/model.surveyFragment', [
   class Group extends $row.BaseRow
     @kls = "Group"
     @key = "group"
-    _isRepeat: ()->
-      !!(@get("type")?.get("value")?.match(/repeat/))
     constructor: (a,b)->
       __rows = a.__rows
       delete a.__rows
       @rows = new Rows([], _parent: @)
       super(a,b)
       @rows.add __rows
+
+    initialize: ->
+      @convertAttributesToRowDetails()
+
+    _isRepeat: ()->
+      !!(@get("type")?.get("value")?.match(/repeat/))
 
     # initialize: ()->
     #   @set "type", {value: "begin #{@key}"}
