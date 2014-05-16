@@ -14,13 +14,13 @@ define [
     _lastGroup = (s)->
       _.last s.rows.filter (r,i)-> r.constructor.name is "Group"
 
-    describe 'survey imports groups', ->
+    describe 'survey imports groups >', ->
       beforeEach ->
         @survey = $survey.Survey.load("""
         survey,,,
         ,type,name,label
         ,begin group,grp1,Group1
-        ,text,q1,Question1
+        ,text,g1q1,Group1Question1
         ,end group,,,
         """)
       it 'can import a simple group', ->
@@ -31,6 +31,22 @@ define [
         @survey.addRow type: 'group', name: 'grp2'
         expect(@survey.rows.length).toBe(2)
         expect(_lastGroup(@survey).rows.length).toBe(0)
+      describe 'groups can be exported >', ->
+        it 'works with a simple group', ->
+          expect(@survey.toCSV().split('\n').length).toBe(8)
+        it 'works with a nested group', ->
+          survey = $survey.Survey.load("""
+          survey,,,
+          ,type,name,label
+          ,begin group,grp1,Group1
+          ,text,g1q1,Group1Question1
+          ,begin group,grp2,Group2
+          ,text,g1g2q1,Grp2Question1
+          ,end group,,,
+          ,end group,,,
+          """)
+          expect(survey.toCSV().split('\n').length).toBe(11)
+
     it 'can import repeats', ->
       survey = $survey.Survey.load("""
       survey,,,

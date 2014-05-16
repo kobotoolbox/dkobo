@@ -32,17 +32,10 @@ define 'cs!xlform/model.surveyFragment', [
     forEachRow: (cb, ctx={})->
       ctx.includeErrors ?= false
       @rows.each (r, index, list)->
-        # if r instanceof XLF.SurveyDetail
-        #   ``
-        # else if !ctx.includeErrors && r instanceof row.RowError
-        #   ``
-        # else if r instanceof group.Group
-        #   cb(r.groupStart())
-        #   r.forEachRow(cb, ctx)
-        #   cb(r.groupEnd())
-        #   ``
-        # else
-        cb(r)
+        if typeof r.forEachRow is 'function'
+          r.forEachRow cb, ctx
+        else
+          cb(r)
     getRowDescriptors: () ->
       descriptors = []
       @forEachRow (row) ->
@@ -73,6 +66,7 @@ define 'cs!xlform/model.surveyFragment', [
       @rows = new Rows([], _parent: @)
       super(a,b)
       @rows.add __rows
+      @_groupOrRepeatKey = if @_isRepeat() then "repeat" else "group"
 
     initialize: ->
       @convertAttributesToRowDetails()
@@ -80,13 +74,26 @@ define 'cs!xlform/model.surveyFragment', [
     _isRepeat: ()->
       !!(@get("type")?.get("value")?.match(/repeat/))
 
-    # initialize: ()->
-    #   @set "type", {value: "begin #{@key}"}
+    forEachRow: (cb, ctxt={})->
+      cb(@groupStart())  if ctxt.includeGroupEnds
+      @rows.each (r, index, list)->
+        if typeof r.forEachRow is 'function'
+          r.forEachRow cb, ctxt
+        else
+          cb(r)
+      cb(@groupEnd())  if ctxt.includeGroupEnds
+
     groupStart: ->
-      toJSON: => @attributes
-      inGroupStart: true
+      group = @
+      toJSON: ->
+        out =
+          type: "begin #{group._groupOrRepeatKey}"
+        for k, val of group.attributes
+          out[k] = val.getValue()
+        out
     groupEnd: ->
-      toJSON: ()-> type: "end #{@key}"
+      group = @
+      toJSON: ()-> type: "end #{group._groupOrRepeatKey}"
 
   INVALID_TYPES_AT_THIS_STAGE = ['begin group', 'end group', 'begin repeat', 'end repeat']
   _determineConstructorByParams = (obj)->

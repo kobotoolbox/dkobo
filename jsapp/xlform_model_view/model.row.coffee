@@ -24,6 +24,7 @@ define 'cs!xlform/model.row', [
       for key, val of attributes when key is ""
         delete attributes[key]
       super(attributes, options)
+
     initialize: ->
       @convertAttributesToRowDetails()
 
@@ -31,6 +32,21 @@ define 'cs!xlform/model.row', [
       for key, val of @attributes
         unless val instanceof $rowDetail.RowDetail
           @set key, new $rowDetail.RowDetail({key: key, value: val}, {_parent: @}), {silent: true}
+    attributesArray: ()->
+      arr = ([k, v] for k, v of @attributes)
+      arr.sort (a,b)-> if a[1]._order < b[1]._order then -1 else 1
+      arr
+
+    toJSON: ->
+      outObj = {}
+      for [key, val] in @attributesArray()
+        result = @getValue(key)
+        unless @hidden
+          if _.isBoolean(result)
+            outObj[key] = $configs.boolOutputs[if result then "true" else "false"]
+          else
+            outObj[key] = result
+      outObj
 
   class row.Row extends row.BaseRow
     @kls = "Row"
@@ -134,22 +150,6 @@ define 'cs!xlform/model.row', [
 
     linkUp: ->
       val.linkUp()  for key, val of @attributes
-
-    attributesArray: ()->
-      arr = ([k, v] for k, v of @attributes)
-      arr.sort (a,b)-> if a[1]._order < b[1]._order then -1 else 1
-      arr
-
-    toJSON: ->
-      outObj = {}
-      for [key, val] in @attributesArray()
-        result = @getValue(key)
-        unless @hidden
-          if _.isBoolean(result)
-            outObj[key] = $configs.boolOutputs[if result then "true" else "false"]
-          else
-            outObj[key] = result
-      outObj
 
   class row.RowError extends base.BaseModel
     constructor: (obj, options)->

@@ -72,7 +72,7 @@ define 'cs!xlform/model.survey', [
             oCols.push key
           oRows.push colJson
 
-        @forEachRow addRowToORows, includeErrors: true
+        @forEachRow addRowToORows, includeErrors: true, includeGroupEnds: true
         for sd in @surveyDetails.models when sd.get("value")
           addRowToORows(sd)
 
@@ -82,7 +82,7 @@ define 'cs!xlform/model.survey', [
       choicesCsvJson = do =>
         lists = new $choices.ChoiceLists()
         @forEachRow (r)->
-          if (list = r.getList())
+          if 'getList' of r and (list = r.getList())
             lists.add list
 
         rows = []
