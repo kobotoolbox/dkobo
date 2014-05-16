@@ -249,6 +249,16 @@
     }
 }
 
+.card__text {
+    .editable-container {
+        width: 100%;
+        .editable-input input {
+            border:none;
+            border-radius:none;
+        }
+    }
+}
+
 // ==========================================================================
 // Single/multiple select questions
 // ==========================================================================
