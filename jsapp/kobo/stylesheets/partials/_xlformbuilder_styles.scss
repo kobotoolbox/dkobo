@@ -259,6 +259,22 @@
     }
 }
 
+h1 {
+    .editable-container {
+        width: 90%;
+        .editable-input input {
+            border:none;
+            border-radius:none;
+            display: inline-block;
+            background-color: transparent;
+            font-size: 32px;
+            margin:0px;
+            padding:0px;
+        }
+    }
+
+}
+
 // ==========================================================================
 // Single/multiple select questions
 // ==========================================================================
