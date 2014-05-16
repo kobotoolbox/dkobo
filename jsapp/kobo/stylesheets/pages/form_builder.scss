@@ -184,6 +184,18 @@
       width: $cardIndicatorWidth;
       height: 100%;
       border-right: $cardBorderStyle;
+      .fa.invert {
+        padding: 3px 1px;
+        font-size: 0.95em;
+        background-color: #8595A5;
+      }
+      .fa-lato-calculate, .fa-lato-integer {
+        font-size: 0.9em;
+        margin-left: -4px;
+      }
+      .fa-lato-decimal {
+        font-size: 0.9em;
+      }
   }
   .card--insort {
       .card__indicator {
