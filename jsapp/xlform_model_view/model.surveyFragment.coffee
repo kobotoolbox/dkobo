@@ -86,10 +86,10 @@ define 'cs!xlform/model.surveyFragment', [
     groupStart: ->
       group = @
       toJSON: ->
-        out =
-          type: "begin #{group._groupOrRepeatKey}"
+        out = {}
         for k, val of group.attributes
           out[k] = val.getValue()
+        out.type = "begin #{group._groupOrRepeatKey}"
         out
     groupEnd: ->
       group = @
