@@ -32,6 +32,10 @@ module.exports = function(grunt) {
              *  Changes in the source directory should rebuild the file, which ends up
              *    eventually triggering 'sourceChanged' as well.
              */
+            retestXlform: {
+                files: ['jsapp/xlform_model_view/*.coffee'],
+                tasks: ['karma:amd']
+            },
             rebuildDkoboXlform: {
                 files: ['jsapp/xlform_model_view/**/*.js', 'jsapp/xlform_model_view/**/*.coffee'],
                 tasks: ['requirejs:compile_xlform'],
@@ -59,6 +63,11 @@ module.exports = function(grunt) {
         karma: {
             unit: {
                 configFile: 'jsapp/test/configs/karma.conf.js',
+                singleRun: true,
+                browsers: ['PhantomJS'],
+            },
+            amd: {
+                configFile: 'jsapp/test/configs/karma-amd.conf.js',
                 singleRun: true,
                 browsers: ['PhantomJS'],
             },
@@ -192,6 +201,7 @@ module.exports = function(grunt) {
     grunt.registerTask('test', [
         'build',
         'karma:unit',
+        'karma:amd',
     ]);
 
     grunt.registerTask('develop', [

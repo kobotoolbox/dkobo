@@ -156,7 +156,11 @@ define 'cs!xlform/view.surveyApp', [
           row.unset 'relevant'
         isEmpty = false
         unless (xlfrv = @rowViews.get(row.cid))
-          @rowViews.set(row.cid, new $rowView.RowView(model: row, ngScope: @ngScope, surveyView: @))
+          if row.constructor.kls is 'Group'
+            rv = new $rowView.GroupView(model: row, ngScope: @ngScope, surveyView: @)
+          else
+            rv = new $rowView.RowView(model: row, ngScope: @ngScope, surveyView: @)
+          @rowViews.set(row.cid, rv)
           xlfrv = @rowViews.get(row.cid)
 
         $el = xlfrv.render().$el
@@ -164,14 +168,15 @@ define 'cs!xlform/view.surveyApp', [
           @formEditorEl.append($el)
 
       @ngScope.displayQlib = false
-      @survey.forEachRow(fn, includeErrors: true)
+      # @survey.forEachRow(fn, includeErrors: true)
+      @survey.rows.each(fn, includeErrors: true)
 
       null_top_row = @formEditorEl.find(".survey-editor__null-top-row, .survey-editor__message").removeClass("expanded")
       if isEmpty
         null_top_row.removeClass("hidden")
       else
         null_top_row.addClass("hidden")
-      $viewUtils.reorderElemsByData(".xlf-row-view", @$el, "row-index")
+      # $viewUtils.reorderElemsByData(".xlf-row-view", @$el, "row-index")
       ``
 
     clickRemoveRow: (evt)->
