@@ -79,6 +79,7 @@ define 'cs!xlform/view.choices', [
     initialize: (@options)->
     render: ->
       @t = $("<i class=\"fa fa-trash-o\">")
+      @pw = $("<div class=\"editable-wrapper\">")
       @p = $("<span>")
       @c = $("<code><label>Value:</label> <span>Automatic</span></code>")
       @d = $('<div>')
@@ -117,7 +118,8 @@ define 'cs!xlform/view.choices', [
           @model.set('setManually', true)
           @$el.trigger("choice-list-update", @options.cl.cid)
         newValue: val
-      @d.append(@p)
+      @pw.html(@p)
+      @d.append(@pw)
       @d.append(@t)
       @d.append(@c)
       @$el.html(@d)
