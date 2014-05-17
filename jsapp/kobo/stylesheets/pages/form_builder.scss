@@ -200,8 +200,8 @@
       position: absolute;
       top: 50%;
       margin-top: -($cardIndicatorIconHeight/2);
-      left: ($cardIndicatorWidth/2) - ($cardIndicatorIconWidth / 2);
-      width: $cardIndicatorIconWidth;
+      left: 8px;
+      width: $cardIndicatorIconHeight;
       height: $cardIndicatorIconHeight;
       font-size: 20px;
       line-height: 20px;
