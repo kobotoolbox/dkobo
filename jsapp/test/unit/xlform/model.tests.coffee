@@ -1,8 +1,12 @@
-$model = dkobo_xlform.model
+define 'cs!test/unit/xlform/model.tests', [
+          'cs!xlform/_model',
+          ], (
+              $model,
+              )->
 
-xlf = dkobo_xlform
+  describe "xlform survey model", -> xlform_survey_model.call(@, $model)
 
-describe "xlform survey model", ->
+xlform_survey_model = ($model)->
   beforeEach ->
     @pizzaSurvey = $model.Survey.load(PIZZA_SURVEY)
     @createSurveyCsv = (survey=[],choices=[])->
@@ -34,6 +38,7 @@ describe "xlform survey model", ->
       @compareCsvs(x1, x2)
 
   it "creates xlform", ->
+    expect(1).toBe(2)
     xlf = new $model.Survey name: "Sample"
     expect(xlf).toBeDefined()
     expect(xlf instanceof $model.Survey).toBe(true)
@@ -211,7 +216,7 @@ describe "xlform survey model", ->
       @pizzaSurvey.addRow type: "group", name: "group"
       expect(@pizzaSurvey.rows.length).toBe(3)
       grp = @pizzaSurvey.rows.last()
-      expect(grp.constructor.name).toBe("Group")
+      expect(grp instanceof $model.RowError).toBe(true)
   describe "automatic naming", ->
     it "can import questions without names", ->
       survey = @createSurvey([

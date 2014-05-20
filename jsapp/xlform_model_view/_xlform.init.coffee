@@ -25,18 +25,6 @@ ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF S
 DAMAGE.
 ###
 
-# define [
-#         # 'cs!xlform/model',
-#         # 'cs!xlform/view',
-#         # 
-#         # 'cs!xlform/skipLogic',
-#         # 'cs!csv',
-#         ], (
-#             # $model,
-#             # $view,
-#             # $skipLogic,
-#             # $csv,
-#             )->
 #   ###
 #   XLForm
 #     (for XLSForm without the excel dependency)

@@ -10,35 +10,74 @@
     left: 0;
     z-index: 2;
     line-height: 40px;
-    background-color: #666;
+    background-color: #3F3F3F;
     transition: width 150ms, left 150ms;
+    .header-bar__title {
+        margin-top: 0;
+        margin-right: 10px;
+        margin-bottom: 0;
+        display: inline-block;
+        font-size: 14px;
+        font-weight: 600;
+        font-family: 'Lato';
+        .header-bar__title-text { color: white; }
+    }
+
+    .btn {
+        margin-top: 5px;
+        margin-right: 5px;
+        margin-bottom: 5px;
+        background-color: #3f3f3f;
+        &:hover, &:focus { background-color: #4d4d4d; }
+    }
+
+    .header-bar__top-logo {
+        position: absolute;
+        right: 10px;
+        top:5px;
+        background: url(kobologo.svg);
+        background-size: 120px 27px;
+        background-repeat: none;
+        width: 120px;
+        height: 27px;
+    }
 }
 
-.header-bar__page-icon {
-    left: 1px;
-    top: -2px;
-}
 
-.header-bar__title {
-    margin-top: 0;
-    margin-right: 10px;
-    margin-bottom: 0;
-    display: inline-block;
-    font-size: 17px;
-}
+// ==========================================================================
+// Sub header bar
+// ==========================================================================
 
-.header-bar__title-text {
-    color: white;
-}
+.sub-header-bar {
+    width: 100%;
+    height: 40px;
+    border-bottom: 1px solid #E3E8EC;
+    padding: 5px 4px;
+    position: fixed;
+    top: 40px;
+    left: 0;
+    z-index: 1;
+    background-color: #FFF;
+    transition: width 150ms, left 150ms;
 
-.header-bar .btn {
-    margin-top: 5px;
-    margin-right: 5px;
-    margin-bottom: 5px;
-    background-color: #3f3f3f;
-}
-
-.header-bar .btn:hover,
-.header-bar .btn:focus {
-    background-color: #4d4d4d;
+    > .btn {
+        height: 30px;
+        margin-right: 1px;
+        margin-left: 1px;
+        padding-right: 10px;
+        padding-left: 10px;
+        font-size: 12px;
+        line-height: 30px;
+        border:none;
+        font-family: 'LatoBlack';
+        vertical-align: middle;
+        i {
+            font-size: 15px;
+            line-height: 30px;
+            margin-right: 5px;
+            &.green {
+                color: #2EB662;
+            }
+        }
+    }
 }

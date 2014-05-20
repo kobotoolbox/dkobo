@@ -111,7 +111,3 @@ describe '', () ->
   describe 'Skip Logic Parser', skip_logic_parser_tests
   describe 'Validator', validator_tests
 
-require [
-         'skip_logic_tests',
-         # 'xlform_tests',
-         ]

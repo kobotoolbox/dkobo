@@ -16,18 +16,20 @@ define 'cs!xlform/view.surveyApp.templates', [], ()->
   surveyApp = (survey) ->
       """
         <div class="sub-header-bar">
-          <button class="btn  btn--utility" id="save">Save</button>
-          <button class="btn  btn--utility" id="xlf-preview">Preview</button>
+          
+          <button class="btn btn--utility" id="settings"><i class="fa fa-cog"></i> Form Settings</button>
+          <button class="btn btn--utility" id="save"><i class="fa fa-check-circle green"></i> Save Survey</button>
+          <button class="btn btn--utility" id="xlf-preview"><i class="fa fa-eye"></i> Preview Survey</button>
+          <button class="btn btn--utility pull-right" id="question-library"><i class="fa fa-folder"></i> Question Library</button>
           <!--
-          <button class="btn  btn--utility  pull-right" id="xlf-group">Group questions</button>
-          <button class="btn  btn--utility  pull-right" id="xlf-repeat">Repeat questions</button>
+          <button class="btn btn--utility  pull-right" id="xlf-group">Group questions</button>
+          <button class="btn btn--utility  pull-right" id="xlf-repeat">Repeat questions</button>
           -->
         </div>
         <header class="survey-header">
           <p class="survey-header__description" hidden>
             <hgroup class="survey-header__inner">
               <h1 class="survey-header__title">
-                <i class="survey-header__options-toggle  fa  fa-cog"></i>
                 <span class="form-title">#{survey.settings.get("form_title")}</span>
               </h1>
             </hgroup>

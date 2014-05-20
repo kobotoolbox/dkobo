@@ -16,8 +16,13 @@ define 'cs!xlform/view.choices', [
     initialize: ({@rowView, @model})->
       @list = @model
       @row = @rowView.model
+      $($.parseHTML $viewTemplates.row.selectQuestionExpansion()).insertAfter @rowView.$('.card__header')
+      @$el = @rowView.$(".list-view")
       @ulClasses = @$("ul").prop("className")
     render: ->
+      cardText = @rowView.$el.find('.card__text')
+      if cardText.find('.card__buttons__multioptions.js-expand-multioptions').length is 0
+        cardText.prepend $.parseHTML($viewTemplates.row.expandChoiceList())
       @$el.html (@ul = $("<ul>", class: @ulClasses))
       if @row.get("type").get("rowType").specifyChoice
         for option, i in @model.options.models
@@ -68,13 +73,15 @@ define 'cs!xlform/view.choices', [
 
   class OptionView extends $baseView
     tagName: "li"
-    className: "xlf-option-view well"
+    className: "xlf-option-view"
     events:
       "keyup input": "keyupinput"
     initialize: (@options)->
     render: ->
+      @t = $("<i class=\"fa fa-trash-o\">")
+      @pw = $("<div class=\"editable-wrapper\">")
       @p = $("<span>")
-      @c = $("<code> [<span>Automatic</span>]</code>")
+      @c = $("<code><label>Value:</label> <span>Automatic</span></code>")
       @d = $('<div>')
       if @model
         @p.html @model.get("label")
@@ -111,7 +118,9 @@ define 'cs!xlform/view.choices', [
           @model.set('setManually', true)
           @$el.trigger("choice-list-update", @options.cl.cid)
         newValue: val
-      @d.append(@p)
+      @pw.html(@p)
+      @d.append(@pw)
+      @d.append(@t)
       @d.append(@c)
       @$el.html(@d)
       @
