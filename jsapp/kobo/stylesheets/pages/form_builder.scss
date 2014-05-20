@@ -49,12 +49,18 @@
               display: inline-block;
               vertical-align: middle;
               width: 99%;
+              position: relative;
               &.activated {
                 color: #8595A5;
               }
               .card__buttons__multioptions {
                 cursor: pointer;
                 vertical-align: middle;
+                position: absolute;
+                left:-14px;
+                top:50%;
+                margin-top:-8px;
+                
                 .fa {
                   width: 12px;
                   font-size: 15px;
@@ -174,8 +180,8 @@
   // ==========================================================================
 
   $cardIndicatorWidth: 42px;
-  $cardIndicatorIconHeight: 20px;
-  $cardIndicatorIconWidth: 22px;
+  $cardIndicatorIconHeight: 21px;
+  $cardIndicatorIconWidth: 21px;
   
   .card__indicator {
       position: absolute;
@@ -184,35 +190,36 @@
       width: $cardIndicatorWidth;
       height: 100%;
       border-right: $cardBorderStyle;
-      .fa.invert {
-        padding: 3px 1px;
-        font-size: 0.95em;
-        background-color: #8595A5;
-      }
-      .fa-lato-calculate, .fa-lato-integer {
-        font-size: 0.9em;
-        margin-left: -4px;
-      }
-      .fa-lato-decimal {
-        font-size: 0.9em;
-      }
   }
   .card--insort {
       .card__indicator {
           border-right: $cardInSortThinBorderStyle;
       }
   }
-
   .card__indicator__icon {
       position: absolute;
-      top: 54%;
-      margin-top: -($cardIndicatorIconWidth/2);
-      left: ($cardIndicatorWidth/2) - ($cardIndicatorIconWidth / 2);
-      width: $cardIndicatorIconWidth;
+      top: 50%;
+      margin-top: -($cardIndicatorIconHeight/2);
+      left: 8px;
+      width: $cardIndicatorIconHeight;
       height: $cardIndicatorIconHeight;
-      font-size: 18px;
+      font-size: 20px;
+      line-height: 20px;
       text-align: center;
       color: $indicatorColor;
+      .fa.invert {
+        padding: 3px 1px;
+        font-size: 0.95em;
+        background-color: #8595A5;
+      }
+      .fa-lato-calculate, .fa-lato-decimal,
+      .fa-lato-integer, .fa-lato-text {
+        font-size: 15px;
+        width: $cardIndicatorIconWidth;
+      }
+      .fa-lato-decimal {
+        margin-left:2px;
+      }
   }
   
   // ==========================================================================
@@ -252,6 +259,8 @@
       }
       &.blue {
         color:$linkColor;
+      }
+      &.gray-green {
       }
       &.activated {
         color: #646D75;

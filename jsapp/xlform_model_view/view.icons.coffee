@@ -73,7 +73,7 @@ define 'cs!xlform/view.icons', [
 
     # r4
       label: "Read a note"
-      faClass: "bars invert"
+      faClass: "bars"
       grouping: "r4"
       id: "note"
     ,

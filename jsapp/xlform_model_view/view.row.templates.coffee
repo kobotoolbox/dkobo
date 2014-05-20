@@ -24,16 +24,14 @@ define 'cs!xlform/view.row.templates', [], ()->
           <div class="card__buttons">
             <span class="card__buttons__button gray js-advanced-toggle"><i class="fa fa-cog"></i></span>
             <span class="card__buttons__button red js-delete-row"><i class="fa fa-trash-o"></i></span>
-            <span class="card__buttons__button blue"><i class="fa fa-copy"></i></span>
+            <span class="card__buttons__button blue hidden"><i class="fa fa-copy"></i></span>
+            <span class="card__buttons__button gray-green js-add-to-question-library"><i class="fa fa-folder-o"><i class="fa fa-plus"></i></i></span>
+
           </div>
         </div>
         <div class="advanced-details">
           <div class="row-extras card__settings advanced-details__content">
           </div>
-        </div>
-        <div class="pull-right row-extras__add-to-question-library">
-          <span class="fa fa-plus-square-o fa-fw"></span>
-          <span class="row-extras__add-to-question-library--text">Copy to Library</span>
         </div>
       </div>
       #{expandingSpacerHtml}
