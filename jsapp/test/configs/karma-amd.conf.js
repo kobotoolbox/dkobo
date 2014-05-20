@@ -6,9 +6,9 @@ module.exports = function(config) {
         if(served === undefined) { served = true; }
         return {
             pattern: pattern,
-            included: false,
-            watched: false,
-            served: true
+            included: !!included,
+            watched: !!watched,
+            served: !!served
         };
     }
 
@@ -17,18 +17,18 @@ module.exports = function(config) {
         components = require(path.resolve(__dirname, '../components.js'));
 
     for (var _c in components.libs) {
-        componentFiles.push(project(components.libs[_c], false, true, true));
+        componentFiles.push(project(components.libs[_c], 0, 1, 1));
     }
     for (_c in components.serve) {
-        componentFiles.push(project(components.serve[_c], false, true, true));
+        componentFiles.push(project(components.serve[_c], 0, 1, 1));
     }
 
     config.set({
         basePath: path.resolve(__dirname, '../..'),
         frameworks: ['jasmine', 'requirejs'],
         files: componentFiles.concat([
-            'test/components.js',
-            project('test/amdrunner.coffee', false, true, true),
+            project('test/components.js', 0, 0, 1),
+            project('test/amdrunner.coffee', 0, 1, 1),
             'test/amdtest-main.js',
         ]),
         plugins: [

@@ -23,6 +23,8 @@ define('test/components', [], function(){
             "underscore": "components/underscore/underscore.js",
             "jquery": "components/jquery/dist/jquery.js",
             "cs": "components/require-cs/cs.js",
+            "sinon": "components/sinon/index.js",
+            "jasmine-sinon": "components/jasmine-sinon/lib/jasmine-sinon.js",
             "coffee-script": "components/require-cs/coffee-script.js",
             "backbone": "components/backbone/backbone.js",
             "backbone-validation": "components/backbone-validation/dist/backbone-validation-amd.js",

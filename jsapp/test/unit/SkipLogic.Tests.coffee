@@ -1073,11 +1073,5 @@ skip_logic_helpers = (dkobo_xlform) ->
 
         actual instanceof expectedInstance
 
-define [
-        'cs!xlform/_xlform.init',
-        ], (
-            dkobo_xlform_
-            )->
-
-  describe 'skip logic model', -> skip_logic_model.call(@, dkobo_xlform_)
-  describe 'skip logic helpers', -> skip_logic_helpers.call(@, dkobo_xlform_)
+describe 'skip logic model', -> skip_logic_model.call(@, dkobo_xlform)
+describe 'skip logic helpers', -> skip_logic_helpers.call(@, dkobo_xlform)
