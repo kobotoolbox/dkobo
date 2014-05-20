@@ -43,10 +43,10 @@ define 'cs!xlform/view.row.templates', [], ()->
     group_label = g.getValue('label') or "<em>no label</em>"
     """
     <div class="group">
-      <p>
+      <header class="group__header">
         <span>Group</span>
         <code>#{g.getValue('name')}</code>
-      </p>
+      </header>
       <p class="group__label">
         #{group_label}
       </p>
