@@ -56,7 +56,7 @@
     padding-left: 20px;
 }
 
-// custom icons for some response types
+/**** custom icons for some response types  ******/
 
 .fa.invert {
     background-color: #35495D;
@@ -106,4 +106,13 @@
 
 .fa.clock-over:before {
     margin-left: 5px;
+}
+
+.fa-folder-o .fa-plus {
+    color:#39BF6E;
+    position: absolute;
+    left: 10px;
+    top: 8px;
+    font-size: 0.6em;
+    font-weight: normal;
 }

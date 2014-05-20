@@ -32,7 +32,7 @@ define 'cs!xlform/view.surveyApp', [
       "click #xlf-download": "downloadButtonClick"
       "click #save": "saveButtonClick"
       "click #publish": "publishButtonClick"
-      "click .survey-header__options-toggle": "toggleSurveyOptions"
+      "click #settings": "toggleSurveyOptions"
       "update-sort": "updateSort"
     @create: (params = {}) ->
       if _.isString params.el

@@ -101,14 +101,10 @@
     <main class="main">
       <header class="header-bar" ng-controller="HeaderController">
         <span class="header-bar__top-level-menu-button">
-          <i class="fa  fa-bars  fa-lg  fa-inverse" ng-click="toggleTopMenu()"></i>
+          <i class="fa fa-bars fa-lg fa-inverse" ng-click="toggleTopMenu()"></i>
         </span>
         <h1 class="header-bar__title">
           <a href="#/{{icon_link}}">
-            <span class="header-bar__page-icon-stack  fa-stack  fa-md">
-              <i class="header-bar__page-icon-circle  fa  fa-circle  fa-stack-2x  icon--{{ pageIconColor }}"></i>
-              <i class="header-bar__page-icon  fa  {{ pageIcon }}  fa-stack-1x  fa-inverse"></i>
-            </span>
             <span class="header-bar__title-text">{{ activeTab }}</span>
           </a>
         </h1>
@@ -125,6 +121,8 @@
               <input type="file" name="files">
             </span>
           </form>
+          <span class="header-bar__top-logo"></span>
+
       </header>
 
       <section ng-view class="content" ng-class="additionalClasses"></section>

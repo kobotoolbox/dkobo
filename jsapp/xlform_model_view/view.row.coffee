@@ -27,7 +27,7 @@ define 'cs!xlform/view.row', [
      "drop": "drop"
      "click .js-advanced-toggle": "toggleSettings"
      "click .js-expand-multioptions": "toggleMultiOptions"
-     "click .row-extras__add-to-question-library": "add_row_to_question_library"
+     "click .js-add-to-question-library": "add_row_to_question_library"
 
     initialize: (opts)->
       @options = opts
