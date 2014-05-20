@@ -1073,7 +1073,7 @@ skip_logic_helpers = (dkobo_xlform) ->
 
         actual instanceof expectedInstance
 
-define 'skip_logic_tests', [
+define [
         'cs!xlform/_xlform.init',
         ], (
             dkobo_xlform_
