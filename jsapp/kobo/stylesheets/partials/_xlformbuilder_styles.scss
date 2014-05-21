@@ -1,21 +1,13 @@
-// ==========================================================================
-// Form builder
-// ==========================================================================
-
-.form-builder {
-    max-width: 700px;
-    margin-right: auto;
-    margin-left: auto;
-}
-
-
 
 // ==========================================================================
 // Survey header
 // ==========================================================================
 
 .survey-header {
-    margin-bottom: 40px;
+    margin-bottom: 30px;
+    background-color: white;
+    padding:20px 0px;
+    padding-top: 70px;
 }
 
     .survey-header__title,
@@ -86,9 +78,6 @@
             display: none;
         }
     }
-
-
-
 
 
 
@@ -188,6 +177,8 @@
     right: 5px;
     top: 5px;
 }
+
+
 
 // ==========================================================================
 // Editable forms
@@ -308,13 +299,6 @@ h1 {
 
 // Quick fixes for KF-96. (Consider chainging HTML and CSS for BEM)
 
-.xlf-row-view {
-  position: relative;
-  &:first-child {
-    margin-top: 0;
-  }
-}
-
 .placeholder {
     height: 100px;
     margin-bottom: 10px;
@@ -334,8 +318,6 @@ h1 {
     line-height: 1em;
   }
 }
-
-
 
 // ==========================================================================
 // Edit buttons
@@ -361,32 +343,11 @@ h1 {
 
 
 
-
-// ==========================================================================
-// Advanced details
-// ==========================================================================
-
-.xlf-dv-name,
-.xlf-dv-hint {
-    text-transform: capitalize;
-}
-
-.xlf-dv-name > code,
-.xlf-dv-hint > code {
-    text-transform: none;
-}
-
-
-
-
-
-
 // ==========================================================================
 // Skip logic
 // ==========================================================================
 
 .skiplogic__criterion {
-  // @extend .well;
   margin-bottom: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;

@@ -32,14 +32,13 @@
     }
 
     .header-bar__top-logo {
-        position: absolute;
-        right: 10px;
-        top:5px;
         background: url(/static/kobo/images/kobologo.svg);
         background-size: 120px 27px;
         background-repeat: none;
         width: 120px;
         height: 27px;
+        margin-top: 5px;
+        margin-right: 6px;
     }
 }
 
