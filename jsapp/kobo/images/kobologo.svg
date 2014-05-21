@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="1199.371px" height="271.658px" viewBox="0 0 1199.371 271.658" enable-background="new 0 0 1199.371 271.658"
+	 xml:space="preserve">
+<font horiz-adv-x="1000">
+<!-- Copyright 1992, 1994, 1997, 2000, 2004 Adobe Systems Incorporated. All rights reserved. Myriad is either a registered trademark or a trademark of Adobe Systems Incorporated in the United States and/or other countries. -->
+<font-face font-family="MyriadPro-Regular" units-per-em="1000" underline-position="-100" underline-thickness="50"/>
+<missing-glyph horiz-adv-x="500" d="M0,0l500,0l0,700l-500,0M250,395l-170,255l340,0M280,350l170,255l0,-510M80,50l170,255l170,-255M50,605l170,-255l-170,-255z"/>
+<glyph unicode="B" horiz-adv-x="542" d="M76,2C105,-2 151,-6 211,-6C321,-6 397,14 444,57C478,90 501,134 501,192C501,292 426,345 362,361l0,2C433,389 476,446 476,511C476,564 455,604 420,630C378,664 322,679 235,679C174,679 114,673 76,665M163,606C177,609 200,612 240,612C328,612 388,581 388,502C388,437 334,389 242,389l-79,0M163,323l72,0C330,323 409,285 409,193C409,95 326,62 236,62C205,62 180,63 163,66z"/>
+<glyph unicode="K" horiz-adv-x="542" d="M76,0l87,0l0,257l64,74l222,-331l103,0l-263,388l244,286l-108,0l-206,-253C202,399 184,375 166,349l-3,0l0,325l-87,0z"/>
+<glyph unicode="T" horiz-adv-x="497" d="M204,0l88,0l0,600l206,0l0,74l-499,0l0,-74l205,0z"/>
+<glyph unicode="b" horiz-adv-x="569" d="M145,0l4,80l3,0C188,16 244,-11 314,-11C422,-11 531,75 531,248C532,395 447,495 327,495C249,495 193,460 162,406l-2,0l0,304l-87,0l0,-585C73,82 71,33 69,0M160,281C160,295 163,307 165,317C183,384 239,425 299,425C393,425 443,342 443,245C443,134 388,59 296,59C232,59 181,101 164,162C162,172 160,183 160,194z"/>
+<glyph unicode="l" horiz-adv-x="236" d="M73,0l88,0l0,710l-88,0z"/>
+<glyph unicode="o" horiz-adv-x="549" d="M278,495C144,495 38,400 38,238C38,85 139,-11 270,-11C387,-11 511,67 511,246C511,394 417,495 278,495M276,429C380,429 421,325 421,243C421,134 358,55 274,55C188,55 127,135 127,241C127,333 172,429 276,429z"/>
+<glyph unicode="x" horiz-adv-x="463" d="M16,484l164,-237l-172,-247l97,0l70,109C193,138 210,164 226,193l2,0C245,164 261,137 280,109l71,-109l100,0l-170,250l165,234l-95,0l-68,-103C267,355 251,330 235,301l-3,0C216,328 201,353 183,380l-69,104z"/>
+</font>
+
+	<g>
+	<g>
+		<defs>
+			<path id="SVGID_1_" d="M0.5,37.167V37.07V37.167z M159.679,37.167V37.07V37.167z M20.362,17.21h0.096H20.362z M20.458,17.21
+				C9.414,17.21,0.5,26.123,0.5,37.167v212.172c0,11.045,8.914,19.958,19.958,19.958l-0.096-0.096h119.359l0.097,0.096
+				c10.947,0,19.861-8.913,19.861-19.958V37.167c0-11.044-8.914-19.957-19.861-19.957H20.458z"/>
+		</defs>
+		<clipPath id="SVGID_2_">
+			<use xlink:href="#SVGID_1_"  overflow="visible"/>
+		</clipPath>
+		<rect y="17.21" clip-path="url(#SVGID_2_)" fill="#DDDDDD" width="161.77" height="254.448"/>
+	</g>
+</g>
+<g>
+	<g>
+		<defs>
+			<rect id="SVGID_3_" width="1199.371" height="271.658"/>
+		</defs>
+		<clipPath id="SVGID_4_">
+			<use xlink:href="#SVGID_3_"  overflow="visible"/>
+		</clipPath>
+		<path clip-path="url(#SVGID_4_)" fill="#59AFEF" d="M27.046,262.612h119.359c11.045,0,19.958-8.914,19.958-19.86l-0.096-0.097
+			V30.482h0.096c0-10.948-8.913-19.862-19.958-19.862v-0.096H27.046v0.096c-10.948,0-19.861,8.914-19.861,19.862H7.089v212.173
+			l0.096,0.097C7.185,253.698,16.098,262.612,27.046,262.612"/>
+	</g>
+</g>
+<g>
+	<g>
+		<defs>
+			<path id="SVGID_5_" d="M27.046,10.524v0.096c-10.948,0-19.861,8.914-19.861,19.862H7.088v212.173l0.097,0.097
+				c0,10.946,8.913,19.86,19.861,19.86h119.36c11.045,0,19.957-8.914,19.957-19.86l-0.096-0.097V30.482h0.096
+				c0-10.948-8.912-19.862-19.957-19.862v-0.096H27.046z"/>
+		</defs>
+		<clipPath id="SVGID_6_">
+			<use xlink:href="#SVGID_5_"  overflow="visible"/>
+		</clipPath>
+		<rect x="5.926" y="9.361" clip-path="url(#SVGID_6_)" fill="#59AFEF" width="163.537" height="256.545"/>
+	</g>
+</g>
+<g>
+	<g>
+		<defs>
+			<rect id="SVGID_7_" width="1199.371" height="271.658"/>
+		</defs>
+		<clipPath id="SVGID_8_">
+			<use xlink:href="#SVGID_7_"  overflow="visible"/>
+		</clipPath>
+		<path clip-path="url(#SVGID_8_)" fill="#231F20" d="M64.54,204.87h44.275l0.097,0.098c10.948,0,19.861-8.914,19.861-19.958V91.615
+			v0.097c0-11.045-8.913-19.957-19.861-19.957H64.54h0.096c-11.044,0-19.957,8.912-19.957,19.957v-0.097v93.395
+			c0,11.044,8.913,19.958,19.957,19.958"/>
+	</g>
+</g>
+<g>
+	<g>
+		<defs>
+			<path id="SVGID_9_" d="M53.495,122.812v-0.098V122.812z M106.684,122.812v-0.098V122.812z M73.356,102.852h0.098H73.356z
+				 M73.454,102.852c-11.045,0-19.959,8.915-19.959,19.96v44.371c0,11.045,8.914,19.959,19.959,19.959l-0.098-0.098h13.371
+				l0.096,0.098c10.948,0,19.861-8.914,19.861-19.959v-44.371c0-11.045-8.913-19.96-19.861-19.96H73.454z"/>
+		</defs>
+		<clipPath id="SVGID_10_">
+			<use xlink:href="#SVGID_9_"  overflow="visible"/>
+		</clipPath>
+		<rect x="52.236" y="101.69" clip-path="url(#SVGID_10_)" fill="#D8D8D8" width="57.732" height="87.995"/>
+	</g>
+</g>
+<g>
+	<g>
+		<defs>
+			<rect id="SVGID_11_" width="1199.371" height="271.658"/>
+		</defs>
+		<clipPath id="SVGID_12_">
+			<use xlink:href="#SVGID_11_"  overflow="visible"/>
+		</clipPath>
+		<path clip-path="url(#SVGID_12_)" fill="#59AFEF" d="M80.041,180.455h13.37c11.045,0,19.958-8.911,19.958-19.86l-0.098-0.096
+			v-44.373h0.098c0-10.947-8.913-19.86-19.958-19.86h-13.37c-10.948,0-19.86,8.913-19.86,19.86h-0.098v44.373l0.098,0.096
+			C60.181,171.544,69.093,180.455,80.041,180.455"/>
+	</g>
+</g>
+<g>
+	<g>
+		<defs>
+			<path id="SVGID_13_" d="M80.041,96.265c-10.948,0-19.861,8.914-19.861,19.86h-0.097v44.374l0.097,0.095
+				c0,10.95,8.913,19.861,19.861,19.861h13.37c11.045,0,19.957-8.911,19.957-19.861l-0.097-0.095v-44.374h0.097
+				c0-10.946-8.912-19.86-19.957-19.86H80.041z"/>
+		</defs>
+		<clipPath id="SVGID_14_">
+			<use xlink:href="#SVGID_13_"  overflow="visible"/>
+		</clipPath>
+		<rect x="58.921" y="93.94" clip-path="url(#SVGID_14_)" fill="#59AFEF" width="58.129" height="90.196"/>
+	</g>
+</g>
+<g>
+	<g>
+		<defs>
+			<rect id="SVGID_15_" width="1199.371" height="271.658"/>
+		</defs>
+		<clipPath id="SVGID_16_">
+			<use xlink:href="#SVGID_15_"  overflow="visible"/>
+		</clipPath>
+		
+			<path clip-path="url(#SVGID_16_)" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="
+			M46.908,10.62c-4.167,0-9.98-0.968-14.92-0.871C13.774,10.233,9.123,25.734,7.185,42.107c-3.681,31.293,2.616,65.978,0,104.44
+			c-2.324,33.229-11.141,69.175-1.646,89.521c8.138,17.632,29.84,23.64,56.289,28.192c27.999,4.941,61.132,8.235,81.284-1.647
+			c11.529-5.617,18.698-15.5,23.251-27.32c13.467-35.361,2.423-87.581,4.942-140.092c1.162-24.123,5.231-48.345-1.647-64.717
+			C153.382-8.272,75.682-3.039,40.32,10.62"/>
+	</g>
+	<g>
+		<defs>
+			<rect id="SVGID_17_" width="1199.371" height="271.658"/>
+		</defs>
+		<clipPath id="SVGID_18_">
+			<use xlink:href="#SVGID_17_"  overflow="visible"/>
+		</clipPath>
+		
+			<path clip-path="url(#SVGID_18_)" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="
+			M73.454,76.889c-33.521-1.26-43.598,40.206-36.428,73.049c6.491,30.033,27.514,52.897,48.053,51.347
+			c19.086-1.452,37.881-23.929,43.113-52.218c3.1-16.664,1.55-35.364-4.941-48.926C113.757,80.376,93.895,71.463,73.454,76.889"/>
+	</g>
+	<g>
+		<defs>
+			<rect id="SVGID_19_" width="1199.371" height="271.658"/>
+		</defs>
+		<clipPath id="SVGID_20_">
+			<use xlink:href="#SVGID_19_"  overflow="visible"/>
+		</clipPath>
+		
+			<path clip-path="url(#SVGID_20_)" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="
+			M73.454,116.708c-22.865,3.099-15.889,34.102-3.295,41.465C89.342,169.509,121.507,126.009,73.454,116.708"/>
+	</g>
+</g>
+<text transform="matrix(1 0 0 1 210.2373 207.1318)" fill="#FFFFFF" font-family="'MyriadPro-Regular'" font-size="203.6187" letter-spacing="-14">Ko</text>
+<text transform="matrix(1 0 0 1 402.2471 207.1318)" fill="#FFFFFF" font-family="'MyriadPro-Regular'" font-size="203.6187" letter-spacing="-13">B</text>
+<text transform="matrix(1 0 0 1 498.3535 207.1318)" fill="#FFFFFF" font-family="'MyriadPro-Regular'" font-size="203.6187">o</text>
+<g>
+	<g>
+		<defs>
+			<rect id="SVGID_21_" width="1199.371" height="271.658"/>
+		</defs>
+		<clipPath id="SVGID_22_">
+			<use xlink:href="#SVGID_21_"  overflow="visible"/>
+		</clipPath>
+		<g clip-path="url(#SVGID_22_)">
+			
+				<text transform="matrix(1 0 0 1 616.0073 207.1318)" fill="#62ACDF" font-family="'MyriadPro-Regular'" font-size="203.6187" letter-spacing="-28">T</text>
+			
+				<text transform="matrix(1 0 0 1 687.4761 207.1318)" fill="#62ACDF" font-family="'MyriadPro-Regular'" font-size="203.6187" letter-spacing="-14">o</text>
+			
+				<text transform="matrix(1 0 0 1 783.9907 207.1318)" fill="#62ACDF" font-family="'MyriadPro-Regular'" font-size="203.6187" letter-spacing="-14">olb</text>
+			
+				<text transform="matrix(1 0 0 1 1014.4829 207.1318)" fill="#62ACDF" font-family="'MyriadPro-Regular'" font-size="203.6187" letter-spacing="-16">o</text>
+			<text transform="matrix(1 0 0 1 1108.3491 207.1318)" fill="#62ACDF" font-family="'MyriadPro-Regular'" font-size="203.6187">x</text>
+		</g>
+	</g>
+</g>
+</svg>
