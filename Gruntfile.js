@@ -32,6 +32,10 @@ module.exports = function(grunt) {
              *  Changes in the source directory should rebuild the file, which ends up
              *    eventually triggering 'sourceChanged' as well.
              */
+            retestXlform: {
+                files: ['jsapp/xlform_model_view/*.coffee'],
+                tasks: ['karma:amd']
+            },
             rebuildDkoboXlform: {
                 files: ['jsapp/xlform_model_view/**/*.js', 'jsapp/xlform_model_view/**/*.coffee'],
                 tasks: ['requirejs:compile_xlform'],
@@ -41,19 +45,29 @@ module.exports = function(grunt) {
              *  of the generated css files.
              */
             scssChanged: {
-                files: ['jsapp/**/*.scss'],
+                files: ['jsapp/kobo/stylesheets/**/*.scss'],
                 tasks: ['build_css'],
-                options: { spawn: false, livereload: false },
+                options: { livereload: false },
             },
 
-            cssChanged: {
-                files: ['jsapp/**/*.css', '!jsapp/**/*.verbose.css'],
-                options: { livereload: true },
+            // cssChanged: {
+                // files: ['jsapp/kobo.compiled/*.css', '!jsapp/**/*.verbose.css'],
+                // tasks: [],
+                // options: { livereload: true },
+            // },
+            livereload: {
+              options: { livereload: true },
+              files: ['jsapp/kobo.compiled/*.css', '!jsapp/**/*.verbose.css'],
             },
         },
         karma: {
             unit: {
                 configFile: 'jsapp/test/configs/karma.conf.js',
+                singleRun: true,
+                browsers: ['PhantomJS'],
+            },
+            amd: {
+                configFile: 'jsapp/test/configs/karma-amd.conf.js',
                 singleRun: true,
                 browsers: ['PhantomJS'],
             },
@@ -187,6 +201,7 @@ module.exports = function(grunt) {
     grunt.registerTask('test', [
         'build',
         'karma:unit',
+        'karma:amd',
     ]);
 
     grunt.registerTask('develop', [

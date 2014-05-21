@@ -58,7 +58,7 @@ CENSUS_TEXTS =
 
 ###
 loremipsum = """
-  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
 """
 
 li_row = (variation='text') ->
@@ -75,11 +75,8 @@ drag_placeholder_row = ({note})->
   """
   <li class="xlf-row-view">
     #{sidenote(note, 'absrt')}
-
-    <div class="card">
-      <div class="---placeholder">
+    <div class="card--placeholder">
         <span>Drag and drop to reorder</span>
-      </div>
     </div>
   </li>
   """
@@ -97,14 +94,14 @@ standard_row = (variation='text', {note}) ->
 
   card__indicator = """
     <div class="card__indicator">
-      <a href="#" class="noop card__indicator__icon"></a>
+      <div class="noop card__indicator__icon"><i class="fa fa-list"></i></div>
     </div>
   """
   card__butons = """
     <div class="card__buttons">
-      <a href="#" class="card__buttons__button">A</a>
-      <a href="#" class="card__buttons__button">B</a>
-      <a href="#" class="card__buttons__button">C</a>
+      <a href="#" class="card__buttons__button gray"><i class="fa fa-cog"></i></a>
+      <a href="#" class="card__buttons__button red"><i class="fa fa-trash-o"></i></a>
+      <a href="#" class="card__buttons__button blue"><i class="fa fa-copy"></i></a>
     </div>
   """
 
@@ -113,9 +110,13 @@ standard_row = (variation='text', {note}) ->
     #{sidenote(note, 'absrt')}
 
     <div class="card">
-      #{card__indicator}
-      #{_text}
-      #{card__butons}
+      <div class="card__header">
+        #{card__indicator}
+        <div class="card__text">
+          #{_text}
+        </div>
+        #{card__butons}
+      </div>
     </div>
   </li>
   """
@@ -135,7 +136,7 @@ empty_survey_message = ->
     <p class="survey-editor__message well">
       <b>This form is currently empty.</b>
       <br>
-      You can add questions, notes, prompts, or other fields by clicking on the "+" sign below.
+      <a href="#">Add your first question now</a>
     </p>
   </li>
   """

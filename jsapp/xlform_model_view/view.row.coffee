@@ -5,7 +5,6 @@ define 'cs!xlform/view.row', [
         'cs!xlform/model.row',
         'cs!xlform/view.templates',
         'cs!xlform/view.utils',
-        'cs!xlform/model.choices',
         'cs!xlform/view.choices',
         'cs!xlform/view.rowDetail',
         ], (
@@ -15,20 +14,19 @@ define 'cs!xlform/view.row', [
             $row,
             $viewTemplates,
             $viewUtils,
-            $choices,
             $viewChoices,
             $viewRowDetail,
             )->
-
-  class RowView extends Backbone.View
+  class BaseRowView extends Backbone.View
     tagName: "li"
     className: "xlf-row-view"
     events:
      "click": "select"
      "click .js-expand-row-selector": "expandRowSelector"
      "drop": "drop"
-     "click .js-advanced-toggle": "expandCog"
-     "click .row-extras__add-to-question-library": "add_row_to_question_library"
+     "click .js-advanced-toggle": "toggleSettings"
+     "click .js-expand-multioptions": "toggleMultiOptions"
+     "click .js-add-to-question-library": "add_row_to_question_library"
 
     initialize: (opts)->
       @options = opts
@@ -70,24 +68,49 @@ define 'cs!xlform/view.row', [
       @
     _renderRow: ->
       @$el.html $viewTemplates.$$render('row.xlfRowView')
-      unless (cl = @model.getList())
-        cl = new $choices.ChoiceList()
-        @model.setList(cl)
-      @listView = new $viewChoices.ListView(el: @$(".list-view"), model: cl, rowView: @).render()
+      @$card = @$el.find('.card')
+      if (cl = @model.getList())
+        @$card.addClass('card--selectquestion')
+        @listView = new $viewChoices.ListView(model: cl, rowView: @).render()
+
+      # @multiOptions = @$(".row__multioptions")
+      # @multiOptions.addClass("hidden")
+
       @rowExtras = @$(".row-extras")
       @rowExtrasSummary = @$(".row-extras-summary")
       for [key, val] in @model.attributesArray()
         new $viewRowDetail.DetailView(model: val, rowView: @).renderInRowView(@)
       @
 
-    expandCog: (evt)->
+    toggleSettings: (evt)->
       evt.stopPropagation()
-      @rowExtras.parent().toggleClass("activated")
-      @rowExtrasSummary.toggleClass("hidden")
-      @rowExtras.toggleClass("hidden")
+      # cannot be expandsettings and expandchoices at the same time
+      @$card.removeClass('card--expandedchoices')
+      @$card.toggleClass('card--expandsettings')
+      @$(evt.currentTarget).toggleClass("activated")
+
+    toggleMultiOptions: (evt)->
+      evt.stopPropagation()
+      # cannot be expandsettings and expandchoices at the same time
+      @$card.removeClass('card--expandsettings')
+      @$card.toggleClass('card--expandedchoices')
 
     add_row_to_question_library: (evt) ->
       evt.stopPropagation()
       @ngScope.add_row_to_question_library @model
 
+  class GroupView extends BaseRowView
+    initialize: (opts)->
+      @options = opts
+    render: ->
+      @$el.html $viewTemplates.row.groupView(@model)
+      @$rows = @$('.group__rows')
+      @model.rows.each (row)=>
+        new RowView(model: row, ngScope: @ngScope, surveyView: @).render().$el.appendTo(@$rows)
+      @$el.data("row-index", @model.getSurvey().rows.indexOf @model)
+      @
+
+  class RowView extends BaseRowView
+
   RowView: RowView
+  GroupView: GroupView

@@ -1,139 +1,187 @@
-// ==========================================================================
-// Dependencies
-// ==========================================================================
+// All variables are now in kobo.scss
 
 // ==========================================================================
-// Color Settings
+// General Styling
 // ==========================================================================
-$cardBorderColor: #d9dde1;
-$cardInSortBorderColor: #38a1f1;
-$cardBorderStyle: 1px solid $cardBorderColor;
-$cardInSortBorderStyle: 2px solid $cardInSortBorderColor;
-$cardInSortThinBorderStyle: 1px solid $cardInSortBorderColor;
 
-body.planned-formbuilder-bg-color {
-  background-color: #e9edf0;
-}
+.form-builder {
 
-.-form-builder {
-  .survey-header {
-    display: none;
+  .survey-editor__message {
+    border: $cardBorderStyle;
+    padding: 20px;
+    background: #FFF;
+    color: $wellTextColor;
+    font-family: 'LatoBlack';
+    font-style: italic;
+    font-size: 13px;
+    a {
+      font-family: 'Lato';
+      font-style: normal;
+      text-decoration: underline;
+    }
   }
 
   // ==========================================================================
-  // Card
+  // Card (incl. Header and Expanded)
   // ==========================================================================
 
   .card {
-      border: $cardBorderStyle;
-      min-height: 67px;
-
-      padding: 10px 20px 10px 48px;
-      display: block;
-      font-size: 14px;
-      background: white;
-      margin-bottom: 2px;
-
-      cursor: not-allowed; // TODO: add card--movable to sortable cards.
+      border-radius: 0px;
+      font-family: 'LatoBlack';
+      font-size: 13px;
+      line-height: 18px;
+      margin-bottom: 4px;
       &.card--movable {
         cursor: move;
       }
-
       &.card--error {
           background-color: rgb(255, 176, 176);
       }
-      &.card--insort {
-          border: $cardInSortBorderStyle;
+      .card__header {
+          border: $cardBorderStyle;
+          padding: 23px 40px 23px 60px;
+          display: block;
+          background: white;
+          cursor: move;
+          position: relative;
+          .card__text {
+              margin:auto;
+              display: inline-block;
+              vertical-align: middle;
+              width: 99%;
+              position: relative;
+              &.activated {
+                color: #8595A5;
+              }
+              .card__buttons__multioptions {
+                cursor: pointer;
+                vertical-align: middle;
+                position: absolute;
+                left:-14px;
+                top:50%;
+                margin-top:-8px;
+                
+                .fa {
+                  width: 12px;
+                  font-size: 15px;
+                }
+              }
+          }
       }
-      //for vertical text align:
-      // position: relative;
   }
 
-  // ==========================================================================
-  // Card Header
-  // ==========================================================================
-
-  h4.card__header {
-    margin: 0;
-    font-weight: normal;
+// multi-choice expanded
+  .caret {
+    &:before {
+      // from fa-caret-right
+      content: "\f0da";
+    }
   }
-  .card__header {
-      //for vertical text align:
-      // position: absolute;
-      // top: 50%;
-      // -webkit-transform: translateY(-50%);
-      // -ms-transform: translateY(-50%);
-      // transform: translateY(-50%);
+  .card.card--selectquestion {
+    .row__multioptions {
+      display: none;
+    }
+
+    &.card--expandedchoices {
+      .caret {
+        &:before {
+          // from fa-caret-down
+          content: "\f0d7";
+        }
+      }
+      .row__multioptions {
+        display: block;
+      }
+      .card__text {
+        color: $indicatorColor;
+      }
+    }
   }
 
-  
+// card settings
+  .card {
+    .advanced-details {
+      display: none;
+    }
+
+    &.card--expandsettings {
+      .advanced-details {
+        display: block;
+      }
+    }
+  }
+
+  .card--selectquestion__expansion, .card__settings {
+      border: $cardBorderStyle;
+      border-top-width: 1px;
+      padding: 23px 10px 23px 60px;
+      background: white;
+      margin-top:-2px;
+      position: relative;
+      &:after, &:before {
+        bottom: 100%;
+        left: 50%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+      }
+      &:after {
+        border-color: rgba(255, 255, 255, 0);
+        border-bottom-color: #FFF;
+        border-width: 8px;
+        margin-left: -8px;
+      }
+      &:before {
+        border-color: rgba(217, 221, 225, 0);
+        border-bottom-color: #d9dde1;
+        border-width: 9px;
+        margin-left: -9px;
+      }
+  }
+
+  .card--placeholder {
+      background-color: transparent;
+      color:#8695A5;
+      border:2px solid #8695A5;
+      text-align: center;
+      font-family: 'LatoBlack';
+      padding: 20px;
+      margin:20px 0px;
+  }
+
+  .sortable-active {
+    .card__header {
+      border: $cardInSortBorderStyle;
+      .card__header-title {
+        color: $cardInSortBorderColor;
+      }
+    }
+  }
+  .card--error {
+      background-color: rgb(255, 176, 176);
+  }
+
+  .card__addoptions {
+    opacity: 0.4;
+  }
   // ==========================================================================
   // Advanced details
   // ==========================================================================
 
   .advanced-details {
-      display: none;
       position: relative;
-      border: 1px solid #E8E1E1;
-      border-radius: 3px;
   }
 
-  .advanced-details .dt-view {
-      margin-bottom: 10px;
-      // .card
-      border: 1px solid #ddd;
-      border-radius: 3px;
-      padding: 10px;
-      display: block;
-      font-size: 14px;
-      cursor: pointer;
-      background: white;
-  }
-  
-  // ==========================================================================
-  // Row-Extras (aka advanced details)
-  // ==========================================================================
-
-  .row-extras, .row-extras-summary {
-      margin: 0;
-      padding: 10px;
-      color: #777;
-      background-color: #f8f8f8;
-
-      .adv-details-txt {
-          font-size: 14px;
-      }
-
-      &:hover > *,
-      &:focus > * {
-          color: #222;
-      }
-
-  }
-
-  .row-extras {
-      padding-left: 36px;
-  }
-
-  .row-extras__cog {
-      position: absolute;
-      top: 12px;
-      left: 10px;
-      color: #222;
-  }
-
-  .row-extras__cog-faded {
-      color: #777;
-  }
-  
-  
   // ==========================================================================
   // Card indicator
   // ==========================================================================
 
   $cardIndicatorWidth: 42px;
-  $cardIndicatorIconHeight: 20px;
-  $cardIndicatorIconWidth: 22px;
+  $cardIndicatorIconHeight: 21px;
+  $cardIndicatorIconWidth: 21px;
   
   .card__indicator {
       position: absolute;
@@ -148,15 +196,30 @@ body.planned-formbuilder-bg-color {
           border-right: $cardInSortThinBorderStyle;
       }
   }
-
   .card__indicator__icon {
-      background-color: $cardBorderColor;
       position: absolute;
       top: 50%;
-      margin-top: -($cardIndicatorIconWidth/2);
-      left: ($cardIndicatorWidth/2) - ($cardIndicatorIconWidth / 2);
-      width: $cardIndicatorIconWidth;
+      margin-top: -($cardIndicatorIconHeight/2);
+      left: 8px;
+      width: $cardIndicatorIconHeight;
       height: $cardIndicatorIconHeight;
+      font-size: 20px;
+      line-height: 20px;
+      text-align: center;
+      color: $indicatorColor;
+      .fa.invert {
+        padding: 3px 1px;
+        font-size: 0.95em;
+        background-color: #8595A5;
+      }
+      .fa-lato-calculate, .fa-lato-decimal,
+      .fa-lato-integer, .fa-lato-text {
+        font-size: 15px;
+        width: $cardIndicatorIconWidth;
+      }
+      .fa-lato-decimal {
+        margin-left:2px;
+      }
   }
   
   // ==========================================================================
@@ -164,12 +227,13 @@ body.planned-formbuilder-bg-color {
   // ==========================================================================
   .card__buttons {
       border: $cardBorderStyle;
-      border-width: 0 0 0 1px;
+      border-width: 0 0 0 2px;
       position: absolute;
-      top: 0;
-      right: 0;
-      width: 22px;
+      top: 0px;
+      right: 2px;
+      width: 26px;
       height: 100%;
+      cursor: pointer;
   }
   .card--insort {
       .card__buttons {
@@ -177,69 +241,96 @@ body.planned-formbuilder-bg-color {
       }
   }
   .card__buttons__button {
-      display: block;
-      border-bottom: 1px transparent;
-      position: relative;
-      text-align: center;
       height: 22px;
       line-height: 22px;
-
-      .linkhelpertext {
-          display: none;
-          position: absolute;
-          top: 2px;
-          left: 24px;
-          background-color: rgba(0,0,0,0.5);
-          padding: 4px 12px;
-          width: 150px;
-          color: #fff;
-          font-size: 12px;
+      width: 26px;
+      position: absolute;
+      right: -2px;
+      bottom: 4px;
+      text-align: center;
+      &.gray {
+        color: #858F98;
+        top:0px;
       }
-
-      &:hover {
-          border-bottom: $cardBorderStyle;
-
-          .linkhelpertext {
-              display: block;
-          }
+      &.red {
+        color: #D08B8C;
+        top:50%;
+        margin-top:-11px;
       }
+      &.blue {
+        color:$linkColor;
+      }
+      &.gray-green {
+      }
+      &.activated {
+        color: #646D75;
+        background-color: #D9DDE1;
+      }
+      // Hover effect
+
+      // &:hover {
+      //   &:after {
+      //       content: "Testing";
+      //       height: 20px;
+      //       width: 100px;
+      //       top:0px;
+      //       left:20px;
+      //       background: pink;
+      //       position: absolute;
+      //       font-size:12px;
+      //   }
+      // }
   }
-  
+
   // ==========================================================================
   // Advanced details
   // ==========================================================================
 
-  .expanding-spacer-between-rows {
-      display: none;
-  }
 
-  .expanding-spacer-between-rows > .line {
-      height: 0;
-      position: relative;
-  }
-
-  .editable-input > input {
-      width: 180px;
-  }
-  
   // ==========================================================================
   // Add row button
   // ==========================================================================
 
-  .btn.add-row-btn {
-      width: 100px;
-      height: 20px;
-      line-height: 20px;
+  .expanding-spacer-between-rows {
+      position: relative; 
+      .line {
+        height: 0px;
+      }
+  }
+
+  .add-row-btn {
+      width: 24px;
+      height: 24px;
+      line-height: 23px;
+      border-radius: $buttonBorderRadius;
+      padding:0px;
       margin-right: auto;
       margin-left: auto;
-      // transition: opacity .25s ease-in-out;
-      // -moz-transition: opacity .25s ease-in-out;
-      // -webkit-transition: opacity .25s ease-in-out;
+      background-color:$addButtonColor;
+      // TODO: this below should be for desktop only
+      position: absolute;
+      left: -38px;
+      top: -22px;
+      &:hover {
+          background-color:$addButtonColorHover;
+      }
   }
   .insort {
-      .btn.add-row-btn {
+      .add-row-btn {
           opacity: 0;
       }
+  }
+
+
+  // ==========================================================================
+  // Add new question
+  // ==========================================================================
+
+  .row__questiontypes {
+      border: $cardInSortBorderStyle;
+      padding: 23px 40px 23px 60px;
+      background: white;
+      margin:4px 0px;
   }
 
 
@@ -257,8 +348,12 @@ body.planned-formbuilder-bg-color {
       text-transform: none;
   }
 
-  // ==========================================================================
-  // Sub modules
-  // ==========================================================================
-  @import '../partials/add_question_to_library';
+}
+
+.group {
+  background-color: #fff;
+  padding: 4px 8px;
+}
+.group__header {
+  border-bottom: 1px solid #ddd;
 }

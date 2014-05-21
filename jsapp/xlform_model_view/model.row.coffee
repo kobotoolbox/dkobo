@@ -5,7 +5,8 @@ define 'cs!xlform/model.row', [
         'cs!xlform/model.utils',
         'cs!xlform/model.surveyDetail',
         'cs!xlform/model.aliases',
-        'cs!xlform/model.rowDetail'
+        'cs!xlform/model.rowDetail',
+        'cs!xlform/model.choices',
         ], (
             _,
             base,
@@ -13,38 +14,44 @@ define 'cs!xlform/model.row', [
             $utils,
             $surveyDetail,
             $aliases,
-            $rowDetail
+            $rowDetail,
+            $choices,
             )->
 
   row = {}
 
-  _determineConstructorByParams = (obj)->
-    formSettingsTypes = do ->
-      for key, val of $configs.defaultSurveyDetails
-        val.asJson.type
-    type = obj?.type
-    if type in formSettingsTypes
-      $surveyDetail.SurveyDetail
-    else if type in $aliases.aliases("group")
-      row.RowError
-    else
-      row.Row
-
-  class row.Rows extends base.BaseCollection
-    model: (obj, ctxt)->
-      RowConstructor = _determineConstructorByParams(obj)
-      try
-        new RowConstructor(obj, _.extend({}, ctxt, _parent: ctxt.collection))
-      catch e
-        # Store exceptions in with the survey
-        new row.RowError(obj, _.extend({}, ctxt, error: e, _parent: ctxt.collection))
-    comparator: (m)-> m.ordinal
-
-  class row.Row extends base.BaseModel
+  class row.BaseRow extends base.BaseModel
+    @kls = "BaseRow"
     constructor: (attributes={}, options={})->
       for key, val of attributes when key is ""
         delete attributes[key]
       super(attributes, options)
+
+    initialize: ->
+      @convertAttributesToRowDetails()
+
+    convertAttributesToRowDetails: ->
+      for key, val of @attributes
+        unless val instanceof $rowDetail.RowDetail
+          @set key, new $rowDetail.RowDetail({key: key, value: val}, {_parent: @}), {silent: true}
+    attributesArray: ()->
+      arr = ([k, v] for k, v of @attributes)
+      arr.sort (a,b)-> if a[1]._order < b[1]._order then -1 else 1
+      arr
+
+    toJSON: ->
+      outObj = {}
+      for [key, val] in @attributesArray()
+        result = @getValue(key)
+        unless @hidden
+          if _.isBoolean(result)
+            outObj[key] = $configs.boolOutputs[if result then "true" else "false"]
+          else
+            outObj[key] = result
+      outObj
+
+  class row.Row extends row.BaseRow
+    @kls = "Row"
     initialize: ->
       ###
       The best way to understand the @details collection is
@@ -52,9 +59,9 @@ define 'cs!xlform/model.row', [
       The column name is the "key" and the value is the "value".
       We opted for a collection (rather than just saving in the attributes of
       this model) because of the various state-related attributes
-      that need to be saved for each cell and allowing room to grow.
+      that need to be saved for each cell and this allows more room to grow.
 
-      E.g.: {"key": "type", "value": "select_one from colors"}
+      E.g.: {"key": "type", "value": "select_one colors"}
             needs to keep track of how the value was built
       ###
       if @_parent
@@ -79,10 +86,7 @@ define 'cs!xlform/model.row', [
             newVals[vk] = if ("function" is typeof vv) then vv() else vv
           @set key, newVals
 
-
-      for key, val of @attributes
-        unless val instanceof $rowDetail.RowDetail
-          @set key, new $rowDetail.RowDetail({key: key, value: val}, {_parent: @}), {silent: true}
+      @convertAttributesToRowDetails()
 
       typeDetail = @get("type")
       tpVal = typeDetail.get("value")
@@ -133,8 +137,17 @@ define 'cs!xlform/model.row', [
 
     get_type: ->
       $configs.question_types[@get('type').get('typeId')] || $configs.question_types['default']
+
+    _isSelectQuestion: ->
+      # TODO [ald]: pull this from $aliases
+      @get('type').get('typeId') in ['select_one', 'select_multiple']
+
     getList: ->
-      @get("type")?.get("list")
+      _list = @get('type')?.get('list')
+      if (not _list) and @_isSelectQuestion()
+        _list = new $choices.ChoiceList()
+        @setList(_list)
+      _list
 
     setList: (list)->
       listToSet = @getSurvey().choices.get(list)
@@ -148,23 +161,6 @@ define 'cs!xlform/model.row', [
 
     linkUp: ->
       val.linkUp()  for key, val of @attributes
-
-    attributesArray: ()->
-      arr = ([k, v] for k, v of @attributes)
-      arr.sort (a,b)-> if a[1]._order < b[1]._order then -1 else 1
-      arr
-
-    toJSON: ->
-      outObj = {}
-      for [key, val] in @attributesArray()
-        result = @getValue(key)
-        unless @hidden
-          if _.isBoolean(result)
-            outObj[key] = $configs.boolOutputs[if result then "true" else "false"]
-          else
-            outObj[key] = result
-      outObj
-
 
   class row.RowError extends base.BaseModel
     constructor: (obj, options)->
