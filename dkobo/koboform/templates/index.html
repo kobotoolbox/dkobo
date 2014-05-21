@@ -22,13 +22,15 @@
     {% endcompress %}
 
     <script src="{% static 'kobo.compiled/modernizr.js' %}"></script>
-    <script src="{% static 'components/jquery/dist/jquery.js' %}"></script>
-    <script src="{% static 'components/jquery-migrate/jquery-migrate.js' %}"></script>
-    <script src="{% static 'components/underscore/underscore.js' %}"></script>
-    <script src="{% static 'components/backbone/backbone.js' %}"></script>
 
-    <script src="{% static 'js/jquery.poshytip.js' %}"></script>
-    <script src="{% static 'components/x-editable/dist/jquery-editable/js/jquery-editable-poshytip.js' %}"></script>
+    {% compress js %}
+      <script src="{% static 'components/jquery/dist/jquery.js' %}"></script>
+      <script src="{% static 'components/jquery-migrate/jquery-migrate.js' %}"></script>
+      <script src="{% static 'components/underscore/underscore.js' %}"></script>
+      <script src="{% static 'components/backbone/backbone.js' %}"></script>
+      <script src="{% static 'js/jquery.poshytip.js' %}"></script>
+      <script src="{% static 'components/x-editable/dist/jquery-editable/js/jquery-editable-poshytip.js' %}"></script>
+    {% endcompress %}
 
     {% if DEBUG %}
     <script src="http://localhost:35729/livereload.js"></script>
