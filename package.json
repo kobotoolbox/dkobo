@@ -13,7 +13,8 @@
     "grunt-contrib-sass": "~0.7.3",
     "grunt-contrib-cssmin": "~0.9.0",
     "grunt-contrib-watch": "~0.6.1",
-    "grunt-modernizr": "~0.5.2"
+    "grunt-modernizr": "~0.5.2",
+    "yuglify": "https://registry.npmjs.org/yuglify/-/yuglify-0.1.4.tgz"
   },
   "devDependencies": {
     "grunt-karma": "0.7.2",
@@ -28,8 +29,7 @@
     "karma-junit-reporter": "~0.2.2",
     "karma-ng-html2js-preprocessor": "~0.1.0",
     "karma-phantomjs-launcher": "~0.1.4",
-    "karma-requirejs": "~0.2.1",
-    "yuglify": "~0.1.4"
+    "karma-requirejs": "~0.2.1"
   },
   "engines": {
     "node": "0.10.x",
