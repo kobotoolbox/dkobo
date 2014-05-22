@@ -7,6 +7,7 @@ define 'cs!xlform/model.row', [
         'cs!xlform/model.aliases',
         'cs!xlform/model.rowDetail',
         'cs!xlform/model.choices',
+        'cs!xlform/mv.skipLogicHelpers',
         ], (
             _,
             base,
@@ -16,6 +17,7 @@ define 'cs!xlform/model.row', [
             $aliases,
             $rowDetail,
             $choices,
+            $skipLogicHelpers,
             )->
 
   row = {}
@@ -136,7 +138,7 @@ define 'cs!xlform/model.row', [
       @
 
     get_type: ->
-      $configs.question_types[@get('type').get('typeId')] || $configs.question_types['default']
+      $skipLogicHelpers.question_types[@get('type').get('typeId')] || $skipLogicHelpers.question_types['default']
 
     _isSelectQuestion: ->
       # TODO [ald]: pull this from $aliases
