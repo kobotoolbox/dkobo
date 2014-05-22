@@ -64,6 +64,20 @@ COMPRESS_PRECOMPILERS = (
     ('text/x-scss', 'sass --scss {infile} {outfile}'),
 )
 
+COMPRESS_STORAGE = 'compressor.storage.GzipCompressorFileStorage'
+
+COMPRESS_JS_FILTERS = (
+    'compressor.filters.yuglify.YUglifyJSFilter',
+)
+COMPRESS_YUGLIFY_BINARY = 'yuglify'
+COMPRESS_YUGLIFY_JS_ARGUMENTS = '--terminal'
+
+GZIP_CONTENT_TYPES = (
+    'text/css',
+    'application/javascript',
+    'text/javascript',
+)
+
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
