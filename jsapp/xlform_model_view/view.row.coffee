@@ -110,6 +110,7 @@ define 'cs!xlform/view.row', [
     deleteGroup: (evt)->
       if confirm('Are you sure you want to delete this group? All questions will be lost')
         @model.detach()
+        @$el.remove()
       evt.preventDefault()
     toggleAdvanced: (evt)->
       @$('.group').toggleClass('group--expanded-settings')
