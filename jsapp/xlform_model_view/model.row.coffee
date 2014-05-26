@@ -41,6 +41,11 @@ define 'cs!xlform/model.row', [
       arr.sort (a,b)-> if a[1]._order < b[1]._order then -1 else 1
       arr
 
+    detach: ->
+      if @_parent
+        @_parent.remove @
+      ``
+
     toJSON: ->
       outObj = {}
       for [key, val] in @attributesArray()

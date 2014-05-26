@@ -100,13 +100,34 @@ define 'cs!xlform/view.row', [
       @ngScope.add_row_to_question_library @model
 
   class GroupView extends BaseRowView
+    events:
+      "click .js-toggle-group-expansion": "toggleExpansion"
+      "click .js-advanced-toggle": "toggleAdvanced"
+      "click .js-delete-group": "deleteGroup"
     initialize: (opts)->
       @options = opts
+      @_shrunk = !!opts.shrunk
+    deleteGroup: (evt)->
+      if confirm('Are you sure you want to delete this group? All questions will be lost')
+        @model.detach()
+      evt.preventDefault()
+    toggleAdvanced: (evt)->
+      @$('.group').toggleClass('group--expanded-settings')
+      evt.preventDefault()
+    toggleExpansion: (evt)->
+      @_shrunk = !@_shrunk
+      @$(".group").eq(0).toggleClass("group--shrunk", @_shrunk)
+      evt.preventDefault()
     render: ->
       @$el.html $viewTemplates.row.groupView(@model)
       @$rows = @$('.group__rows')
+      @_rowViews = {}
       @model.rows.each (row)=>
-        new RowView(model: row, ngScope: @ngScope, surveyView: @).render().$el.appendTo(@$rows)
+        unless @_rowViews[row.cid]
+          _rv = new RowView(model: row, @ngScope, surveyView: @)
+          _rv.$el.appendTo(@$rows)
+          @_rowViews[row.cid] = _rv
+        @_rowViews[row.cid].render()
       @$el.data("row-index", @model.getSurvey().rows.indexOf @model)
       @
 

@@ -85,3 +85,68 @@ define [
         ,begin repeat,grp1,Group1
         ,end group,,
         """
+
+    describe 'group creation', ->
+      beforeEach ->
+        @survey = $survey.Survey.load("""
+        survey,,,
+        ,type,name,label
+        ,text,q1,Q1
+        ,text,q2,Q2
+        ,text,q3,Q3
+        ,text,q4,Q4
+        ,text,q5,Q5
+        """)
+      describe 'can create group with existing rows', ->
+        beforeEach ->
+          @get_names = (s)->
+            _n = 'noname'
+            names = []
+            s.forEachRow (
+                    (r)->
+                      name = r.get('name')?.get('value') or _n
+                      names.push name
+                  ), includeGroups: true
+            names
+
+          expect(@survey._allRows().length).toBe(5)
+          rows = for n in [0,2,4]
+            @survey.rows.at(n)
+
+          @survey._addGroup(label: 'My Group', __rows: rows)
+
+        it 'and has the right number of rows', ->
+          expect(@survey._allRows().length).toBe(5)
+        it 'has the right order of names', ->
+          expect(@get_names(@survey)).toEqual(["q2", "q4", "noname", "q1", "q3", "q5"])
+
+        describe 'can generate missing names on finalize', ->
+          beforeEach ->
+            @grp = _firstGroup(@survey)
+
+          it 'and has a finalize method', ->
+            expect(@grp.finalize).toBeDefined()
+          it 'and has finalize called on survey finalize', ->
+            spyOn @grp, 'finalize'
+            @survey.finalize()
+            expect(@grp.finalize).toHaveBeenCalled()
+          it 'has the correct name', ->
+            @survey.finalize()
+            expect(@get_names(@survey)).toEqual(['q2', 'q4', 'My_Group', 'q1', 'q3', 'q5'])
+
+    describe 'group manipulation', ->
+      beforeEach ->
+        @survey = $survey.Survey.load("""
+        survey,,,
+        ,type,name,label
+        ,text,q1,Q1
+        ,begin group,grp1,Group1
+        ,text,g1q1,G1Q1
+        ,end group,,,
+        ,text,q2,Q2
+        """)
+      it 'group can be deleted', ->
+        g1 = _firstGroup @survey
+        expect(@survey._allRows().length).toBe(3)
+        @survey.rows.remove(g1)
+        expect(@survey._allRows().length).toBe(2)

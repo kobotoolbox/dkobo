@@ -2,12 +2,14 @@ define 'cs!xlform/model.surveyFragment', [
         'cs!xlform/model.base',
         'cs!xlform/model.row',
         'cs!xlform/model.aliases',
+        'cs!xlform/model.utils',
         'cs!xlform/model.configs',
         'backbone',
         ], (
             $base,
             $row,
             $aliases,
+            $utils,
             $configs,
             Backbone,
             )->
@@ -32,6 +34,8 @@ define 'cs!xlform/model.surveyFragment', [
     forEachRow: (cb, ctx={})->
       ctx.includeErrors ?= false
       @rows.each (r, index, list)->
+        if ctx.includeGroups and r.constructor.kls is "Group"
+          cb(r)
         if typeof r.forEachRow is 'function'
           r.forEachRow cb, ctx
         else
@@ -60,28 +64,56 @@ define 'cs!xlform/model.surveyFragment', [
   class Group extends $row.BaseRow
     @kls = "Group"
     @key = "group"
-    constructor: (a,b)->
+    constructor: (a={}, b)->
       __rows = a.__rows
       delete a.__rows
       @rows = new Rows([], _parent: @)
       super(a,b)
-      @rows.add __rows
+      @rows.add __rows  if __rows
       @_groupOrRepeatKey = if @_isRepeat() then "repeat" else "group"
 
     initialize: ->
+      defaultsForType = @getSurvey().defaultsForType
+      grpDefaults = defaultsForType.group
+      unless @attributes.label
+        @set 'label', grpDefaults?.label(@)
       @convertAttributesToRowDetails()
 
     _isRepeat: ()->
       !!(@get("type")?.get("value")?.match(/repeat/))
 
-    forEachRow: (cb, ctxt={})->
+    autoname: ->
+      if @get('name') is undefined
+        slgOpts =
+          lowerCase: false
+          stripSpaces: true
+          lrstrip: true
+          incrementorPadding: 3
+          validXmlTag: true
+        new_name = $utils.sluggify(@getValue('label'), slgOpts)
+        @setDetail('name', new_name)
+
+    finalize: ->
+      @autoname()
+
+    detach: ->
+      @_parent.remove(@)
+
+    _beforeIterator: (cb, ctxt)->
       cb(@groupStart())  if ctxt.includeGroupEnds
+    _afterIterator: (cb, ctxt)->
+      cb(@groupEnd())  if ctxt.includeGroupEnds
+
+    forEachRow: (cb, ctxt={})->
+      @_beforeIterator(cb, ctxt)
       @rows.each (r, index, list)->
+        if ctxt.includeGroups and r.constructor.kls is "Group"
+          cb(r)
         if typeof r.forEachRow is 'function'
           r.forEachRow cb, ctxt
         else
           cb(r)
-      cb(@groupEnd())  if ctxt.includeGroupEnds
+      @_afterIterator(cb, ctxt)
 
     groupStart: ->
       group = @
@@ -94,6 +126,8 @@ define 'cs!xlform/model.surveyFragment', [
     groupEnd: ->
       group = @
       toJSON: ()-> type: "end #{group._groupOrRepeatKey}"
+
+  surveyFragment.Group = Group
 
   INVALID_TYPES_AT_THIS_STAGE = ['begin group', 'end group', 'begin repeat', 'end repeat']
   _determineConstructorByParams = (obj)->
