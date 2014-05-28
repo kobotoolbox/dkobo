@@ -25,3 +25,9 @@ jsapp/coverage
 jsapp/kobo.compiled
 
 .sass-cache/
+
+.gitattributes
+dkobo.pyproj
+dkobo.pyproj.user
+dkobo.sln
+dkobo.v12.suo
