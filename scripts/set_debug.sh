@@ -32,10 +32,14 @@ else
   else
     if [ "$1" = "true" ]; then
     	export DJANGO_DEBUG=True
+        export COMPRESS_OFFLINE=False
+        export COMPRESS_ENABLED=False
     	export DJANGO_SECRET_KEY=AnOtSoSeCrEtKeY
     	echo "local debug mode set to true"
     else
     	export DJANGO_DEBUG=False
+        export COMPRESS_OFFLINE=True
+        export COMPRESS_ENABLED=True
     	export DJANGO_SECRET_KEY=AnOtSoSeCrEtKeY
     	echo "local debug mode set to false"
     fi

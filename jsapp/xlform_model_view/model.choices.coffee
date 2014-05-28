@@ -11,7 +11,7 @@ define 'cs!xlform/model.choices', [
   class choices.Option extends base.BaseModel
     initialize: -> @unset("list name")
     destroy: ->
-      log "destroy me", @
+      @collection.remove(@)
     list: -> @collection
     toJSON: ()->
       name: @get("name")
