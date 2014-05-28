@@ -2,6 +2,8 @@
 /* global dkobo_xlform */
 'use strict';
 function AssetEditorController($scope, $rootScope, $routeParams, $restApi, $routeTo) {
+    $rootScope.showImportButton = false;
+    $rootScope.showCreateButton = false;
     var surveyDraftApi = $restApi.create_question_api($scope, $routeParams.id);
     $rootScope.activeTab = 'Question Library > Edit question';
     surveyDraftApi.get({id: $routeParams.id}, function builder_get_callback(response) {
