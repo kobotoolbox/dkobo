@@ -10,7 +10,7 @@ function AssetEditorController($scope, $rootScope, $routeParams, $restApi, $rout
         $scope.xlfSurvey = dkobo_xlform.model.Survey.load(response.body);
         // temporarily saving response in __djangoModelDetails
         $scope.xlfSurvey.__djangoModelDetails = response;
-        $scope.xlfQuestionApp = QuestionApp.create({el: 'section.form-builder', survey: $scope.xlfSurvey, ngScope: $scope, save: saveCallback});
+        $scope.xlfQuestionApp = dkobo_xlform.view.QuestionApp.create({el: 'section.form-builder', survey: $scope.xlfSurvey, ngScope: $scope, save: saveCallback});
         $scope.xlfQuestionApp.render();
     });
 
