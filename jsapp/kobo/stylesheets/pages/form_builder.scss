@@ -11,12 +11,14 @@
     padding: 20px;
     background: #FFF;
     color: $wellTextColor;
-    font-family: 'LatoBlack';
+    font-family: 'Lato';
+    font-weight: 600;
     font-style: italic;
     font-size: 13px;
     a {
       font-family: 'Lato';
       font-style: normal;
+      font-weight: normal;
       text-decoration: underline;
     }
   }
@@ -27,7 +29,8 @@
 
   .card {
       border-radius: 0px;
-      font-family: 'LatoBlack';
+      font-family: 'Lato';
+      font-weight: 600;
       font-size: 13px;
       line-height: 18px;
       margin-bottom: 4px;
@@ -114,7 +117,6 @@
   .card--selectquestion__expansion, .card__settings {
       border: $cardBorderStyle;
       border-top-width: 1px;
-      padding: 23px 10px 23px 60px;
       background: white;
       margin-top:-2px;
       position: relative;
@@ -142,12 +144,50 @@
       }
   }
 
+  .card--selectquestion__expansion {
+      padding: 23px 10px 23px 60px;      
+  }
+
+  ul.card__settings__tabs {
+    float: left;
+    
+    width: 20%;
+    li {
+      padding: 6px 10px;
+      font-size: 11px;
+      font-weight: normal;
+      font-family: 'Lato';
+      cursor: pointer;
+      &.heading {
+        border-bottom:$thinBorderStyle;
+        font-size: 13px;
+        padding:8px 10px;
+        font-weight: 600;
+        margin-bottom: 3px;
+        i.fa {
+          color:$indicatorColor;
+          margin-right: 5px;
+        }
+      }
+      &.active {
+        background: #E5E8EB;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .card__settings__content {
+    padding:20px 30px;
+    margin-left: 20%;
+    border-left: $thinBorderStyle;
+  }
   .card--placeholder {
       background-color: transparent;
       color:#8695A5;
       border:2px solid #8695A5;
       text-align: center;
-      font-family: 'LatoBlack';
+      font-family: 'Lato';
+      font-weight: 600;
       padding: 20px;
       margin:20px 0px;
   }

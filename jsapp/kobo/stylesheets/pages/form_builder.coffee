@@ -22,11 +22,12 @@ contents = ->
   
   # TODO: merge .-form-builder (wrap) with .form-builder (margin)
   """
+  <div class="survey-header">
+    SurveyHeader
+  </div>
+  <div class="container">
   <section class="-form-builder form-builder">
     <div class="formb__surveybuttons"></div>
-    <div class="survey-header">
-      SurveyHeader
-    </div>
     <div class="survey-editor">
       <ul>
         #{empty_survey_message()}
@@ -38,6 +39,7 @@ contents = ->
       </ul>
     </div>
   </section>
+  </div>
   """
 
 
@@ -116,6 +118,18 @@ standard_row = (variation='text', {note}) ->
           #{_text}
         </div>
         #{card__butons}
+      </div>
+      <div class="card__settings">
+        <ul class="card__settings__tabs">
+          <li class="heading"><i class="fa fa-cog"></i> Settings</li>
+          <li class="active">Question Options</li>
+          <li>Skip Logic</li>
+          <li>Validation Criteria</li>
+          <li>Response Type</li>
+        </ul>
+        <div class="card__settings__content clearfix">
+          What What!
+        </div>
       </div>
     </div>
   </li>
