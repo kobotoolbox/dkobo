@@ -16,20 +16,24 @@ define [
 
   describe 'integration of SurveyApp', ->
     beforeEach ->
-      @survey = $model.Survey.load("""
-      survey,,,
-      ,type,name,label
-      ,text,q1,Question1
-      ,begin group,grp,
-      ,text,g1q1,Group1Question1
-      ,text,g1q2,Group1Question2
-      ,end group,,
-      """)
-      @div = $('<div>', class: 'test-div')
-      @div.prependTo('body')
-      @app = new $view.SurveyApp({survey: @survey, ngScope: {}})
-      @div.append @app.$el
-      @app.render()
+      @load_csv = (scsv)=>
+        @div.remove()  if @div
+        @survey = $model.Survey.load(scsv)
+        @div = $('<div>', class: 'test-div')
+        @div.prependTo('body')
+        @app = new $view.SurveyApp({survey: @survey, ngScope: {}})
+        @div.append @app.$el
+        @app.render()
+      @load_csv("""
+        survey,,,
+        ,type,name,label
+        ,text,q1,Question1
+        ,begin group,grp,
+        ,text,g1q1,Group1Question1
+        ,text,g1q2,Group1Question2
+        ,end group,,
+        """)
+    afterEach -> $('.test-div').remove()
 
     it 'has group html structure', ->
       expect(@survey.rows.length).toBe(2)
@@ -51,17 +55,34 @@ define [
       expect(@app.selectedRows().length).toBe(1)
       expect(@div.find('.survey-editor__list > .survey__row').length).toBe(2)
 
-    it 'can group rows', ->
-      @survey.rows.add type: 'text', name: 'q3', label: 'Q3'
-      @survey.rows.add type: 'text', name: 'q4', label: 'Q4'
+    describe 'grouping selected rows', ->
+      beforeEach ->
+        @load_csv """
+        survey,,,
+        ,type,name,label
+        ,text,q1,Question1
+        ,begin group,grp,
+        ,text,g1q1,Group1Question1
+        ,text,g1q2,Group1Question2
+        ,end group,,
+        ,text,q2,Question2
+        ,text,q3,Question3
+        ,text,q4,Question4
+        """
 
-      firstLevelRows = @div.find('.survey-editor__list > .survey__row')
-      expect(firstLevelRows.length).toBe(4)
-      firstLevelRows.addClass('survey__row--selected')
-      expect(@app.selectedRows().length).toBe(4)
-      @app.groupSelectedRows()
-      dump(@survey.toCSV())
-      
+      it 'can group all rows and groups together', ->
+        firstLevelRows = @div.find('.survey-editor__list > .survey__row')
+        expect(firstLevelRows.length).toBe(5)
+        firstLevelRows.addClass('survey__row--selected')
+        expect(@app.selectedRows().length).toBe(5)
+        @app.groupSelectedRows()
+        expect(@app.survey.rows.at(0).getValue('type')).toBe('group')
+        # dump @survey.toCSV()
 
-    afterEach ->
-      $('.test-div').remove()
+      it 'can group discontinuous questions', ->
+        firstLevelRows = @div.find('.survey-editor__list > .survey__row')
+        firstLevelRows.eq(0).addClass('survey__row--selected')
+        firstLevelRows.eq(-1).addClass('survey__row--selected')
+        expect(@app.selectedRows().length).toBe(2)
+        @app.groupSelectedRows()
+        # dump @survey.toCSV()

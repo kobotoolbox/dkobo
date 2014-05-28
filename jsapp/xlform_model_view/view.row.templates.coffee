@@ -12,7 +12,7 @@ define 'cs!xlform/view.row.templates', [], ()->
 
   xlfRowView = () ->
       """
-      <div class="survey__row__item survey__row__item--question card">
+      <div class="survey__row__item survey__row__item--question card js-select-row">
         <div class="card__header">
           <div class="card__indicator">
             <div class="noop card__indicator__icon"><i class="fa fa-fw card__header-icon"></i></div>
@@ -39,7 +39,7 @@ define 'cs!xlform/view.row.templates', [], ()->
 
   groupView = (g)->
     """
-    <div class="survey__row__item survey__row__item--group group">
+    <div class="survey__row__item survey__row__item--group group js-select-row">
       <header class="group__header">
         <i class="group__carat js-toggle-group-expansion fa fa-fw"></i>
         <span class="group__name">#{g.getValue('label')}</span>

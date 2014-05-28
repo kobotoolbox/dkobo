@@ -34,6 +34,8 @@ define 'cs!xlform/view.surveyApp', [
       "click #publish": "publishButtonClick"
       "click #settings": "toggleSurveyOptions"
       "update-sort": "updateSort"
+      "click .js-group-rows": "groupSelectedRows"
+      "question-select": "questionSelect"
     @create: (params = {}) ->
       if _.isString params.el
         params.el = $(params.el).get 0
@@ -72,7 +74,14 @@ define 'cs!xlform/view.surveyApp', [
       model.ordinal = position
       @survey.rows.add(model, at: position)
       ``
+    questionSelect: (evt)->
+      @activateGroupButton(@selectedRows().length > 0)
+      ``
 
+    activateGroupButton: (active=true)->
+      @$('.btn--group-questions').toggleClass('btn--disabled', !active)
+
+    getApp: -> @
     toggleSurveyOptions: ->
       if @features.surveySettings
         @$(".survey-header__options").toggle()
@@ -197,6 +206,7 @@ define 'cs!xlform/view.surveyApp', [
 
     groupSelectedRows: ->
       rows = @selectedRows()
+      @$('.survey__row--selected').removeClass('survey__row--selected')
       if rows.length > 0
         @survey._addGroup(__rows: rows)
         true

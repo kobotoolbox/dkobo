@@ -61,6 +61,36 @@ define 'cs!xlform/model.surveyFragment', [
     addRow: (r, opts={})->
       @rows.add r, _.extend(opts, _parent: @rows)
 
+    _addGroup: (opts)->
+      # move to surveyFrag
+      opts._parent = @rows
+
+      index = if ('index' of opts) then opts.index else -1
+      delete opts.index
+
+      unless 'type' of opts
+        opts.type = 'group'
+
+      unless '__rows' of opts
+        opts.__rows = []
+
+      for row in opts.__rows
+        row.detach()
+
+      grp = new Group(opts)
+      @rows.add(grp)
+
+    _allRows: ->
+      # move to surveyFrag
+      rows = []
+      @forEachRow ((r)-> rows.push(r)  if r.constructor.kls is "Row"), {}
+      rows
+
+    finalize: ->
+      # move to surveyFrag
+      @forEachRow ((r)=> r.finalize()), includeGroups: true
+      @
+
   class Group extends $row.BaseRow
     @kls = "Group"
     @key = "group"
@@ -75,7 +105,7 @@ define 'cs!xlform/model.surveyFragment', [
     initialize: ->
       defaultsForType = @getSurvey().defaultsForType
       grpDefaults = defaultsForType.group
-      unless @attributes.label
+      unless @has 'label'
         @set 'label', grpDefaults?.label(@)
       @convertAttributesToRowDetails()
 

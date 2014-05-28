@@ -21,7 +21,6 @@ define 'cs!xlform/view.row', [
     tagName: "li"
     className: "xlf-row-view survey__row"
     events:
-     "click": "select"
      "click .js-select-row": "selectRow"
      "click .js-expand-row-selector": "expandRowSelector"
      "drop": "drop"
@@ -42,19 +41,16 @@ define 'cs!xlform/view.row', [
         customEventName = "row-detail-change-#{key}"
         @$(".on-#{customEventName}").trigger(customEventName, key, value, ctxt)
 
-      @$el.on "xlf-blur", =>
-        @$el.removeClass("xlf-selected")
-
     drop: (evt, index)->
       @$el.trigger("update-sort", [@model, index])
 
     selectRow: ->
       @$el.toggleClass("survey__row--selected")
+      @getApp().questionSelect()
 
-    select: ->
-      unless @$el.hasClass("xlf-selected")
-        $(".xlf-selected").trigger("xlf-blur")
-        @$el.addClass("xlf-selected")
+    getApp: ->
+      @surveyView.getApp()
+
     expandRowSelector: ->
       new $rowSelector.RowSelector(el: @$el.find(".expanding-spacer-between-rows").get(0), ngScope: @ngScope, spawnedFromView: @).expand()
 
@@ -112,6 +108,7 @@ define 'cs!xlform/view.row', [
       @options = opts
       @_shrunk = !!opts.shrunk
       @$el.attr("data-row-id", @model.cid)
+      @surveyView = @options.surveyView
     deleteGroup: (evt)->
       if confirm('Are you sure you want to delete this group? All questions will be lost')
         @model.detach()

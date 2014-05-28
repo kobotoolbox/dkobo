@@ -112,30 +112,6 @@ define 'cs!xlform/model.survey', [
         sheeted.sheet shtName, csv(content)
       sheeted.toString()
 
-    _addGroup: (opts)->
-      opts._parent = @rows
-
-      index = if ('index' of opts) then opts.index else -1
-      delete opts.index
-
-      unless '__rows' of opts
-        opts.__rows = []
-
-      for row in opts.__rows
-        row.detach()
-
-      grp = new $surveyFragment.Group(opts)
-      @rows.add(grp)
-
-    _allRows: ->
-      rows = []
-      @forEachRow ((r)-> rows.push(r)  if r.constructor.kls is "Row"), {}
-      rows
-
-    finalize: ->
-      @forEachRow ((r)=> r.finalize()), includeGroups: true
-      @
-
   Survey.load = (csv_repr)->
     _deserialized = $inputDeserializer.deserialize csv_repr
     _parsed = $inputParser.parse _deserialized
