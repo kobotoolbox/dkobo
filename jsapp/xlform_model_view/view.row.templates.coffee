@@ -1,6 +1,6 @@
 define 'cs!xlform/view.row.templates', [], ()->
   expandingSpacerHtml = """
-      <div class="row clearfix expanding-spacer-between-rows">
+      <div class="survey__row__spacer row clearfix expanding-spacer-between-rows">
         <div class="add-row-btn js-expand-row-selector btn  btn--block  btn-xs  btn-default"><i class="fa fa-plus"></i></div>
         <div class="line">&nbsp;</div>
       </div>
@@ -12,7 +12,7 @@ define 'cs!xlform/view.row.templates', [], ()->
 
   xlfRowView = () ->
       """
-      <div class="card">
+      <div class="survey__row__item survey__row__item--question card">
         <div class="card__header">
           <div class="card__indicator">
             <div class="noop card__indicator__icon"><i class="fa fa-fw card__header-icon"></i></div>
@@ -39,7 +39,7 @@ define 'cs!xlform/view.row.templates', [], ()->
 
   groupView = (g)->
     """
-    <div class="group">
+    <div class="survey__row__item survey__row__item--group group">
       <header class="group__header">
         <i class="group__carat js-toggle-group-expansion fa fa-fw"></i>
         <span class="group__name">#{g.getValue('label')}</span>

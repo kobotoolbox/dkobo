@@ -195,6 +195,28 @@ define 'cs!xlform/view.surveyApp', [
         rowEl.slideUp 175, "swing", ()=>
           @survey.rows.remove matchingRow
 
+    groupSelectedRows: ->
+      rows = @selectedRows()
+      if rows.length > 0
+        @survey._addGroup(__rows: rows)
+        true
+      else
+        false
+
+    selectedRows: ()->
+      rows = []
+      @$el.find('.survey__row--selected').each (i, el)=>
+        $el = $(el)
+        rowId = $el.data("rowId")
+        matchingRow = false
+        findMatch = (row)->
+          if row.cid is rowId
+            matchingRow = row
+        @survey.forEachRow findMatch, includeGroups: true
+        # matchingRow = @survey.rows.find (row)-> row.cid is rowId
+        rows.push matchingRow
+      rows
+
     onEscapeKeydown: -> #noop. to be overridden
     previewButtonClick: (evt)->
       if evt.shiftKey #and evt.altKey

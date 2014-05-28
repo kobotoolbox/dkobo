@@ -73,7 +73,7 @@ define 'cs!xlform/view.surveyApp.templates', [], ()->
           </div>
         </header>
         <div class="survey-editor  form-editor-wrap">
-          <ul class="-form-editor">
+          <ul class="-form-editor survey-editor__list">
             <li class="survey-editor__null-top-row empty">
               <p class="survey-editor__message well">
                 <b>This form is currently empty.</b><br>

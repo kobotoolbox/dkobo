@@ -19,9 +19,10 @@ define 'cs!xlform/view.row', [
             )->
   class BaseRowView extends Backbone.View
     tagName: "li"
-    className: "xlf-row-view"
+    className: "xlf-row-view survey__row"
     events:
      "click": "select"
+     "click .js-select-row": "selectRow"
      "click .js-expand-row-selector": "expandRowSelector"
      "drop": "drop"
      "click .js-advanced-toggle": "toggleSettings"
@@ -47,6 +48,9 @@ define 'cs!xlform/view.row', [
     drop: (evt, index)->
       @$el.trigger("update-sort", [@model, index])
 
+    selectRow: ->
+      @$el.toggleClass("survey__row--selected")
+
     select: ->
       unless @$el.hasClass("xlf-selected")
         $(".xlf-selected").trigger("xlf-blur")
@@ -69,7 +73,7 @@ define 'cs!xlform/view.row', [
     _renderRow: ->
       @$el.html $viewTemplates.$$render('row.xlfRowView')
       @$card = @$el.find('.card')
-      if (cl = @model.getList())
+      if 'getList' of @model and (cl = @model.getList())
         @$card.addClass('card--selectquestion')
         @listView = new $viewChoices.ListView(model: cl, rowView: @).render()
 
@@ -107,6 +111,7 @@ define 'cs!xlform/view.row', [
     initialize: (opts)->
       @options = opts
       @_shrunk = !!opts.shrunk
+      @$el.attr("data-row-id", @model.cid)
     deleteGroup: (evt)->
       if confirm('Are you sure you want to delete this group? All questions will be lost')
         @model.detach()
@@ -125,7 +130,10 @@ define 'cs!xlform/view.row', [
       @_rowViews = {}
       @model.rows.each (row)=>
         unless @_rowViews[row.cid]
-          _rv = new RowView(model: row, @ngScope, surveyView: @)
+          if row.constructor.kls is 'Group'
+            _rv = new GroupView(model: row, ngScope: @ngScope, surveyView: @)
+          else
+            _rv = new RowView(model: row, ngScope: @ngScope, surveyView: @)
           _rv.$el.appendTo(@$rows)
           @_rowViews[row.cid] = _rv
         @_rowViews[row.cid].render()
