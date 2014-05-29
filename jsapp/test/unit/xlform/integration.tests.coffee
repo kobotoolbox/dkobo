@@ -9,12 +9,11 @@ define [
             $surveys,
             )->
 
-  describe 'necessary plugins are installed', ->
+  describe 'integration.tests; necessary plugins are installed', ->
     it 'has select2', ->
       expect(jQuery.fn.select2).toBeDefined()
 
-
-  describe 'integration of SurveyApp', ->
+  describe 'integration.tests; integration of SurveyApp', ->
     beforeEach ->
       @load_csv = (scsv)=>
         @div.remove()  if @div
@@ -75,9 +74,24 @@ define [
         expect(firstLevelRows.length).toBe(5)
         firstLevelRows.addClass('survey__row--selected')
         expect(@app.selectedRows().length).toBe(5)
+
+        # set the btn-disabled on btn--group-questions
+        @app.questionSelect()
+        expect(@div.find('.btn--group-questions').hasClass('btn--disabled')).not.toBeTruthy()
+
         @app.groupSelectedRows()
         expect(@app.survey.rows.at(0).getValue('type')).toBe('group')
+        expect(@div.find('.survey-editor__list > .survey__row--group').length).toBe(1)
+
+        # reset the btn-disabled on btn--group-questions
+        @app.questionSelect()
+        expect(@div.find('.btn--group-questions').hasClass('btn--disabled')).toBeTruthy()
+        # @div.find('.survey-editor__list > .survey__row--group').addClass()
         # dump @survey.toCSV()
+
+        @div.find('.survey-editor__list > .survey__row--group').addClass('survey__row--selected')
+        @app.questionSelect()
+        expect(@div.find('.survey-editor__list > .survey__row--group').length).toBe(1)
 
       it 'can group discontinuous questions', ->
         firstLevelRows = @div.find('.survey-editor__list > .survey__row')

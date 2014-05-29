@@ -107,6 +107,7 @@ define 'cs!xlform/view.row', [
     initialize: (opts)->
       @options = opts
       @_shrunk = !!opts.shrunk
+      @$el.addClass("survey__row--group")
       @$el.attr("data-row-id", @model.cid)
       @surveyView = @options.surveyView
     deleteGroup: (evt)->
@@ -126,14 +127,7 @@ define 'cs!xlform/view.row', [
       @$rows = @$('.group__rows')
       @_rowViews = {}
       @model.rows.each (row)=>
-        unless @_rowViews[row.cid]
-          if row.constructor.kls is 'Group'
-            _rv = new GroupView(model: row, ngScope: @ngScope, surveyView: @)
-          else
-            _rv = new RowView(model: row, ngScope: @ngScope, surveyView: @)
-          _rv.$el.appendTo(@$rows)
-          @_rowViews[row.cid] = _rv
-        @_rowViews[row.cid].render()
+        @getApp().ensureElInView(row, @, @$rows).render()
       @$el.data("row-index", @model.getSurvey().rows.indexOf @model)
       @
 

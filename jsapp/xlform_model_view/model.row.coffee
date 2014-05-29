@@ -32,6 +32,7 @@ define 'cs!xlform/model.row', [
     initialize: ->
       @convertAttributesToRowDetails()
 
+    isError: -> false
     convertAttributesToRowDetails: ->
       for key, val of @attributes
         unless val instanceof $rowDetail.RowDetail
@@ -45,6 +46,21 @@ define 'cs!xlform/model.row', [
       if @_parent
         @_parent.remove @
       ``
+
+    toJSON2: ->
+      outObj = {}
+      for [key, val] in @attributesArray()
+        if key is 'type' and val.get('typeId') in ['select_one', 'select_multiple']
+          result = {}
+          result[val.get('typeId')] = val.get('listName')
+        else
+          result = @getValue(key)
+        unless @hidden
+          if _.isBoolean(result)
+            outObj[key] = $configs.boolOutputs[if result then "true" else "false"]
+          else if '' isnt result
+            outObj[key] = result
+      outObj
 
     toJSON: ->
       outObj = {}
@@ -169,14 +185,16 @@ define 'cs!xlform/model.row', [
     linkUp: ->
       val.linkUp()  for key, val of @attributes
 
-  class row.RowError extends base.BaseModel
+  class row.RowError extends row.BaseRow
     constructor: (obj, options)->
       @_error = options.error
-      console?.error("Error creating row: [#{options.error}]", obj)
+      unless window.xlfHideWarnings
+        console?.error("Error creating row: [#{options.error}]", obj)
       super(obj, options)
+    isError: -> true
     getValue: (what)->
       if what of @attributes
-        @attributes[what]
+        @attributes[what].get('value')
       else
         "[error]"
 

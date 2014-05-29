@@ -20,6 +20,23 @@ define 'cs!xlform/model.surveyFragment', [
     obj["__#{fname}"] = obj[fname]
     obj[fname] = (args...) -> obj._meta[fname].apply(obj._meta, args)
 
+  _forEachRow = (cb, ctx)->
+    @_beforeIterator(cb, ctx)  if '_beforeIterator' of @
+    unless 'includeErrors' of ctx
+      ctx.includeErrors = false
+    @rows.each (r, index, list)->
+      if typeof r.forEachRow is 'function'
+        if ctx.includeGroups
+          cb(r)
+        if not ctx.flat
+          r.forEachRow cb, ctx
+      else if r.isError()
+        cb(r)  if ctx.includeErrors
+      else
+        cb(r)
+    @_afterIterator(cb, ctx)  if '_afterIterator' of @
+    ``
+
   class surveyFragment.SurveyFragment extends $base.BaseCollection
     constructor: (a,b)->
       @rows = new Rows([], _parent: @)
@@ -32,14 +49,7 @@ define 'cs!xlform/model.surveyFragment', [
     _validate: -> true
     linkUp: -> @invoke('linkUp')
     forEachRow: (cb, ctx={})->
-      ctx.includeErrors ?= false
-      @rows.each (r, index, list)->
-        if ctx.includeGroups and r.constructor.kls is "Group"
-          cb(r)
-        if typeof r.forEachRow is 'function'
-          r.forEachRow cb, ctx
-        else
-          cb(r)
+      _forEachRow.apply(@, [cb, ctx])
     getRowDescriptors: () ->
       descriptors = []
       @forEachRow (row) ->
@@ -134,16 +144,8 @@ define 'cs!xlform/model.surveyFragment', [
     _afterIterator: (cb, ctxt)->
       cb(@groupEnd())  if ctxt.includeGroupEnds
 
-    forEachRow: (cb, ctxt={})->
-      @_beforeIterator(cb, ctxt)
-      @rows.each (r, index, list)->
-        if ctxt.includeGroups and r.constructor.kls is "Group"
-          cb(r)
-        if typeof r.forEachRow is 'function'
-          r.forEachRow cb, ctxt
-        else
-          cb(r)
-      @_afterIterator(cb, ctxt)
+    forEachRow: (cb, ctx={})->
+      _forEachRow.apply(@, [cb, ctx])
 
     groupStart: ->
       group = @

@@ -8,7 +8,7 @@ define [
             $surveys,
             )->
 
-  describe 'model.groups', ->
+  describe 'group.tests', ->
     _firstGroup = (s)->
       _.first s.rows.filter (r,i)-> r.constructor.name is "Group"
     _lastGroup = (s)->

@@ -54,6 +54,23 @@ define 'cs!xlform/model.survey', [
         index_incr = index + row_i
         @rows.add(row.toJSON(), at: index_incr)
       ``
+    toJSON: (stringify=false, spaces=4)->
+      obj = {}
+      choices = new $choices.ChoiceLists()
+      obj.survey = do =>
+        out = []
+        fn = (r)->
+          if 'getList' of r and (l = r.getList())
+            choices.add(l)
+          out.push r.toJSON2()
+        @forEachRow fn
+        out
+      if choices.length > 0
+        obj.choices = choices.summaryObj(true)
+      if stringify
+        JSON.stringify(obj, null, spaces)
+      else
+        obj
 
     toCsvJson: ()->
       # build an object that can be easily passed to the "csv" library

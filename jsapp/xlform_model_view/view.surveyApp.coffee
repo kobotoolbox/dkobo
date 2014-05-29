@@ -47,8 +47,7 @@ define 'cs!xlform/view.surveyApp', [
       else
         @survey = new $survey.Survey(options)
 
-      @rowViews = new Backbone.Model()
-
+      @__rowViews = new Backbone.Model()
       @ngScope = options.ngScope
 
       @survey.rows.on "add", @reset, @
@@ -65,6 +64,13 @@ define 'cs!xlform/view.surveyApp', [
 
       $(window).on "keydown", (evt)=>
         @onEscapeKeydown(evt)  if evt.keyCode is 27
+
+    registerView: (cid, view)->
+      @__rowViews.set(cid, view)
+
+    getView: (cid)->
+      @__rowViews.get(cid)
+
     updateSort: (evt, model, position)->
       # inspired by this:
       # http://stackoverflow.com/questions/10147969/saving-jquery-ui-sortables-order-to-backbone-js-collection
@@ -156,6 +162,25 @@ define 'cs!xlform/view.surveyApp', [
       log scsv
       ``
 
+    ensureElInView: (row, parentView, $parentEl)->
+      view = @getViewForRow(row)
+      $el = view.$el
+      if $el.parents($parentEl).length is 0
+        $parentEl.append($el)
+      else if $el.parent().get(0) isnt $parentEl.get(0)
+        $el.detach().appendTo($parentEl)
+      view
+
+    getViewForRow: (row)->
+      unless (xlfrv = @__rowViews.get(row.cid))
+        if row.constructor.kls is 'Group'
+          rv = new $rowView.GroupView(model: row, ngScope: @ngScope, surveyView: @)
+        else
+          rv = new $rowView.RowView(model: row, ngScope: @ngScope, surveyView: @)
+        @__rowViews.set(row.cid, rv)
+        xlfrv = @__rowViews.get(row.cid)
+      xlfrv
+
     reset: ->
       fe = @formEditorEl
       isEmpty = true
@@ -164,21 +189,10 @@ define 'cs!xlform/view.surveyApp', [
           # TODO: avoid changing model from the view
           row.unset 'relevant'
         isEmpty = false
-        unless (xlfrv = @rowViews.get(row.cid))
-          if row.constructor.kls is 'Group'
-            rv = new $rowView.GroupView(model: row, ngScope: @ngScope, surveyView: @)
-          else
-            rv = new $rowView.RowView(model: row, ngScope: @ngScope, surveyView: @)
-          @rowViews.set(row.cid, rv)
-          xlfrv = @rowViews.get(row.cid)
-
-        $el = xlfrv.render().$el
-        if $el.parents(@$el).length is 0
-          @formEditorEl.append($el)
+        @ensureElInView(row, @, @formEditorEl).render()
 
       @ngScope.displayQlib = false
-      # @survey.forEachRow(fn, includeErrors: true)
-      @survey.rows.each(fn, includeErrors: true)
+      @survey.forEachRow(fn, includeErrors: true, includeGroups: true, flat: true)
 
       null_top_row = @formEditorEl.find(".survey-editor__null-top-row, .survey-editor__message").removeClass("expanded")
       if isEmpty
@@ -207,6 +221,7 @@ define 'cs!xlform/view.surveyApp', [
     groupSelectedRows: ->
       rows = @selectedRows()
       @$('.survey__row--selected').removeClass('survey__row--selected')
+      @activateGroupButton(false)
       if rows.length > 0
         @survey._addGroup(__rows: rows)
         true
