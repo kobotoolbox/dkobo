@@ -137,7 +137,7 @@ standard_row = (variation='text', {note}) ->
           <li data-card-settings-tab-id="validation-criteria">Validation Criteria</li>
           <li data-card-settings-tab-id="response-type">Response Type</li>
         </ul>
-        <div class="card__settings__content clearfix">
+        <div class="card__settings__content clearfix card__settings__content--question-options">
           <ul class="card__settings__fields">
             <li><label>Question Hint: </label> <span class="settings__input"><input type="text" name="hint" class="text" /></span></li>
             <li><label>Required: </label> <span class="settings__input"><input type="checkbox" name="required"/> Yes</span></li>
