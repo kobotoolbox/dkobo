@@ -60,7 +60,7 @@ CENSUS_TEXTS =
 
 ###
 loremipsum = """
-  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
 """
 
 li_row = (variation='text') ->
@@ -128,7 +128,17 @@ standard_row = (variation='text', {note}) ->
           <li>Response Type</li>
         </ul>
         <div class="card__settings__content clearfix">
-          What What!
+          <ul class="card__settings__fields">
+            <li><label>Question Hint: </label> <span class="settings__input"><input type="text" name="hint" class="text" /></span></li>
+            <li><label>Required: </label> <span class="settings__input"><input type="checkbox" name="required"/> Yes</span></li>
+            <li><label>Default: </label> <span class="settings__input"><input type="text" name="default" class="text"/></span></li>
+          </ul>
+
+          <ul class="card__settings__fields skip-logic">
+            <li><button class="skiplogic__button skiplogic__select-builder"><i class="fa fa-plus"></i> Add a condition</button></li>
+            <li><button class="skiplogic__button skiplogic__select-handcode"><i class="fa fa-code"></i> Manually enter your skip logic in XLSForm code</button></li>
+          </ul>
+
         </div>
       </div>
     </div>

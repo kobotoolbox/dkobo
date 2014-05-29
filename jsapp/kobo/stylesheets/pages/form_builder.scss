@@ -181,6 +181,60 @@
     margin-left: 20%;
     border-left: $thinBorderStyle;
   }
+
+  .card__settings__fields {
+    li {
+      padding-top: 4px;
+      padding-bottom: 4px;
+      > label {
+        text-align: right;
+        width: 25%;
+        margin-right: 3%;
+        display: inline-block;
+        font-weight: 600;
+        vertical-align: middle;
+      }
+      .settings__input {
+        width: 65%;
+        display: inline-block;
+        input.text {
+          display: inline-block;
+        }
+      }
+    }
+
+    // TEMP
+    &.skip-logic {
+      margin-top:10px;
+      clear: both;
+    }
+
+    .skiplogic__button {
+      border:none;
+      width: 100%;
+      display: block;
+      text-align: center;
+      padding:12px 0px;
+      font-weight: 600;
+      i {
+        margin-right: 10px;
+      }
+      &.skiplogic__select-builder {
+        background: #B3E6C9;
+        border-bottom: 1px solid #54A174;
+        i {
+          color: #54A174;
+        }
+      }
+      &.skiplogic__select-handcode {
+        background: #A3DBFD;
+        border-bottom: 1px solid #4A82A5;
+        i {
+          color: #4A82A5;
+        }
+      }
+    }
+  }
   .card--placeholder {
       background-color: transparent;
       color:#8695A5;
