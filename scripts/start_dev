@@ -2,4 +2,6 @@
 source ~/.virtualenvs/$1/bin/activate
 export COMPRESS_ENABLED=false
 source scripts/set_debug.sh true
-python manage.py runserver
+export DJANGO_SETTINGS_MODULE=dkobo.settings
+export PATH=$PATH:node_modules/.bin
+python manage.py gruntserver 0:8000

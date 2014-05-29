@@ -259,7 +259,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
         when 'dropdown' then new viewRowDetailSkipLogic.SkipLogicDropDownResponse responses
         when 'integer', 'decimal' then new viewRowDetailSkipLogic.SkipLogicValidatingTextResponseView
     create_criterion_view: (question_picker_view, operator_picker_view, response_value_view, presenter) ->
-      return new $modelRowDetailsSkipLogic.SkipLogicCriterion question_picker_view, operator_picker_view, response_value_view, presenter
+      return new viewRowDetailSkipLogic.SkipLogicCriterion question_picker_view, operator_picker_view, response_value_view, presenter
     constructor: (@survey) ->
     create_criterion_builder_view: () ->
       return new viewRowDetailSkipLogic.SkipLogicCriterionBuilderView()
