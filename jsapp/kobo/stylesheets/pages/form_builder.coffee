@@ -107,6 +107,16 @@ standard_row = (variation='text', {note}) ->
     </div>
   """
 
+  $('body').on 'click', '.card__settings li', (evt)->
+    evt.preventDefault()
+    $et = $(evt.target)
+    unless $et.hasClass('.heading')
+      tabId = $et.closest('li').data('cardSettingsTabId')
+      $ul = $et.parents('ul')
+      $ul.find('.active').removeClass('active')
+      $ul.find("li[data-card-settings-tab-id='#{tabId}']").addClass('active')
+      $et.parents('.card__settings').attr('class', "card__settings card__settings--#{tabId}")
+
   """
   <li class="xlf-row-view">
     #{sidenote(note, 'absrt')}
@@ -119,13 +129,13 @@ standard_row = (variation='text', {note}) ->
         </div>
         #{card__butons}
       </div>
-      <div class="card__settings">
+      <div class="card__settings card__settings--question-options">
         <ul class="card__settings__tabs">
           <li class="heading"><i class="fa fa-cog"></i> Settings</li>
-          <li class="active">Question Options</li>
-          <li>Skip Logic</li>
-          <li>Validation Criteria</li>
-          <li>Response Type</li>
+          <li class="active" data-card-settings-tab-id="question-options">Question Options</li>
+          <li data-card-settings-tab-id="skip-logic">Skip Logic</li>
+          <li data-card-settings-tab-id="validation-criteria">Validation Criteria</li>
+          <li data-card-settings-tab-id="response-type">Response Type</li>
         </ul>
         <div class="card__settings__content clearfix">
           <ul class="card__settings__fields">
