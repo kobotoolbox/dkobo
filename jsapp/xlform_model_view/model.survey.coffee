@@ -5,43 +5,37 @@ define 'cs!xlform/model.survey', [
         'cs!xlform/model.configs',
         'cs!xlform/model.surveyFragment',
         'cs!xlform/model.surveyDetail',
+        'cs!xlform/model.inputDeserializer',
+        'cs!xlform/model.inputParser',
         'cs!xlform/csv',
         ], (
-            base,
+            $base,
             $choices,
             $modelUtils,
-            configs,
-            surveyFragment,
+            $configs,
+            $surveyFragment,
             $surveyDetail,
+            $inputDeserializer,
+            $inputParser,
             csv,
             )->
 
-  class Survey extends surveyFragment.SurveyFragment
+  class Survey extends $surveyFragment.SurveyFragment
     constructor: (options={}, addlOpts)->
       super()
       @_initialParams = options
       @settings = new Settings(options.settings, _parent: @)
       if (sname = @settings.get("name") or options.name)
         @set("name", sname)
-      @newRowDetails = options.newRowDetails || configs.newRowDetails
-      @defaultsForType = options.defaultsForType || configs.defaultsForType
-      @surveyDetails = new $surveyDetail.SurveyDetails([], _parent: @).loadSchema(options.surveyDetailsSchema || configs.surveyDetailSchema)
+      @newRowDetails = options.newRowDetails || $configs.newRowDetails
+      @defaultsForType = options.defaultsForType || $configs.defaultsForType
+      @surveyDetails = new $surveyDetail.SurveyDetails([], _parent: @).loadSchema(options.surveyDetailsSchema || $configs.surveyDetailSchema)
       passedChoices = options.choices || []
       @choices = new $choices.ChoiceLists([], _parent: @)
-      do (choices=@choices)->
-        tmp = {}
-        choiceNames = []
-        for choiceRow in passedChoices
-          lName = choiceRow["list name"]
-          unless tmp[lName]
-            tmp[lName] = []
-            choiceNames.push(lName)
-          tmp[lName].push(choiceRow)
-        for cn in choiceNames
-          choices.add(name: cn, options: tmp[cn])
+      $inputParser.loadChoiceLists(passedChoices, @choices)
       if options.survey
         for r in options.survey
-          if r.type in configs.surveyDetailSchema.typeList()
+          if r.type in $configs.surveyDetailSchema.typeList()
             @surveyDetails.importDetail(r)
           else
             @rows.add r, collection: @rows, silent: true, _parent: @rows
@@ -60,6 +54,23 @@ define 'cs!xlform/model.survey', [
         index_incr = index + row_i
         @rows.add(row.toJSON(), at: index_incr)
       ``
+    toJSON: (stringify=false, spaces=4)->
+      obj = {}
+      choices = new $choices.ChoiceLists()
+      obj.survey = do =>
+        out = []
+        fn = (r)->
+          if 'getList' of r and (l = r.getList())
+            choices.add(l)
+          out.push r.toJSON2()
+        @forEachRow fn
+        out
+      if choices.length > 0
+        obj.choices = choices.summaryObj(true)
+      if stringify
+        JSON.stringify(obj, null, spaces)
+      else
+        obj
 
     toCsvJson: ()->
       # build an object that can be easily passed to the "csv" library
@@ -78,7 +89,7 @@ define 'cs!xlform/model.survey', [
             oCols.push key
           oRows.push colJson
 
-        @forEachRow addRowToORows, includeErrors: true
+        @forEachRow addRowToORows, includeErrors: true, includeGroupEnds: true
         for sd in @surveyDetails.models when sd.get("value")
           addRowToORows(sd)
 
@@ -88,7 +99,7 @@ define 'cs!xlform/model.survey', [
       choicesCsvJson = do =>
         lists = new $choices.ChoiceLists()
         @forEachRow (r)->
-          if (list = r.getList())
+          if 'getList' of r and (list = r.getList())
             lists.add list
 
         rows = []
@@ -118,23 +129,14 @@ define 'cs!xlform/model.survey', [
         sheeted.sheet shtName, csv(content)
       sheeted.toString()
 
-    finalize: ->
-      @forEachRow (r)=> r.finalize()
-      @
-
   Survey.load = (csv_repr)->
-    cobj = csv.sheeted(csv_repr)
-    l_survey = if (sht = cobj.sheet "survey") then sht.toObjects() else []
-    l_choices = if (sht = cobj.sheet "choices") then sht.toObjects() else []
-
-    if (settingsSheet = cobj.sheet "settings")
-      l_settings = settingsSheet.toObjects()[0]
-
-    new Survey(survey: l_survey, choices: l_choices, settings: l_settings)
+    _deserialized = $inputDeserializer.deserialize csv_repr
+    _parsed = $inputParser.parse _deserialized
+    new Survey(_parsed)
 
   # Settings (assigned to each $survey.Survey instance)
 
-  class Settings extends base.BaseModel
+  class Settings extends $base.BaseModel
     validation:
       form_title:
         required: true

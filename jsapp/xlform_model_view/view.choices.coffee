@@ -76,9 +76,10 @@ define 'cs!xlform/view.choices', [
     className: "xlf-option-view"
     events:
       "keyup input": "keyupinput"
+      "click .js-remove-option": "remove"
     initialize: (@options)->
     render: ->
-      @t = $("<i class=\"fa fa-trash-o\">")
+      @t = $("<i class=\"fa fa-trash-o js-remove-option\">")
       @pw = $("<div class=\"editable-wrapper\">")
       @p = $("<span>")
       @c = $("<code><label>Value:</label> <span>Automatic</span></code>")
@@ -86,7 +87,7 @@ define 'cs!xlform/view.choices', [
       if @model
         @p.html @model.get("label")
         @$el.attr("data-option-id", @model.cid)
-        if @model.get('name') != $modelUtils.sluggify(@model.get('label'))
+        if @model.get('name') != $modelUtils.sluggify(@model.get('label') || '')
           $('span', @c).html @model.get("name")
           @model.set('setManually', true)
       else
@@ -133,10 +134,12 @@ define 'cs!xlform/view.choices', [
         ifield.addClass("empty")
       else
         ifield.removeClass("empty")
+    remove: ()->
+      @$el.remove()
+      @model.destroy()
     saveValue: (ick, nval, oval, ctxt)->
       if nval is ""
-        @$el.remove()
-        @model.destroy()
+        @remove()
       else
         @model.set("label", nval, silent: true)
         other_names = @options.cl.getNames()

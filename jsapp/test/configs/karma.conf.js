@@ -18,6 +18,12 @@ module.exports = function(config) {
             'components/jquery/dist/jquery.js',
             'components/lodash/dist/lodash.js',
             'components/backbone/backbone.js',
+            // require-js
+            'components/requirejs/require.js',
+            {pattern: 'components/require-cs/*.js', served: true, included: false, watched: false},
+
+            {pattern: 'xlform_model_view/*.coffee', served: true, included: false, watched: false},
+            {pattern: 'xlform_model_view/*.js', served: true, included: false, watched: false},
 
             '../dkobo/static/js/Backbone.Validation.js',
 

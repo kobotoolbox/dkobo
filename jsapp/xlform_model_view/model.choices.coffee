@@ -11,7 +11,7 @@ define 'cs!xlform/model.choices', [
   class choices.Option extends base.BaseModel
     initialize: -> @unset("list name")
     destroy: ->
-      log "destroy me", @
+      @collection.remove(@)
     list: -> @collection
     toJSON: ()->
       name: @get("name")
@@ -60,10 +60,13 @@ define 'cs!xlform/model.choices', [
 
   class choices.ChoiceLists extends base.BaseCollection
     model: choices.ChoiceList
-    summaryObj: ()->
+    summaryObj: (shorter=false)->
       out = {}
       for model in @models
-        out[model.get("name")] = model.summaryObj()
+        if shorter
+          out[model.get("name")] = model.summaryObj().options
+        else
+          out[model.get("name")] = model.summaryObj()
       out
 
   choices

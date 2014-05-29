@@ -452,3 +452,117 @@
   }
 
 }
+
+
+// ==========================================================================
+// Survey Row
+// (formerly .xlf-row-view)
+// ==========================================================================
+.survey__row {
+    &.survey__row--selected {
+        .card__header {
+            border: $cardInSortBorderStyle;
+        }
+        .group__header {
+            border: $cardInSortBorderStyle;
+        }
+    }
+}
+
+// ==========================================================================
+// Groups
+// ==========================================================================
+
+.group {
+  padding: 4px 8px;
+  margin: 0 0 6px;
+  background-color: rgba(233, 237, 240, 0.8);
+  background-color: #e9edf0;
+  border: 1px solid #c3cfd8;
+}
+
+.group {
+  .group__settings {
+    display: none;
+  }
+  &.group--expanded-settings {
+    .group__settings {
+      display: block;
+    }
+  }
+}
+
+  .group__carat {
+    cursor: pointer;
+    color: #8595a6;
+    &:before {
+      content: "\f0d7";
+    }
+  }
+
+.group--shrunk {
+  .group__carat {
+    &:before {
+      content: "\f0da";
+    }
+  }
+  .group__rows {
+    height: 1px;
+    margin-bottom: 4px;
+    border: 1px solid #c3cfd8;
+    border-width: 1px 0 0;
+    .xlf-row-view {
+      display: none;
+    }
+  }
+}
+  .group__header {
+    border-bottom: 1px solid #ddd;
+    position: relative;
+    margin: -4px -8px 0;
+    padding: 4px 8px;
+    min-height: 50px;
+  }
+  .group__rows {
+    margin-top: 6px;
+  }
+  .group__header__buttons {
+    border: $cardBorderStyle;
+    border-width: 0 0 0 2px;
+    position: absolute;
+    top: 0px;
+    right: 2px;
+    width: 26px;
+    height: 100%;
+    cursor: pointer;
+  }
+  .group__header__buttons__button {
+    display: block;
+    font-size: 13px;
+    height: 22px;
+    line-height: 22px;
+    width: 26px;
+    text-align: center;
+    &.gray {
+      color: #858F98;
+    }
+    &.red {
+      color: #D08B8C;
+    }
+    &.activated {
+      color: #646D75;
+      background-color: #D9DDE1;
+    }
+  }
+
+.group {
+  .card, .row__questiontypes {
+    margin-left: 12px;
+  }
+  .add-row-btn {
+    left: -6px;
+    width: 16px;
+    font-weight: normal;
+    font-size: 11px;
+  }
+}

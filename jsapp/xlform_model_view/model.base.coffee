@@ -3,14 +3,16 @@ define 'cs!xlform/model.base', [
         'backbone',
         'backbone-validation',
         'cs!xlform/view.utils',
+        'cs!xlform/model.configs',
+        'cs!xlform/model.rowDetailMixins',
         ], (
             _,
             Backbone,
             validation,
             $viewUtils,
+            $configs,
+            $rowDetailMixins,
             )->
-
-
 
   _.extend validation.validators, {
     invalidChars: (value, attr, customValue)->
@@ -66,10 +68,67 @@ define 'cs!xlform/model.base', [
       else
         resp = @get("value")
       resp
+    setDetail: (what, value)->
+      if value.constructor is base.RowDetail
+        @set(what, value)
+      else
+        @set(what, new base.RowDetail({value: value}, {_parent: @}))
     getSurvey: ->
       parent = @_parent
       while parent._parent
         parent = parent._parent
       parent
+
+  class base.RowDetail extends base.BaseModel
+    idAttribute: "name"
+    validation: () =>
+      if @key == 'name'
+        return value:
+          unique: true
+          required: true
+      else if @key == 'label'
+        return value:
+          required: true
+      {}
+
+    constructor: ({@key, value}, opts)->
+      @_parent = opts._parent
+      if @key of $rowDetailMixins
+        _.extend(@, $rowDetailMixins[@key])
+      super()
+      # We should consider pulling the value from the CSV at this stage
+      # depending on the question type. truthy-CSV values should be set here
+      # In the quick fix, this is done in the view for 'required' rowDetails
+      # (grep: XLF.configs.truthyValues)
+
+      if value not in [undefined, false, null]
+        vals2set = {}
+        if _.isString(value) || _.isNumber(value)
+          vals2set.value = value
+        else if "value" of value
+          _.extend vals2set, value
+        else
+          vals2set.value = value
+        @set(vals2set)
+      @_order = $configs.columnOrder(@key)
+      @postInitialize()
+
+    postInitialize: ()->
+    initialize: ()->
+      # todo: change "_hideUnlessChanged" to describe something about the form, not the representation of the form.
+      # E.g. undefinedUnlessChanged or definedIffChanged
+      if @get("_hideUnlessChanged")
+        @hidden = true
+        @_oValue = @get("value")
+        @on "change", ()->
+          @hidden = @get("value") is @_oValue
+
+      @on "change:value", (rd, val, ctxt)=>
+        @_parent.trigger "change", @key, val, ctxt
+        @_parent.trigger "detail-change", @key, val, ctxt
+        @getSurvey().trigger "row-detail-change", @_parent, @key, val, ctxt
+      if @key is "type"
+        @on "change:list", (rd, val, ctxt)=>
+          @_parent.trigger "change", @key, val, ctxt
 
   base
