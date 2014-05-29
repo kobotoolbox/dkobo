@@ -19,7 +19,7 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
 
           newValue: ent
         , that
-      showButtons: false
+      showbuttons: false
 
     editableOpts = _.extend(opts, options)
 
