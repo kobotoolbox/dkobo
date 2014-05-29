@@ -139,13 +139,16 @@ define 'cs!xlform/view.surveyApp', [
 
       
       if @expand_all_multioptions == null
-        @$(".js-expand-multioptions--all").click () ->
+        $expand_multioptions = @$(".js-expand-multioptions--all")
+        $expand_multioptions.click () ->
           if @expand_all_multioptions
             @expand_all_multioptions = false
             $(".card.card--selectquestion").removeClass("card--expandedchoices")
+            $expand_multioptions.text("Expand All Questions")
           else
             @expand_all_multioptions = true
             $(".card.card--selectquestion").addClass("card--expandedchoices")
+            $expand_multioptions.text("Colapse All Questions")
 
       @
 
