@@ -92,7 +92,10 @@ define 'cs!xlform/view.surveyApp', [
         @emptySurveyXlfRowSelector.expand()
 
       if @features.displayTitle
-        $viewUtils.makeEditable @, @survey.settings, '.form-title', property:'form_title'
+        $viewUtils.makeEditable @, @survey.settings, '.form-title', property:'form_title', validate: () ->
+          if value.length > 255
+            return "Length cannot exceed 255 characters, is " + value.length + " characters."
+          return
       else
         @$(".survey-header__inner").hide()
 
