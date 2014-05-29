@@ -138,7 +138,7 @@ define 'cs!xlform/view.surveyApp', [
         @$(".row-extras__add-to-question-library").hide()
 
       
-      if @expand_all_multioptions === null
+      if @expand_all_multioptions == null
         @$(".js-expand-multioptions--all").click () ->
           if @expand_all_multioptions
             @expand_all_multioptions = false
