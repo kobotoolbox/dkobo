@@ -60,6 +60,7 @@ define 'cs!xlform/view.surveyApp', [
       @onPublish = options.publish || $.noop
       @onSave = options.save || $.noop
       @onPreview = options.preview || $.noop
+      @expand_all_multioptions = null
 
       $(window).on "keydown", (evt)=>
         @onEscapeKeydown(evt)  if evt.keyCode is 27
@@ -135,6 +136,16 @@ define 'cs!xlform/view.surveyApp', [
 
       if not @features.copyToLibrary
         @$(".row-extras__add-to-question-library").hide()
+
+      
+      if @expand_all_multioptions === null
+        @$(".js-expand-multioptions--all").click () ->
+          if @expand_all_multioptions
+            @expand_all_multioptions = false
+            $(".card card--selectquestion").removeClass("card--expandedchoices")
+          else
+            @expand_all_multioptions = true
+            $(".card card--selectquestion").addClass("card--expandedchoices")
 
       @
 
