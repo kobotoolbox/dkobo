@@ -20,6 +20,7 @@ define 'cs!xlform/view.surveyApp.templates', [], ()->
           <button class="btn btn--utility" id="settings"><i class="fa fa-cog"></i> Form Settings</button>
           <button class="btn btn--utility" id="save"><i class="fa fa-check-circle green"></i> Save Survey</button>
           <button class="btn btn--utility" id="xlf-preview"><i class="fa fa-eye"></i> Preview Survey</button>
+          <button class="btn btn--utility btn--group-questions btn--disabled js-group-rows">Group Questions</button>
           <button class="btn btn--utility pull-right" id="question-library"><i class="fa fa-folder"></i> Question Library</button>
           <!--
           <button class="btn btn--utility  pull-right" id="xlf-group">Group questions</button>
@@ -73,7 +74,7 @@ define 'cs!xlform/view.surveyApp.templates', [], ()->
           </div>
         </header>
         <div class="survey-editor  form-editor-wrap">
-          <ul class="-form-editor">
+          <ul class="-form-editor survey-editor__list">
             <li class="survey-editor__null-top-row empty">
               <p class="survey-editor__message well">
                 <b>This form is currently empty.</b><br>
