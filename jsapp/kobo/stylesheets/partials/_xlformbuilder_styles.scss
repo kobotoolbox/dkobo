@@ -10,75 +10,74 @@
     padding-top: 70px;
 }
 
-    .survey-header__title,
-    .survey-header__hashtag {
-        margin-top: 0;
+.survey-header__title,
+.survey-header__hashtag {
+    margin-top: 0;
+}
+
+.survey-header__hashtag {
+    font-size: 14px;
+    color: #aaa;
+}
+
+.survey-header__options-toggle {
+    position: relative;
+    top: -2px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #bbb;
+
+    &:hover,
+    &:focus {
+        color: #777;
+    }
+}
+
+.survey-header__options {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: none;
+}
+
+.survey-header__option {
+    margin-right: 20px;
+    display: inline-block;
+    font-size: 13px;
+}
+
+.survey-header__options-table-title {
+    margin-top: 0;
+}
+
+.survey-header__options-table {
+    margin-bottom: 50px;
+    font-size: 13px;
+
+    tr {
+        height: 65px;
     }
 
-    .survey-header__hashtag {
-        font-size: 14px;
-        color: #aaa;
+    tr:nth-of-type(2n) {
+        background-color: rgba(255, 255, 255, 0.5);
     }
 
-    .survey-header__options-toggle {
-        position: relative;
-        top: -2px;
-        font-size: 24px;
-        cursor: pointer;
-        color: #bbb;
-
-        &:hover,
-        &:focus {
-            color: #777;
-        }
+    td {
+        padding-right: 10px;
+        padding-left: 10px;
     }
 
-    .survey-header__options {
-        margin-top: 10px;
-        margin-bottom: 10px;
+    td:first-child {
+        width: 140px;
+    }
+
+    td:nth-child(2) {
+        width: 200px;
+    }
+
+    .editable-buttons {
         display: none;
     }
-
-    .survey-header__option {
-        margin-right: 20px;
-        display: inline-block;
-        font-size: 13px;
-    }
-
-    .survey-header__options-table-title {
-        margin-top: 0;
-    }
-
-    .survey-header__options-table {
-        margin-bottom: 50px;
-        font-size: 13px;
-
-        tr {
-            height: 65px;
-        }
-
-        tr:nth-of-type(2n) {
-            background-color: rgba(255, 255, 255, 0.5);
-        }
-
-        td {
-            padding-right: 10px;
-            padding-left: 10px;
-        }
-
-        td:first-child {
-            width: 140px;
-        }
-
-        td:nth-child(2) {
-            width: 200px;
-        }
-
-        .editable-buttons {
-            display: none;
-        }
-    }
-
+}
 
 
 // ==========================================================================
@@ -107,14 +106,9 @@
 
 
 
-
-
 // ==========================================================================
 // Menu row and item
 // ==========================================================================
-
-.menu-title {
-}
 
 .menu-row {
     width: 25%;
