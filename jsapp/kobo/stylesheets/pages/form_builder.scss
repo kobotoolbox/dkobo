@@ -70,6 +70,29 @@
                 }
               }
           }
+          .bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0px;
+            top: 0px;
+            z-index: 2;
+            text-align: center;
+            h2 {
+              font-weight: 600;
+              line-height: 1.5em;
+            }
+            &.gray {
+              background: rgba(#858F98, 0.4);
+            }
+            &.red {
+              background: rgba(#D08B8C, 0.4);
+            }
+            &.blue {
+              background:rgba($linkColor, 0.4);
+            }
+
+          }
       }
   }
 
@@ -334,6 +357,7 @@
       width: 26px;
       height: 100%;
       cursor: pointer;
+      z-index: 4;
   }
   .card--insort {
       .card__buttons {
@@ -366,20 +390,10 @@
         color: #646D75;
         background-color: #D9DDE1;
       }
-      // Hover effect
 
-      // &:hover {
-      //   &:after {
-      //       content: "Testing";
-      //       height: 20px;
-      //       width: 100px;
-      //       top:0px;
-      //       left:20px;
-      //       background: pink;
-      //       position: absolute;
-      //       font-size:12px;
-      //   }
-      // }
+      &:hover {
+        color: white;
+      }
   }
 
   // ==========================================================================

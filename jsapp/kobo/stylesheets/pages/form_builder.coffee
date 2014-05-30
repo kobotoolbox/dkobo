@@ -60,7 +60,7 @@ CENSUS_TEXTS =
 
 ###
 loremipsum = """
-  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
 """
 
 li_row = (variation='text') ->
@@ -101,20 +101,34 @@ standard_row = (variation='text', {note}) ->
   """
   card__butons = """
     <div class="card__buttons">
-      <a href="#" class="card__buttons__button gray"><i class="fa fa-cog"></i></a>
-      <a href="#" class="card__buttons__button red"><i class="fa fa-trash-o"></i></a>
-      <a href="#" class="card__buttons__button blue"><i class="fa fa-copy"></i></a>
+      <a href="#" class="card__buttons__button gray" data-button-color="gray" data-button-text="Settings"><i class="fa fa-cog"></i></a>
+      <a href="#" class="card__buttons__button red" data-button-color="red" data-button-text="Delete Question"><i class="fa fa-trash-o"></i></a>
+      <a href="#" class="card__buttons__button blue" data-button-color="blue" data-button-text="Duplicate Question"><i class="fa fa-copy"></i></a>
     </div>
   """
 
+  # click event for question settings tab switching
   $('body').on 'click', 'ul.card__settings__tabs li:not(.heading)', (evt)->
-    evt.preventDefault()
+    # evt.preventDefault()
     $et = $(evt.target)
     tabId = $et.data('cardSettingsTabId')
     $et.parent('ul').find('.active').removeClass('active')
     $et.addClass('active')
     $et.parents('.card__settings').find(".card__settings__fields.active").removeClass('active')
     $et.parents('.card__settings').find(".card__settings__fields--#{tabId}").addClass('active')
+
+  # button hover effects via JS
+  $('body').on 'mouseenter', '.card__buttons .card__buttons__button', (evt)->
+    $et = $(evt.target)
+    bColor = $et.data('buttonColor')
+    bText = $et.data('buttonText')
+    console.log bText
+    $et.parents('.card__header').append('<div class="bg">')
+    $et.parents('.card__header').find('.bg').addClass("#{bColor}").html("<h2>#{bText}</h2>")
+
+  $('body').on 'mouseleave', '.card__buttons .card__buttons__button', (evt)->
+    $et = $(evt.target)
+    $et.parents('.card__header').find('.bg').remove()
 
   """
   <li class="xlf-row-view">
