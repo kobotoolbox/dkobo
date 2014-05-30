@@ -18,45 +18,10 @@
     color: #1daee3;
 }
 
-.icon--teal {
-    color: #1aaa9e;
-}
+// ==========================================================================
+// custom icons for a few response types  
+// ==========================================================================
 
-.icon--blue {
-    color: #1daee3;
-}
-
-.icon--dark-blue {
-    color: #1073b9;
-}
-
-.icon--purple {
-    color: #65318f;
-}
-
-.icon--orange {
-    color: #f59231;
-}
-
-.icon--brown {
-    color: #c59c70;
-}
-
-.icon--green {
-    color: #40b34f;
-}
-
-.btn:hover .icon--blue,
-.btn:focus .icon--blue {
-    color: #179dd0;
-}
-
-.btn--create-new-form {
-    padding-right: 20px;
-    padding-left: 20px;
-}
-
-/**** custom icons for some response types  ******/
 
 .fa.invert {
     background-color: #35495D;
@@ -116,3 +81,39 @@
     font-size: 0.6em;
     font-weight: normal;
 }
+
+
+// OLD ICONS
+
+// .icon--teal {
+//     color: #1aaa9e;
+// }
+
+// .icon--blue {
+//     color: #1daee3;
+// }
+
+// .icon--dark-blue {
+//     color: #1073b9;
+// }
+
+// .icon--purple {
+//     color: #65318f;
+// }
+
+// .icon--orange {
+//     color: #f59231;
+// }
+
+// .icon--brown {
+//     color: #c59c70;
+// }
+
+// .icon--green {
+//     color: #40b34f;
+// }
+
+// .btn:hover .icon--blue,
+// .btn:focus .icon--blue {
+//     color: #179dd0;
+// }
