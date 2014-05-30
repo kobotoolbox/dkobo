@@ -45,6 +45,8 @@ define [
     beforeEach ->
       window.xlfHideWarnings = true
       @survey = new $model.Survey()
+    afterEach -> window.xlfHideWarnings = false
+
     it 'has a valid empty survey', ->
       expect(@survey.toCSV()).toBeDefined()
     it 'can add rows to the survey', ->
@@ -94,10 +96,13 @@ define [
 
     describe 'forEachRow iterator tests', ->
       beforeEach ->
+        window.xlfHideWarnings = true
+
         @load_csv surveys.iterateOver
         @getProp = (propName, arr)->
           (r)->
             arr.push r.get(propName)?.get('value')
+      afterEach -> window.xlfHideWarnings = false
 
       it 'runs normally', ->
         # without any options, it will skip the group but iterate

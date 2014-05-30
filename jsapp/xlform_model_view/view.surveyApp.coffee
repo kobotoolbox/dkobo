@@ -34,8 +34,13 @@ define 'cs!xlform/view.surveyApp', [
       "click #publish": "publishButtonClick"
       "click #settings": "toggleSurveyOptions"
       "update-sort": "updateSort"
+      "click .js-select-row": "selectRow"
+      "click .js-select-row--force": "forceSelectRow"
       "click .js-group-rows": "groupSelectedRows"
-      "question-select": "questionSelect"
+      "click .js-toggle-group-settings": "toggleGroupSettings"
+      "click .js-toggle-group-expansion": "toggleGroupExpansion"
+      "click .js-toggle-row-settings": "toggleRowSettings"
+      "click .js-toggle-row-multioptions": "toggleRowMultioptions"
     @create: (params = {}) ->
       if _.isString params.el
         params.el = $(params.el).get 0
@@ -80,6 +85,20 @@ define 'cs!xlform/view.surveyApp', [
       model.ordinal = position
       @survey.rows.add(model, at: position)
       ``
+
+    forceSelectRow: (evt)->
+      # forceSelectRow is used to mock the shift key
+      @selectRow($.extend({}, evt, shiftKey: true))
+    selectRow: (evt)->
+      if evt.shiftKey
+        $et = $(evt.target)
+        $ect = $(evt.currentTarget)
+        # a way to ensure the event is not run twice when in nested .js-select-row elements
+        _isIntendedTarget = $ect.closest('.survey__row').get(0) is $et.closest('.survey__row').get(0)
+        if _isIntendedTarget
+          $et.closest('.survey__row').toggleClass("survey__row--selected")
+          @questionSelect()
+
     questionSelect: (evt)->
       @activateGroupButton(@selectedRows().length > 0)
       ``
@@ -88,9 +107,28 @@ define 'cs!xlform/view.surveyApp', [
       @$('.btn--group-questions').toggleClass('btn--disabled', !active)
 
     getApp: -> @
+
     toggleSurveyOptions: ->
       if @features.surveySettings
         @$(".survey-header__options").toggle()
+
+    toggleGroupSettings: (evt)->
+      $et = $(evt.currentTarget)
+      $group = $et.closest('.group').toggleClass('group--expanded-settings')
+    toggleGroupExpansion: (evt)->
+      $et = $(evt.currentTarget)
+      $group = $et.closest('.group').toggleClass('group--shrunk')
+
+    toggleRowSettings: (evt)->
+      $et = $(evt.currentTarget)
+      $row = $et.closest('.card')
+      $row.removeClass('card--expandedchoices')
+      $row.toggleClass('card--expandedsettings')
+    toggleRowMultioptions: (evt)->
+      $et = $(evt.currentTarget)
+      $row = $et.closest('.card')
+      $row.removeClass('card--expandedsettings')
+      $row.toggleClass('card--expandedchoices')
 
     render: ()->
       @$el.removeClass("content--centered").removeClass("content")

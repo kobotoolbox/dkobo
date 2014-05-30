@@ -59,11 +59,18 @@ define 'cs!xlform/view.rowSelector', [
 
     selectMenuItem: (evt)->
       $('select.skiplogic__rowselect').select2('destroy')
-      mi = $(evt.target).data("menuItem")
-      rowBefore = @options.spawnedFromView?.model
-      survey = @options.survey || rowBefore.getSurvey()
-      rowBeforeIndex = survey.rows.indexOf(rowBefore)
-      survey.addRowAtIndex({type: mi}, rowBeforeIndex+1)
+      rowDetails =
+        type: $(evt.target).closest('.menu-item').data("menuItem")
+      options = {}
+      if (rowBefore = @options.spawnedFromView?.model)
+        options.after = rowBefore
+        survey = rowBefore.getSurvey()
+      else
+        survey = @options.survey
+
+      survey.addRow(rowDetails, options)
       @hide()
+      parentSurveyView = @options.spawnedFromView.surveyView
+      parentSurveyView.reset()
 
   viewRowSelector

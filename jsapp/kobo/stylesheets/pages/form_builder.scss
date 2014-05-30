@@ -104,7 +104,7 @@
       display: none;
     }
 
-    &.card--expandsettings {
+    &.card--expandedsettings {
       .advanced-details {
         display: block;
       }
@@ -357,11 +357,13 @@
 // ==========================================================================
 .survey__row {
     &.survey__row--selected {
-        .card__header {
-            border: $cardInSortBorderStyle;
-        }
-        .group__header {
-            border: $cardInSortBorderStyle;
+        > .survey__row__item {
+            > .card__header {
+                border: $cardInSortBorderStyle;
+            }
+            > .group__header {
+                border: $cardInSortBorderStyle;
+            }
         }
     }
 }

@@ -22,7 +22,7 @@ define 'cs!xlform/view.row.templates', [], ()->
           </div>
 
           <div class="card__buttons">
-            <span class="card__buttons__button gray js-advanced-toggle"><i class="fa fa-cog"></i></span>
+            <span class="card__buttons__button gray js-advanced-toggle js-toggle-row-settings"><i class="fa fa-cog"></i></span>
             <span class="card__buttons__button red js-delete-row"><i class="fa fa-trash-o"></i></span>
             <span class="card__buttons__button blue hidden"><i class="fa fa-copy"></i></span>
             <span class="card__buttons__button gray-green js-add-to-question-library"><i class="fa fa-folder-o"><i class="fa fa-plus"></i></i></span>
@@ -42,9 +42,9 @@ define 'cs!xlform/view.row.templates', [], ()->
     <div class="survey__row__item survey__row__item--group group js-select-row">
       <header class="group__header">
         <i class="group__carat js-toggle-group-expansion fa fa-fw"></i>
-        <span class="group__name">#{g.getValue('label')}</span>
+        <span class="group__label">#{g.getValue('label')}</span>
           <div class="group__header__buttons">
-            <span class="group__header__buttons__button gray js-advanced-toggle"><i class="fa fa-cog"></i></span>
+            <span class="group__header__buttons__button gray js-toggle-group-settings"><i class="fa fa-cog"></i></span>
             <span class="group__header__buttons__button red js-delete-group"><i class="fa fa-trash-o"></i></span>
           </div>
       </header>
@@ -65,7 +65,7 @@ define 'cs!xlform/view.row.templates', [], ()->
 
   expandChoiceList = ()->
     """
-    <span class="card__buttons__multioptions js-expand-multioptions"><i class="fa fa-fw caret"></i></span>
+    <span class="card__buttons__multioptions js-toggle-row-multioptions"><i class="fa fa-fw caret"></i></span>
     """
 
   rowErrorView = (atts)->

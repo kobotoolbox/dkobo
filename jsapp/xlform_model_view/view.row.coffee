@@ -21,11 +21,8 @@ define 'cs!xlform/view.row', [
     tagName: "li"
     className: "xlf-row-view survey__row"
     events:
-     "click .js-select-row": "selectRow"
      "click .js-expand-row-selector": "expandRowSelector"
      "drop": "drop"
-     "click .js-advanced-toggle": "toggleSettings"
-     "click .js-expand-multioptions": "toggleMultiOptions"
      "click .js-add-to-question-library": "add_row_to_question_library"
 
     initialize: (opts)->
@@ -43,10 +40,6 @@ define 'cs!xlform/view.row', [
 
     drop: (evt, index)->
       @$el.trigger("update-sort", [@model, index])
-
-    selectRow: ->
-      @$el.toggleClass("survey__row--selected")
-      @getApp().questionSelect()
 
     getApp: ->
       @surveyView.getApp()
@@ -73,41 +66,24 @@ define 'cs!xlform/view.row', [
         @$card.addClass('card--selectquestion')
         @listView = new $viewChoices.ListView(model: cl, rowView: @).render()
 
-      # @multiOptions = @$(".row__multioptions")
-      # @multiOptions.addClass("hidden")
-
       @rowExtras = @$(".row-extras")
       @rowExtrasSummary = @$(".row-extras-summary")
       for [key, val] in @model.attributesArray()
         new $viewRowDetail.DetailView(model: val, rowView: @).renderInRowView(@)
       @
 
-    toggleSettings: (evt)->
-      evt.stopPropagation()
-      # cannot be expandsettings and expandchoices at the same time
-      @$card.removeClass('card--expandedchoices')
-      @$card.toggleClass('card--expandsettings')
-      @$(evt.currentTarget).toggleClass("activated")
-
-    toggleMultiOptions: (evt)->
-      evt.stopPropagation()
-      # cannot be expandsettings and expandchoices at the same time
-      @$card.removeClass('card--expandsettings')
-      @$card.toggleClass('card--expandedchoices')
-
     add_row_to_question_library: (evt) ->
       evt.stopPropagation()
       @ngScope.add_row_to_question_library @model
 
   class GroupView extends BaseRowView
+    className: "xlf-row-view survey__row survey__row--group"
     events:
-      "click .js-toggle-group-expansion": "toggleExpansion"
-      "click .js-advanced-toggle": "toggleAdvanced"
       "click .js-delete-group": "deleteGroup"
+      "click .js-expand-row-selector": "expandRowSelector"
     initialize: (opts)->
       @options = opts
       @_shrunk = !!opts.shrunk
-      @$el.addClass("survey__row--group")
       @$el.attr("data-row-id", @model.cid)
       @surveyView = @options.surveyView
     deleteGroup: (evt)->
@@ -115,20 +91,18 @@ define 'cs!xlform/view.row', [
         @model.detach()
         @$el.remove()
       evt.preventDefault()
-    toggleAdvanced: (evt)->
-      @$('.group').toggleClass('group--expanded-settings')
-      evt.preventDefault()
-    toggleExpansion: (evt)->
-      @_shrunk = !@_shrunk
-      @$(".group").eq(0).toggleClass("group--shrunk", @_shrunk)
-      evt.preventDefault()
+
     render: ->
       @$el.html $viewTemplates.row.groupView(@model)
-      @$rows = @$('.group__rows')
-      @_rowViews = {}
+      @$rows = @$('.group__rows').eq(0)
+      @rowExtras = @$('.group__settings').eq(0)
+
       @model.rows.each (row)=>
         @getApp().ensureElInView(row, @, @$rows).render()
       @$el.data("row-index", @model.getSurvey().rows.indexOf @model)
+
+      for [key, val] in @model.attributesArray()
+        new $viewRowDetail.DetailView(model: val, rowView: @).renderInRowView(@)
       @
 
   class RowView extends BaseRowView

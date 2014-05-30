@@ -23,6 +23,11 @@ define [
         @app = new $view.SurveyApp({survey: @survey, ngScope: {}})
         @div.append @app.$el
         @app.render()
+      @ensure_selectrow = (el, classname='js-select-row--force', attachToClassname='js-select-row')->
+        $el = $(el)
+        $el.find(".#{attachToClassname}").eq(0).addClass(classname)
+        $el.find(".#{classname}").eq(0)
+
       @load_csv("""
         survey,,,
         ,type,name,label
@@ -45,14 +50,25 @@ define [
     it 'has selectable rows', ->
       rowItems = @div.find('.survey-editor__list > .survey__row')
       row1 = rowItems.eq(0)
-      if row1.find('.js-select-row').length is 0
-        $('<span>', class: 'js-select-row', html: 'select row').appendTo(row1)
-      jsSelectRow1 = row1.find('.js-select-row').eq(0)
+      jsSelectRow1 = @ensure_selectrow(row1)
 
       expect(@app.selectedRows().length).toBe(0)
       jsSelectRow1.click()
       expect(@app.selectedRows().length).toBe(1)
       expect(@div.find('.survey-editor__list > .survey__row').length).toBe(2)
+
+    it 'has selectable groups', ->
+      @load_csv """
+      survey,,,
+      ,type,name,label
+      ,begin group,grp,Group1
+      ,text,q1,Q1
+      ,end group
+      """
+      expect(@div.find('.survey__row--selected').length).toBe(0)
+      jsSelectRow1 = @ensure_selectrow(@div)
+      jsSelectRow1.click()
+      expect(@div.find('.survey__row--selected').length).toBe(1)
 
     describe 'grouping selected rows', ->
       beforeEach ->
@@ -92,6 +108,12 @@ define [
         @div.find('.survey-editor__list > .survey__row--group').addClass('survey__row--selected')
         @app.questionSelect()
         expect(@div.find('.survey-editor__list > .survey__row--group').length).toBe(1)
+
+      # it 'places group at the correct part of the survey', ->
+      #   @app.$el.find('.survey__row').eq(0).addClass('survey__row--selected')
+      #   @app.groupSelectedRows()
+      #   newGroupCid = @app.survey.rows.at(0).cid
+      #   expect(@app.$el.find('.survey__row').eq(0).data('rowId')).toBe(newGroupCid)
 
       it 'can group discontinuous questions', ->
         firstLevelRows = @div.find('.survey-editor__list > .survey__row')

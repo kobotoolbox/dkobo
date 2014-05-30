@@ -57,18 +57,26 @@ define 'cs!xlform/view.rowDetail', [
     html: -> false
     insertInDOM: (rowView)->
       typeStr = @model.get("value").split(" ")[0]
-      faClass = $icons.get(typeStr).get("faClass")
-      rowView.$el.find(".card__header-icon").addClass("fa-#{faClass}")
+      if !(@model._parent.constructor.kls is "Group")
+        faClass = $icons.get(typeStr).get("faClass")
+        rowView.$el.find(".card__header-icon").addClass("fa-#{faClass}")
 
   viewRowDetail.DetailViewMixins.label =
     html: -> false
     insertInDOM: (rowView)->
-      if rowView.model.get("type").get("typeId") isnt "calculate"
-        cht = rowView.$el.find(".card__header-title")
+      if @model._parent.constructor.kls is "Group"
+        cht = rowView.$el.find('.group__label')
         cht.html(@model.get("value"))
         $viewUtils.makeEditable @, @model, cht, options:
           placement: 'right'
           rows: 3
+      else
+        if rowView.model.get("type").get("typeId") isnt "calculate"
+          cht = rowView.$el.find(".card__header-title")
+          cht.html(@model.get("value"))
+          $viewUtils.makeEditable @, @model, cht, options:
+            placement: 'right'
+            rows: 3
 
   viewRowDetail.DetailViewMixins.hint =
     html: ->
