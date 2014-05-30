@@ -11,12 +11,14 @@
     padding: 20px;
     background: #FFF;
     color: $wellTextColor;
-    font-family: 'LatoBlack';
+    font-family: 'Lato';
+    font-weight: 600;
     font-style: italic;
     font-size: 13px;
     a {
       font-family: 'Lato';
       font-style: normal;
+      font-weight: normal;
       text-decoration: underline;
     }
   }
@@ -27,7 +29,8 @@
 
   .card {
       border-radius: 0px;
-      font-family: 'LatoBlack';
+      font-family: 'Lato';
+      font-weight: 600;
       font-size: 13px;
       line-height: 18px;
       margin-bottom: 4px;
@@ -66,6 +69,29 @@
                   font-size: 15px;
                 }
               }
+          }
+          .bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0px;
+            top: 0px;
+            z-index: 2;
+            text-align: center;
+            h2 {
+              font-weight: 600;
+              line-height: 1.5em;
+            }
+            &.gray {
+              background: rgba(#858F98, 0.4);
+            }
+            &.red {
+              background: rgba(#D08B8C, 0.4);
+            }
+            &.blue {
+              background:rgba($linkColor, 0.4);
+            }
+
           }
       }
   }
@@ -114,7 +140,6 @@
   .card--selectquestion__expansion, .card__settings {
       border: $cardBorderStyle;
       border-top-width: 1px;
-      padding: 23px 10px 23px 60px;
       background: white;
       margin-top:-2px;
       position: relative;
@@ -142,12 +167,110 @@
       }
   }
 
+  .card--selectquestion__expansion {
+      padding: 23px 10px 23px 60px;      
+  }
+
+  ul.card__settings__tabs {
+    float: left;
+    
+    width: 20%;
+    li {
+      padding: 6px 10px;
+      font-size: 11px;
+      font-weight: normal;
+      font-family: 'Lato';
+      cursor: pointer;
+      &.heading {
+        border-bottom:$thinBorderStyle;
+        font-size: 13px;
+        padding:8px 10px;
+        font-weight: 600;
+        margin-bottom: 3px;
+        i.fa {
+          color:$indicatorColor;
+          margin-right: 5px;
+        }
+      }
+      &.active {
+        background: #E5E8EB;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .card__settings__content {
+    padding:20px 30px;
+    margin-left: 20%;
+    border-left: $thinBorderStyle;
+  }
+
+  .card__settings__fields {
+    display: none;
+    transition:height .3s;
+    &.active {
+      display: block;
+      transition:height .3s;
+    }
+    li {
+      padding-top: 4px;
+      padding-bottom: 4px;
+      > label {
+        text-align: right;
+        width: 25%;
+        margin-right: 3%;
+        display: inline-block;
+        font-weight: 600;
+        vertical-align: middle;
+      }
+      .settings__input {
+        width: 65%;
+        display: inline-block;
+        input.text {
+          display: inline-block;
+        }
+      }
+    }
+
+    // TEMP
+    &.skip-logic {
+      margin-top:10px;
+      clear: both;
+    }
+
+    .skiplogic__button {
+      border:none;
+      width: 100%;
+      display: block;
+      text-align: center;
+      padding:12px 0px;
+      font-weight: 600;
+      i {
+        margin-right: 10px;
+      }
+      &.skiplogic__select-builder {
+        background: #B3E6C9;
+        border-bottom: 1px solid #54A174;
+        i {
+          color: #54A174;
+        }
+      }
+      &.skiplogic__select-handcode {
+        background: #A3DBFD;
+        border-bottom: 1px solid #4A82A5;
+        i {
+          color: #4A82A5;
+        }
+      }
+    }
+  }
   .card--placeholder {
       background-color: transparent;
       color:#8695A5;
       border:2px solid #8695A5;
       text-align: center;
-      font-family: 'LatoBlack';
+      font-family: 'Lato';
+      font-weight: 600;
       padding: 20px;
       margin:20px 0px;
   }
@@ -234,6 +357,7 @@
       width: 26px;
       height: 100%;
       cursor: pointer;
+      z-index: 4;
   }
   .card--insort {
       .card__buttons {
@@ -266,26 +390,11 @@
         color: #646D75;
         background-color: #D9DDE1;
       }
-      // Hover effect
 
-      // &:hover {
-      //   &:after {
-      //       content: "Testing";
-      //       height: 20px;
-      //       width: 100px;
-      //       top:0px;
-      //       left:20px;
-      //       background: pink;
-      //       position: absolute;
-      //       font-size:12px;
-      //   }
-      // }
+      &:hover {
+        color: white;
+      }
   }
-
-  // ==========================================================================
-  // Advanced details
-  // ==========================================================================
-
 
   // ==========================================================================
   // Add row button
@@ -299,28 +408,29 @@
   }
 
   .add-row-btn {
-      width: 24px;
-      height: 24px;
-      line-height: 23px;
-      border-radius: $buttonBorderRadius;
-      padding:0px;
-      margin-right: auto;
-      margin-left: auto;
-      background-color:$addButtonColor;
-      // TODO: this below should be for desktop only
-      position: absolute;
-      left: -38px;
-      top: -22px;
-      &:hover {
-          background-color:$addButtonColorHover;
-      }
-  }
-  .insort {
-      .add-row-btn {
-          opacity: 0;
-      }
-  }
+    background: transparent;
+    width: 48px;
+    height: 48px;
+    // TODO: this below should be for desktop only
+    position: absolute;
+    left: -38px;
+    top: -36px;
+    padding:10px 0px;
 
+    border-radius: 0px;
+      i {
+        width: 24px;
+        height: 24px;
+        line-height: 24px;
+        border-radius: $buttonBorderRadius;
+        background-color:$addButtonColor;
+        position: absolute;
+        left: 0px;
+        &:hover {
+            background-color:$addButtonColorHover;
+        }        
+      }
+  }
 
   // ==========================================================================
   // Add new question
@@ -366,7 +476,21 @@
             }
         }
     }
+
+    .add-row-btn {
+      display: none;
+    }
+    &:hover .add-row-btn {
+      display: block;
+    }
 }
+
+.insort {
+    .add-row-btn {
+        opacity: 0;
+    }
+}
+
 
 // ==========================================================================
 // Groups
@@ -378,6 +502,9 @@
   background-color: rgba(233, 237, 240, 0.8);
   background-color: #e9edf0;
   border: 1px solid #c3cfd8;
+  .group__name {
+    font-weight: 600;
+  }
 }
 
 .group {

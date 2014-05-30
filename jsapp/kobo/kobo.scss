@@ -1,4 +1,4 @@
-// Variable declarations
+// Variable declarations here to make them available to all stylesheets
 
 // Colors 
 // ==========================================================================
@@ -39,22 +39,18 @@ $buttonBorderRadius: 5px;
 @import "stylesheets/partials/base";
 @import "stylesheets/partials/fonts";
 @import "stylesheets/partials/icons";
-@import "stylesheets/partials/misc";
-@import "stylesheets/partials/wells";
 @import "stylesheets/partials/buttons";
-@import "stylesheets/partials/fileupload_btn";
-@import "stylesheets/partials/header_bar";
-@import "stylesheets/partials/top_level_menu";
+@import "stylesheets/partials/misc";
+@import "stylesheets/partials/modals_iframes";
+
+@import "stylesheets/partials/header_and_top_menu";
 @import "stylesheets/partials/content";
-@import "stylesheets/partials/enketo_iframe";
-@import "stylesheets/partials/info_list";
-@import "stylesheets/partials/xlformbuilder_styles";
-@import "stylesheets/partials/ng_modal";
 @import "stylesheets/partials/registration";
 @import "stylesheets/partials/sidenote";
-@import "stylesheets/partials/widgets";
 
+@import "stylesheets/partials/xlformbuilder_styles";
 @import 'stylesheets/pages/form_builder';
+@import 'stylesheets/pages/form_list';
 @import "stylesheets/pages/question_library";
 
 @import "stylesheets/partials/helpers";

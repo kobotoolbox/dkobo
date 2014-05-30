@@ -1,13 +1,20 @@
 /* ==========================================================================
+   Main
+   ========================================================================== */
+
+.main {
+    margin-top: 40px;
+    transition: padding-left 150ms;
+}
+
+/* ==========================================================================
    Content
    ========================================================================== */
 
-.content {
-    padding: 20px;
-}
-
-.content > .content {
-    padding: 0;
+.container {
+    max-width: 700px;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 .content--centered {
@@ -24,6 +31,4 @@
     color: #cdcdcd;
 }
 
-.content__message-action {
-
-}
+.content__message-action {}

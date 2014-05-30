@@ -29,13 +29,13 @@ define 'cs!xlform/view.surveyApp.templates', [], ()->
         </div>
         <header class="survey-header">
           <p class="survey-header__description" hidden>
-            <hgroup class="survey-header__inner">
+            <hgroup class="survey-header__inner container">
               <h1 class="survey-header__title">
                 <span class="form-title">#{survey.settings.get("form_title")}</span>
               </h1>
             </hgroup>
           </p>
-          <div class="survey-header__options  well">
+          <div class="survey-header__options container">
             <h4 class="survey-header__options-table-title">Form settings</h4>
             <table class="survey-header__options-table">
               <tr>
@@ -73,7 +73,7 @@ define 'cs!xlform/view.surveyApp.templates', [], ()->
             <div class="stats  row-details" id="additional-options"></div>
           </div>
         </header>
-        <div class="survey-editor  form-editor-wrap">
+        <div class="survey-editor form-editor-wrap container">
           <ul class="-form-editor survey-editor__list">
             <li class="survey-editor__null-top-row empty">
               <p class="survey-editor__message well">
