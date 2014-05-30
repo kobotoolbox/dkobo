@@ -62,6 +62,8 @@ define 'cs!xlform/view.surveyApp', [
       @onSave = options.save || $.noop
       @onPreview = options.preview || $.noop
 
+      @expand_all_multioptions = null
+
       $(window).on "keydown", (evt)=>
         @onEscapeKeydown(evt)  if evt.keyCode is 27
 
@@ -106,7 +108,10 @@ define 'cs!xlform/view.surveyApp', [
         @emptySurveyXlfRowSelector.expand()
 
       if @features.displayTitle
-        $viewUtils.makeEditable @, @survey.settings, '.form-title', property:'form_title'
+        $viewUtils.makeEditable @, @survey.settings, '.form-title', property:'form_title', options: validate: (value) ->
+          if value.length > 255
+            return "Length cannot exceed 255 characters, is " + value.length + " characters."
+          return
       else
         @$(".survey-header__inner").hide()
 
@@ -150,6 +155,19 @@ define 'cs!xlform/view.surveyApp', [
 
       if not @features.copyToLibrary
         @$(".row-extras__add-to-question-library").hide()
+
+      
+      if @expand_all_multioptions is null
+        $expand_multioptions = @$(".js-expand-multioptions--all")
+        $expand_multioptions.click () =>
+          if @expand_all_multioptions
+            @expand_all_multioptions = false
+            $(".card.card--selectquestion").removeClass("card--expandedchoices")
+            $expand_multioptions.html($expand_multioptions.html().replace("Collapse", "Expand"));
+          else
+            @expand_all_multioptions = true
+            $(".card.card--selectquestion").addClass("card--expandedchoices")
+            $expand_multioptions.html($expand_multioptions.html().replace("Expand", "Collapse"));
 
       @
 
