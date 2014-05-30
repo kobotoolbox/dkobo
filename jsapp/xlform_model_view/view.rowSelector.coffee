@@ -24,7 +24,6 @@ define 'cs!xlform/view.rowSelector', [
       if opts.action is "click-add-row"
         @expand()
     expand: ->
-      @button.fadeOut 150
       @line.addClass "expanded"
       @line.parents(".survey-editor__null-top-row").addClass "expanded"
       @line.css "height", "inherit"
@@ -41,7 +40,6 @@ define 'cs!xlform/view.rowSelector', [
       @line.find("div").eq(0).fadeOut 250, =>
         @line.empty()
       @line.parents(".survey-editor__null-top-row").removeClass "expanded"
-      @button.fadeIn 200
       @line.removeClass "expanded"
       @line.animate height: "0"
     hide: ->
