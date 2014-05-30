@@ -1,6 +1,6 @@
 define 'cs!xlform/view.row.templates', [], ()->
   expandingSpacerHtml = """
-      <div class="row clearfix expanding-spacer-between-rows">
+      <div class="survey__row__spacer row clearfix expanding-spacer-between-rows">
         <div class="add-row-btn js-expand-row-selector btn  btn--block  btn-xs  btn-default"><i class="fa fa-plus"></i></div>
         <div class="line">&nbsp;</div>
       </div>
@@ -12,7 +12,7 @@ define 'cs!xlform/view.row.templates', [], ()->
 
   xlfRowView = () ->
       """
-      <div class="card">
+      <div class="survey__row__item survey__row__item--question card js-select-row">
         <div class="card__header">
           <div class="card__indicator">
             <div class="noop card__indicator__icon"><i class="fa fa-fw card__header-icon"></i></div>
@@ -38,18 +38,18 @@ define 'cs!xlform/view.row.templates', [], ()->
       """
 
   groupView = (g)->
-    group_label = g.getValue('label') or "<em>no label</em>"
     """
-    <div class="group">
+    <div class="survey__row__item survey__row__item--group group js-select-row">
       <header class="group__header">
-        <span>Group</span>
-        <code>#{g.getValue('name')}</code>
+        <i class="group__carat js-toggle-group-expansion fa fa-fw"></i>
+        <span class="group__name">#{g.getValue('label')}</span>
+          <div class="group__header__buttons">
+            <span class="group__header__buttons__button gray js-advanced-toggle"><i class="fa fa-cog"></i></span>
+            <span class="group__header__buttons__button red js-delete-group"><i class="fa fa-trash-o"></i></span>
+          </div>
       </header>
-      <p class="group__label">
-        #{group_label}
-      </p>
-      <ul class="group__rows">
-      </ul>
+      <section class="group__settings"></section>
+      <ul class="group__rows"></ul>
     </div>
     #{expandingSpacerHtml}
     """
@@ -71,7 +71,6 @@ define 'cs!xlform/view.row.templates', [], ()->
   rowErrorView = (atts)->
     """
     <div class="card card--error">
-      #{deleteRowButton}
       Row could not be displayed: <pre>#{atts}</pre>
       <em>This question could not be imported. Please re-create it manually. Please contact us at <a href="mailto:info@kobotoolbox.org">info@kobotoolbox.org</a> so we can fix this bug!</em>
     </div>

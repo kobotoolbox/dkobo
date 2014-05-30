@@ -27,7 +27,7 @@
     user-select: none;
     position: relative;
   
-    &:hover, &:focus {
+    &:hover {
         background-color: #179dd0;
         text-decoration: none;
     }
@@ -87,10 +87,17 @@ input[type="button"].btn--block {
     border: 1px solid #ddd;
     color: #222;
     background-color: transparent;
+    &:hover {
+        border-color: #999;
+        background-color: #e2e2e2;
+    }
 }
 
-.btn--utility:hover,
-.btn--utility:focus {
-    border-color: #999;
-    background-color: #e2e2e2;
+.btn--disabled {
+    cursor: default;
+    color: #ddd;
+    font-weight: normal;
+    &.btn--utility:hover {
+        background-color: inherit;
+    }
 }
