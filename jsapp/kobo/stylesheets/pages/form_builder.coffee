@@ -107,15 +107,14 @@ standard_row = (variation='text', {note}) ->
     </div>
   """
 
-  $('body').on 'click', '.card__settings li', (evt)->
+  $('body').on 'click', 'ul.card__settings__tabs li:not(.heading)', (evt)->
     evt.preventDefault()
     $et = $(evt.target)
-    unless $et.hasClass('.heading')
-      tabId = $et.closest('li').data('cardSettingsTabId')
-      $ul = $et.parents('ul')
-      $ul.find('.active').removeClass('active')
-      $ul.find("li[data-card-settings-tab-id='#{tabId}']").addClass('active')
-      $et.parents('.card__settings').attr('class', "card__settings card__settings--#{tabId}")
+    tabId = $et.data('cardSettingsTabId')
+    $et.parent('ul').find('.active').removeClass('active')
+    $et.addClass('active')
+    $et.parents('.card__settings').find(".card__settings__fields.active").removeClass('active')
+    $et.parents('.card__settings').find(".card__settings__fields--#{tabId}").addClass('active')
 
   """
   <li class="xlf-row-view">
@@ -137,16 +136,24 @@ standard_row = (variation='text', {note}) ->
           <li data-card-settings-tab-id="validation-criteria">Validation Criteria</li>
           <li data-card-settings-tab-id="response-type">Response Type</li>
         </ul>
-        <div class="card__settings__content clearfix card__settings__content--question-options">
-          <ul class="card__settings__fields">
+        <div class="card__settings__content clearfix">
+          <ul class="card__settings__fields card__settings__fields--question-options active">
             <li><label>Question Hint: </label> <span class="settings__input"><input type="text" name="hint" class="text" /></span></li>
             <li><label>Required: </label> <span class="settings__input"><input type="checkbox" name="required"/> Yes</span></li>
             <li><label>Default: </label> <span class="settings__input"><input type="text" name="default" class="text"/></span></li>
           </ul>
 
-          <ul class="card__settings__fields skip-logic">
+          <ul class="card__settings__fields card__settings__fields--skip-logic">
             <li><button class="skiplogic__button skiplogic__select-builder"><i class="fa fa-plus"></i> Add a condition</button></li>
             <li><button class="skiplogic__button skiplogic__select-handcode"><i class="fa fa-code"></i> Manually enter your skip logic in XLSForm code</button></li>
+          </ul>
+
+          <ul class="card__settings__fields card__settings__fields--validation-criteria">
+            <li>Validation criteria will go here</li>
+          </ul>
+
+          <ul class="card__settings__fields card__settings__fields--response-type">
+            <li>Response type will go here</li>
           </ul>
 
         </div>

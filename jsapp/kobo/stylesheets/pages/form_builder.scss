@@ -183,6 +183,12 @@
   }
 
   .card__settings__fields {
+    display: none;
+    transition:height .3s;
+    &.active {
+      display: block;
+      transition:height .3s;
+    }
     li {
       padding-top: 4px;
       padding-bottom: 4px;
