@@ -1,7 +1,8 @@
 define 'cs!xlform/view.row.templates', [], ()->
   expandingSpacerHtml = """
-      <div class="survey__row__spacer row clearfix expanding-spacer-between-rows">
-        <div class="add-row-btn js-expand-row-selector btn  btn--block  btn-xs  btn-default"><i class="fa fa-plus"></i></div>
+      <div class="survey__row__spacer  row clearfix expanding-spacer-between-rows expanding-spacer-between-rows--depr">
+        <div class="js-expand-row-selector btn btn--addrow btn--block  btn-xs  btn-default  add-row-btn"
+            ><i class="fa fa-plus"></i></div>
         <div class="line">&nbsp;</div>
       </div>
   """
@@ -29,8 +30,8 @@ define 'cs!xlform/view.row.templates', [], ()->
 
           </div>
         </div>
-        <div class="advanced-details">
-          <div class="row-extras card__settings advanced-details__content">
+        <div class="card__settingswrap  advanced-details advanced-details--depr">
+          <div class="card__settings  row-extras row-extras--depr">
           </div>
         </div>
       </div>
@@ -41,7 +42,7 @@ define 'cs!xlform/view.row.templates', [], ()->
     """
     <div class="survey__row__item survey__row__item--group group js-select-row">
       <header class="group__header">
-        <i class="group__carat js-toggle-group-expansion fa fa-fw"></i>
+        <i class="group__caret js-toggle-group-expansion fa fa-fw"></i>
         <span class="group__label">#{g.getValue('label')}</span>
           <div class="group__header__buttons">
             <span class="group__header__buttons__button gray js-toggle-group-settings"><i class="fa fa-cog"></i></span>

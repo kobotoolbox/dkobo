@@ -1,0 +1,19 @@
+// ==========================================================================
+// Add new question
+// ==========================================================================
+
+// .expanding-spacer-between-rows BECOMES .survey__row__spacer
+.survey__row__spacer {
+    position: relative; 
+
+    .line {
+        height: 0px;
+    }
+}
+
+.row__questiontypes {
+    border: $cardInSortBorderStyle;
+    padding: 23px 40px 23px 60px;
+    background: white;
+    margin:4px 0px;
+}

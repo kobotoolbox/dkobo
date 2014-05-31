@@ -138,9 +138,9 @@ define 'cs!xlform/view.surveyApp', [
             break
 
       @formEditorEl = @$(".-form-editor")
-      @$(".survey-editor__null-top-row .expanding-spacer-between-rows .add-row-btn").click (evt)=>
+      @$(".survey-editor__null-top-row .survey__row__spacer .btn--addrow").click (evt)=>
         if !@emptySurveyXlfRowSelector
-          @emptySurveyXlfRowSelector = new $viewRowSelector.RowSelector(el: @$el.find(".expanding-spacer-between-rows").get(0), survey: @survey, ngScope: @ngScope)
+          @emptySurveyXlfRowSelector = new $viewRowSelector.RowSelector(el: @$el.find(".survey__row__spacer").get(0), survey: @survey, ngScope: @ngScope)
         @emptySurveyXlfRowSelector.expand()
 
       if @features.displayTitle
@@ -184,7 +184,7 @@ define 'cs!xlform/view.surveyApp', [
           })
       else
         @$(".delete-row").hide()
-        @$(".expanding-spacer-between-rows").hide()
+        @$(".survey__row__spacer").hide()
 
       if not @features.copyToLibrary
         @$(".row-extras__add-to-question-library").hide()

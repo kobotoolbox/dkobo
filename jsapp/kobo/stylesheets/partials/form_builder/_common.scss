@@ -1,0 +1,42 @@
+%caret-right {
+    &:before {
+        content: "\f0da";
+    }
+}
+
+%caret-down {
+    &:before {
+        content: "\f0d7";
+    }
+}
+
+%card-expansion {
+    border: $cardBorderStyle;
+    border-top-width: 1px;
+    background: white;
+    margin-top:-2px;
+    position: relative;
+
+    &:after, &:before {
+        bottom: 100%;
+        left: 50%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+    }
+    &:after {
+        border-color: rgba(255, 255, 255, 0);
+        border-bottom-color: #FFF;
+        border-width: 8px;
+        margin-left: -8px;
+    }
+    &:before {
+        border-color: rgba(217, 221, 225, 0);
+        border-bottom-color: #d9dde1;
+        border-width: 9px;
+        margin-left: -9px;
+    }
+}

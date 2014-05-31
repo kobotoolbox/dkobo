@@ -1,0 +1,48 @@
+// form_builder miscellaneous rules
+
+.survey-editor__message {
+    border: $cardBorderStyle;
+    padding: 20px;
+    background: #FFF;
+    color: $wellTextColor;
+    font-family: 'Lato';
+    font-weight: 600;
+    font-style: italic;
+    font-size: 13px;
+    a {
+        font-family: 'Lato';
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: underline;
+    }
+}
+
+.insort {
+    .add-row-btn {
+        opacity: 0;
+    }
+}
+
+.btn--addrow {
+    background: transparent;
+    width: 48px;
+    height: 48px;
+    // TODO: this below should be for desktop only
+    position: absolute;
+    left: -38px;
+    top: -36px;
+    padding:10px 0px;
+    border-radius: 0px;
+    i {
+        width: 24px;
+        height: 24px;
+        line-height: 24px;
+        border-radius: $buttonBorderRadius;
+        background-color: $addButtonColor;
+        position: absolute;
+        left: 0px;
+        &:hover {
+            background-color: $addButtonColorHover;
+        }
+    }
+}

@@ -1,0 +1,43 @@
+// ==========================================================================
+// Multiple choice cards
+// ==========================================================================
+
+// multi-choice expanded
+.caret {
+    &:before {
+        // from fa-caret-right
+        content: "\f0da";
+    }
+}
+
+.card__text {
+    color: $indicatorColor;
+}
+
+.card--selectquestion__expansion {
+    @extend %card-expansion;
+}
+
+
+// ==========================================================================
+// Overrides
+// ==========================================================================
+
+.card--selectquestion {
+    .row__multioptions {
+        display: none;
+    }
+
+    &.card--expandedchoices {
+        .row__multioptions {
+            display: block;
+        }
+
+        .caret {
+            &:before {
+                // from fa-caret-down
+                content: "\f0d7";
+            }
+        }
+    }
+}

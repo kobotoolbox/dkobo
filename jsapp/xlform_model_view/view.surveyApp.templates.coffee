@@ -80,9 +80,9 @@ define 'cs!xlform/view.surveyApp.templates', [], ()->
                 <b>This form is currently empty.</b><br>
                 You can add questions, notes, prompts, or other fields by clicking on the "+" sign below.
               </p>
-              <div class="expanding-spacer-between-rows">
-                <div class="add-row-btn  btn  btn--block">
-                  <i class="fa  fa-plus"></i>
+              <div class="survey__row__spacer  expanding-spacer-between-rows expanding-spacer-between-rows--depr">
+                <div class="btn btn--block btn--addrow js-expand-row-selector   add-row-btn add-row-btn--depr">
+                  <i class="fa fa-plus"></i>
                 </div>
                 <div class="line">&nbsp;</div>
               </div>

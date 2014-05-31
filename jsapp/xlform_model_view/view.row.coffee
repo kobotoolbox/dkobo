@@ -45,7 +45,7 @@ define 'cs!xlform/view.row', [
       @surveyView.getApp()
 
     expandRowSelector: ->
-      new $rowSelector.RowSelector(el: @$el.find(".expanding-spacer-between-rows").get(0), ngScope: @ngScope, spawnedFromView: @).expand()
+      new $rowSelector.RowSelector(el: @$el.find(".survey__row__spacer").get(0), ngScope: @ngScope, spawnedFromView: @).expand()
 
     render: ->
       if @model instanceof $row.RowError

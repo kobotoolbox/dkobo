@@ -1,0 +1,153 @@
+
+// ==========================================================================
+// Card settings tabs
+// ==========================================================================
+
+// ==========================================================================
+// Advanced details
+// ==========================================================================
+
+// .advanced-details BECOMES .card__settingswrap
+// TODO: this element might not be necessary
+.card__settingswrap {
+    position: relative;
+}
+
+.card__settings {
+    @extend %card-expansion;
+}
+
+.card--selectquestion__expansion {
+    padding: 23px 10px 23px 60px;      
+}
+
+//== ul.card__settings__tabs
+.card__settings__tabs {
+    float: left;
+    width: 20%;
+}
+
+// note: this rule is only used with '@extend'
+%card__settings__tabs__tab {
+    padding: 6px 10px;
+    font-size: 11px;
+    font-weight: normal;
+    font-family: 'Lato';
+    cursor: pointer;
+    &.active {
+        background: #E5E8EB;
+        font-weight: 600;
+    }
+}
+
+//== ul.card__settings__tabs li.card__settings__tabs__tab
+// proposed: .card__settings__tabs__tab
+.card__settings__tabs li {
+    @extend %card__settings__tabs__tab;
+}
+
+//== ul.card__settings__tabs li.card__settings__tabs__heading
+// proposed: .card__settings__tabs__heading
+.card__settings__tabs .heading {
+    @extend %card__settings__tabs__tab;
+
+    border-bottom: $thinBorderStyle;
+    font-size: 13px;
+    padding: 8px 10px;
+    font-weight: 600;
+    margin-bottom: 3px;
+
+    //== i.fa
+    .fa {
+        color: $indicatorColor;
+        margin-right: 5px;
+    }
+}
+
+.card__settings__content {
+    padding: 20px 30px;
+    margin-left: 20%;
+    border-left: $thinBorderStyle;
+}
+
+//== ul.card__settings__fields
+.card__settings__fields {
+    display: none;
+    transition: height .3s;
+    &.active {
+        display: block;
+        transition:height .3s;
+    }
+}
+.card__settings__fields li {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    > label {
+        text-align: right;
+        width: 25%;
+        margin-right: 3%;
+        display: inline-block;
+        font-weight: 600;
+        vertical-align: middle;
+    }
+}
+
+.card__settings__fields .settings__input {
+    width: 65%;
+    display: inline-block;
+    input.text {
+        display: inline-block;
+    }
+}
+
+// TEMP
+// ------
+.card__settings__fields.skip-logic {
+    margin-top: 10px;
+    clear: both;
+}
+
+.card__settings__fields {
+    .skiplogic__button {
+        border: none;
+        width: 100%;
+        display: block;
+        text-align: center;
+        padding:12px 0px;
+        font-weight: 600;
+        i {
+            margin-right: 10px;
+        }
+        &.skiplogic__select-builder {
+            background: #B3E6C9;
+            border-bottom: 1px solid #54A174;
+            i {
+                color: #54A174;
+            }
+        }
+        &.skiplogic__select-handcode {
+            background: #A3DBFD;
+            border-bottom: 1px solid #4A82A5;
+            i {
+                color: #4A82A5;
+            }
+        }
+    }
+}
+
+
+// Overrides
+// --------------------------------------------------------------------------
+
+// .advanced-details displayed only inside .card--expandedsettings
+.card {
+    .advanced-details {
+        display: none;
+    }
+
+    &.card--expandedsettings {
+        .advanced-details {
+            display: block;
+        }
+    }
+}
