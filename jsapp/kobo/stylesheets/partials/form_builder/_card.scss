@@ -195,3 +195,18 @@ $cardIndicatorIconWidth: 21px;
       color: white;
     }
 }
+
+// Misc...
+
+.card__text {
+    .editable-container {
+        width: 100%;
+    }
+}
+
+.placeholder {
+    height: 100px;
+    margin-bottom: 10px;
+    border: 2px dashed #ccc;
+    border-radius: 4px;
+}

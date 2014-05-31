@@ -4,7 +4,7 @@
 
 // .expanding-spacer-between-rows BECOMES .survey__row__spacer
 .survey__row__spacer {
-    position: relative; 
+    position: relative;
 
     .line {
         height: 0px;
@@ -15,5 +15,67 @@
     border: $cardInSortBorderStyle;
     padding: 23px 40px 23px 60px;
     background: white;
-    margin:4px 0px;
+    margin: 4px 0px;
+}
+
+.row__questiontypes__close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background-color: #C5CACF;
+    color: white;
+    border: 0 none;
+    border-radius: 3px;
+    font-family: 'Lato';
+    font-weight: 600;
+    padding: 1px 3px;
+    line-height: 1em;
+
+    &:hover {
+        background-color: darken(#C5CACF, 20%);
+    }
+}
+
+// ==========================================================================
+// The question type selector icon menu
+// ==========================================================================
+
+// .menu-row BECOMES .questiontypelist__row
+.questiontypelist__row {
+    width: 25%;
+    padding-right: 1px;
+    float: left;
+}
+
+// .menu-item BECOMES .questiontypelist__item
+.questiontypelist__item {
+    margin-bottom: 1px;
+    padding: 10px 5px;
+    background: $bodyBackgroundColor;
+    font-size: 11px;
+    font-family: 'Lato';
+    font-weight: 600;
+    border: 2px solid $bodyBackgroundColor;
+    cursor: pointer;
+    color: #35495D;
+    i {
+        margin-right: 10px;
+        font-size: 16px;
+        &.fa.invert {
+            background-color: #35495D;
+            color: white;
+            border-radius: 4px;
+            padding: 3px;
+            font-size: 1em;
+            margin-left: 2px;
+            margin-right: 13px;
+        }
+    }
+    &:hover {
+        border-color: $cardInSortBorderColor;
+        color: $cardInSortBorderColor;
+        i.fa.invert {
+            background-color: $cardInSortBorderColor;
+        }
+    }
 }

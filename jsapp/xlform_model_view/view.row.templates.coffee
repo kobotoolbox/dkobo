@@ -24,7 +24,7 @@ define 'cs!xlform/view.row.templates', [], ()->
 
           <div class="card__buttons">
             <span class="card__buttons__button gray js-advanced-toggle js-toggle-row-settings"><i class="fa fa-cog"></i></span>
-            <span class="card__buttons__button red js-delete-row"><i class="fa fa-trash-o"></i></span>
+            <span class="card__buttons__button card__buttons__button--delete red js-delete-row"><i class="fa fa-trash-o"></i></span>
             <span class="card__buttons__button blue hidden"><i class="fa fa-copy"></i></span>
             <span class="card__buttons__button gray-green js-add-to-question-library"><i class="fa fa-folder-o"><i class="fa fa-plus"></i></i></span>
 

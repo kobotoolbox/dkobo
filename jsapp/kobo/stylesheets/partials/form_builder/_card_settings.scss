@@ -76,7 +76,7 @@
     transition: height .3s;
     &.active {
         display: block;
-        transition:height .3s;
+        transition: height .3s;
     }
 }
 .card__settings__fields li {
@@ -113,7 +113,7 @@
         width: 100%;
         display: block;
         text-align: center;
-        padding:12px 0px;
+        padding: 12px 0px;
         font-weight: 600;
         i {
             margin-right: 10px;
@@ -134,6 +134,79 @@
         }
     }
 }
+
+
+// ==========================================================================
+// Skip logic
+// ==========================================================================
+
+.skiplogic__criterion {
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px 14px;
+    position: relative;
+    background-color: #eee;
+
+    &.skiplogic__criterion--unspecified-question {
+        .skiplogic__expressionselect {
+            display: none;
+        }
+        .skiplogic__rowselect {
+            width: 100%;
+        }
+    }
+}
+
+.skiplogic__deletecriterion {
+    height: auto;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    position: absolute;
+    top: 2px;
+    right: 7px;
+    opacity: 0.6;
+    -webkit-appearance: none;
+    text-transform: none;
+    color: #333;
+    background-color: transparent;
+
+    &:hover {
+        opacity: 1;
+    }
+}
+
+.skiplogic__responseval {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+
+// ==========================================================================
+// Edit buttons
+// ==========================================================================
+
+.editable-buttons button,
+.card__settingswrap button {
+    height: 28px;
+    margin: 3px 0;
+    border: 1px solid;
+    border-radius: 4px;
+    padding: 0 10px;
+    -webkit-appearance: none;
+    text-transform: capitalize;
+    color: #333;
+    background-color: #f8f8f8;
+
+    &:hover {
+        background-color: #f0f0f0;
+    }
+}
+
+// ==========================================================================
+
 
 
 // Overrides

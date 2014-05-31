@@ -28,10 +28,10 @@ define 'cs!xlform/view.rowSelector', [
       @line.parents(".survey-editor__null-top-row").addClass "expanded"
       @line.css "height", "inherit"
       @line.html $viewTemplates.$$render('xlfRowSelector.line')
-      $menu = @line.find(".rowselector__questiontypes")
-      $menu.on("click", ".menu-item", _.bind(@selectMenuItem, @))
+      $menu = @line.find(".row__questiontypes__list")
+      $menu.on("click", ".questiontypelist__item", _.bind(@selectMenuItem, @))
       for mrow in $icons.grouped()
-        menurow = $("<div>", class: "menu-row").appendTo $menu
+        menurow = $("<div>", class: "questiontypelist__row").appendTo $menu
         for mitem, i in mrow
           menurow.append $viewTemplates.$$render('xlfRowSelector.cell', mitem.attributes)
 
@@ -58,7 +58,7 @@ define 'cs!xlform/view.rowSelector', [
     selectMenuItem: (evt)->
       $('select.skiplogic__rowselect').select2('destroy')
       rowDetails =
-        type: $(evt.target).closest('.menu-item').data("menuItem")
+        type: $(evt.target).closest('.questiontypelist__item').data("menuItem")
       options = {}
       if (rowBefore = @options.spawnedFromView?.model)
         options.after = rowBefore

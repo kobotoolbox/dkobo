@@ -414,7 +414,7 @@ describe "testing the view", ->
     expect(closeButton.length).toBe(1)
     closeButton.click()
     clickNewRow()
-    lastRowEl.find(".line.expanded").find(".menu-item[data-menu-item='geopoint']").trigger("click")
+    lastRowEl.find(".line.expanded").find(".questiontypelist__item[data-menu-item='geopoint']").trigger("click")
 
     # when the event is triggered twice this next test will fail.
     expect(@_div.find("li.xlf-row-view").length).toBe(2)
@@ -456,7 +456,7 @@ describe "testing the view", ->
 
     # adds row selector
     $(".add-row-btn", firstRowEl).click()
-    $(".menu-item[data-menu-item='text']", firstRowEl).click()
+    $(".questiontypelist__item[data-menu-item='text']", firstRowEl).click()
     lastRowEl = @_div.find("li.xlf-row-view").eq(-1)
     $(".js-advanced-toggle", lastRowEl).eq(0).click()
     expect(if $(".xlf-dv-relevant", lastRowEl).length is 1 then "relevant rendered" else "relevant not rendered").toBe("relevant rendered")

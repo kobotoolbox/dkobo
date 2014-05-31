@@ -2,7 +2,7 @@ define 'cs!xlform/view.rowSelector.templates', [], ()->
   xlfRowSelector = {}
 
   closeRowSelectorButton = """
-      <button type="button" class="close-button js-close-row-selector shrink pull-right close" aria-hidden="true">&times;</button>
+      <button type="button" class="row__questiontypes__close js-close-row-selector shrink pull-right close close-button close-button--depr" aria-hidden="true">&times;</button>
   """
 
   xlfRowSelector.line = () ->
@@ -10,7 +10,7 @@ define 'cs!xlform/view.rowSelector.templates', [], ()->
           <div class="row__questiontypes row-fluid clearfix">
             #{closeRowSelectorButton}
             <h4 class="menu-title">Choose question type</h4>
-            <div class="rowselector__questiontypes clearfix"></div>
+            <div class="row__questiontypes__list clearfix"></div>
             <div>
               Or
               <button class="menu-title btn rowselector_openlibrary">Add from Question Library</button>
@@ -20,7 +20,7 @@ define 'cs!xlform/view.rowSelector.templates', [], ()->
 
   xlfRowSelector.cell = (atts) ->
       """
-        <div class="menu-item" data-menu-item="#{atts.id}">
+        <div class="questiontypelist__item" data-menu-item="#{atts.id}">
           <i class="fa fa-#{atts.faClass} fa-fw"></i>
           #{atts.label}
         </div>

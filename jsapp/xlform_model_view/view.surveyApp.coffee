@@ -183,7 +183,7 @@ define 'cs!xlform/view.surveyApp', [
               ui.item.removeClass("sortable-active")
           })
       else
-        @$(".delete-row").hide()
+        @$(".card__buttons__button--delete").hide()
         @$(".survey__row__spacer").hide()
 
       if not @features.copyToLibrary
