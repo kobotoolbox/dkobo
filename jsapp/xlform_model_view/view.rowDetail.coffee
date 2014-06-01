@@ -26,7 +26,7 @@ define 'cs!xlform/view.rowDetail', [
     initialize: ({@rowView})->
       unless @model.key
         throw new Error "RowDetail does not have key"
-      @extraClass = "xlf-dv-#{@model.key}"
+      @extraClass = "card__settings__fields xlf-dv-#{@model.key}"
       if (viewMixin = viewRowDetail.DetailViewMixins[@model.key])
         _.extend(@, viewMixin)
       else
@@ -114,14 +114,24 @@ define 'cs!xlform/view.rowDetail', [
 
   viewRowDetail.DetailViewMixins.name = viewRowDetail.DetailViewMixins.default =
     html: ->
+      @fieldTab = "active"
       @listenTo @model, "change:value", ()=>
         @render()
         @afterRender()
+      @$el.addClass("card__settings__fields--#{@fieldTab}")
       """
-      #{@model.key}: <code>#{@model.get("value")}</code>
+      <div class="card__settings__fields__field">
+        <label>#{@model.key}: </label>
+        <span class="settings__input">
+          <input type="text" name="hint" class="text" />
+        </span>
+      </div>
       """
     afterRender: ->
-      $viewUtils.makeEditable @, @model, "code", transformFunction: $modelUtils.sluggify
+      @$el.find('input').eq(0).val(@model.get("value"))
+      # $viewUtils.makeEditable @, @model, "code", transformFunction: $modelUtils.sluggify
+    insertInDom: (rowView)->
+      rowView.rowExtras.append(@el)
 
   viewRowDetail.DetailViewMixins.calculation =
     html: -> false

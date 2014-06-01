@@ -11,6 +11,24 @@ define 'cs!xlform/view.row.templates', [], ()->
   #     <button type="button" class="close delete-row close-button js-delete-row" aria-hidden="true">&times;</button>
   # """
 
+  settingsView = (forWhat, blockName)->
+    """
+    <section class="#{blockName}  row-extras row-extras--depr">
+      <ul class="#{blockName}__tabs">
+        <li class="heading"><i class="fa fa-cog"></i> Settings</li>
+        <li>All #{forWhat} settings</li>
+        <!--
+        <li data-card-settings-tab-id="question-options">Question Options</li>
+        <li data-card-settings-tab-id="skip-logic" class="">Skip Logic</li>
+        <li data-card-settings-tab-id="validation-criteria" class="">Validation Criteria</li>
+        <li data-card-settings-tab-id="response-type" class="">Response Type</li>
+        -->
+      </ul>
+      <div class="#{blockName}__content">
+      </div>
+    </section>
+    """
+
   xlfRowView = () ->
       """
       <div class="survey__row__item survey__row__item--question card js-select-row">
@@ -21,19 +39,14 @@ define 'cs!xlform/view.row.templates', [], ()->
           <div class="card__text">
             <span class="card__header-title"></span>
           </div>
-
           <div class="card__buttons">
-            <span class="card__buttons__button gray js-advanced-toggle js-toggle-row-settings"><i class="fa fa-cog"></i></span>
+            <span class="card__buttons__button card__buttons__button--settings gray js-advanced-toggle js-toggle-row-settings"><i class="fa fa-cog"></i></span>
             <span class="card__buttons__button card__buttons__button--delete red js-delete-row"><i class="fa fa-trash-o"></i></span>
-            <span class="card__buttons__button blue hidden"><i class="fa fa-copy"></i></span>
+            <span class="card__buttons__button card__buttons__button--copy blue hidden"><i class="fa fa-copy"></i></span>
             <span class="card__buttons__button gray-green js-add-to-question-library"><i class="fa fa-folder-o"><i class="fa fa-plus"></i></i></span>
-
           </div>
         </div>
-        <div class="card__settingswrap  advanced-details advanced-details--depr">
-          <div class="card__settings  row-extras row-extras--depr">
-          </div>
-        </div>
+        #{settingsView('question', 'card__settings')}
       </div>
       #{expandingSpacerHtml}
       """
@@ -45,11 +58,11 @@ define 'cs!xlform/view.row.templates', [], ()->
         <i class="group__caret js-toggle-group-expansion fa fa-fw"></i>
         <span class="group__label">#{g.getValue('label')}</span>
           <div class="group__header__buttons">
-            <span class="group__header__buttons__button gray js-toggle-group-settings"><i class="fa fa-cog"></i></span>
-            <span class="group__header__buttons__button red js-delete-group"><i class="fa fa-trash-o"></i></span>
+            <span class="group__header__buttons__button group__header__buttons__button--settings  gray js-toggle-group-settings"><i class="fa fa-cog"></i></span>
+            <span class="group__header__buttons__button group__header__buttons__button--delete  red js-delete-group"><i class="fa fa-trash-o"></i></span>
           </div>
       </header>
-      <section class="group__settings"></section>
+      #{settingsView('group', 'card__settings')}
       <ul class="group__rows"></ul>
     </div>
     #{expandingSpacerHtml}

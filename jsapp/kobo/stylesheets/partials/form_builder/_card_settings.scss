@@ -9,9 +9,6 @@
 
 // .advanced-details BECOMES .card__settingswrap
 // TODO: this element might not be necessary
-.card__settingswrap {
-    position: relative;
-}
 
 .card__settings {
     @extend %card-expansion;
@@ -70,16 +67,15 @@
     border-left: $thinBorderStyle;
 }
 
-//== ul.card__settings__fields
 .card__settings__fields {
     display: none;
     transition: height .3s;
-    &.active {
+    &.card__settings__fields--active {
         display: block;
         transition: height .3s;
     }
 }
-.card__settings__fields li {
+.card__settings__fields__field {
     padding-top: 4px;
     padding-bottom: 4px;
     > label {
@@ -214,13 +210,17 @@
 
 // .advanced-details displayed only inside .card--expandedsettings
 .card {
-    .advanced-details {
+    .card__settings {
         display: none;
     }
 
     &.card--expandedsettings {
-        .advanced-details {
+        .card__settings {
             display: block;
+        }
+
+        .card__buttons__button--settings {
+            @extend %activated-card-button;
         }
     }
 }

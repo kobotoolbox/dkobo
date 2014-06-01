@@ -187,6 +187,7 @@ define 'cs!xlform/view.surveyApp', [
         @$(".survey__row__spacer").hide()
 
       if not @features.copyToLibrary
+        # TODO: what happened to this element?
         @$(".row-extras__add-to-question-library").hide()
 
       @

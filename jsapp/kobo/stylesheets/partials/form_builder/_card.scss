@@ -29,44 +29,21 @@
             width: 99%;
             position: relative;
             &.activated {
-              color: #8595A5;
+                color: #8595A5;
             }
             .card__buttons__multioptions {
-              cursor: pointer;
-              vertical-align: middle;
-              position: absolute;
-              left:-14px;
-              top:50%;
-              margin-top:-8px;
+                cursor: pointer;
+                vertical-align: middle;
+                position: absolute;
+                left:-14px;
+                top:50%;
+                margin-top:-8px;
               
-              .fa {
-                width: 12px;
-                font-size: 15px;
-              }
+                .fa {
+                    width: 12px;
+                    font-size: 15px;
+                }
             }
-        }
-        .bg {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          left: 0px;
-          top: 0px;
-          z-index: 2;
-          text-align: center;
-          h2 {
-            font-weight: 600;
-            line-height: 1.5em;
-          }
-          &.gray {
-            background: rgba(#858F98, 0.4);
-          }
-          &.red {
-            background: rgba(#D08B8C, 0.4);
-          }
-          &.blue {
-            background:rgba($linkColor, 0.4);
-          }
-
         }
     }
 }
@@ -83,19 +60,19 @@
 }
 
 .sortable-active {
-  .card__header {
-    border: $cardInSortBorderStyle;
-    .card__header-title {
-      color: $cardInSortBorderColor;
+    .card__header {
+        border: $cardInSortBorderStyle;
+        .card__header-title {
+            color: $cardInSortBorderColor;
+        }
     }
-  }
 }
 .card--error {
     background-color: rgb(255, 176, 176);
 }
 
 .card__addoptions {
-  opacity: 0.4;
+    opacity: 0.4;
 }
 
 // ==========================================================================
@@ -130,18 +107,19 @@ $cardIndicatorIconWidth: 21px;
     line-height: 20px;
     text-align: center;
     color: $indicatorColor;
+
     .fa.invert {
-      padding: 3px 1px;
-      font-size: 0.95em;
-      background-color: #8595A5;
+        padding: 3px 1px;
+        font-size: 0.95em;
+        background-color: #8595A5;
     }
     .fa-lato-calculate, .fa-lato-decimal,
     .fa-lato-integer, .fa-lato-text {
-      font-size: 15px;
-      width: $cardIndicatorIconWidth;
+        font-size: 15px;
+        width: $cardIndicatorIconWidth;
     }
     .fa-lato-decimal {
-      margin-left:2px;
+        margin-left:2px;
     }
 }
 
@@ -157,8 +135,42 @@ $cardIndicatorIconWidth: 21px;
     width: 26px;
     height: 100%;
     cursor: pointer;
-    z-index: 4;
 }
+
+// ==========================================================================
+// Card Shade (displays over the card)
+// ==========================================================================
+
+// Displayed when parent .card has .card--shaded
+.card__header .card__text .bg {
+    display: none;
+
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    top: 0px;
+    z-index: 2;
+    text-align: center;
+
+    h2 {
+        font-weight: 600;
+        line-height: 1.5em;
+    }
+
+    &.gray {
+        background: rgba(#858F98, 0.4);
+    }
+    &.red {
+        background: rgba(#D08B8C, 0.4);
+    }
+    &.blue {
+        background:rgba($linkColor, 0.4);
+    }
+}
+
+
+
 .card--insort {
     .card__buttons {
         border-left: $cardInSortThinBorderStyle;
@@ -173,26 +185,26 @@ $cardIndicatorIconWidth: 21px;
     bottom: 4px;
     text-align: center;
     &.gray {
-      color: #858F98;
-      top:0px;
+        color: #858F98;
+        top:0px;
     }
     &.red {
-      color: #D08B8C;
-      top:50%;
-      margin-top:-11px;
+        color: #D08B8C;
+        top:50%;
+        margin-top:-11px;
     }
     &.blue {
-      color:$linkColor;
+        color:$linkColor;
     }
     &.gray-green {
     }
     &.activated {
-      color: #646D75;
-      background-color: #D9DDE1;
+        // trying to transition this into %activated-card-button
+        color: #646D75;
+        background-color: #D9DDE1;
     }
-
     &:hover {
-      color: white;
+        @extend %activated-card-button;
     }
 }
 
@@ -209,4 +221,16 @@ $cardIndicatorIconWidth: 21px;
     margin-bottom: 10px;
     border: 2px dashed #ccc;
     border-radius: 4px;
+}
+
+// overrides
+// ---------
+
+.card--shaded {
+    .card__buttons {
+        z-index: 4;
+    }
+    .card__header .card__text .bg {
+        display: block;
+    }
 }

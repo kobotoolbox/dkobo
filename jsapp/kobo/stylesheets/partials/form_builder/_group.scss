@@ -13,6 +13,17 @@
     .card, .row__questiontypes {
         margin-left: 12px;
     }
+
+    > .card__settings {
+        background-color: transparent;
+        &:after {
+            border-bottom-color: #E9EDF0;
+        }
+        &:before {
+            border-width: 11px;
+            margin-left: -11px;
+        }
+    }
 }
 
 .group__name {
@@ -75,13 +86,18 @@
 // Overrides
 // --------------------------------------------------------------------------
 
-// .group__settings displayed only in .group--expanded-settings
-.group__settings {
-    display: none;
-}
-.group--expanded-settings {
-    .group__settings {
-        display: block;
+.group {
+    // .group__settings displayed only in .group--expanded-settings
+    > .card__settings {
+        display: none;
+    }
+    &.group--expanded-settings {
+        > .card__settings {
+            display: block;
+        }
+        > .group__header > .group__header__buttons > .group__header__buttons__button--settings {
+            @extend %activated-card-button;
+        }
     }
 }
 

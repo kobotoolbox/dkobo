@@ -19,7 +19,7 @@ define 'cs!xlform/view.row', [
             )->
   class BaseRowView extends Backbone.View
     tagName: "li"
-    className: "xlf-row-view survey__row"
+    className: "survey__row  xlf-row-view xlf-row-view--depr"
     events:
      "click .js-expand-row-selector": "expandRowSelector"
      "drop": "drop"
@@ -66,8 +66,8 @@ define 'cs!xlform/view.row', [
         @$card.addClass('card--selectquestion')
         @listView = new $viewChoices.ListView(model: cl, rowView: @).render()
 
-      @rowExtras = @$(".row-extras")
-      @rowExtrasSummary = @$(".row-extras-summary")
+      # @rowExtras = @$(".row-extras")
+      @rowExtras = @$(".card__settings__content")
       for [key, val] in @model.attributesArray()
         new $viewRowDetail.DetailView(model: val, rowView: @).renderInRowView(@)
       @
@@ -77,7 +77,7 @@ define 'cs!xlform/view.row', [
       @ngScope.add_row_to_question_library @model
 
   class GroupView extends BaseRowView
-    className: "xlf-row-view survey__row survey__row--group"
+    className: "survey__row survey__row--group  xlf-row-view xlf-row-view--depr"
     events:
       "click .js-delete-group": "deleteGroup"
       "click .js-expand-row-selector": "expandRowSelector"
@@ -95,7 +95,7 @@ define 'cs!xlform/view.row', [
     render: ->
       @$el.html $viewTemplates.row.groupView(@model)
       @$rows = @$('.group__rows').eq(0)
-      @rowExtras = @$('.group__settings').eq(0)
+      @rowExtras = @$('.card__settings__content').eq(0)
 
       @model.rows.each (row)=>
         @getApp().ensureElInView(row, @, @$rows).render()
