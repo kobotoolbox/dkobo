@@ -3,7 +3,7 @@ test_helper =
     module "dkobo"
     module "templates/TopLevelMenu.Template.html"
     module "templates/InfoList.Template.html"
-  initializeController: (@$controller, name, $rootScope) ->
+  initializeController: (@$controller, name, $rootScope, $userDetails = {}) ->
     @$rs = $rootScope
     @$scope = $rootScope
     @$resource = sinon.stub()
@@ -12,6 +12,7 @@ test_helper =
     @miscUtils = new @miscServiceStub()
 
     @$controller name + "Controller",
+      $userDetails: $userDetails
       $rootScope: @$rs
       $scope: @$scope
       $resource: @$resource
