@@ -22,9 +22,6 @@ module.exports = function(config) {
             'components/requirejs/require.js',
             {pattern: 'components/require-cs/*.js', served: true, included: false, watched: false},
 
-            {pattern: 'xlform_model_view/*.coffee', served: true, included: false, watched: false},
-            {pattern: 'xlform_model_view/*.js', served: true, included: false, watched: false},
-
             '../dkobo/static/js/Backbone.Validation.js',
 
             // require-js
@@ -34,11 +31,6 @@ module.exports = function(config) {
             {pattern: 'components/backbone-validation/dist/backbone-validation-amd.js', watched: false, served: true, included: false},
 
             'test/init.js',
-
-            {pattern: 'xlform_model_view/*.coffee', watched: false, served: true, included: true},
-            {pattern: 'xlform_model_view/*.js', watched: false, served: true, included: true},
-            {pattern: 'build_stubs/*.js', watched: false, served: true, included: true},
-
 
             // kobo jsapp source files
             'kobo/controllers/*.js',
@@ -54,8 +46,14 @@ module.exports = function(config) {
             // 'kobo.compiled/**/*.html',
 
             // jsapp/test files
-            //'test/unit/*.js',
-            'test/unit/*.coffee',
+            'test/unit/Controller/*.coffee',
+            'test/unit/Directive/*.coffee',
+            'test/unit/Factory/*.coffee',
+            'test/unit/Service/*.coffee',
+            'test/unit/SkipLogic/*.coffee',
+            'test/unit/Validator/*.coffee',
+            'test/unit/SkipLogic.Tests.coffee',
+            'test/unit/Xlform.Tests.coffee',
             'test/runner.coffee',
         ],
         plugins: [
