@@ -52,6 +52,8 @@ module.exports = function(config) {
             'test/unit/Service/*.coffee',
             'test/unit/SkipLogic/*.coffee',
             'test/unit/Validator/*.coffee',
+            'test/unit/SkipLogic.Tests.coffee',
+            'test/unit/Xlform.Tests.coffee',
             'test/runner.coffee',
         ],
         plugins: [
