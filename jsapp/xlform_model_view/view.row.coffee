@@ -21,7 +21,7 @@ define 'cs!xlform/view.row', [
     tagName: "li"
     className: "survey__row  xlf-row-view xlf-row-view--depr"
     events:
-     "click .js-expand-row-selector": "expandRowSelector"
+     # "click .js-expand-row-selector": "expandRowSelector"
      "drop": "drop"
      "click .js-add-to-question-library": "add_row_to_question_library"
 
@@ -44,8 +44,8 @@ define 'cs!xlform/view.row', [
     getApp: ->
       @surveyView.getApp()
 
-    expandRowSelector: ->
-      new $rowSelector.RowSelector(el: @$el.find(".survey__row__spacer").get(0), ngScope: @ngScope, spawnedFromView: @).expand()
+    # expandRowSelector: ->
+    #   new $rowSelector.RowSelector(el: @$el.find(".survey__row__spacer").get(0), ngScope: @ngScope, spawnedFromView: @).expand()
 
     render: ->
       if @model instanceof $row.RowError
@@ -81,7 +81,7 @@ define 'cs!xlform/view.row', [
     className: "survey__row survey__row--group  xlf-row-view xlf-row-view--depr"
     events:
       "click .js-delete-group": "deleteGroup"
-      "click .js-expand-row-selector": "expandRowSelector"
+      # "click .js-expand-row-selector": "expandRowSelector"
     initialize: (opts)->
       @options = opts
       @_shrunk = !!opts.shrunk

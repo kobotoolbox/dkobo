@@ -41,6 +41,7 @@ define 'cs!xlform/view.surveyApp', [
       "click .js-toggle-group-expansion": "toggleGroupExpansion"
       "click .js-toggle-row-settings": "toggleRowSettings"
       "click .js-toggle-row-multioptions": "toggleRowMultioptions"
+      "click .js-expand-row-selector": "expandRowSelector"
     @create: (params = {}) ->
       if _.isString params.el
         params.el = $(params.el).get 0
@@ -130,6 +131,13 @@ define 'cs!xlform/view.surveyApp', [
       $row.removeClass('card--expandedsettings')
       $row.toggleClass('card--expandedchoices')
 
+    expandRowSelector: (evt)->
+      $ect = $(evt.currentTarget)
+      $row = $ect.parents('.survey__row').eq(0)
+      $spacer = $ect.parent()
+      view = @getViewForRow(cid: $row.data('rowId'))
+      new $viewRowSelector.RowSelector(el: $spacer.get(0), ngScope: @ngScope, spawnedFromView: view).expand()
+
     render: ()->
       @$el.removeClass("content--centered").removeClass("content")
       @$el.html $viewTemplates.$$render('surveyApp', @survey)
@@ -138,10 +146,10 @@ define 'cs!xlform/view.surveyApp', [
             break
 
       @formEditorEl = @$(".-form-editor")
-      @$(".survey-editor__null-top-row .survey__row__spacer .btn--addrow").click (evt)=>
-        if !@emptySurveyXlfRowSelector
-          @emptySurveyXlfRowSelector = new $viewRowSelector.RowSelector(el: @$el.find(".survey__row__spacer").get(0), survey: @survey, ngScope: @ngScope)
-        @emptySurveyXlfRowSelector.expand()
+      # @$(".survey-editor__null-top-row .survey__row__spacer .btn--addrow").click (evt)=>
+      #   if !@emptySurveyXlfRowSelector
+      #     @emptySurveyXlfRowSelector = new $viewRowSelector.RowSelector(el: @$el.find(".survey__row__spacer").get(0), survey: @survey, ngScope: @ngScope)
+      #   @emptySurveyXlfRowSelector.expand()
 
       if @features.displayTitle
         $viewUtils.makeEditable @, @survey.settings, '.form-title', property:'form_title'
