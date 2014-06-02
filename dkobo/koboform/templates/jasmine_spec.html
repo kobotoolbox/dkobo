@@ -77,7 +77,8 @@
           paths[k] = stubs[k].replace(/\.js$/, '');
         }
         require.config({
-          paths: paths
+          paths: paths,
+          urlArgs: "bust=" +  (new Date()).getTime(),
         });
         require(['cs!test/amdrunner'], execJasmine);
       });

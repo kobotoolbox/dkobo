@@ -145,14 +145,16 @@ define 'cs!xlform/model.surveyFragment', [
           if typeof obj.value is 'function'
             obj.value = obj.value(@)
           @set key, obj
-
+      typeIsRepeat = @get('type') is 'repeat'
+      @set('_isRepeat', typeIsRepeat)
       @convertAttributesToRowDetails()
 
     _isRepeat: ()->
       !!(@get("_isRepeat")?.get("value"))
 
     autoname: ->
-      if @get('name') is undefined
+      name = @getValue('name')
+      if name in [undefined, '']
         slgOpts =
           lowerCase: false
           stripSpaces: true
