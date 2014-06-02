@@ -23,9 +23,15 @@
 
     `pip install -r requirements.txt`
 
-1. Install ruby dependencies:
+1. Ensure system packages are installed:
 
-    `gem install sass`
+    `apt-get install python2.7-dev`
+    `apt-get install libxml2 libxml2-dev libxslt1-dev`
+
+1. Special package installs (require custom repositories):
+
+    `apt-get install postgresql-server-dev-9.3`
+    `apt-get install nodejs`
 
 1. Install javascript dependencies:
 
