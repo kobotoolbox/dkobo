@@ -80,14 +80,15 @@ rowDetailsSkipLogic.SkipLogicCriterion = (function(_super) {
     };
 
     SkipLogicCriterion.prototype._get_question = function() {
-        return this.survey.rows.get(this.get('question_cid'));
+        return this.survey.findRowByCid(this.get('question_cid'), { includeGroups: true });
     };
 
     SkipLogicCriterion.prototype.change_question = function(cid) {
         var old_question_type, question_type, _ref, _ref1, _ref2;
-        old_question_type = ((_ref = this._get_question()) != null ? _ref.get_type() : void 0) || {
+        old_question_type = ((_ref = this._get_question()) ? _ref.get_type() : void 0) || {
             name: null
         };
+        log(cid)
         this.set('question_cid', cid);
         question_type = this._get_question().get_type();
         if (_ref1 = this.get('operator').get_id(), __indexOf.call(question_type.operators, _ref1) < 0) {

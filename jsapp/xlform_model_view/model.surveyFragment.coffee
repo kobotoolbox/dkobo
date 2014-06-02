@@ -58,6 +58,17 @@ define 'cs!xlform/model.surveyFragment', [
           name: row.getValue('name')
         descriptors.push(descriptor)
       descriptors
+    findRowByCid: (cid, options={})->
+      match = false
+      fn = (row)->
+        if row.cid is cid
+          match = row
+        # maybe implement a way to bust out
+        # of this loop with false response.
+        !match
+      @forEachRow fn, options
+      match
+
     findRowByName: (name)->
       match = false
       @forEachRow (row)->
