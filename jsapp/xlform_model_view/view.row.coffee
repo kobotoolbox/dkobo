@@ -19,9 +19,9 @@ define 'cs!xlform/view.row', [
             )->
   class BaseRowView extends Backbone.View
     tagName: "li"
-    className: "xlf-row-view"
+    className: "xlf-row-view survey__row"
     events:
-     "click": "select"
+     "click .js-select-row": "selectRow"
      "click .js-expand-row-selector": "expandRowSelector"
      "drop": "drop"
      "click .js-advanced-toggle": "toggleSettings"
@@ -41,16 +41,16 @@ define 'cs!xlform/view.row', [
         customEventName = "row-detail-change-#{key}"
         @$(".on-#{customEventName}").trigger(customEventName, key, value, ctxt)
 
-      @$el.on "xlf-blur", =>
-        @$el.removeClass("xlf-selected")
-
     drop: (evt, index)->
       @$el.trigger("update-sort", [@model, index])
 
-    select: ->
-      unless @$el.hasClass("xlf-selected")
-        $(".xlf-selected").trigger("xlf-blur")
-        @$el.addClass("xlf-selected")
+    selectRow: ->
+      @$el.toggleClass("survey__row--selected")
+      @getApp().questionSelect()
+
+    getApp: ->
+      @surveyView.getApp()
+
     expandRowSelector: ->
       new $rowSelector.RowSelector(el: @$el.find(".expanding-spacer-between-rows").get(0), ngScope: @ngScope, spawnedFromView: @).expand()
 
@@ -69,7 +69,7 @@ define 'cs!xlform/view.row', [
     _renderRow: ->
       @$el.html $viewTemplates.$$render('row.xlfRowView')
       @$card = @$el.find('.card')
-      if (cl = @model.getList())
+      if 'getList' of @model and (cl = @model.getList())
         @$card.addClass('card--selectquestion')
         @listView = new $viewChoices.ListView(model: cl, rowView: @).render()
 
@@ -100,13 +100,34 @@ define 'cs!xlform/view.row', [
       @ngScope.add_row_to_question_library @model
 
   class GroupView extends BaseRowView
+    events:
+      "click .js-toggle-group-expansion": "toggleExpansion"
+      "click .js-advanced-toggle": "toggleAdvanced"
+      "click .js-delete-group": "deleteGroup"
     initialize: (opts)->
       @options = opts
+      @_shrunk = !!opts.shrunk
+      @$el.addClass("survey__row--group")
+      @$el.attr("data-row-id", @model.cid)
+      @surveyView = @options.surveyView
+    deleteGroup: (evt)->
+      if confirm('Are you sure you want to delete this group? All questions will be lost')
+        @model.detach()
+        @$el.remove()
+      evt.preventDefault()
+    toggleAdvanced: (evt)->
+      @$('.group').toggleClass('group--expanded-settings')
+      evt.preventDefault()
+    toggleExpansion: (evt)->
+      @_shrunk = !@_shrunk
+      @$(".group").eq(0).toggleClass("group--shrunk", @_shrunk)
+      evt.preventDefault()
     render: ->
       @$el.html $viewTemplates.row.groupView(@model)
       @$rows = @$('.group__rows')
+      @_rowViews = {}
       @model.rows.each (row)=>
-        new RowView(model: row, ngScope: @ngScope, surveyView: @).render().$el.appendTo(@$rows)
+        @getApp().ensureElInView(row, @, @$rows).render()
       @$el.data("row-index", @model.getSurvey().rows.indexOf @model)
       @
 

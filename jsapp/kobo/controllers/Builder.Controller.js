@@ -2,10 +2,10 @@
 /* global dkobo_xlform */
 'use strict';
 
-function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo, $miscUtils, $location) {
+function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo, $miscUtils, $location, $userDetails) {
     $rootScope.activeTab = 'Forms';
     $scope.routeParams = $routeParams;
-    $rootScope.deregisterLocationChangeStart = $rootScope.$on('$locationChangeStart', handleUnload);
+    var forceLeaveConfirmation = !$userDetails.debug;
     function handleUnload(event) {
         if ($miscUtils.confirm('Are you sure you want to leave? you will lose any unsaved changes.')){
             $rootScope.deregisterLocationChangeStart();
@@ -14,9 +14,13 @@ function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo,
             $miscUtils.preventDefault(event);
         }
     }
-    $(window).bind('beforeunload', function(){
-        return 'Are you sure you want to leave?';
-    });
+
+    if (forceLeaveConfirmation) {
+        $rootScope.deregisterLocationChangeStart = $rootScope.$on('$locationChangeStart', handleUnload);
+        $(window).bind('beforeunload', function(){
+            return 'Are you sure you want to leave?';
+        });
+    }
 
     $scope.add_item = function (item) {
         //add item.backbone_model contains the survey representing the question

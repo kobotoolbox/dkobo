@@ -89,6 +89,15 @@ input[type="button"].btn--block {
     background-color: transparent;
 }
 
+.btn--disabled {
+    cursor: default;
+    color: #ddd;
+    font-weight: normal;
+    &.btn--utility:hover {
+        background-color: inherit;
+    }
+}
+
 .btn--utility:hover,
 .btn--utility:focus {
     border-color: #999;

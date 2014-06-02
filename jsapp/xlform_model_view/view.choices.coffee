@@ -87,7 +87,7 @@ define 'cs!xlform/view.choices', [
       if @model
         @p.html @model.get("label")
         @$el.attr("data-option-id", @model.cid)
-        if @model.get('name') != $modelUtils.sluggify(@model.get('label'))
+        if @model.get('name') != $modelUtils.sluggify(@model.get('label') || '')
           $('span', @c).html @model.get("name")
           @model.set('setManually', true)
       else

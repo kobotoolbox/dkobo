@@ -1,9 +1,9 @@
 define('xlform/model.rowDetails.skipLogic', [
-        'cs!xlform/model.base',
+        'backbone',
         'cs!xlform/model.utils',
         'cs!xlform/mv.skipLogicHelpers'
         ], function(
-                    $base,
+                    Backbone,
                     $utils,
                     $skipLogicHelpers
                     ) {
@@ -170,7 +170,7 @@ rowDetailsSkipLogic.SkipLogicCriterion = (function(_super) {
     }
 
     return SkipLogicCriterion;
-})($base.BaseModel);
+})(Backbone.Model);
 
 rowDetailsSkipLogic.Operator = (function(_super) {
     __extends(Operator, _super);
@@ -203,7 +203,7 @@ rowDetailsSkipLogic.Operator = (function(_super) {
 
     return Operator;
     // get base model
-})($base.BaseModel);
+})(Backbone.Model);
 
 rowDetailsSkipLogic.EmptyOperator = (function(_super) {
     __extends(EmptyOperator, _super);
@@ -309,7 +309,7 @@ rowDetailsSkipLogic.ResponseModel = (function(_super) {
 
     return ResponseModel;
     // get base model
-})($base.BaseModel);
+})(Backbone.Model);
 
 rowDetailsSkipLogic.IntegerResponseModel = (function(_super) {
     __extends(IntegerResponseModel, _super);

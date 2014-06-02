@@ -16,6 +16,8 @@ from dkobo.koboform.serializers import ListSurveyDraftSerializer, DetailSurveyDr
 from dkobo.koboform import utils
 from dkobo.koboform import pyxform_utils
 
+from sandbox import jasmine_spec, sandbox
+
 import json
 
 
@@ -63,7 +65,8 @@ def spa(request):
     context = RequestContext(request)
     if request.user.is_authenticated():
         context['user_details'] = json.dumps({u'name': request.user.email,
-                        u'gravatar': utils.gravatar_url(request.user.email)})
+                        u'gravatar': utils.gravatar_url(request.user.email),
+                        u'debug': settings.DEBUG})
     else:
         context['user_details'] = "{}"
     context['DEBUG'] = settings.DEBUG
@@ -157,15 +160,6 @@ def survey_draft_detail(request, pk, format=None):
     elif request.method == 'DELETE':
         survey_draft.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-def jasmine_spec(request):
-    context = RequestContext(request)
-    context['DEBUG'] = settings.DEBUG
-    context['run_jasmine'] = False
-    context['include_coffeefile'] = "kobo/stylesheets/pages/form_builder.coffee"
-    # context['include_js'] = "test/unit/Validator.Tests.js"
-    return render_to_response("jasmine_spec.html", context_instance=context)
 
 XLS_CONTENT_TYPES = [
     "application/vnd.ms-excel",
