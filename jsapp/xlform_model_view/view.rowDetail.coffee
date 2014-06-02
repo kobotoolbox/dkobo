@@ -40,6 +40,61 @@ define 'cs!xlform/view.rowDetail', [
       @
     html: ()->
       $viewTemplates.$$render('xlfDetailView', @)
+    listenForCheckboxChange: (opts={})->
+      el = opts.el || @$('input[type=checkbox]').get(0)
+      $el = $(el)
+      changing = false
+      reflectValueInEl = ()=>
+        if !changing
+          if @model.get('value') in  $configs.truthyValues
+            $el.prop('checked', true)
+      @model.on 'change:value', reflectValueInEl
+      reflectValueInEl()
+      $el.on 'change', ()=>
+        changing = true
+        @model.set('value', $el.prop('checked'))
+        changing = false
+    listenForInputChange: (opts={})->
+      # listens to checkboxes and input fields and ensures
+      # the model's value is reflected in the element and changes
+      # to the element are reflected in the model (with transformFn
+      # applied)
+      el = opts.el || @$('input').get(0)
+      $el = $(el)
+      transformFn = opts.transformFn || false
+      inputType = opts.inputType
+      inTransition = false
+
+      changeModelValue = ($elVal)=>
+        # preventing race condition
+        if !inTransition
+          inTransition = true
+          @model.set('value', $elVal)
+          reflectValueInEl(true)
+          inTransition = false
+
+      reflectValueInEl = (force=false)=>
+        # This should never change the model value
+        if force || !inTransition
+          modelVal = @model.get('value')
+          if inputType is 'checkbox'
+            if !_.isBoolean(modelVal)
+              modelVal = modelVal in $configs.truthyValues
+            # triggers element change event
+            $el.prop('checked', modelVal)
+          else
+            # triggers element change event
+            $el.val(modelVal)
+
+      reflectValueInEl()
+      @model.on 'change:value', reflectValueInEl
+
+      $el.on 'change', ()=>
+        $elVal = $el.val()
+        if transformFn
+          $elVal = transformFn($elVal)
+        changeModelValue($elVal)
+      ``
 
     insertInDOM: (rowView)->
       rowView.rowExtras.append(@el)
@@ -71,7 +126,7 @@ define 'cs!xlform/view.rowDetail', [
         placement: 'right'
         rows: 3
 
-  viewRowDetail.DetailViewMixins.hint =
+  viewRowDetail.DetailViewMixins.hint = viewRowDetail.DetailViewMixins.default =
     html: ->
       @$el.addClass("card__settings__fields--active")
       """
@@ -83,8 +138,7 @@ define 'cs!xlform/view.rowDetail', [
       </div>
       """
     afterRender: ->
-      # $viewUtils.makeEditable @, @model, 'code', {}
-      @$('input').eq(0).val(@model.get('value'))
+      @listenForInputChange()
 
   viewRowDetail.DetailViewMixins.relevant =
     html: ->
@@ -126,14 +180,15 @@ define 'cs!xlform/view.rowDetail', [
       </div>
       """
     afterRender: ->
-      $viewUtils.makeEditable @, @model, 'code', {}
+      @listenForInputChange()
+      # $viewUtils.makeEditable @, @model, 'code', {}
 
-  viewRowDetail.DetailViewMixins.name = viewRowDetail.DetailViewMixins.default =
+  viewRowDetail.DetailViewMixins.name =
     html: ->
       @fieldTab = "active"
-      @listenTo @model, "change:value", ()=>
-        @render()
-        @afterRender()
+      # @listenTo @model, "change:value", ()=>
+      #   @render()
+      #   @afterRender()
       @$el.addClass("card__settings__fields--#{@fieldTab}")
       """
       <div class="card__settings__fields__field">
@@ -145,7 +200,30 @@ define 'cs!xlform/view.rowDetail', [
       """
     afterRender: ->
       @$el.find('input').eq(0).val(@model.get("value"))
+      @listenForInputChange(transformFn: $modelUtils.sluggify)
       # $viewUtils.makeEditable @, @model, "code", transformFunction: $modelUtils.sluggify
+    insertInDom: (rowView)->
+      rowView.rowExtras.append(@el)
+
+  viewRowDetail.DetailViewMixins.default =
+    html: ->
+      @fieldTab = "active"
+      # @listenTo @model, "change:value", ()=>
+      #   @render()
+      #   @afterRender()
+      @$el.addClass("card__settings__fields--#{@fieldTab}")
+      """
+      <div class="card__settings__fields__field">
+        <label for="#{@cid}">#{@model.key}: </label>
+        <span class="settings__input">
+          <input type="text" name="#{@model.key}" id="#{@cid}" class="text" />
+        </span>
+      </div>
+      """
+    afterRender: ->
+      @$el.find('input').eq(0).val(@model.get("value"))
+      @listenForInputChange()
+
     insertInDom: (rowView)->
       rowView.rowExtras.append(@el)
 
@@ -171,10 +249,12 @@ define 'cs!xlform/view.rowDetail', [
       </div>
       """
     afterRender: ->
-      inp = @$el.find("input")
-      # to be moved into the model when XLF.configs.truthyValues is refactored
-      isTrueValue = (@model.get("value") || "").toLowerCase() in $configs.truthyValues
-      inp.prop("checked", isTrueValue)
-      inp.change ()=> @model.set("value", inp.prop("checked"))
+      @listenForCheckboxChange()
+
+      # inp = @$el.find("input")
+      # # to be moved into the model when XLF.configs.truthyValues is refactored
+      # isTrueValue = (@model.get("value") || "").toLowerCase() in $configs.truthyValues
+      # inp.prop("checked", isTrueValue)
+      # inp.change ()=> @model.set("value", inp.prop("checked"))
 
   viewRowDetail
