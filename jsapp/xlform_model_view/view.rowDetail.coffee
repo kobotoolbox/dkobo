@@ -237,6 +237,20 @@ define 'cs!xlform/view.rowDetail', [
           placement: 'right'
           rows: 3
 
+  viewRowDetail.DetailViewMixins._isRepeat =
+    html: ->
+      @$el.addClass("card__settings__fields--active")
+      """
+      <div class="card__settings__fields__field">
+        <label for="#{@cid}">Repeat: </label>
+        <span class="settings__input">
+          <input type="checkbox" name="#{@model.key}" id="#{@cid}"/> <label for="#{@cid}">Yes</label>
+        </span>
+      </div>
+      """
+    afterRender: ->
+      @listenForCheckboxChange()
+
   viewRowDetail.DetailViewMixins.required =
     html: ->
       @$el.addClass("card__settings__fields--active")

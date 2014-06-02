@@ -137,17 +137,19 @@ define 'cs!xlform/model.surveyFragment', [
       @rows.add __rows  if __rows
       for row in __rows
         row._parent = row.collection = @rows
-      @_groupOrRepeatKey = if @_isRepeat() then "repeat" else "group"
 
     initialize: ->
-      defaultsForType = @getSurvey().defaultsForType
-      grpDefaults = defaultsForType.group
-      unless @has 'label'
-        @set 'label', grpDefaults?.label(@)
+      grpDefaults = $configs.newGroupDetails
+      for key, obj of grpDefaults
+        if !@has key
+          if typeof obj.value is 'function'
+            obj.value = obj.value(@)
+          @set key, obj
+
       @convertAttributesToRowDetails()
 
     _isRepeat: ()->
-      !!(@get("type")?.get("value")?.match(/repeat/))
+      !!(@get("_isRepeat")?.get("value"))
 
     autoname: ->
       if @get('name') is undefined
@@ -174,17 +176,21 @@ define 'cs!xlform/model.surveyFragment', [
     forEachRow: (cb, ctx={})->
       _forEachRow.apply(@, [cb, ctx])
 
+    _groupOrRepeatKey: ->
+      if @_isRepeat() then "repeat" else "group"
+
     groupStart: ->
       group = @
       toJSON: ->
         out = {}
         for k, val of group.attributes
-          out[k] = val.getValue()
-        out.type = "begin #{group._groupOrRepeatKey}"
+          if k isnt '_isRepeat'
+            out[k] = val.getValue()
+        out.type = "begin #{group._groupOrRepeatKey()}"
         out
     groupEnd: ->
       group = @
-      toJSON: ()-> type: "end #{group._groupOrRepeatKey}"
+      toJSON: ()-> type: "end #{group._groupOrRepeatKey()}"
 
   INVALID_TYPES_AT_THIS_STAGE = ['begin group', 'end group', 'begin repeat', 'end repeat']
   _determineConstructorByParams = (obj)->
