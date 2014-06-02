@@ -121,7 +121,7 @@ define 'cs!xlform/view.rowDetail', [
       <div class="card__settings__fields__field">
         <label for="#{@cid}">Validation logic: </label>
         <span class="settings__input">
-          <input type="checkbox" name="#{@model.key}" id="#{@cid}" />
+          <input type="text" name="#{@model.key}" id="#{@cid}" />
         </span>
       </div>
       """

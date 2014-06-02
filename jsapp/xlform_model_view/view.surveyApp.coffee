@@ -133,10 +133,18 @@ define 'cs!xlform/view.surveyApp', [
 
     expandRowSelector: (evt)->
       $ect = $(evt.currentTarget)
-      $row = $ect.parents('.survey__row').eq(0)
-      $spacer = $ect.parent()
-      view = @getViewForRow(cid: $row.data('rowId'))
-      new $viewRowSelector.RowSelector(el: $spacer.get(0), ngScope: @ngScope, spawnedFromView: view).expand()
+      if $ect.parents('.survey-editor__null-top-row').length > 0
+        # This is the initial row in the survey
+        new $viewRowSelector.RowSelector(el: @$el.find(".survey__row__spacer").get(0), survey: @survey, ngScope: @ngScope, surveyView: @).expand()
+      else
+        $row = $ect.parents('.survey__row').eq(0)
+        $spacer = $ect.parents('.survey__row__spacer')
+        rowId = $row.data('rowId')
+        view = @getViewForRow(cid: rowId)
+        if !view
+          # hopefully, this error is never triggered
+          throw new Error('View for row was not found: ' + rowId)
+        new $viewRowSelector.RowSelector(el: $spacer.get(0), ngScope: @ngScope, spawnedFromView: view, surveyView: @).expand()
 
     render: ()->
       @$el.removeClass("content--centered").removeClass("content")
@@ -253,14 +261,23 @@ define 'cs!xlform/view.surveyApp', [
       evt.preventDefault()
       if confirm("Are you sure you want to delete this question? This action cannot be undone.")
         $et = $(evt.target)
-        rowId = $et.parents("li").data("rowId")
-        rowEl = $et.parents("li").eq(0)
+        rowEl = $et.parents(".survey__row").eq(0)
+        rowId = rowEl.data("rowId")
 
-        matchingRow = @survey.rows.find (row)-> row.cid is rowId
+        matchingRow = false
+        findMatch = (r)->
+          if r.cid is rowId
+            matchingRow = r
+          ``
+
+        @survey.forEachRow findMatch, {
+          includeGroups: false
+        }
 
         if !matchingRow
           throw new Error("Matching row was not found.")
 
+        matchingRow.detach()
         # this slideUp is for add/remove row animation
         rowEl.slideUp 175, "swing", ()=>
           @survey.rows.remove matchingRow

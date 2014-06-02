@@ -68,7 +68,6 @@ define 'cs!xlform/view.rowSelector', [
 
       survey.addRow(rowDetails, options)
       @hide()
-      parentSurveyView = @options.spawnedFromView.surveyView
-      parentSurveyView.reset()
+      @options.surveyView.reset()
 
   viewRowSelector
