@@ -85,6 +85,12 @@
         display: inline-block;
         font-weight: 600;
         vertical-align: middle;
+        text-transform: capitalize;
+
+        &.align-top {
+            vertical-align: top;
+            margin-top: 5px;
+        }
     }
 }
 

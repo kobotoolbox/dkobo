@@ -61,6 +61,7 @@ define 'cs!xlform/view.row', [
       @
     _renderRow: ->
       @$el.html $viewTemplates.$$render('row.xlfRowView')
+      @$label = @$('.card__header-title')
       @$card = @$el.find('.card')
       if 'getList' of @model and (cl = @model.getList())
         @$card.addClass('card--selectquestion')
@@ -94,6 +95,7 @@ define 'cs!xlform/view.row', [
 
     render: ->
       @$el.html $viewTemplates.row.groupView(@model)
+      @$label = @$('.group__label').eq(0)
       @$rows = @$('.group__rows').eq(0)
       @rowExtras = @$('.card__settings__content').eq(0)
 

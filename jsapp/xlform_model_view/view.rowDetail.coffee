@@ -22,11 +22,11 @@ define 'cs!xlform/view.rowDetail', [
     of each row of the XLForm. When the view is initialized,
     a mixin from "DetailViewMixins" is applied.
     ###
-    className: "dt-view"
+    className: "card__settings__fields  dt-view dt-view--depr"
     initialize: ({@rowView})->
       unless @model.key
         throw new Error "RowDetail does not have key"
-      @extraClass = "card__settings__fields xlf-dv-#{@model.key}"
+      @extraClass = "xlf-dv-#{@model.key}"
       if (viewMixin = viewRowDetail.DetailViewMixins[@model.key])
         _.extend(@, viewMixin)
       else
@@ -61,36 +61,44 @@ define 'cs!xlform/view.rowDetail', [
         faClass = $icons.get(typeStr).get("faClass")
         rowView.$el.find(".card__header-icon").addClass("fa-#{faClass}")
 
+
   viewRowDetail.DetailViewMixins.label =
     html: -> false
     insertInDOM: (rowView)->
-      if @model._parent.constructor.kls is "Group"
-        cht = rowView.$el.find('.group__label')
-        cht.html(@model.get("value"))
-        $viewUtils.makeEditable @, @model, cht, options:
-          placement: 'right'
-          rows: 3
-      else
-        if rowView.model.get("type").get("typeId") isnt "calculate"
-          cht = rowView.$el.find(".card__header-title")
-          cht.html(@model.get("value"))
-          $viewUtils.makeEditable @, @model, cht, options:
-            placement: 'right'
-            rows: 3
+      cht = rowView.$label
+      cht.html(@model.get("value"))
+      $viewUtils.makeEditable @, @model, cht, options:
+        placement: 'right'
+        rows: 3
 
   viewRowDetail.DetailViewMixins.hint =
     html: ->
+      @$el.addClass("card__settings__fields--active")
       """
-      #{@model.key}: <code>#{@model.get("value")}</code>
+      <div class="card__settings__fields__field">
+        <label for="#{@cid}">#{@model.key}: </label>
+        <span class="settings__input">
+          <input type="text" name="#{@model.key}" id="#{@cid}" class="text" />
+        </span>
+      </div>
       """
     afterRender: ->
-      $viewUtils.makeEditable @, @model, 'code', {}
+      # $viewUtils.makeEditable @, @model, 'code', {}
+      @$('input').eq(0).val(@model.get('value'))
 
   viewRowDetail.DetailViewMixins.relevant =
     html: ->
+      @$el.addClass("card__settings__fields--active")
       """
-        <button>Skip Logic</button>
-        <div class="relevant__editor"></div>
+      <div class="card__settings__fields__field">
+        <label class="card__settings__fields__field_button align-top">
+          Skip Logic
+        </label>
+        <div class="settings__input">
+          <button>Skip Logic</button>
+          <div class="relevant__editor"></div>
+        </div>
+      </div>
       """
 
     afterRender: ->
@@ -105,9 +113,17 @@ define 'cs!xlform/view.rowDetail', [
 
   viewRowDetail.DetailViewMixins.constraint =
     html: ->
+      @$el.addClass("card__settings__fields--active")
+      # Validation logic (i.e. <span style='font-family:monospace'>constraint</span>):
+      # <code>#{@model.get("value")}</code>
+      fldUid = _.uniqueId("row-detail-field")
       """
-        Validation logic (i.e. <span style='font-family:monospace'>constraint</span>):
-        <code>#{@model.get("value")}</code>
+      <div class="card__settings__fields__field">
+        <label for="#{@cid}">Validation logic: </label>
+        <span class="settings__input">
+          <input type="checkbox" name="#{@model.key}" id="#{@cid}" />
+        </span>
+      </div>
       """
     afterRender: ->
       $viewUtils.makeEditable @, @model, 'code', {}
@@ -121,9 +137,9 @@ define 'cs!xlform/view.rowDetail', [
       @$el.addClass("card__settings__fields--#{@fieldTab}")
       """
       <div class="card__settings__fields__field">
-        <label>#{@model.key}: </label>
+        <label for="#{@cid}">#{@model.key}: </label>
         <span class="settings__input">
-          <input type="text" name="hint" class="text" />
+          <input type="text" name="#{@model.key}" id="#{@cid}" class="text" />
         </span>
       </div>
       """
@@ -145,7 +161,15 @@ define 'cs!xlform/view.rowDetail', [
 
   viewRowDetail.DetailViewMixins.required =
     html: ->
-      """<label><input type="checkbox"> Required?</label>"""
+      @$el.addClass("card__settings__fields--active")
+      """
+      <div class="card__settings__fields__field">
+        <label for="#{@cid}">Required: </label>
+        <span class="settings__input">
+          <input type="checkbox" name="#{@model.key}" id="#{@cid}"/> <label for="#{@cid}">Yes</label>
+        </span>
+      </div>
+      """
     afterRender: ->
       inp = @$el.find("input")
       # to be moved into the model when XLF.configs.truthyValues is refactored
