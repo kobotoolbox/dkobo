@@ -88,7 +88,6 @@ rowDetailsSkipLogic.SkipLogicCriterion = (function(_super) {
         old_question_type = ((_ref = this._get_question()) ? _ref.get_type() : void 0) || {
             name: null
         };
-        log(cid)
         this.set('question_cid', cid);
         question_type = this._get_question().get_type();
         if (_ref1 = this.get('operator').get_id(), __indexOf.call(question_type.operators, _ref1) < 0) {
