@@ -96,7 +96,7 @@ define 'cs!xlform/view.surveyApp', [
 
     render: ()->
       @$el.removeClass("content--centered").removeClass("content")
-      @$el.html $viewTemplates.$$render('surveyApp', @survey)
+      @$el.html $viewTemplates.$$render('surveyApp', @)
       @survey.settings.on 'validated:invalid', (model, validations) ->
         for key, value of validations
             break

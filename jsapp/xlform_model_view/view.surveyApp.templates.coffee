@@ -13,13 +13,18 @@ define 'cs!xlform/view.surveyApp.templates', [], ()->
           </form>
       """
 
-  surveyApp = (survey) ->
+  surveyApp = (surveyApp) ->
+      survey = surveyApp.survey
+      if surveyApp.features.multipleQuestions
+        type_name = "Survey"
+      else
+        type_name = "Question"
       """
         <div class="sub-header-bar">
           
           <button class="btn btn--utility" id="settings"><i class="fa fa-cog"></i> Form Settings</button>
-          <button class="btn btn--utility" id="save"><i class="fa fa-check-circle green"></i> Save Survey</button>
-          <button class="btn btn--utility" id="xlf-preview"><i class="fa fa-eye"></i> Preview Survey</button>
+          <button class="btn btn--utility" id="save"><i class="fa fa-check-circle green"></i> Save #{type_name}</button>
+          <button class="btn btn--utility" id="xlf-preview"><i class="fa fa-eye"></i> Preview #{type_name}</button>
           <button class="btn btn--utility js-expand-multioptions--all"><i class="fa fa-eye"></i> Expand All Questions</button>
           <button class="btn btn--utility btn--group-questions btn--disabled js-group-rows">Group Questions</button>
           <button class="btn btn--utility pull-right" id="question-library"><i class="fa fa-folder"></i> Question Library</button>
