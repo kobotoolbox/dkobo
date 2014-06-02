@@ -1,9 +1,9 @@
 controller_tests = ->
   beforeEach ->
-    sinon.stub(SurveyApp, "create").returns render: ->
+    sinon.stub(dkobo_xlform.view.SurveyApp, "create").returns render: ->
 
   afterEach ->
-    SurveyApp.create.restore()
+    dkobo_xlform.view.SurveyApp.create.restore()
 
   describe "Forms Controller", forms_controller_tests
 

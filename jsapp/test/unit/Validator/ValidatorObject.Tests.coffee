@@ -1,6 +1,8 @@
 validator_object_tests = ->
   validator = undefined
   validatorStub = undefined
+  viewUtils = dkobo_xlform.view.utils
+
   beforeEach ->
     validator = viewUtils.Validator.create(validations: [
       name: "test"

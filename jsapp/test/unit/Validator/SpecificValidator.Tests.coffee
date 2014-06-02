@@ -1,4 +1,6 @@
 specific_validator_tests = ->
+  viewUtils = dkobo_xlform.view.utils
+
   describe "invalidChars", ->
     it "should return true when the passed test string contains no invalid chars", ->
       expect(viewUtils.Validator.__validators.invalidChars("asdf", "bxc")).toBeTruthy()
