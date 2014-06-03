@@ -131,12 +131,6 @@ define 'cs!xlform/model.configs', ["underscore", "backbone"], (_, Backbone)->
     acknowledge:
       label:
         value: "Acknowledge"
-    group:
-      label: (s)->
-        n = 1
-        count_grps = (r)-> n++  if r.constructor.kls is "Group"
-        s.getSurvey().forEachRow count_grps, includeGroups: true
-        "Group #{n}"
 
   configs.columns = ["type", "name", "label", "hint", "required", "relevant", "default", "constraint"]
 
@@ -205,6 +199,27 @@ define 'cs!xlform/model.configs', ["underscore", "backbone"], (_, Backbone)->
     constraint:
       value: ""
       _hideUnlessChanged: true
+
+  configs.newGroupDetails =
+    name:
+      value: ""
+    label:
+      value: (s)->
+        n = 1
+        count_grps = (r)-> n++  if r.constructor.kls is "Group"
+        s.getSurvey().forEachRow count_grps, includeGroups: true
+        "Group #{n}"
+    type:
+      value: "group"
+    _isRepeat:
+      value: false
+    required:
+      value: false
+      _hideUnlessChanged: true
+    relevant:
+      value: ""
+      _hideUnlessChanged: true
+
 
   configs.question_types = {}
 

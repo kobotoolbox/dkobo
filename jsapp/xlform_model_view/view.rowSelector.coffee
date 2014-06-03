@@ -24,15 +24,14 @@ define 'cs!xlform/view.rowSelector', [
       if opts.action is "click-add-row"
         @expand()
     expand: ->
-      @button.fadeOut 150
       @line.addClass "expanded"
       @line.parents(".survey-editor__null-top-row").addClass "expanded"
       @line.css "height", "inherit"
       @line.html $viewTemplates.$$render('xlfRowSelector.line')
-      $menu = @line.find(".rowselector__questiontypes")
-      $menu.on("click", ".menu-item", _.bind(@selectMenuItem, @))
+      $menu = @line.find(".row__questiontypes__list")
+      $menu.on("click", ".questiontypelist__item", _.bind(@selectMenuItem, @))
       for mrow in $icons.grouped()
-        menurow = $("<div>", class: "menu-row").appendTo $menu
+        menurow = $("<div>", class: "questiontypelist__row").appendTo $menu
         for mitem, i in mrow
           menurow.append $viewTemplates.$$render('xlfRowSelector.cell', mitem.attributes)
 
@@ -41,7 +40,6 @@ define 'cs!xlform/view.rowSelector', [
       @line.find("div").eq(0).fadeOut 250, =>
         @line.empty()
       @line.parents(".survey-editor__null-top-row").removeClass "expanded"
-      @button.fadeIn 200
       @line.removeClass "expanded"
       @line.animate height: "0"
     hide: ->
@@ -59,11 +57,17 @@ define 'cs!xlform/view.rowSelector', [
 
     selectMenuItem: (evt)->
       $('select.skiplogic__rowselect').select2('destroy')
-      mi = $(evt.target).data("menuItem")
-      rowBefore = @options.spawnedFromView?.model
-      survey = @options.survey || rowBefore.getSurvey()
-      rowBeforeIndex = survey.rows.indexOf(rowBefore)
-      survey.addRowAtIndex({type: mi}, rowBeforeIndex+1)
+      rowDetails =
+        type: $(evt.target).closest('.questiontypelist__item').data("menuItem")
+      options = {}
+      if (rowBefore = @options.spawnedFromView?.model)
+        options.after = rowBefore
+        survey = rowBefore.getSurvey()
+      else
+        survey = @options.survey
+
+      survey.addRow(rowDetails, options)
       @hide()
+      @options.surveyView.reset()
 
   viewRowSelector

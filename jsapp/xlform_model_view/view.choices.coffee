@@ -73,7 +73,7 @@ define 'cs!xlform/view.choices', [
 
   class OptionView extends $baseView
     tagName: "li"
-    className: "xlf-option-view"
+    className: "multioptions__option  xlf-option-view xlf-option-view--depr"
     events:
       "keyup input": "keyupinput"
       "click .js-remove-option": "remove"

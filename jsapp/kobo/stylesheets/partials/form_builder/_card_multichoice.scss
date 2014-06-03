@@ -1,0 +1,122 @@
+// ==========================================================================
+// Multiple choice cards
+// ==========================================================================
+
+// multi-choice expanded
+.caret {
+    &:before {
+        // from fa-caret-right
+        content: "\f0da";
+    }
+}
+
+.card__text {
+    color: $indicatorColor;
+}
+
+.card--selectquestion__expansion {
+    @extend %card-expansion;
+}
+
+
+// ==========================================================================
+// Overrides
+// ==========================================================================
+
+.card--selectquestion {
+    .row__multioptions {
+        display: none;
+    }
+
+    &.card--expandedchoices {
+        .row__multioptions {
+            display: block;
+        }
+
+        .caret {
+            &:before {
+                // from fa-caret-down
+                content: "\f0d7";
+            }
+        }
+    }
+}
+
+
+.option-placeholder {
+    height: 41px;
+    margin-bottom: 10px;
+    border: 2px dashed #ccc;
+    border-radius: 4px;
+}
+
+
+// ==========================================================================
+// Single/multiple select questions
+// ==========================================================================
+
+// .xlf-option-view BECOMES .multioptions__option
+.multioptions__option {
+    margin-bottom: 10px;
+    cursor: move;
+    position: relative;
+    div.editable-wrapper {
+        font-family: 'Lato';
+        font-weight: 600;
+        border-radius: 5px;
+        border:$thinBorderStyle;
+        padding: 5px;
+        font-size: 12px;
+        display: inline-block;
+        width: 74%;
+        vertical-align: top;
+        height: auto;
+        position: relative;
+        min-height: 18px;
+        .editable-input input {
+            line-height: 1em;
+        }
+    }
+    code {
+        font-family: 'Lato';
+        font-weight: 600;
+        font-size: 10px;
+        background-color: #E3E7EC;
+        padding:5px;
+        width: 23%;
+        text-align: left;
+        display: inline-block;
+        margin-left: 2%;
+        overflow: hidden;
+        label {
+            text-transform: uppercase;
+            width: 32%;
+        }
+        span, .editable-container {
+            display: inline-block;
+            float: right;
+            width: 66%;
+            color: $linkColor;
+            text-align: right;
+        }
+        .editable-buttons {
+            display: none; // TEMPORARY
+        }
+        .editable-container .editable-input input {
+            text-align: right;
+            display: inline-block;
+            float: right;
+            color: $linkColor;
+            line-height: 1em;
+            text-transform: uppercase;
+            font-size: 10px;
+            margin-top: 3px;
+        }
+    }
+    i.fa-trash-o {
+        position: absolute;
+        left:-24px;
+        top:8px;
+        color: #D08B8C;
+    }
+}

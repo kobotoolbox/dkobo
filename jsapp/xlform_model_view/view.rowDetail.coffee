@@ -22,7 +22,7 @@ define 'cs!xlform/view.rowDetail', [
     of each row of the XLForm. When the view is initialized,
     a mixin from "DetailViewMixins" is applied.
     ###
-    className: "dt-view"
+    className: "card__settings__fields  dt-view dt-view--depr"
     initialize: ({@rowView})->
       unless @model.key
         throw new Error "RowDetail does not have key"
@@ -40,6 +40,61 @@ define 'cs!xlform/view.rowDetail', [
       @
     html: ()->
       $viewTemplates.$$render('xlfDetailView', @)
+    listenForCheckboxChange: (opts={})->
+      el = opts.el || @$('input[type=checkbox]').get(0)
+      $el = $(el)
+      changing = false
+      reflectValueInEl = ()=>
+        if !changing
+          if @model.get('value') in  $configs.truthyValues
+            $el.prop('checked', true)
+      @model.on 'change:value', reflectValueInEl
+      reflectValueInEl()
+      $el.on 'change', ()=>
+        changing = true
+        @model.set('value', $el.prop('checked'))
+        changing = false
+    listenForInputChange: (opts={})->
+      # listens to checkboxes and input fields and ensures
+      # the model's value is reflected in the element and changes
+      # to the element are reflected in the model (with transformFn
+      # applied)
+      el = opts.el || @$('input').get(0)
+      $el = $(el)
+      transformFn = opts.transformFn || false
+      inputType = opts.inputType
+      inTransition = false
+
+      changeModelValue = ($elVal)=>
+        # preventing race condition
+        if !inTransition
+          inTransition = true
+          @model.set('value', $elVal)
+          reflectValueInEl(true)
+          inTransition = false
+
+      reflectValueInEl = (force=false)=>
+        # This should never change the model value
+        if force || !inTransition
+          modelVal = @model.get('value')
+          if inputType is 'checkbox'
+            if !_.isBoolean(modelVal)
+              modelVal = modelVal in $configs.truthyValues
+            # triggers element change event
+            $el.prop('checked', modelVal)
+          else
+            # triggers element change event
+            $el.val(modelVal)
+
+      reflectValueInEl()
+      @model.on 'change:value', reflectValueInEl
+
+      $el.on 'change', ()=>
+        $elVal = $el.val()
+        if transformFn
+          $elVal = transformFn($elVal)
+        changeModelValue($elVal)
+      ``
 
     insertInDOM: (rowView)->
       rowView.rowExtras.append(@el)
@@ -57,32 +112,47 @@ define 'cs!xlform/view.rowDetail', [
     html: -> false
     insertInDOM: (rowView)->
       typeStr = @model.get("value").split(" ")[0]
-      faClass = $icons.get(typeStr).get("faClass")
-      rowView.$el.find(".card__header-icon").addClass("fa-#{faClass}")
+      if !(@model._parent.constructor.kls is "Group")
+        faClass = $icons.get(typeStr).get("faClass")
+        rowView.$el.find(".card__header-icon").addClass("fa-#{faClass}")
+
 
   viewRowDetail.DetailViewMixins.label =
     html: -> false
     insertInDOM: (rowView)->
-      if rowView.model.get("type").get("typeId") isnt "calculate"
-        cht = rowView.$el.find(".card__header-title")
-        cht.html(@model.get("value"))
-        $viewUtils.makeEditable @, @model, cht, options:
-          placement: 'right'
-          rows: 3
+      cht = rowView.$label
+      cht.html(@model.get("value"))
+      $viewUtils.makeEditable @, @model, cht, options:
+        placement: 'right'
+        rows: 3
 
-  viewRowDetail.DetailViewMixins.hint =
+  viewRowDetail.DetailViewMixins.hint = viewRowDetail.DetailViewMixins.default =
     html: ->
+      @$el.addClass("card__settings__fields--active")
       """
-      #{@model.key}: <code>#{@model.get("value")}</code>
+      <div class="card__settings__fields__field">
+        <label for="#{@cid}">#{@model.key}: </label>
+        <span class="settings__input">
+          <input type="text" name="#{@model.key}" id="#{@cid}" class="text" />
+        </span>
+      </div>
       """
     afterRender: ->
-      $viewUtils.makeEditable @, @model, 'code', {}
+      @listenForInputChange()
 
   viewRowDetail.DetailViewMixins.relevant =
     html: ->
+      @$el.addClass("card__settings__fields--active")
       """
-        <button>Skip Logic</button>
-        <div class="relevant__editor"></div>
+      <div class="card__settings__fields__field">
+        <label class="card__settings__fields__field_button align-top">
+          Skip Logic
+        </label>
+        <div class="settings__input">
+          <button>Skip Logic</button>
+          <div class="relevant__editor"></div>
+        </div>
+      </div>
       """
 
     afterRender: ->
@@ -97,23 +167,65 @@ define 'cs!xlform/view.rowDetail', [
 
   viewRowDetail.DetailViewMixins.constraint =
     html: ->
+      @$el.addClass("card__settings__fields--active")
+      # Validation logic (i.e. <span style='font-family:monospace'>constraint</span>):
+      # <code>#{@model.get("value")}</code>
+      fldUid = _.uniqueId("row-detail-field")
       """
-        Validation logic (i.e. <span style='font-family:monospace'>constraint</span>):
-        <code>#{@model.get("value")}</code>
+      <div class="card__settings__fields__field">
+        <label for="#{@cid}">Validation logic: </label>
+        <span class="settings__input">
+          <input type="text" name="#{@model.key}" id="#{@cid}" />
+        </span>
+      </div>
       """
     afterRender: ->
-      $viewUtils.makeEditable @, @model, 'code', {}
+      @listenForInputChange()
+      # $viewUtils.makeEditable @, @model, 'code', {}
 
-  viewRowDetail.DetailViewMixins.name = viewRowDetail.DetailViewMixins.default =
+  viewRowDetail.DetailViewMixins.name =
     html: ->
-      @listenTo @model, "change:value", ()=>
-        @render()
-        @afterRender()
+      @fieldTab = "active"
+      # @listenTo @model, "change:value", ()=>
+      #   @render()
+      #   @afterRender()
+      @$el.addClass("card__settings__fields--#{@fieldTab}")
       """
-      #{@model.key}: <code>#{@model.get("value")}</code>
+      <div class="card__settings__fields__field">
+        <label for="#{@cid}">#{@model.key}: </label>
+        <span class="settings__input">
+          <input type="text" name="#{@model.key}" id="#{@cid}" class="text" />
+        </span>
+      </div>
       """
     afterRender: ->
-      $viewUtils.makeEditable @, @model, "code", transformFunction: $modelUtils.sluggify
+      @$el.find('input').eq(0).val(@model.get("value"))
+      @listenForInputChange(transformFn: $modelUtils.sluggify)
+      # $viewUtils.makeEditable @, @model, "code", transformFunction: $modelUtils.sluggify
+    insertInDom: (rowView)->
+      rowView.rowExtras.append(@el)
+
+  viewRowDetail.DetailViewMixins.default =
+    html: ->
+      @fieldTab = "active"
+      # @listenTo @model, "change:value", ()=>
+      #   @render()
+      #   @afterRender()
+      @$el.addClass("card__settings__fields--#{@fieldTab}")
+      """
+      <div class="card__settings__fields__field">
+        <label for="#{@cid}">#{@model.key}: </label>
+        <span class="settings__input">
+          <input type="text" name="#{@model.key}" id="#{@cid}" class="text" />
+        </span>
+      </div>
+      """
+    afterRender: ->
+      @$el.find('input').eq(0).val(@model.get("value"))
+      @listenForInputChange()
+
+    insertInDom: (rowView)->
+      rowView.rowExtras.append(@el)
 
   viewRowDetail.DetailViewMixins.calculation =
     html: -> false
@@ -125,14 +237,38 @@ define 'cs!xlform/view.rowDetail', [
           placement: 'right'
           rows: 3
 
+  viewRowDetail.DetailViewMixins._isRepeat =
+    html: ->
+      @$el.addClass("card__settings__fields--active")
+      """
+      <div class="card__settings__fields__field">
+        <label for="#{@cid}">Repeat: </label>
+        <span class="settings__input">
+          <input type="checkbox" name="#{@model.key}" id="#{@cid}"/> <label for="#{@cid}">Yes</label>
+        </span>
+      </div>
+      """
+    afterRender: ->
+      @listenForCheckboxChange()
+
   viewRowDetail.DetailViewMixins.required =
     html: ->
-      """<label><input type="checkbox"> Required?</label>"""
+      @$el.addClass("card__settings__fields--active")
+      """
+      <div class="card__settings__fields__field">
+        <label for="#{@cid}">Required: </label>
+        <span class="settings__input">
+          <input type="checkbox" name="#{@model.key}" id="#{@cid}"/> <label for="#{@cid}">Yes</label>
+        </span>
+      </div>
+      """
     afterRender: ->
-      inp = @$el.find("input")
-      # to be moved into the model when XLF.configs.truthyValues is refactored
-      isTrueValue = (@model.get("value") || "").toLowerCase() in $configs.truthyValues
-      inp.prop("checked", isTrueValue)
-      inp.change ()=> @model.set("value", inp.prop("checked"))
+      @listenForCheckboxChange()
+
+      # inp = @$el.find("input")
+      # # to be moved into the model when XLF.configs.truthyValues is refactored
+      # isTrueValue = (@model.get("value") || "").toLowerCase() in $configs.truthyValues
+      # inp.prop("checked", isTrueValue)
+      # inp.change ()=> @model.set("value", inp.prop("checked"))
 
   viewRowDetail

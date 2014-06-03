@@ -19,13 +19,10 @@ define 'cs!xlform/view.row', [
             )->
   class BaseRowView extends Backbone.View
     tagName: "li"
-    className: "xlf-row-view survey__row"
+    className: "survey__row  xlf-row-view xlf-row-view--depr"
     events:
-     "click .js-select-row": "selectRow"
-     "click .js-expand-row-selector": "expandRowSelector"
+     # "click .js-expand-row-selector": "expandRowSelector"
      "drop": "drop"
-     "click .js-advanced-toggle": "toggleSettings"
-     "click .js-expand-multioptions": "toggleMultiOptions"
      "click .js-add-to-question-library": "add_row_to_question_library"
 
     initialize: (opts)->
@@ -44,15 +41,11 @@ define 'cs!xlform/view.row', [
     drop: (evt, index)->
       @$el.trigger("update-sort", [@model, index])
 
-    selectRow: ->
-      @$el.toggleClass("survey__row--selected")
-      @getApp().questionSelect()
-
     getApp: ->
       @surveyView.getApp()
 
-    expandRowSelector: ->
-      new $rowSelector.RowSelector(el: @$el.find(".expanding-spacer-between-rows").get(0), ngScope: @ngScope, spawnedFromView: @).expand()
+    # expandRowSelector: ->
+    #   new $rowSelector.RowSelector(el: @$el.find(".survey__row__spacer").get(0), ngScope: @ngScope, spawnedFromView: @).expand()
 
     render: ->
       if @model instanceof $row.RowError
@@ -68,46 +61,30 @@ define 'cs!xlform/view.row', [
       @
     _renderRow: ->
       @$el.html $viewTemplates.$$render('row.xlfRowView')
+      @$label = @$('.card__header-title')
       @$card = @$el.find('.card')
       if 'getList' of @model and (cl = @model.getList())
         @$card.addClass('card--selectquestion')
         @listView = new $viewChoices.ListView(model: cl, rowView: @).render()
 
-      # @multiOptions = @$(".row__multioptions")
-      # @multiOptions.addClass("hidden")
-
-      @rowExtras = @$(".row-extras")
-      @rowExtrasSummary = @$(".row-extras-summary")
+      # @rowExtras = @$(".row-extras")
+      @rowExtras = @$(".card__settings__content")
       for [key, val] in @model.attributesArray()
         new $viewRowDetail.DetailView(model: val, rowView: @).renderInRowView(@)
       @
-
-    toggleSettings: (evt)->
-      evt.stopPropagation()
-      # cannot be expandsettings and expandchoices at the same time
-      @$card.removeClass('card--expandedchoices')
-      @$card.toggleClass('card--expandsettings')
-      @$(evt.currentTarget).toggleClass("activated")
-
-    toggleMultiOptions: (evt)->
-      evt.stopPropagation()
-      # cannot be expandsettings and expandchoices at the same time
-      @$card.removeClass('card--expandsettings')
-      @$card.toggleClass('card--expandedchoices')
 
     add_row_to_question_library: (evt) ->
       evt.stopPropagation()
       @ngScope.add_row_to_question_library @model
 
   class GroupView extends BaseRowView
+    className: "survey__row survey__row--group  xlf-row-view xlf-row-view--depr"
     events:
-      "click .js-toggle-group-expansion": "toggleExpansion"
-      "click .js-advanced-toggle": "toggleAdvanced"
       "click .js-delete-group": "deleteGroup"
+      # "click .js-expand-row-selector": "expandRowSelector"
     initialize: (opts)->
       @options = opts
       @_shrunk = !!opts.shrunk
-      @$el.addClass("survey__row--group")
       @$el.attr("data-row-id", @model.cid)
       @surveyView = @options.surveyView
     deleteGroup: (evt)->
@@ -115,20 +92,19 @@ define 'cs!xlform/view.row', [
         @model.detach()
         @$el.remove()
       evt.preventDefault()
-    toggleAdvanced: (evt)->
-      @$('.group').toggleClass('group--expanded-settings')
-      evt.preventDefault()
-    toggleExpansion: (evt)->
-      @_shrunk = !@_shrunk
-      @$(".group").eq(0).toggleClass("group--shrunk", @_shrunk)
-      evt.preventDefault()
+
     render: ->
       @$el.html $viewTemplates.row.groupView(@model)
-      @$rows = @$('.group__rows')
-      @_rowViews = {}
+      @$label = @$('.group__label').eq(0)
+      @$rows = @$('.group__rows').eq(0)
+      @rowExtras = @$('.card__settings__content').eq(0)
+
       @model.rows.each (row)=>
         @getApp().ensureElInView(row, @, @$rows).render()
       @$el.data("row-index", @model.getSurvey().rows.indexOf @model)
+
+      for [key, val] in @model.attributesArray()
+        new $viewRowDetail.DetailView(model: val, rowView: @).renderInRowView(@)
       @
 
   class RowView extends BaseRowView

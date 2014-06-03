@@ -22,11 +22,12 @@ contents = ->
   
   # TODO: merge .-form-builder (wrap) with .form-builder (margin)
   """
+  <div class="survey-header">
+    SurveyHeader
+  </div>
+  <div class="container">
   <section class="-form-builder form-builder">
     <div class="formb__surveybuttons"></div>
-    <div class="survey-header">
-      SurveyHeader
-    </div>
     <div class="survey-editor">
       <ul>
         #{empty_survey_message()}
@@ -38,6 +39,7 @@ contents = ->
       </ul>
     </div>
   </section>
+  </div>
   """
 
 
@@ -58,7 +60,7 @@ CENSUS_TEXTS =
 
 ###
 loremipsum = """
-  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
 """
 
 li_row = (variation='text') ->
@@ -99,12 +101,37 @@ standard_row = (variation='text', {note}) ->
   """
   card__butons = """
     <div class="card__buttons">
-      <a href="#" class="card__buttons__button gray"><i class="fa fa-cog"></i></a>
-      <a href="#" class="card__buttons__button red"><i class="fa fa-trash-o"></i></a>
-      <a href="#" class="card__buttons__button blue"><i class="fa fa-copy"></i></a>
+      <a href="#" class="card__buttons__button gray" data-button-color="gray" data-button-text="Settings"><i class="fa fa-cog"></i></a>
+      <a href="#" class="card__buttons__button red" data-button-color="red" data-button-text="Delete Question"><i class="fa fa-trash-o"></i></a>
+      <a href="#" class="card__buttons__button blue" data-button-color="blue" data-button-text="Duplicate Question"><i class="fa fa-copy"></i></a>
     </div>
   """
+  ###
+  i accidentally put this where it's triggered multiple times on the page load
 
+  # click event for question settings tab switching
+  $('body').on 'click', 'ul.card__settings__tabs li:not(.heading)', (evt)->
+    # evt.preventDefault()
+    $et = $(evt.target)
+    tabId = $et.data('cardSettingsTabId')
+    $et.parent('ul').find('.active').removeClass('active')
+    $et.addClass('active')
+    $et.parents('.card__settings').find(".card__settings__fields.active").removeClass('active')
+    $et.parents('.card__settings').find(".card__settings__fields--#{tabId}").addClass('active')
+
+  # button hover effects via JS
+  $('body').on 'mouseenter', '.card__buttons .card__buttons__button', (evt)->
+    $et = $(evt.target)
+    bColor = $et.data('buttonColor')
+    bText = $et.data('buttonText')
+    console.log bText
+    $et.parents('.card__header').append('<div class="bg">')
+    $et.parents('.card__header').find('.bg').addClass("#{bColor}").html("<h2>#{bText}</h2>")
+
+  $('body').on 'mouseleave', '.card__buttons .card__buttons__button', (evt)->
+    $et = $(evt.target)
+    $et.parents('.card__header').find('.bg').remove()
+  ###
   """
   <li class="xlf-row-view">
     #{sidenote(note, 'absrt')}
@@ -116,6 +143,36 @@ standard_row = (variation='text', {note}) ->
           #{_text}
         </div>
         #{card__butons}
+      </div>
+      <div class="card__settings card__settings--question-options">
+        <ul class="card__settings__tabs">
+          <li class="heading"><i class="fa fa-cog"></i> Settings</li>
+          <li class="active" data-card-settings-tab-id="question-options">Question Options</li>
+          <li data-card-settings-tab-id="skip-logic">Skip Logic</li>
+          <li data-card-settings-tab-id="validation-criteria">Validation Criteria</li>
+          <li data-card-settings-tab-id="response-type">Response Type</li>
+        </ul>
+        <div class="card__settings__content clearfix">
+          <ul class="card__settings__fields card__settings__fields--question-options active">
+            <li class="card__settings__fields__field"><label>Question Hint: </label> <span class="settings__input"><input type="text" name="hint" class="text" /></span></li>
+            <li class="card__settings__fields__field"><label>Required: </label> <span class="settings__input"><input type="checkbox" name="required"/> Yes</span></li>
+            <li class="card__settings__fields__field"><label>Default: </label> <span class="settings__input"><input type="text" name="default" class="text"/></span></li>
+          </ul>
+
+          <ul class="card__settings__fields card__settings__fields--skip-logic">
+            <li class="card__settings__fields__field"><button class="skiplogic__button skiplogic__select-builder"><i class="fa fa-plus"></i> Add a condition</button></li>
+            <li class="card__settings__fields__field"><button class="skiplogic__button skiplogic__select-handcode"><i class="fa fa-code"></i> Manually enter your skip logic in XLSForm code</button></li>
+          </ul>
+
+          <ul class="card__settings__fields card__settings__fields--validation-criteria">
+            <li class="card__settings__fields__field">Validation criteria will go here</li>
+          </ul>
+
+          <ul class="card__settings__fields card__settings__fields--response-type">
+            <li class="card__settings__fields__field">Response type will go here</li>
+          </ul>
+
+        </div>
       </div>
     </div>
   </li>

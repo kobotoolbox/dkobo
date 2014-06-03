@@ -35,13 +35,13 @@ define 'cs!xlform/view.surveyApp.templates', [], ()->
         </div>
         <header class="survey-header">
           <p class="survey-header__description" hidden>
-            <hgroup class="survey-header__inner">
+            <hgroup class="survey-header__inner container">
               <h1 class="survey-header__title">
                 <span class="form-title">#{survey.settings.get("form_title")}</span>
               </h1>
             </hgroup>
           </p>
-          <div class="survey-header__options  well">
+          <div class="survey-header__options container">
             <h4 class="survey-header__options-table-title">Form settings</h4>
             <table class="survey-header__options-table">
               <tr>
@@ -79,16 +79,16 @@ define 'cs!xlform/view.surveyApp.templates', [], ()->
             <div class="stats  row-details" id="additional-options"></div>
           </div>
         </header>
-        <div class="survey-editor  form-editor-wrap">
+        <div class="survey-editor form-editor-wrap container">
           <ul class="-form-editor survey-editor__list">
             <li class="survey-editor__null-top-row empty">
               <p class="survey-editor__message well">
                 <b>This form is currently empty.</b><br>
                 You can add questions, notes, prompts, or other fields by clicking on the "+" sign below.
               </p>
-              <div class="expanding-spacer-between-rows">
-                <div class="add-row-btn  btn  btn--block">
-                  <i class="fa  fa-plus"></i>
+              <div class="survey__row__spacer  expanding-spacer-between-rows expanding-spacer-between-rows--depr">
+                <div class="btn btn--block btn--addrow js-expand-row-selector   add-row-btn add-row-btn--depr">
+                  <i class="fa fa-plus"></i>
                 </div>
                 <div class="line">&nbsp;</div>
               </div>

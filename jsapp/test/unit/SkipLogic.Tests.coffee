@@ -131,18 +131,6 @@ skip_logic_model = (dkobo_xlform)->
     #**----------------------------------------------------------------***
     #********************************************************************#
 
-    describe 'get question', () ->
-      it 'returns current question', () ->
-        _criterion.survey =
-          rows:
-            get: sinon.stub().withArgs('test').returns 'success'
-        _criterion.set 'question_cid', 'test'
-
-        expect(_criterion._get_question()).toBe 'success'
-
-    #*********************************************************************
-    #**----------------------------------------------------------------***
-    #********************************************************************#
 
     describe 'change question', () ->
       beforeEach () ->

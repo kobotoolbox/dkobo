@@ -1,0 +1,24 @@
+// ==========================================================================
+// Survey Row
+// (formerly .xlf-row-view)
+// ==========================================================================
+
+.survey__row {
+    &.survey__row--selected {
+        > .survey__row__item {
+            > .card__header {
+                border: $cardInSortBorderStyle;
+            }
+            > .group__header {
+                border: $cardInSortBorderStyle;
+            }
+        }
+    }
+
+    .btn--addrow {
+        display: none;
+    }
+    &:hover > .survey__row__spacer > .btn--addrow {
+        display: block;
+    }
+}

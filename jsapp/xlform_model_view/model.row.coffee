@@ -45,6 +45,7 @@ define 'cs!xlform/model.row', [
     detach: ->
       if @_parent
         @_parent.remove @
+        @_parent = null
       ``
 
     toJSON2: ->
