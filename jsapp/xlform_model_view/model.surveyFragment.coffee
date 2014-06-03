@@ -84,9 +84,22 @@ define 'cs!xlform/model.surveyFragment', [
         delete opts.after
         opts._parent = afterRow._parent
         index = 1 + opts._parent.models.indexOf(afterRow)
+        opts.at = index
+      else if (beforeRow = opts.before)
+        delete opts.before
+        opts._parent = beforeRow._parent
+        index = opts._parent.models.indexOf(beforeRow)
+        opts.at = index
       else
         opts._parent = @rows
       opts._parent.add r, opts
+
+    detach: ->
+      @_parent.remove(@)
+      ``
+
+    remove: (item)->
+      item.detach()
 
     _addGroup: (opts)->
       # move to surveyFrag
@@ -180,6 +193,12 @@ define 'cs!xlform/model.surveyFragment', [
 
     detach: ->
       @_parent.remove(@)
+
+    splitApart: ->
+      startingIndex = @_parent.models.indexOf(@)
+      @detach()
+      for row, n in @rows.models
+        @_parent.add(row, at: startingIndex + n)
 
     _beforeIterator: (cb, ctxt)->
       cb(@groupStart())  if ctxt.includeGroupEnds

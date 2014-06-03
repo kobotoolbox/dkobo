@@ -88,8 +88,8 @@ define 'cs!xlform/view.row', [
       @$el.attr("data-row-id", @model.cid)
       @surveyView = @options.surveyView
     deleteGroup: (evt)->
-      if confirm('Are you sure you want to delete this group? All questions will be lost')
-        @model.detach()
+      if confirm('Are you sure you want to split apart this group?')
+        @model.splitApart()
         @$el.remove()
       evt.preventDefault()
 
