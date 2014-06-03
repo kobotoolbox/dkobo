@@ -213,9 +213,6 @@ define 'cs!xlform/model.configs', ["underscore", "backbone"], (_, Backbone)->
       value: "group"
     _isRepeat:
       value: false
-    required:
-      value: false
-      _hideUnlessChanged: true
     relevant:
       value: ""
       _hideUnlessChanged: true

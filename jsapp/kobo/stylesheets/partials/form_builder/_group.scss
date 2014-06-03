@@ -2,12 +2,14 @@
 // Groups
 // ==========================================================================
 
+
 .group {
     padding: 4px 8px;
     margin: 0 0 6px;
     background-color: rgba(233, 237, 240, 0.8);
     background-color: #e9edf0;
     border: 1px solid #c3cfd8;
+    font-size: 13px;
 
     // make space for the .btn--addrow on the left
     .card, .row__questiontypes {
