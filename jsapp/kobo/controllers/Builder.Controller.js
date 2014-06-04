@@ -32,19 +32,28 @@ function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo,
 
     function saveCallback() {
         if (this.validateSurvey()) {
+            try {
+                var survey = this.survey.toCSV();
+            } catch (e) {
+                $miscUtils.alert(e.message, "Error");
+                throw e;
+            }
+
             surveyDraftApi.save({
-                    body: this.survey.toCSV(),
-                    description: this.survey.get('description'),
-                    name: this.survey.settings.get('form_title')
-                }, function () {
-                    $rootScope.deregisterLocationChangeStart && $rootScope.deregisterLocationChangeStart()
-                    $(window).unbind('beforeunload');
-                    $routeTo.forms()
-                });
+                body: survey,
+                description: this.survey.get('description'),
+                name: this.survey.settings.get('form_title')
+            }, function() {
+                $rootScope.deregisterLocationChangeStart && $rootScope.deregisterLocationChangeStart();
+                $(window).unbind('beforeunload');
+                $routeTo.forms();
+            }, function(response) {
+                $miscUtils.alert('a server error occured: \n' + response.statusText, 'Error');
+            });
         }
     }
 
-    $scope.displayQlib = false
+    $scope.displayQlib = false;
 
     if ($scope.routeParams.id && $scope.routeParams.id !== 'new'){
         // url points to existing survey_draft
@@ -57,7 +66,7 @@ function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo,
         });
     } else {
         // url points to new survey_draft
-        $scope.xlfSurvey = new dkobo_xlform.model.Survey()
+        $scope.xlfSurvey = new dkobo_xlform.model.Survey();
         $scope.xlfSurveyApp = dkobo_xlform.view.SurveyApp.create({el: 'section.form-builder', survey: $scope.xlfSurvey, ngScope: $scope, save: saveCallback});
         $scope.xlfSurveyApp.render();
     }
@@ -68,7 +77,7 @@ function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo,
 
         var resource = $restApi.create_question_api($scope);
         resource.save({body: survey.toCSV(), asset_type: 'question'}, function () {
-            $miscUtils.alert('Question added to library', 'Success!!')
+            $miscUtils.alert('Question added to library', 'Success!!');
         });
     };
 }
