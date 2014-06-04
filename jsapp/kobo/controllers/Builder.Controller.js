@@ -33,20 +33,23 @@ function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo,
     function saveCallback() {
         if (this.validateSurvey()) {
             try {
-                surveyDraftApi.save({
-                    body: this.survey.toCSV(),
-                    description: this.survey.get('description'),
-                    name: this.survey.settings.get('form_title')
-                }, function() {
-                    $rootScope.deregisterLocationChangeStart && $rootScope.deregisterLocationChangeStart();
-                    $(window).unbind('beforeunload');
-                    $routeTo.forms();
-                }, function(response) {
-                    $miscUtils.alert('a server error occured: \n' + response.statusText, 'Error');
-                });
+                var survey = this.survey.toCSV();
             } catch (e) {
                 $miscUtils.alert(e.message, "Error");
+                throw e;
             }
+
+            surveyDraftApi.save({
+                body: survey,
+                description: this.survey.get('description'),
+                name: this.survey.settings.get('form_title')
+            }, function() {
+                $rootScope.deregisterLocationChangeStart && $rootScope.deregisterLocationChangeStart();
+                $(window).unbind('beforeunload');
+                $routeTo.forms();
+            }, function(response) {
+                $miscUtils.alert('a server error occured: \n' + response.statusText, 'Error');
+            });
         }
     }
 
