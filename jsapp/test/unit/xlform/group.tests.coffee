@@ -22,7 +22,7 @@ define [
         ,begin group,grp1,Group1
         ,text,g1q1,Group1Question1
         ,end group,,,
-        """)
+        """) 
       it 'can import a simple group', ->
         first_group = _firstGroup(@survey)
         expect(first_group).toBeDefined()
@@ -99,7 +99,7 @@ define [
         """)
       describe 'can create group with existing rows', ->
         beforeEach ->
-          @get_names = (s)->
+          @getNames = (s)->
             _n = 'noname'
             names = []
             s.forEachRow (
@@ -119,7 +119,7 @@ define [
           expect(@survey._allRows().length).toBe(5)
         it 'has the right order of names', ->
           @survey.finalize()
-          expect(@get_names(@survey)).toEqual(["My_Group", "q1", "q3", "q5", "q2", "q4"])
+          expect(@getNames(@survey)).toEqual(["My_Group", "q1", "q3", "q5", "q2", "q4"])
 
         describe 'can generate missing names on finalize', ->
           beforeEach ->
@@ -133,7 +133,7 @@ define [
             expect(@grp.finalize).toHaveBeenCalled()
           it 'has the correct name', ->
             @survey.finalize()
-            expect(@get_names(@survey)).toEqual(['My_Group', 'q1', 'q3', 'q5', 'q2', 'q4'])
+            expect(@getNames(@survey)).toEqual(['My_Group', 'q1', 'q3', 'q5', 'q2', 'q4'])
 
     describe 'group manipulation', ->
       beforeEach ->
@@ -146,8 +146,27 @@ define [
         ,end group,,,
         ,text,q2,Q2
         """)
+        @g1 = _firstGroup @survey
+
+        @getNames = (s)->
+          _n = 'noname'
+          names = []
+          s.forEachRow (
+                  (r)->
+                    name = r.get('name')?.get('value') or _n
+                    names.push name
+                ), includeGroups: true
+          names
       it 'group can be deleted', ->
         g1 = _firstGroup @survey
         expect(@survey._allRows().length).toBe(3)
-        @survey.rows.remove(g1)
+        @survey.remove g1
         expect(@survey._allRows().length).toBe(2)
+      it 'group can be detached from parent', ->
+        expect(@getNames(@survey)).toEqual(['q1', 'grp1', 'g1q1', 'q2'])
+        @g1.detach()
+        expect(@getNames(@survey)).toEqual(['q1', 'q2'])
+      it 'group can be split apart', ->
+        expect(@getNames(@survey)).toEqual(['q1', 'grp1', 'g1q1', 'q2'])
+        @g1.splitApart()
+        expect(@getNames(@survey)).toEqual(['q1', 'g1q1', 'q2'])
