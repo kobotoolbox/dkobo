@@ -1,4 +1,4 @@
-<div class="question-filter--short">
+<div class="questions__sidebar--short-filters">
   <a href="" class="question-filter__close" ng-click="hide_library_popup()">&times;</a>
   <label>Search tools</label> 
   <div class="question-filter__search">
@@ -6,7 +6,7 @@
     <input id="qlib-search" class="question-filter__searchbox" ng-model="filters.label" placeholder="Search questions" value="" />
   </div>
 </div>
-<ul class="questions__container--scrolling">
+<ul class="questions__sidebar--scrolling">
   <li ng-class="item.meta.question_class" ng-repeat="item in info_list_items|filter:filters" ng-click="handle_click(item)">
     <h4 class="question__name">{{ item.label }}</h4>
     <a href="" ng-click="toggle_response_list(item)" ng-class="item.meta.question_type_class">

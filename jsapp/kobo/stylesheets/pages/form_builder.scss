@@ -358,6 +358,9 @@
       height: 100%;
       cursor: pointer;
       z-index: 4;
+      &.noborder {
+        border:none;
+      }
   }
   .card--insort {
       .card__buttons {
