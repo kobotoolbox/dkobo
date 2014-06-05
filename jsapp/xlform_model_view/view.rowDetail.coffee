@@ -30,7 +30,7 @@ define 'cs!xlform/view.rowDetail', [
       if (viewMixin = viewRowDetail.DetailViewMixins[@model.key])
         _.extend(@, viewMixin)
       else
-        console?.error "couldn't find ", @model.key
+        console?.error "Couldn't build view for column: ", @model.key
       @$el.addClass(@extraClass)
 
     render: ()->
@@ -132,6 +132,20 @@ define 'cs!xlform/view.rowDetail', [
       """
       <div class="card__settings__fields__field">
         <label for="#{@cid}">#{@model.key}: </label>
+        <span class="settings__input">
+          <input type="text" name="#{@model.key}" id="#{@cid}" class="text" />
+        </span>
+      </div>
+      """
+    afterRender: ->
+      @listenForInputChange()
+
+  viewRowDetail.DetailViewMixins.constraint_message = 
+    html: ->
+      @$el.addClass("card__settings__fields--active")
+      """
+      <div class="card__settings__fields__field">
+        <label for="#{@cid}">Constraint message: </label>
         <span class="settings__input">
           <input type="text" name="#{@model.key}" id="#{@cid}" class="text" />
         </span>

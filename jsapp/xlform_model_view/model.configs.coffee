@@ -199,6 +199,9 @@ define 'cs!xlform/model.configs', ["underscore", "backbone"], (_, Backbone)->
     constraint:
       value: ""
       _hideUnlessChanged: true
+    constraint_message:
+      value: ""
+      _hideUnlessChanged: true
 
   configs.newGroupDetails =
     name:
