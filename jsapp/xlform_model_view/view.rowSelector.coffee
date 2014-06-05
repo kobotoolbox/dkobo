@@ -31,10 +31,12 @@ define 'cs!xlform/view.rowSelector', [
       @line.parents(".survey-editor__null-top-row").addClass "expanded"
       @line.css "height", "inherit"
       @line.html $viewTemplates.$$render('xlfRowSelector.namer')
+      $.scrollTo @line, 200, offset: -300
       @line.find('button').click () => 
         @question_name = @line.find('input').val()
         @line.empty()
         @show_picker()
+        $.scrollTo @line, 200, offset: -300
     show_picker: () ->
       @line.html $viewTemplates.$$render('xlfRowSelector.line')
       $menu = @line.find(".row__questiontypes__list")
