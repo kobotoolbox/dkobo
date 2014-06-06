@@ -27,6 +27,17 @@ define [
         $el = $(el)
         $el.find(".#{attachToClassname}").eq(0).addClass(classname)
         $el.find(".#{classname}").eq(0)
+      @viewedNames = =>
+        names = []
+        surv = @survey
+        @div.find('.survey__row').each ->
+          names.push surv.findRowByCid($(@).data('rowId')).get('name').get('value')
+        names
+      @surveyNames = ->
+        names = []
+        getName = (r)-> names.push r.get('name').get('value')
+        @survey.forEachRow(getName, includeGroups: true)
+        names
 
       @load_csv("""
         survey,,,
@@ -69,6 +80,33 @@ define [
       jsSelectRow1 = @ensure_selectrow(@div)
       jsSelectRow1.click()
       expect(@div.find('.survey__row--selected').length).toBe(1)
+    describe 'row reordering', ->
+      describe 'basic rows', ->
+        beforeEach ->
+          @load_csv """
+          survey,,,
+          ,type,name,label
+          ,text,qa,QuestionA
+          ,text,qb,QuestionB
+          ,text,qc,QuestionC
+          """
+
+        it 'can switch ABC -> ACB', ->
+          surv = @app.survey
+          expect(@viewedNames()).toEqual(['qa','qb','qc'])
+          expect(@surveyNames()).toEqual(['qa','qb','qc'])
+          [$a, $b, $c] = ($(x)  for x in @div.find('.survey__row'))
+
+          $a.after $c.detach()
+
+          [prev, par] = @app._getRelatedElIds($c)
+          expect(par).not.toBeDefined()
+          expect(prev).toBe($a.data('rowId'))
+
+          $c.trigger('survey__row-sortablestop', $c.data('rowId'))
+
+          expect(@viewedNames()).toEqual(['qa','qc','qb'])
+          expect(@surveyNames()).toEqual(['qa','qc','qb'])
 
     describe 'grouping selected rows', ->
       beforeEach ->
@@ -102,12 +140,11 @@ define [
         # reset the btn-disabled on btn--group-questions
         @app.questionSelect()
         expect(@div.find('.btn--group-questions').hasClass('btn--disabled')).toBeTruthy()
-        # @div.find('.survey-editor__list > .survey__row--group').addClass()
-        # dump @survey.toCSV()
 
         @div.find('.survey-editor__list > .survey__row--group').addClass('survey__row--selected')
         @app.questionSelect()
         expect(@div.find('.survey-editor__list > .survey__row--group').length).toBe(1)
+        expect(@div.find('.survey-editor__list > .survey__row').length).toBe(1)
 
       # it 'places group at the correct part of the survey', ->
       #   @app.$el.find('.survey__row').eq(0).addClass('survey__row--selected')

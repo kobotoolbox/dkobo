@@ -29,6 +29,7 @@ define 'cs!xlform/view.templates', [
   templates['surveyApp']                    = surveyApp_templates.surveyApp
   templates['xlfRowSelector.line']          = rowSelector_templates.line
   templates['xlfRowSelector.cell']          = rowSelector_templates.cell
+
   templates['xlfDetailView']                = rowDetail_templates
 
   $$render = (id, params...)->

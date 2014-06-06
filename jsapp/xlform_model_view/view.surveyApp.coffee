@@ -1,4 +1,5 @@
 define 'cs!xlform/view.surveyApp', [
+        'underscore',
         'backbone',
         'cs!xlform/model.survey',
         'cs!xlform/model.utils',
@@ -9,6 +10,7 @@ define 'cs!xlform/view.surveyApp', [
         'cs!xlform/view.pluggedIn.backboneView',
         'cs!xlform/view.utils',
         ], (
+            _,
             Backbone,
             $survey,
             $modelUtils,
@@ -17,10 +19,35 @@ define 'cs!xlform/view.surveyApp', [
             $viewRowSelector,
             $rowView,
             $baseView,
-            $viewUtils
+            $viewUtils,
             )->
 
   surveyApp = {}
+
+  _notifyIfRowsOutOfOrder = do ->
+    # a temporary function to notify devs if rows are mysteriously falling out of order
+    fn = (surveyApp)->
+      survey = surveyApp.survey
+      elIds = []
+      surveyApp.$('.survey__row').each -> elIds.push $(@).data('rowId')
+
+      rIds = []
+      gatherId = (r)->
+        rIds.push(r.cid)
+        if 'forEachRow' of r
+          r.forEachRow(gatherId, flat: true, includeGroups: true)
+      survey.forEachRow(gatherId, flat: true, includeGroups: true)
+
+      _s = (i)-> JSON.stringify(i)
+      if _s(rIds) isnt _s(elIds)
+        console?.error "Order do not match"
+        console?.error _s(rIds)
+        console?.error _s(elIds)
+        false
+      else
+        true
+    _.debounce(fn, 2500)
+
 
   class SurveyFragmentApp extends $baseView
     className: "formbuilder-wrap container"
@@ -47,6 +74,27 @@ define 'cs!xlform/view.surveyApp', [
         params.el = $(params.el).get 0
       return new @(params)
 
+    surveyRowSortableStop: (evt)->
+      $et = $(evt.target)
+      cid = $et.data('rowId')
+
+      survey_findRowByCid = (cid)=>
+        if cid
+          @survey.findRowByCid(cid, includeGroups: true)
+
+      row = survey_findRowByCid(cid)
+      [_prev, _par] = @_getRelatedElIds($et)
+      @survey._insertRowInPlace row,
+        previous: survey_findRowByCid _prev
+        parent: survey_findRowByCid _par
+        event: 'sort'
+      ``
+
+    _getRelatedElIds: ($el)->
+      prev = $el.prev('.survey__row').eq(0).data('rowId')
+      parent = $el.parents('.survey__row').eq(0).data('rowId')
+      [prev, parent]
+
     initialize: (options)->
       if options.survey and (options.survey instanceof $survey.Survey)
         @survey = options.survey
@@ -56,13 +104,15 @@ define 'cs!xlform/view.surveyApp', [
       @__rowViews = new Backbone.Model()
       @ngScope = options.ngScope
 
-      @survey.rows.on "add", @reset, @
-      @survey.rows.on "remove", @reset, @
+      @survey.on 'rows-add', @reset, @
+      @survey.on 'rows-remove', @reset, @
       @survey.on "row-detail-change", (row, key, val, ctxt)=>
         evtCode = "row-detail-change-#{key}"
         @$(".on-#{evtCode}").trigger(evtCode, row, key, val, ctxt)
       @$el.on "choice-list-update", (evt, clId) ->
         $(".on-choice-list-update[data-choice-list-cid='#{clId}']").trigger("rebuild-choice-list")
+
+      @$el.on "survey__row-sortablestop", _.bind @surveyRowSortableStop, @
 
       @onPublish = options.publish || $.noop
       @onSave = options.save || $.noop
@@ -184,25 +234,49 @@ define 'cs!xlform/view.surveyApp', [
         @$(".survey-header__options-toggle").hide()
 
       if @features.multipleQuestions
+        $el = @formEditorEl
+        survey = @survey
+
+        sortable_activate_deactivate = (evt, ui)->
+          isActivateEvt = evt.type is 'sortactivate'
+          ui.item.toggleClass 'sortable-active', isActivateEvt
+          $el.toggleClass 'insort', isActivateEvt
+        sortable_deactivate = (evt, ui)->
+          ui.item.toggleClass 'sortable-active', false
+          $el.toggleClass 'insort', true
+
+        sortable_stop = (evt, ui)=>
+          $(ui.item).trigger('survey__row-sortablestop')
+
         @formEditorEl.sortable({
             axis: "y"
-            cancel: "button,div.add-row-btn,.well,ul.list-view,li.editor-message, .editableform, .row-extras"
+            cancel: "button, .btn--addrow, .well, ul.list-view, li.editor-message, .editableform, .row-extras"
             cursor: "move"
             distance: 5
             items: "> li"
             placeholder: "placeholder"
+            connectWith: ".group__rows"
             opacity: 0.9
-            scroll: false
-            stop: (evt, ui)->
-              itemSet = ui.item.parent().find("> .xlf-row-view")
-              ui.item.trigger "drop", itemSet.index(ui.item)
-            activate: (evt, ui)=>
-              @formEditorEl.addClass("insort")
-              ui.item.addClass("sortable-active")
-            deactivate: (evt,ui)=>
-              @formEditorEl.removeClass("insort")
-              ui.item.removeClass("sortable-active")
+            scroll: true
+            stop: sortable_stop
+            activate: sortable_activate_deactivate
+            deactivate: sortable_activate_deactivate
           })
+        @formEditorEl.find('.group__rows').sortable({
+            axis: "y"
+            # cancel: "button,div.add-row-btn,.well,ul.list-view,li.editor-message, .editableform, .row-extras"
+            cursor: "move"
+            distance: 5
+            items: "> li"
+            placeholder: "placeholder"
+            connectWith: ".group__rows, .survey-editor__list"
+            opacity: 0.9
+            scroll: true
+            stop: sortable_stop
+            activate: sortable_activate_deactivate
+            deactivate: sortable_activate_deactivate
+          })
+
       else
         @$(".card__buttons__button--delete").hide()
         @$(".survey__row__spacer").hide()
@@ -255,6 +329,7 @@ define 'cs!xlform/view.surveyApp', [
       xlfrv
 
     reset: ->
+      # _notifyIfRowsOutOfOrder(@)
       fe = @formEditorEl
       isEmpty = true
       fn = (row)=>
@@ -306,6 +381,7 @@ define 'cs!xlform/view.surveyApp', [
       @activateGroupButton(false)
       if rows.length > 0
         @survey._addGroup(__rows: rows)
+        @survey.reset()
         true
       else
         false

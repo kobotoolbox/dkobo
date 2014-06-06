@@ -42,9 +42,9 @@ define 'cs!xlform/model.row', [
       arr.sort (a,b)-> if a[1]._order < b[1]._order then -1 else 1
       arr
 
-    detach: ->
+    detach: (opts)->
       if @_parent
-        @_parent.remove @
+        @_parent.remove @, opts
         @_parent = null
       ``
 

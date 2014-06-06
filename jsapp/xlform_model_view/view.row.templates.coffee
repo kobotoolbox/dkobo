@@ -63,7 +63,8 @@ define 'cs!xlform/view.row.templates', [], ()->
           </div>
       </header>
       #{settingsView('group', 'card__settings')}
-      <ul class="group__rows"></ul>
+      <ul class="group__rows">
+      </ul>
     </div>
     #{expandingSpacerHtml}
     """
