@@ -28,8 +28,8 @@ define 'cs!xlform/view.rowSelector.templates', [], ()->
 
   xlfRowSelector.namer = () ->
     """
-      <div>
-        <input class="cancel-sort" type="text" />
+      <div class="row__questiontypes row__questiontypes--namer">
+        <input type="text" class="js-cancel-sort" />
         <button> + Add Question </button>
       </div>
     """
