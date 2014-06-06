@@ -24,9 +24,20 @@ define 'cs!xlform/view.rowSelector', [
       if opts.action is "click-add-row"
         @expand()
     expand: ->
+      @show_namer()
+
+    show_namer: () ->
       @line.addClass "expanded"
       @line.parents(".survey-editor__null-top-row").addClass "expanded"
       @line.css "height", "inherit"
+      @line.html $viewTemplates.$$render('xlfRowSelector.namer')
+      $.scrollTo @line, 200, offset: -300
+      @line.find('button').click () => 
+        @question_name = @line.find('input').val()
+        @line.empty()
+        @show_picker()
+        $.scrollTo @line, 200, offset: -300
+    show_picker: () ->
       @line.html $viewTemplates.$$render('xlfRowSelector.line')
       $menu = @line.find(".row__questiontypes__list")
       $menu.on("click", ".questiontypelist__item", _.bind(@selectMenuItem, @))
@@ -59,6 +70,7 @@ define 'cs!xlform/view.rowSelector', [
       $('select.skiplogic__rowselect').select2('destroy')
       rowDetails =
         type: $(evt.target).closest('.questiontypelist__item').data("menuItem")
+        label: @question_name || 'New Question'
       options = {}
       if (rowBefore = @options.spawnedFromView?.model)
         options.after = rowBefore

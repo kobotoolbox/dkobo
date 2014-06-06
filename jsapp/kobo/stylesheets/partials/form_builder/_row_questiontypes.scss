@@ -36,6 +36,21 @@
     }
 }
 
+.row__questiontypes--namer {
+    height: 100px;
+    input {
+        width: 70%;
+    }
+    button {
+        @extend .btn;
+        margin-left: 12px;
+        width: 25%;
+    }
+    input, button {
+        float: left;
+    }
+}
+
 // ==========================================================================
 // The question type selector icon menu
 // ==========================================================================

@@ -186,7 +186,7 @@ define 'cs!xlform/view.surveyApp', [
       if @features.multipleQuestions
         @formEditorEl.sortable({
             axis: "y"
-            cancel: "button,div.add-row-btn,.well,ul.list-view,li.editor-message, .editableform, .row-extras"
+            cancel: "button,div.add-row-btn,.well,ul.list-view,li.editor-message, .editableform, .row-extras, .js-cancel-sort"
             cursor: "move"
             distance: 5
             items: "> li"

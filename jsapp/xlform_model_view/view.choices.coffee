@@ -58,6 +58,9 @@ define 'cs!xlform/view.choices', [
       emptyOpt = new $choices.Option(label: label)
       @model.options.add(emptyOpt)
       new OptionView(model: emptyOpt, cl: @model).render().$el.appendTo @ul
+      lis = @ul.find('li')
+      if lis.length == 2
+        lis.find('.js-remove-option').removeClass('hidden')
 
     reordered: (evt, ui)->
       ids = []
@@ -135,8 +138,14 @@ define 'cs!xlform/view.choices', [
       else
         ifield.removeClass("empty")
     remove: ()->
+      $parent = @$el.parent()
+
       @$el.remove()
       @model.destroy()
+
+      lis = $parent.find('li')
+      if lis.length == 1
+        lis.find('.js-remove-option').addClass('hidden')
     saveValue: (ick, nval, oval, ctxt)->
       if nval is ""
         @remove()
