@@ -1,40 +1,30 @@
-<section class="content">
-  <header class="survey-header filters">
-    <div class="container">
-      <select class="filters__filter">
-        <option>Filter</option>
-      </select>
-      <select class="filters__filter">
-        <option>Sort</option>
-      </select>
-      <input placeholder="Search" class="filters__filter" ng-model="searchCriteria">
-    </div>
-  </header>
+<header class="survey-header filters">
   <div class="container">
-    <table class="info-list" style="width:100%">
-        <tr ng-repeat="item in items|orderBy:'-date_modified'">
-            <td class="info-list__date">
-                <a href="#{{ getHashLink(item) }}">
-                    {{item.date_modified.getMonth()+1}}/{{item.date_modified.getDate()}}/{{item.date_modified.getYear() + 1900}}
-                </a>
-            </td>
-            <td class="info-list__title">
-                <a href="#{{ getHashLink(item) }}">{{ item.name }}</a>
-            </td>
-            <td class="info-list__links">
-                <a href="{{ getLink(item, 'xml') }}" class="info-list-link--xml">
-                    XML
-                </a>
-                <a href="{{ getLink(item, 'xls') }}" class="info-list-link--xls">
-                    XLS
-                </a>
-                <a href="" ng-click="deleteItem({item: item})" class="info-list-link--delete">
-                    Delete
-                    <!-- <i class="header-bar__page-icon-circle  fa  fa-circle  fa-stack-2x  icon--{{ pageIconColor }}"></i>
-                    <i class="header-bar__page-icon  fa  fa-code  fa-stack-1x  fa-inverse"></i> -->
-                </a>
-            </td>
-        </tr>
-    </table>
+    <h1 class="survey-header__title">Form Drafts</h1>
   </div>
-</section>
+</header>
+<div class="container">
+  <input placeholder="Search forms" class="filters__filter" ng-model="searchCriteria">
+  <select class="filters__filter">
+    <option>Sort</option>
+  </select>
+
+  <table class="info-list" style="width:100%">
+      <tr ng-repeat="item in items|orderBy:'-date_modified'">
+          <td class="info-list__date">
+              <a href="#{{ getHashLink(item) }}">
+                  {{item.date_modified.getMonth()+1}}/{{item.date_modified.getDate()}}/{{item.date_modified.getYear() + 1900}}
+              </a>
+          </td>
+          <td class="info-list__title">
+              <a href="#{{ getHashLink(item) }}">{{ item.name }}</a>
+          </td>
+          <td class="info-list__links">
+              <a href="{{ getLink(item, 'xml') }}" class="info-list-link--xml">XML</a>
+              <a href="{{ getLink(item, 'xls') }}" class="info-list-link--xls">XLS</a>
+              <a href="" ng-click="deleteItem({item: item})" class="info-list-link--delete">Delete</a>
+          </td>
+      </tr>
+  </table>
+
+</div>
