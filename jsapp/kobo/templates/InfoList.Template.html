@@ -1,30 +1,37 @@
-<header class="survey-header filters">
+<header class="survey-header">
   <div class="container">
     <h1 class="survey-header__title">Form Drafts</h1>
   </div>
 </header>
 <div class="container">
-  <input placeholder="Search forms" class="filters__filter" ng-model="searchCriteria">
-  <select class="filters__filter">
-    <option>Sort</option>
-  </select>
+  <div class="forms-filter">
+    <div class="forms-filter__search">
+      <i class="fa fa-search"></i> <input class="forms-filter__searchbox" placeholder="Search forms"  ng-model="searchCriteria" />
+    </div>
+    <select class="forms-filter__sorter">
+      <option>Sort</option>
+    </select>
+  </div>
 
-  <table class="info-list" style="width:100%">
-      <tr ng-repeat="item in items|orderBy:'-date_modified'">
-          <td class="info-list__date">
-              <a href="#{{ getHashLink(item) }}">
-                  {{item.date_modified.getMonth()+1}}/{{item.date_modified.getDate()}}/{{item.date_modified.getYear() + 1900}}
-              </a>
-          </td>
-          <td class="info-list__title">
-              <a href="#{{ getHashLink(item) }}">{{ item.name }}</a>
-          </td>
-          <td class="info-list__links">
-              <a href="{{ getLink(item, 'xml') }}" class="info-list-link--xml">XML</a>
-              <a href="{{ getLink(item, 'xls') }}" class="info-list-link--xls">XLS</a>
-              <a href="" ng-click="deleteItem({item: item})" class="info-list-link--delete">Delete</a>
-          </td>
-      </tr>
-  </table>
+  <div class="info-list">
+      <div class="forms__card" ng-repeat="item in items|orderBy:'-date_modified'">
+        <div class="forms__card__info">
+          <a class="forms__card__title" href="#{{ getHashLink(item) }}">{{ item.name }}</a>
+          <p class="forms__card__description">Brief description of the card here</p>
+          <p class="forms__card__date">
+            {{item.date_modified.getMonth()+1}}/{{item.date_modified.getDate()}}/{{item.date_modified.getYear() + 1900}}
+          </p>
+          <p class="forms__card__question-count">
+            100 questions (static)
+          </p>
+        </div>
+        <div class="forms__card__buttons">
+          <a class="forms__card__buttons__button blue" href="{{ getLink(item, 'xml') }}"><i class="fa fa-copy"></i></a>
+          <a class="forms__card__buttons__button gray" href="{{ getLink(item, 'xls') }}"><i class="fa fa-download"></i></a>
+          <a class="forms__card__buttons__button red" href="" ng-click="deleteItem({item: item})"><i class="fa fa-trash-o"></i></a>
+        </div>
+      </div>
+  </div>
+
 
 </div>
