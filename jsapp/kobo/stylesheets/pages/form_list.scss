@@ -1,3 +1,39 @@
+.forms-header {
+    margin-bottom: 30px;
+    background-color: white;
+    padding:20px 0px;
+    padding-top: 70px;
+    position: relative;
+    text-align: left;
+}
+
+.forms-header__title {
+    margin-top: 0;
+}
+
+.forms-header__button, 
+.forms-empty__button {
+    width: 120px;
+    padding: 5px;
+    font-size: 12px;
+    color: white;
+    text-align: center;
+    font-weight: 600;
+    background: #39BF6E;
+    border-bottom: 2px solid darken(#39BF6E, 20%);
+}
+
+.forms-empty__button {
+    display: block;
+    margin:0 auto;
+}
+
+.forms-header__button {
+    position: absolute;
+    right:80px;
+    top:80px;    
+}
+
 .forms-filter {
     height: 75px;
     width: 100%;

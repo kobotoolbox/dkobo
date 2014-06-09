@@ -20,20 +20,14 @@
     max-width: 700px;
     margin-right: auto;
     margin-left: auto;
+    &.empty {
+      text-align: center;
+      background: white;
+      padding: 20px;
+    }
 }
 
+// Legacy
 .content--centered {
-    text-align: center;
+  text-align: center;
 }
-
-.content__message {
-    width: 300px;
-    padding-top: 150px;
-    display: inline-block;
-}
-
-.content__message-text {
-    color: #cdcdcd;
-}
-
-.content__message-action {}
