@@ -17,63 +17,6 @@
     }
 }
 
-.insort {
-    .btn--addrow {
-        opacity: 0;
-    }
-}
-
-// ==========================================================================
-// Add new row button
-// ==========================================================================
-
-
-//== usage:
-//   div.btn--addrow
-//     i.fa.fa-plus ''
-.btn--addrow {
-    background-color: red;
-    width: 24px;
-    height: 24px;
-    // TODO: this below should be for desktop only
-    position: absolute;
-    left: -24px;
-    top: -16px;
-    background-color: $addButtonColor;
-    padding: 0 0 0 1px;
-    line-height: 23px;
-    // border-radius: $buttonBorderRadius;
-    // trying out different border radius
-    // because button needed to be close to the parent
-    // to not lose :hover
-    border-radius: 4px 0 0 4px;
-
-    // note: this compiles to
-    // .survey__row:last-child > .survey__row__spacer > .btn--addrow {...}
-    .survey__row:last-child > .survey__row__spacer > & {
-        border-radius: 4px 0 4px 4px
-    }
-
-    &:hover {
-        background-color: $addButtonColorHover;
-    }
-
-
-    // inside group, the btn--addrow must show up differently
-    // note: this compiles to
-    // .group__rows .btn--addrow {...}
-    .group__rows & {
-        left: -4px;
-        width: 16px;
-        font-weight: normal;
-        font-size: 11px;
-    }
-    // the last one was being pushed down too far
-    .group__rows > .survey__row:last-child > .survey__row__spacer > & {
-        top: -21px;
-    }
-}
-
 
 // ==========================================================================
 // Editable forms
