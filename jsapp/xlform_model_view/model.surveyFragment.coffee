@@ -240,7 +240,8 @@ define 'cs!xlform/model.surveyFragment', [
   class Rows extends $base.BaseCollection
     constructor: (args...)->
       super(args...)
-      @on 'add', (a1,a2,a3)-> @_parent.getSurvey().trigger('rows-add', a1,a2,a3)
+      @on 'add', (a,b,c)=> @_parent.getSurvey().trigger('rows-add', a,b,c)
+      @on 'remove', (a,b,c)=> @_parent.getSurvey().trigger('rows-remove', a,b,c)
     model: (obj, ctxt)->
       RowConstructor = _determineConstructorByParams(obj)
       try
@@ -251,3 +252,4 @@ define 'cs!xlform/model.surveyFragment', [
     comparator: (m)-> m.ordinal
 
   surveyFragment
+  

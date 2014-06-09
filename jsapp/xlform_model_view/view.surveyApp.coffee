@@ -312,10 +312,38 @@ define 'cs!xlform/view.surveyApp', [
     ensureElInView: (row, parentView, $parentEl)->
       view = @getViewForRow(row)
       $el = view.$el
+      index = row._parent.indexOf(row)
+
+      if index > 0
+        prevRow = row._parent.at(index - 1)
+      if prevRow
+        prevRowEl = $parentEl.find(".survey__row[data-row-id=#{prevRow.cid}]")
+
+      requiresInsertion = false
+      detachRowEl = (detach)->
+        if detach
+          $el.detach()
+        requiresInsertion = true
+
+      # trying to avoid unnecessary reordering of DOM (very slow)
       if $el.parents($parentEl).length is 0
-        $parentEl.append($el)
+        detachRowEl()
       else if $el.parent().get(0) isnt $parentEl.get(0)
-        $el.detach().appendTo($parentEl)
+        # element does not have the correct parent
+        detachRowEl()
+      else if !prevRow
+        if $el.prev('.survey__row').not('.survey__row--deleted').data('rowId')
+          detachRowEl()
+      else if $el.prev('.survey__row').not('.survey__row--deleted').data('rowId') isnt prevRow.cid
+        # element is in the wrong location
+        detachRowEl()
+
+      if requiresInsertion
+        if prevRow
+          $el.insertAfter(prevRowEl)
+        else
+          $el.prependTo($parentEl)
+
       view
 
     getViewForRow: (row)->
@@ -329,7 +357,7 @@ define 'cs!xlform/view.surveyApp', [
       xlfrv
 
     reset: ->
-      # _notifyIfRowsOutOfOrder(@)
+      _notifyIfRowsOutOfOrder(@)
       fe = @formEditorEl
       isEmpty = true
       fn = (row)=>
@@ -372,16 +400,20 @@ define 'cs!xlform/view.surveyApp', [
 
         matchingRow.detach()
         # this slideUp is for add/remove row animation
+        rowEl.addClass('survey__row--deleted')
         rowEl.slideUp 175, "swing", ()=>
+          rowEl.remove()
           @survey.rows.remove matchingRow
 
     groupSelectedRows: ->
       rows = @selectedRows()
-      @$('.survey__row--selected').removeClass('survey__row--selected')
+      $q = @$('.survey__row--selected')
+      $q.remove()
+      $q.removeClass('survey__row--selected')
       @activateGroupButton(false)
       if rows.length > 0
         @survey._addGroup(__rows: rows)
-        @survey.reset()
+        @reset()
         true
       else
         false
