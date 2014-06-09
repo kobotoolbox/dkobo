@@ -234,49 +234,7 @@ define 'cs!xlform/view.surveyApp', [
         @$(".survey-header__options-toggle").hide()
 
       if @features.multipleQuestions
-        $el = @formEditorEl
-        survey = @survey
-
-        sortable_activate_deactivate = (evt, ui)->
-          isActivateEvt = evt.type is 'sortactivate'
-          ui.item.toggleClass 'sortable-active', isActivateEvt
-          $el.toggleClass 'insort', isActivateEvt
-        sortable_deactivate = (evt, ui)->
-          ui.item.toggleClass 'sortable-active', false
-          $el.toggleClass 'insort', true
-
-        sortable_stop = (evt, ui)=>
-          $(ui.item).trigger('survey__row-sortablestop')
-
-        @formEditorEl.sortable({
-            axis: "y"
-            cancel: "button, .btn--addrow, .well, ul.list-view, li.editor-message, .editableform, .row-extras, .js-cancel-sort"
-            cursor: "move"
-            distance: 5
-            items: "> li"
-            placeholder: "placeholder"
-            connectWith: ".group__rows"
-            opacity: 0.9
-            scroll: true
-            stop: sortable_stop
-            activate: sortable_activate_deactivate
-            deactivate: sortable_activate_deactivate
-          })
-        @formEditorEl.find('.group__rows').sortable({
-            axis: "y"
-            # cancel: "button,div.add-row-btn,.well,ul.list-view,li.editor-message, .editableform, .row-extras"
-            cursor: "move"
-            distance: 5
-            items: "> li"
-            placeholder: "placeholder"
-            connectWith: ".group__rows, .survey-editor__list"
-            opacity: 0.9
-            scroll: true
-            stop: sortable_stop
-            activate: sortable_activate_deactivate
-            deactivate: sortable_activate_deactivate
-          })
-
+        @activateSortable()
       else
         @$(".card__buttons__button--delete").hide()
         @$(".survey__row__spacer").hide()
@@ -299,6 +257,49 @@ define 'cs!xlform/view.surveyApp', [
             $expand_multioptions.html($expand_multioptions.html().replace("Expand", "Collapse"));
 
       @
+
+    activateSortable: ->
+      $el = @formEditorEl
+      survey = @survey
+
+      sortable_activate_deactivate = (evt, ui)->
+        isActivateEvt = evt.type is 'sortactivate'
+        ui.item.toggleClass 'sortable-active', isActivateEvt
+        $el.toggleClass 'insort', isActivateEvt
+
+      sortable_stop = (evt, ui)=>
+        $(ui.item).trigger('survey__row-sortablestop')
+
+      @formEditorEl.sortable({
+          axis: "y"
+          cancel: "button, .btn--addrow, .well, ul.list-view, li.editor-message, .editableform, .row-extras, .js-cancel-sort"
+          cursor: "move"
+          distance: 5
+          items: "> li"
+          placeholder: "placeholder"
+          connectWith: ".group__rows"
+          opacity: 0.9
+          scroll: true
+          stop: sortable_stop
+          activate: sortable_activate_deactivate
+          deactivate: sortable_activate_deactivate
+        })
+      @formEditorEl.find('.group__rows').sortable({
+          axis: "y"
+          # cancel: "button,div.add-row-btn,.well,ul.list-view,li.editor-message, .editableform, .row-extras"
+          cursor: "move"
+          distance: 5
+          items: "> li"
+          placeholder: "placeholder"
+          connectWith: ".group__rows, .survey-editor__list"
+          opacity: 0.9
+          scroll: true
+          stop: sortable_stop
+          activate: sortable_activate_deactivate
+          deactivate: sortable_activate_deactivate
+        })
+      ``
+
 
     validateSurvey: ()->
       true
@@ -375,6 +376,7 @@ define 'cs!xlform/view.surveyApp', [
         null_top_row.removeClass("hidden")
       else
         null_top_row.addClass("hidden")
+      @activateSortable()
       # $viewUtils.reorderElemsByData(".xlf-row-view", @$el, "row-index")
       ``
 
