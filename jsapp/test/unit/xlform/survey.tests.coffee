@@ -47,6 +47,29 @@ define [
       @survey = new $model.Survey()
     afterEach -> window.xlfHideWarnings = false
 
+    describe 'populates default values properly', ->
+      beforeEach ->
+        @populateRow = (opts={})=>
+          @survey.rows.add(opts)
+          @row = @survey.rows.at(0)
+        @expectValue = (key)->
+          expect(@row.get(key).get('value'))
+      it 'text is required', ->
+        @populateRow(type: 'text')
+        @expectValue('required').toBe(true)
+      it 'select one is required', ->
+        @populateRow(type: 'select_one')
+        @expectValue('required').toBe(true)
+      it 'integer is required', ->
+        @populateRow(type: 'integer')
+        @expectValue('required').toBe(true)
+      it 'geopoint is not required', ->
+        @populateRow(type: 'geopoint')
+        @expectValue('required').toBe(false)
+      it 'note is not required', ->
+        @populateRow(type: 'note')
+        @expectValue('required').toBe(false)
+
     it 'has a valid empty survey', ->
       expect(@survey.toCSV()).toBeDefined()
     it 'can add rows to the survey', ->
@@ -77,7 +100,7 @@ define [
               'type': {'select_one': 'yesno'},
               'name': 'yn',
               'label': 'YesNo',
-              'required': 'false'
+              'required': 'true'
             }
           ],
           'choices': {

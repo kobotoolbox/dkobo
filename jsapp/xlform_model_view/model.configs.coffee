@@ -194,7 +194,7 @@ define 'cs!xlform/model.configs', ["underscore", "backbone"], (_, Backbone)->
       value: ""
       _hideUnlessChanged: true
     required:
-      value: false
+      value: true
       _hideUnlessChanged: true
     relevant:
       value: ""
@@ -219,9 +219,6 @@ define 'cs!xlform/model.configs', ["underscore", "backbone"], (_, Backbone)->
       value: "group"
     _isRepeat:
       value: false
-    required:
-      value: true
-      _hideUnlessChanged: true
     relevant:
       value: ""
       _hideUnlessChanged: true
