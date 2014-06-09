@@ -93,6 +93,27 @@ define [
             ]
           }
         })
+    describe 'survey row reordering', ->
+      beforeEach ->
+        @surveyNames = ->
+          names = []
+          getName = (r)-> names.push r.get('name').get('value')
+          @survey.forEachRow(getName, includeGroups: true)
+          names
+      it 'can switch ABC -> ACB', ->
+        @load_csv """
+        survey,,,
+        ,type,name,label
+        ,text,qa,QuestionA
+        ,text,qb,QuestionB
+        ,text,qc,QuestionC
+        """
+        expect(@surveyNames()).toEqual(['qa', 'qb', 'qc'])
+        [qa, qb, qc] = @survey.rows.models
+        _parent = qa._parent
+        @survey._insertRowInPlace(qc, previous: qa)
+        expect(qc._parent).toBe(_parent)
+        expect(@surveyNames()).toEqual(['qa', 'qc', 'qb'])
 
     describe 'forEachRow iterator tests', ->
       beforeEach ->

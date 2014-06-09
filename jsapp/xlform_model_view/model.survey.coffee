@@ -45,7 +45,6 @@ define 'cs!xlform/model.survey', [
 
     @create: (options={}, addlOpts) ->
       return new Survey(options, addlOpts)
-
     insertSurvey: (survey, index=-1)->
       index = @rows.length  if index is -1
       for row, row_i in survey.rows.models
@@ -71,6 +70,36 @@ define 'cs!xlform/model.survey', [
         JSON.stringify(obj, null, spaces)
       else
         obj
+    getSurvey: -> @
+    log: (opts={})->
+      logFn = opts.log or (a...)-> console.log.apply(console, a)
+      tabs = ['-']
+      logr = (r)->
+        if 'forEachRow' of r
+          logFn tabs.join('').replace(/-/g, '='), r.get('label').get('value')
+          tabs.push('-')
+          r.forEachRow(logr, flat: true, includeGroups: true)
+          tabs.pop()
+        else 
+          logFn tabs.join(''), r.get('label').get('value')
+      @forEachRow(logr, flat: true, includeGroups: true)
+      ``
+    _insertRowInPlace: (row, opts={})->
+      if row._parent
+        row.detach(silent: true)
+      index = 0
+      previous = opts.previous
+      parent = opts.parent
+      if previous
+        parent = previous.parentRow()
+        index = parent.rows.indexOf(previous) + 1
+      if !parent
+        parent = @
+      parent.rows.add(row, at: index, silent: true)
+      row._parent = parent.rows
+      if opts.event
+        parent.rows.trigger(opts.event)
+      ``
 
     toCsvJson: ()->
       # build an object that can be easily passed to the "csv" library
