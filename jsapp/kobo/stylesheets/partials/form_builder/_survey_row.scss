@@ -102,4 +102,8 @@ $nested-btn--addrow-height: 24px;
             height: 22px;
         }
     }
+
+    .survey-editor--singlequestion & {
+        display: none;
+    }
 }

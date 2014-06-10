@@ -236,12 +236,10 @@ define 'cs!xlform/view.surveyApp', [
       if @features.multipleQuestions
         @activateSortable()
       else
-        @$(".card__buttons__button--delete").hide()
+        @$el.addClass('survey-editor--singlequestion')
 
         if @survey.rows.length is 0
           new $viewRowSelector.RowSelector(el: @$el.find(".survey__row__spacer").get(0), survey: @survey, ngScope: @ngScope, surveyView: @, reversible: false).expand()
-        else
-          @$(".survey__row__spacer").hide()
 
       if not @features.copyToLibrary
         # TODO: what happened to this element?
