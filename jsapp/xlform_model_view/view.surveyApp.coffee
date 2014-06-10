@@ -284,9 +284,14 @@ define 'cs!xlform/view.surveyApp', [
           activate: sortable_activate_deactivate
           deactivate: sortable_activate_deactivate
         })
-      @formEditorEl.find('.group__rows').sortable({
+      group_rows = @formEditorEl.find('.group__rows')
+      group_rows.off 'mouseenter', '> .survey__row', @_preventSortableIfGroupTooSmall
+      group_rows.off 'mouseleave', '> .survey__row', @_preventSortableIfGroupTooSmall
+      group_rows.on 'mouseenter', '> .survey__row', @_preventSortableIfGroupTooSmall
+      group_rows.on 'mouseleave', '> .survey__row', @_preventSortableIfGroupTooSmall
+      group_rows.sortable({
           axis: "y"
-          # cancel: "button,div.add-row-btn,.well,ul.list-view,li.editor-message, .editableform, .row-extras"
+          cancel: '.js-cancel-sort, .js-cancel-group-sort'
           cursor: "move"
           distance: 5
           items: "> li"
@@ -299,7 +304,13 @@ define 'cs!xlform/view.surveyApp', [
           deactivate: sortable_activate_deactivate
         })
       ``
-
+    _preventSortableIfGroupTooSmall: (evt)->
+      $ect = $(evt.currentTarget)
+      if $ect.siblings('.survey__row').length is 0
+        if evt.type is 'mouseenter'
+          $ect.addClass('js-cancel-group-sort')
+        else
+          $ect.removeClass('js-cancel-group-sort')
 
     validateSurvey: ()->
       true
