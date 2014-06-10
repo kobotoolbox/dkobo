@@ -153,7 +153,14 @@ define 'cs!xlform/view.choices', [
         @model.set("label", nval, silent: true)
         other_names = @options.cl.getNames()
         if !@model.get('setManually')
-          @model.set("name", $modelUtils.sluggifyLabel(nval, other_names))
+          sluggifyOpts =
+            preventDuplicates: other_names
+            lowerCase: false
+            stripSpaces: true
+            lrstrip: true
+            incrementorPadding: 3
+            validXmlTag: true
+          @model.set("name", $modelUtils.sluggify(nval, sluggifyOpts))
         @$el.trigger("choice-list-update", @options.cl.cid)
       ``
 

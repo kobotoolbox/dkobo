@@ -195,7 +195,6 @@ define 'cs!xlform/view.rowDetail', [
       """
     afterRender: ->
       @listenForInputChange()
-      # $viewUtils.makeEditable @, @model, 'code', {}
 
   viewRowDetail.DetailViewMixins.name =
     html: ->
@@ -214,8 +213,7 @@ define 'cs!xlform/view.rowDetail', [
       """
     afterRender: ->
       @$el.find('input').eq(0).val(@model.get("value"))
-      @listenForInputChange(transformFn: $modelUtils.sluggify)
-      # $viewUtils.makeEditable @, @model, "code", transformFunction: $modelUtils.sluggify
+      @listenForInputChange(transformFn: (value)-> $modelUtils.sluggify(value))
     insertInDom: (rowView)->
       rowView.rowExtras.append(@el)
 

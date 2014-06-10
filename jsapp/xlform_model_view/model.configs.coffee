@@ -95,6 +95,9 @@ define 'cs!xlform/model.configs', ["underscore", "backbone"], (_, Backbone)->
     geopoint:
       label:
         value: "Record your current location"
+      required:
+        value: false
+        _hideUnlessChanged: true
     image:
       label:
         value: "Point and shoot! Use the camera to take a photo"
@@ -107,6 +110,9 @@ define 'cs!xlform/model.configs', ["underscore", "backbone"], (_, Backbone)->
     note:
       label:
         value: "This note can be read out loud"
+      required:
+        value: false
+        _hideUnlessChanged: true
     integer:
       label:
         value: "Enter a number"
@@ -188,7 +194,7 @@ define 'cs!xlform/model.configs', ["underscore", "backbone"], (_, Backbone)->
       value: ""
       _hideUnlessChanged: true
     required:
-      value: false
+      value: true
       _hideUnlessChanged: true
     relevant:
       value: ""
@@ -216,9 +222,6 @@ define 'cs!xlform/model.configs', ["underscore", "backbone"], (_, Backbone)->
       value: "group"
     _isRepeat:
       value: false
-    required:
-      value: false
-      _hideUnlessChanged: true
     relevant:
       value: ""
       _hideUnlessChanged: true
