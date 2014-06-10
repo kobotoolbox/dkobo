@@ -52,7 +52,8 @@ define 'cs!xlform/view.row', [
         @_renderError()
       else
         @_renderRow()
-      @$el.data("row-index", @model.getSurvey().rows.indexOf @model)
+      @$el.data("row-index", @model._parent.indexOf @model)
+      # @$el.data("row-parent", @model.parentRow().cid)
       @
     _renderError: ->
       @$el.addClass("xlf-row-view-error")

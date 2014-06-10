@@ -124,20 +124,16 @@ define 'cs!xlform/model.surveyFragment', [
           lowest_i = row_i
           first_row = row
 
-      addOpts = {}
-      if first_row
-        parent = first_row._parent
-        addOpts.at = parent.models.indexOf(first_row)
-      else
-        parent = @rows
-
+      addOpts =
+        previous: first_row.precedingRow()
+        parent: first_row.parentRow()
       for row in opts.__rows
-        row.detach()
-      # this wont work because first_row is removed from survey
-      #   before addRow is called
-      # addOpts.after = first_row
-      # @addRow(new surveyFragment.Group(opts), addOpts)
-      parent.add(new surveyFragment.Group(opts), addOpts)
+        row.detach(silent: true)
+
+      grp = new surveyFragment.Group(opts)
+      @getSurvey()._insertRowInPlace grp, addOpts
+      par = addOpts.parent or @getSurvey().rows
+      par.trigger('add', grp)
 
     _allRows: ->
       # move to surveyFrag
@@ -191,8 +187,8 @@ define 'cs!xlform/model.surveyFragment', [
     finalize: ->
       @autoname()
 
-    detach: ->
-      @_parent.remove(@)
+    detach: (opts)->
+      @_parent.remove(@, opts)
 
     splitApart: ->
       startingIndex = @_parent.models.indexOf(@)
@@ -242,6 +238,10 @@ define 'cs!xlform/model.surveyFragment', [
       $row.Row
 
   class Rows extends $base.BaseCollection
+    constructor: (args...)->
+      super(args...)
+      @on 'add', (a,b,c)=> @_parent.getSurvey().trigger('rows-add', a,b,c)
+      @on 'remove', (a,b,c)=> @_parent.getSurvey().trigger('rows-remove', a,b,c)
     model: (obj, ctxt)->
       RowConstructor = _determineConstructorByParams(obj)
       try
@@ -252,3 +252,4 @@ define 'cs!xlform/model.surveyFragment', [
     comparator: (m)-> m.ordinal
 
   surveyFragment
+  
