@@ -16,6 +16,8 @@ define 'cs!xlform/view.rowSelector', [
     events:
       "click .js-close-row-selector": "shrink"
       "click .rowselector_openlibrary": "openLibrary"
+      "submit .row__questiontypes__form": "show_picker"
+      "click .questiontypelist__item": "selectMenuItem"
     initialize: (opts)->
       @options = opts
       @ngScope = opts.ngScope
@@ -25,6 +27,7 @@ define 'cs!xlform/view.rowSelector', [
         @expand()
     expand: ->
       @show_namer()
+      @$('input').eq(0).focus()
 
     show_namer: () ->
       @line.addClass "expanded"
@@ -32,15 +35,14 @@ define 'cs!xlform/view.rowSelector', [
       @line.css "height", "inherit"
       @line.html $viewTemplates.$$render('xlfRowSelector.namer')
       $.scrollTo @line, 200, offset: -300
-      @line.find('button').click () => 
-        @question_name = @line.find('input').val()
-        @line.empty()
-        @show_picker()
-        $.scrollTo @line, 200, offset: -300
-    show_picker: () ->
+
+    show_picker: (evt) ->
+      evt.preventDefault()
+      @question_name = @line.find('input').val()
+      @line.empty()
+      $.scrollTo @line, 200, offset: -300
       @line.html $viewTemplates.$$render('xlfRowSelector.line')
       $menu = @line.find(".row__questiontypes__list")
-      $menu.on("click", ".questiontypelist__item", _.bind(@selectMenuItem, @))
       for mrow in $icons.grouped()
         menurow = $("<div>", class: "questiontypelist__row").appendTo $menu
         for mitem, i in mrow
