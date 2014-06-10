@@ -62,6 +62,9 @@ define 'cs!xlform/view.row', [
       @
     _renderRow: ->
       @$el.html $viewTemplates.$$render('row.xlfRowView')
+      if !@surveyView.features.multipleQuestions
+        @$('.btn--addrow').hide()
+
       @$label = @$('.card__header-title')
       @$card = @$el.find('.card')
       if 'getList' of @model and (cl = @model.getList())

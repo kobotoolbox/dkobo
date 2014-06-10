@@ -391,7 +391,10 @@ define 'cs!xlform/view.surveyApp', [
         null_top_row.removeClass("hidden")
       else
         null_top_row.addClass("hidden")
-      @activateSortable()
+
+      if @features.multipleQuestions
+        @activateSortable()
+
       # $viewUtils.reorderElemsByData(".xlf-row-view", @$el, "row-index")
       ``
 
