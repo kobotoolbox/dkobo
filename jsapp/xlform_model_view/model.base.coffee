@@ -73,6 +73,14 @@ define 'cs!xlform/model.base', [
         @set(what, value)
       else
         @set(what, new base.RowDetail({value: value}, {_parent: @}))
+    parentRow: ->
+      @_parent._parent
+    precedingRow: ->
+      ii = @_parent.models.indexOf(@)
+      @_parent.at(ii-1)
+    nextRow: ->
+      ii = @_parent.models.indexOf(@)
+      @_parent.at(ii+1)
     getSurvey: ->
       parent = @_parent
       while parent._parent
@@ -105,7 +113,7 @@ define 'cs!xlform/model.base', [
         vals2set = {}
         if _.isString(value) || _.isNumber(value)
           vals2set.value = value
-        else if "value" of value
+        else if _.isObject(value) and "value" of value
           _.extend vals2set, value
         else
           vals2set.value = value

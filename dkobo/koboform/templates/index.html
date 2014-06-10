@@ -48,6 +48,7 @@
       window.userDetails = {{user_details|safe}};
       $.fn.editable.defaults.mode = 'inline';
       $.fn.editable.defaults.onblur = 'submit';
+      $.fn.editable.defaults.showbuttons = false;
     </script>
 
     {% compress js %}
@@ -59,6 +60,7 @@
       <script src="{% static 'components/angular-route/angular-route.js' %}"></script>
 
       <script src="{% static 'js/select2.min.js' %}"></script>
+      <script src="{% static 'components/jquery.scrollTo/jquery.scrollTo.js' %}"></script>
       <script src="{% static 'js/Backbone.Validation.js' %}"></script>
     {% endcompress %}
       <script src="{% static 'kobo/controllers/Builder.Controller.js' %}"></script>
@@ -94,16 +96,17 @@
     <script src="{% static 'kobo.compiled/dkobo_xlform.js' %}"></script>
     <script src="{% static 'kobo/app.js' %}"></script>
 
+
   </head>
 
   <body ng-app="dkobo">
   {%verbatim %}
 
     <section top-level-menu class="top-level-menu" active-tab="activeTab" ng-class="topLevelMenuActive"></section>
-    <main class="main">
-      <header class="header-bar" ng-controller="HeaderController">
+    <main class="main" ng-click="closeTopMenu()">
+      <header class="header-bar" ng-controller="HeaderController" ng-click="closeTopMenu()">
         <span class="header-bar__top-level-menu-button">
-          <i class="fa fa-bars fa-lg fa-inverse" ng-click="toggleTopMenu()"></i>
+          <i class="fa fa-bars fa-lg fa-inverse" ng-click="toggleTopMenu($event)"></i>
         </span>
         <h1 class="header-bar__title">
           <a href="#/{{icon_link}}">

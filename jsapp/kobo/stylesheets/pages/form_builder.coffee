@@ -106,6 +106,8 @@ standard_row = (variation='text', {note}) ->
       <a href="#" class="card__buttons__button blue" data-button-color="blue" data-button-text="Duplicate Question"><i class="fa fa-copy"></i></a>
     </div>
   """
+  ###
+  i accidentally put this where it's triggered multiple times on the page load
 
   # click event for question settings tab switching
   $('body').on 'click', 'ul.card__settings__tabs li:not(.heading)', (evt)->
@@ -130,7 +132,7 @@ standard_row = (variation='text', {note}) ->
     $et = $(evt.target)
     $et.parents('.card__buttons').removeClass('noborder')
     $et.parents('.card__header').find('.bg').remove()
-
+  ###
   """
   <li class="xlf-row-view">
     #{sidenote(note, 'absrt')}
@@ -153,22 +155,22 @@ standard_row = (variation='text', {note}) ->
         </ul>
         <div class="card__settings__content clearfix">
           <ul class="card__settings__fields card__settings__fields--question-options active">
-            <li><label>Question Hint: </label> <span class="settings__input"><input type="text" name="hint" class="text" /></span></li>
-            <li><label>Required: </label> <span class="settings__input"><input type="checkbox" name="required"/> Yes</span></li>
-            <li><label>Default: </label> <span class="settings__input"><input type="text" name="default" class="text"/></span></li>
+            <li class="card__settings__fields__field"><label>Question Hint: </label> <span class="settings__input"><input type="text" name="hint" class="text" /></span></li>
+            <li class="card__settings__fields__field"><label>Required: </label> <span class="settings__input"><input type="checkbox" name="required"/> Yes</span></li>
+            <li class="card__settings__fields__field"><label>Default: </label> <span class="settings__input"><input type="text" name="default" class="text"/></span></li>
           </ul>
 
           <ul class="card__settings__fields card__settings__fields--skip-logic">
-            <li><button class="skiplogic__button skiplogic__select-builder"><i class="fa fa-plus"></i> Add a condition</button></li>
-            <li><button class="skiplogic__button skiplogic__select-handcode"><i class="fa fa-code"></i> Manually enter your skip logic in XLSForm code</button></li>
+            <li class="card__settings__fields__field"><button class="skiplogic__button skiplogic__select-builder"><i class="fa fa-plus"></i> Add a condition</button></li>
+            <li class="card__settings__fields__field"><button class="skiplogic__button skiplogic__select-handcode"><i class="fa fa-code"></i> Manually enter your skip logic in XLSForm code</button></li>
           </ul>
 
           <ul class="card__settings__fields card__settings__fields--validation-criteria">
-            <li>Validation criteria will go here</li>
+            <li class="card__settings__fields__field">Validation criteria will go here</li>
           </ul>
 
           <ul class="card__settings__fields card__settings__fields--response-type">
-            <li>Response type will go here</li>
+            <li class="card__settings__fields__field">Response type will go here</li>
           </ul>
 
         </div>

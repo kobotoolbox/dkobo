@@ -95,6 +95,9 @@ define 'cs!xlform/model.configs', ["underscore", "backbone"], (_, Backbone)->
     geopoint:
       label:
         value: "Record your current location"
+      required:
+        value: false
+        _hideUnlessChanged: true
     image:
       label:
         value: "Point and shoot! Use the camera to take a photo"
@@ -107,6 +110,9 @@ define 'cs!xlform/model.configs', ["underscore", "backbone"], (_, Backbone)->
     note:
       label:
         value: "This note can be read out loud"
+      required:
+        value: false
+        _hideUnlessChanged: true
     integer:
       label:
         value: "Enter a number"
@@ -131,12 +137,6 @@ define 'cs!xlform/model.configs', ["underscore", "backbone"], (_, Backbone)->
     acknowledge:
       label:
         value: "Acknowledge"
-    group:
-      label: (s)->
-        n = 1
-        count_grps = (r)-> n++  if r.constructor.kls is "Group"
-        s.getSurvey().forEachRow count_grps, includeGroups: true
-        "Group #{n}"
 
   configs.columns = ["type", "name", "label", "hint", "required", "relevant", "default", "constraint"]
 
@@ -194,7 +194,7 @@ define 'cs!xlform/model.configs', ["underscore", "backbone"], (_, Backbone)->
       value: ""
       _hideUnlessChanged: true
     required:
-      value: false
+      value: true
       _hideUnlessChanged: true
     relevant:
       value: ""
@@ -205,6 +205,27 @@ define 'cs!xlform/model.configs', ["underscore", "backbone"], (_, Backbone)->
     constraint:
       value: ""
       _hideUnlessChanged: true
+    constraint_message:
+      value: ""
+      _hideUnlessChanged: true
+
+  configs.newGroupDetails =
+    name:
+      value: ""
+    label:
+      value: (s)->
+        n = 1
+        count_grps = (r)-> n++  if r.constructor.kls is "Group"
+        s.getSurvey().forEachRow count_grps, includeGroups: true
+        "Group #{n}"
+    type:
+      value: "group"
+    _isRepeat:
+      value: false
+    relevant:
+      value: ""
+      _hideUnlessChanged: true
+
 
   configs.question_types = {}
 

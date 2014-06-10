@@ -6,8 +6,9 @@ module.exports = function(grunt) {
             /** changes to the source files trigger a karma retest
              */
             sourceChanged: {
-                files: ['jsapp/kobo/**/*.js', 'jsapp/kobo/**/*.coffee', 'jsapp/kobo/**/*.html'],
-                tasks: ['karma:unit'],
+                files: ['jsapp/kobo/**/*.js', 'jsapp/kobo/**/*.coffee', 'jsapp/kobo/**/*.html',
+                        'jsapp/xlform_model_view/*.coffee', 'jsapp/xlform_model_view/*.js'],
+                options: { livereload: true },
             },
 
             htmlChanged: {
@@ -17,14 +18,14 @@ module.exports = function(grunt) {
 
             /** changes to the tests trigger a karma retest
              */
-            testsChanged: {
-                files: [
-                    // do we want to jump to all coffee tests?
-                    'jsapp/test/**/*.js',
-                    'jsapp/test/**/*.coffee'
-                ],
-                tasks: ['karma:unit'],
-            },
+            // testsChanged: {
+            //     files: [
+            //         // do we want to jump to all coffee tests?
+            //         'jsapp/test/**/*.js',
+            //         'jsapp/test/**/*.coffee'
+            //     ],
+            //     tasks: ['karma:unit'],
+            // },
 
             /** dkobo_xlform.js is build with and AMD packaging module
              *    and is referenced by python and browser.
@@ -32,10 +33,10 @@ module.exports = function(grunt) {
              *  Changes in the source directory should rebuild the file, which ends up
              *    eventually triggering 'sourceChanged' as well.
              */
-            retestXlform: {
-                files: ['jsapp/xlform_model_view/*.coffee'],
-                tasks: ['karma:amd']
-            },
+            // retestXlform: {
+            //     files: ['jsapp/xlform_model_view/*.coffee'],
+            //     tasks: ['karma:amd']
+            // },
             rebuildDkoboXlform: {
                 files: ['jsapp/xlform_model_view/**/*.js', 'jsapp/xlform_model_view/**/*.coffee'],
                 tasks: ['requirejs:compile_xlform'],

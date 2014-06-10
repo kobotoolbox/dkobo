@@ -58,6 +58,9 @@ define 'cs!xlform/view.choices', [
       emptyOpt = new $choices.Option(label: label)
       @model.options.add(emptyOpt)
       new OptionView(model: emptyOpt, cl: @model).render().$el.appendTo @ul
+      lis = @ul.find('li')
+      if lis.length == 2
+        lis.find('.js-remove-option').removeClass('hidden')
 
     reordered: (evt, ui)->
       ids = []
@@ -73,7 +76,7 @@ define 'cs!xlform/view.choices', [
 
   class OptionView extends $baseView
     tagName: "li"
-    className: "xlf-option-view"
+    className: "multioptions__option  xlf-option-view xlf-option-view--depr"
     events:
       "keyup input": "keyupinput"
       "click .js-remove-option": "remove"
@@ -135,8 +138,14 @@ define 'cs!xlform/view.choices', [
       else
         ifield.removeClass("empty")
     remove: ()->
+      $parent = @$el.parent()
+
       @$el.remove()
       @model.destroy()
+
+      lis = $parent.find('li')
+      if lis.length == 1
+        lis.find('.js-remove-option').addClass('hidden')
     saveValue: (ick, nval, oval, ctxt)->
       if nval is ""
         @remove()
@@ -144,7 +153,14 @@ define 'cs!xlform/view.choices', [
         @model.set("label", nval, silent: true)
         other_names = @options.cl.getNames()
         if !@model.get('setManually')
-          @model.set("name", $modelUtils.sluggifyLabel(nval, other_names))
+          sluggifyOpts =
+            preventDuplicates: other_names
+            lowerCase: false
+            stripSpaces: true
+            lrstrip: true
+            incrementorPadding: 3
+            validXmlTag: true
+          @model.set("name", $modelUtils.sluggify(nval, sluggifyOpts))
         @$el.trigger("choice-list-update", @options.cl.cid)
       ``
 

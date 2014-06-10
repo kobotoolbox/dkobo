@@ -1,0 +1,74 @@
+// form_builder miscellaneous rules
+
+.survey-editor__message {
+    border: $cardBorderStyle;
+    padding: 20px;
+    background: #FFF;
+    color: $wellTextColor;
+    font-family: 'Lato';
+    font-weight: 600;
+    font-style: italic;
+    font-size: 13px;
+    a {
+        font-family: 'Lato';
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: underline;
+    }
+}
+
+
+// ==========================================================================
+// Editable forms
+// ==========================================================================
+
+//.editable-container is a $.poshytip className
+.editable-container {
+    vertical-align: top;
+    .editable-input input {
+        font-family: 'Lato';
+        font-weight: 600;
+        border-radius: 0px;
+        border:none;
+        padding: 0px !important;
+        font-size: 12px;
+        width: 100%;
+        display: inline-block;
+        margin:0px;
+        height: auto;
+        background-color: transparent;
+    }
+    .editable-buttons {
+        position: absolute;
+        top:-20px;
+        right:0px;
+        font-size: 10px;
+    }
+}
+
+
+// ==========================================================================
+// Survey editor
+// ==========================================================================
+
+.survey-editor {
+    padding-bottom: 36px;
+}
+
+.survey-editor__null-top-row {
+    position: relative;
+
+    &.expanded {
+        .survey-editor__message {
+            display: none;
+        }
+    }
+    &.hidden {
+        display: none;
+    }
+}
+
+.survey-editor__message {
+    text-align: center;
+    color: #888;
+}

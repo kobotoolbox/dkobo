@@ -16,6 +16,8 @@ define 'cs!xlform/view.rowSelector', [
     events:
       "click .js-close-row-selector": "shrink"
       "click .rowselector_openlibrary": "openLibrary"
+      "submit .row__questiontypes__form": "show_picker"
+      "click .questiontypelist__item": "selectMenuItem"
     initialize: (opts)->
       @options = opts
       @ngScope = opts.ngScope
@@ -24,14 +26,25 @@ define 'cs!xlform/view.rowSelector', [
       if opts.action is "click-add-row"
         @expand()
     expand: ->
+      @show_namer()
+      @$('input').eq(0).focus()
+
+    show_namer: () ->
       @line.addClass "expanded"
       @line.parents(".survey-editor__null-top-row").addClass "expanded"
       @line.css "height", "inherit"
+      @line.html $viewTemplates.$$render('xlfRowSelector.namer')
+      $.scrollTo @line, 200, offset: -300
+
+    show_picker: (evt) ->
+      evt.preventDefault()
+      @question_name = @line.find('input').val()
+      @line.empty()
+      $.scrollTo @line, 200, offset: -300
       @line.html $viewTemplates.$$render('xlfRowSelector.line')
-      $menu = @line.find(".rowselector__questiontypes")
-      $menu.on("click", ".menu-item", _.bind(@selectMenuItem, @))
+      $menu = @line.find(".row__questiontypes__list")
       for mrow in $icons.grouped()
-        menurow = $("<div>", class: "menu-row").appendTo $menu
+        menurow = $("<div>", class: "questiontypelist__row").appendTo $menu
         for mitem, i in mrow
           menurow.append $viewTemplates.$$render('xlfRowSelector.cell', mitem.attributes)
 
@@ -57,11 +70,18 @@ define 'cs!xlform/view.rowSelector', [
 
     selectMenuItem: (evt)->
       $('select.skiplogic__rowselect').select2('destroy')
-      mi = $(evt.target).data("menuItem")
-      rowBefore = @options.spawnedFromView?.model
-      survey = @options.survey || rowBefore.getSurvey()
-      rowBeforeIndex = survey.rows.indexOf(rowBefore)
-      survey.addRowAtIndex({type: mi}, rowBeforeIndex+1)
+      rowDetails =
+        type: $(evt.target).closest('.questiontypelist__item').data("menuItem")
+        label: @question_name || 'New Question'
+      options = {}
+      if (rowBefore = @options.spawnedFromView?.model)
+        options.after = rowBefore
+        survey = rowBefore.getSurvey()
+      else
+        survey = @options.survey
+
+      survey.addRow(rowDetails, options)
       @hide()
+      @options.surveyView.reset()
 
   viewRowSelector

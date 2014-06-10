@@ -45,6 +45,31 @@ define [
     beforeEach ->
       window.xlfHideWarnings = true
       @survey = new $model.Survey()
+    afterEach -> window.xlfHideWarnings = false
+
+    describe 'populates default values properly', ->
+      beforeEach ->
+        @populateRow = (opts={})=>
+          @survey.rows.add(opts)
+          @row = @survey.rows.at(0)
+        @expectValue = (key)->
+          expect(@row.get(key).get('value'))
+      it 'text is required', ->
+        @populateRow(type: 'text')
+        @expectValue('required').toBe(true)
+      it 'select one is required', ->
+        @populateRow(type: 'select_one')
+        @expectValue('required').toBe(true)
+      it 'integer is required', ->
+        @populateRow(type: 'integer')
+        @expectValue('required').toBe(true)
+      it 'geopoint is not required', ->
+        @populateRow(type: 'geopoint')
+        @expectValue('required').toBe(false)
+      it 'note is not required', ->
+        @populateRow(type: 'note')
+        @expectValue('required').toBe(false)
+
     it 'has a valid empty survey', ->
       expect(@survey.toCSV()).toBeDefined()
     it 'can add rows to the survey', ->
@@ -75,7 +100,7 @@ define [
               'type': {'select_one': 'yesno'},
               'name': 'yn',
               'label': 'YesNo',
-              'required': 'false'
+              'required': 'true'
             }
           ],
           'choices': {
@@ -91,13 +116,37 @@ define [
             ]
           }
         })
+    describe 'survey row reordering', ->
+      beforeEach ->
+        @surveyNames = ->
+          names = []
+          getName = (r)-> names.push r.get('name').get('value')
+          @survey.forEachRow(getName, includeGroups: true)
+          names
+      it 'can switch ABC -> ACB', ->
+        @load_csv """
+        survey,,,
+        ,type,name,label
+        ,text,qa,QuestionA
+        ,text,qb,QuestionB
+        ,text,qc,QuestionC
+        """
+        expect(@surveyNames()).toEqual(['qa', 'qb', 'qc'])
+        [qa, qb, qc] = @survey.rows.models
+        _parent = qa._parent
+        @survey._insertRowInPlace(qc, previous: qa)
+        expect(qc._parent).toBe(_parent)
+        expect(@surveyNames()).toEqual(['qa', 'qc', 'qb'])
 
     describe 'forEachRow iterator tests', ->
       beforeEach ->
+        window.xlfHideWarnings = true
+
         @load_csv surveys.iterateOver
         @getProp = (propName, arr)->
           (r)->
             arr.push r.get(propName)?.get('value')
+      afterEach -> window.xlfHideWarnings = false
 
       it 'runs normally', ->
         # without any options, it will skip the group but iterate

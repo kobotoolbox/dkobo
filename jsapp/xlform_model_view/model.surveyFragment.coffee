@@ -58,6 +58,17 @@ define 'cs!xlform/model.surveyFragment', [
           name: row.getValue('name')
         descriptors.push(descriptor)
       descriptors
+    findRowByCid: (cid, options={})->
+      match = false
+      fn = (row)->
+        if row.cid is cid
+          match = row
+        # maybe implement a way to bust out
+        # of this loop with false response.
+        !match
+      @forEachRow fn, options
+      match
+
     findRowByName: (name)->
       match = false
       @forEachRow (row)->
@@ -69,14 +80,30 @@ define 'cs!xlform/model.surveyFragment', [
       match
     addRowAtIndex: (r, index)-> @addRow(r, at: index)
     addRow: (r, opts={})->
-      @rows.add r, _.extend(opts, _parent: @rows)
+      if (afterRow = opts.after)
+        delete opts.after
+        opts._parent = afterRow._parent
+        index = 1 + opts._parent.models.indexOf(afterRow)
+        opts.at = index
+      else if (beforeRow = opts.before)
+        delete opts.before
+        opts._parent = beforeRow._parent
+        index = opts._parent.models.indexOf(beforeRow)
+        opts.at = index
+      else
+        opts._parent = @rows
+      opts._parent.add r, opts
+
+    detach: ->
+      @_parent.remove(@)
+      ``
+
+    remove: (item)->
+      item.detach()
 
     _addGroup: (opts)->
       # move to surveyFrag
       opts._parent = @rows
-
-      index = if ('index' of opts) then opts.index else -1
-      delete opts.index
 
       unless 'type' of opts
         opts.type = 'group'
@@ -84,11 +111,29 @@ define 'cs!xlform/model.surveyFragment', [
       unless '__rows' of opts
         opts.__rows = []
 
-      for row in opts.__rows
-        row.detach()
+      rowCids = []
+      @forEachRow (
+          (r)->
+            rowCids.push(r.cid)
+        ), includeGroups: true, includeErrors: true
 
-      grp = new Group(opts)
-      @rows.add(grp)
+      lowest_i = false
+      for row in opts.__rows
+        row_i = rowCids.indexOf row.cid
+        if (lowest_i is false) or (row_i < lowest_i)
+          lowest_i = row_i
+          first_row = row
+
+      addOpts =
+        previous: first_row.precedingRow()
+        parent: first_row.parentRow()
+      for row in opts.__rows
+        row.detach(silent: true)
+
+      grp = new surveyFragment.Group(opts)
+      @getSurvey()._insertRowInPlace grp, addOpts
+      par = addOpts.parent or @getSurvey().rows
+      par.trigger('add', grp)
 
     _allRows: ->
       # move to surveyFrag
@@ -101,29 +146,35 @@ define 'cs!xlform/model.surveyFragment', [
       @forEachRow ((r)=> r.finalize()), includeGroups: true
       @
 
-  class Group extends $row.BaseRow
+  class surveyFragment.Group extends $row.BaseRow
     @kls = "Group"
     @key = "group"
     constructor: (a={}, b)->
-      __rows = a.__rows
+      __rows = a.__rows or []
       delete a.__rows
       @rows = new Rows([], _parent: @)
       super(a,b)
       @rows.add __rows  if __rows
-      @_groupOrRepeatKey = if @_isRepeat() then "repeat" else "group"
+      for row in __rows
+        row._parent = row.collection = @rows
 
     initialize: ->
-      defaultsForType = @getSurvey().defaultsForType
-      grpDefaults = defaultsForType.group
-      unless @has 'label'
-        @set 'label', grpDefaults?.label(@)
+      grpDefaults = $configs.newGroupDetails
+      for key, obj of grpDefaults
+        if !@has key
+          if typeof obj.value is 'function'
+            obj.value = obj.value(@)
+          @set key, obj
+      typeIsRepeat = @get('type') is 'repeat'
+      @set('_isRepeat', typeIsRepeat)
       @convertAttributesToRowDetails()
 
     _isRepeat: ()->
-      !!(@get("type")?.get("value")?.match(/repeat/))
+      !!(@get("_isRepeat")?.get("value"))
 
     autoname: ->
-      if @get('name') is undefined
+      name = @getValue('name')
+      if name in [undefined, '']
         slgOpts =
           lowerCase: false
           stripSpaces: true
@@ -136,8 +187,14 @@ define 'cs!xlform/model.surveyFragment', [
     finalize: ->
       @autoname()
 
-    detach: ->
-      @_parent.remove(@)
+    detach: (opts)->
+      @_parent.remove(@, opts)
+
+    splitApart: ->
+      startingIndex = @_parent.models.indexOf(@)
+      @detach()
+      for row, n in @rows.models
+        @_parent.add(row, at: startingIndex + n)
 
     _beforeIterator: (cb, ctxt)->
       cb(@groupStart())  if ctxt.includeGroupEnds
@@ -147,19 +204,21 @@ define 'cs!xlform/model.surveyFragment', [
     forEachRow: (cb, ctx={})->
       _forEachRow.apply(@, [cb, ctx])
 
+    _groupOrRepeatKey: ->
+      if @_isRepeat() then "repeat" else "group"
+
     groupStart: ->
       group = @
       toJSON: ->
         out = {}
         for k, val of group.attributes
-          out[k] = val.getValue()
-        out.type = "begin #{group._groupOrRepeatKey}"
+          if k isnt '_isRepeat'
+            out[k] = val.getValue()
+        out.type = "begin #{group._groupOrRepeatKey()}"
         out
     groupEnd: ->
       group = @
-      toJSON: ()-> type: "end #{group._groupOrRepeatKey}"
-
-  surveyFragment.Group = Group
+      toJSON: ()-> type: "end #{group._groupOrRepeatKey()}"
 
   INVALID_TYPES_AT_THIS_STAGE = ['begin group', 'end group', 'begin repeat', 'end repeat']
   _determineConstructorByParams = (obj)->
@@ -174,11 +233,15 @@ define 'cs!xlform/model.surveyFragment', [
     if type in formSettingsTypes
       $surveyDetail.SurveyDetail
     else if type in ['group', 'repeat']
-      Group
+      surveyFragment.Group
     else
       $row.Row
 
   class Rows extends $base.BaseCollection
+    constructor: (args...)->
+      super(args...)
+      @on 'add', (a,b,c)=> @_parent.getSurvey().trigger('rows-add', a,b,c)
+      @on 'remove', (a,b,c)=> @_parent.getSurvey().trigger('rows-remove', a,b,c)
     model: (obj, ctxt)->
       RowConstructor = _determineConstructorByParams(obj)
       try
@@ -189,3 +252,4 @@ define 'cs!xlform/model.surveyFragment', [
     comparator: (m)-> m.ordinal
 
   surveyFragment
+  

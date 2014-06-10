@@ -8,11 +8,18 @@ function HeaderController($scope, $rootScope, $miscUtils, $location) {
     $scope.pageIcon = 'fa-file-text-o';
     $rootScope.isLoading = false;
 
-    $scope.topLevelMenuActive = '';
+    $rootScope.topLevelMenuActive = '';
     $rootScope.activeTab = 'Forms';
 
-    $scope.toggleTopMenu = function () {
+    $scope.toggleTopMenu = function ($event) {
+        if (!!$event) {
+            $event.stopPropagation();
+        }
         $rootScope.topLevelMenuActive = !!$rootScope.topLevelMenuActive ? '' : 'is-active';
+    };
+
+    $rootScope.closeTopMenu = function () {
+        $rootScope.topLevelMenuActive = '';
     };
 
     $scope.$on('$locationChangeSuccess', function() {

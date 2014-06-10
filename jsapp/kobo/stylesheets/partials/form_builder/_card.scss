@@ -1,0 +1,240 @@
+// ==========================================================================
+// Card (incl. Header and Expanded)
+// ==========================================================================
+
+.card {
+    border-radius: 0px;
+    font-family: 'Lato';
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 18px;
+    margin-bottom: 4px;
+    &.card--movable {
+      cursor: move;
+    }
+    &.card--error {
+        background-color: rgb(255, 176, 176);
+    }
+    .card__header {
+        border: $cardBorderStyle;
+        padding: 23px 40px 23px 60px;
+        display: block;
+        background: white;
+        cursor: move;
+        position: relative;
+        .card__text {
+            margin:auto;
+            display: inline-block;
+            vertical-align: middle;
+            width: 99%;
+            position: relative;
+            &.activated {
+                color: #8595A5;
+            }
+            .card__buttons__multioptions {
+                cursor: pointer;
+                vertical-align: middle;
+                position: absolute;
+                left:-14px;
+                top:50%;
+                margin-top:-8px;
+              
+                .fa {
+                    width: 12px;
+                    font-size: 15px;
+                }
+            }
+        }
+    }
+}
+
+.card--placeholder {
+    background-color: transparent;
+    color:#8695A5;
+    border:2px solid #8695A5;
+    text-align: center;
+    font-family: 'Lato';
+    font-weight: 600;
+    padding: 20px;
+    margin:20px 0px;
+}
+
+.sortable-active {
+    .card__header {
+        border: $cardInSortBorderStyle;
+        .card__header-title {
+            color: $cardInSortBorderColor;
+        }
+    }
+}
+.card--error {
+    background-color: rgb(255, 176, 176);
+}
+
+.card__addoptions {
+    opacity: 0.4;
+}
+
+// ==========================================================================
+// Card indicator
+// ==========================================================================
+
+$cardIndicatorWidth: 42px;
+$cardIndicatorIconHeight: 21px;
+$cardIndicatorIconWidth: 21px;
+
+.card__indicator {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: $cardIndicatorWidth;
+    height: 100%;
+    border-right: $cardBorderStyle;
+}
+.card--insort {
+    .card__indicator {
+        border-right: $cardInSortThinBorderStyle;
+    }
+}
+.card__indicator__icon {
+    position: absolute;
+    top: 50%;
+    margin-top: -($cardIndicatorIconHeight/2);
+    left: 8px;
+    width: $cardIndicatorIconHeight;
+    height: $cardIndicatorIconHeight;
+    font-size: 20px;
+    line-height: 20px;
+    text-align: center;
+    color: $indicatorColor;
+
+    .fa.invert {
+        padding: 3px 1px;
+        font-size: 0.95em;
+        background-color: #8595A5;
+    }
+    .fa-lato-calculate, .fa-lato-decimal,
+    .fa-lato-integer, .fa-lato-text {
+        font-size: 15px;
+        width: $cardIndicatorIconWidth;
+    }
+    .fa-lato-decimal {
+        margin-left:2px;
+    }
+}
+
+// ==========================================================================
+// Card quick buttons
+// ==========================================================================
+.card__buttons {
+    border: $cardBorderStyle;
+    border-width: 0 0 0 2px;
+    position: absolute;
+    top: 0px;
+    right: 2px;
+    width: 26px;
+    height: 100%;
+    cursor: pointer;
+
+    &.noborder {
+        border:none;
+    }
+}
+
+// ==========================================================================
+// Card Shade (displays over the card)
+// ==========================================================================
+
+// Displayed when parent .card has .card--shaded
+.card__header .card__text .bg {
+    display: none;
+
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    top: 0px;
+    z-index: 2;
+    text-align: center;
+
+    h2 {
+        font-weight: 600;
+        line-height: 1.5em;
+    }
+
+    &.gray {
+        background: rgba(#858F98, 0.4);
+    }
+    &.red {
+        background: rgba(#D08B8C, 0.4);
+    }
+    &.blue {
+        background:rgba($linkColor, 0.4);
+    }
+}
+
+
+
+.card--insort {
+    .card__buttons {
+        border-left: $cardInSortThinBorderStyle;
+    }
+}
+.card__buttons__button {
+    height: 22px;
+    line-height: 22px;
+    width: 26px;
+    position: absolute;
+    right: -2px;
+    bottom: 4px;
+    text-align: center;
+    &.gray {
+        color: #858F98;
+        top:0px;
+    }
+    &.red {
+        color: #D08B8C;
+        top:50%;
+        margin-top:-11px;
+    }
+    &.blue {
+        color:$linkColor;
+    }
+    &.gray-green {
+    }
+    &.activated {
+        // trying to transition this into %activated-card-button
+        color: #646D75;
+        background-color: #D9DDE1;
+    }
+    &:hover {
+        @extend %activated-card-button;
+    }
+}
+
+// Misc...
+
+.card__text {
+    .editable-container {
+        width: 100%;
+    }
+}
+
+.placeholder {
+    height: 100px;
+    margin-bottom: 10px;
+    border: 2px dashed #ccc;
+    border-radius: 4px;
+}
+
+// overrides
+// ---------
+
+.card--shaded {
+    .card__buttons {
+        z-index: 4;
+    }
+    .card__header .card__text .bg {
+        display: block;
+    }
+}

@@ -1,0 +1,105 @@
+// ==========================================================================
+// Survey Row
+// (formerly .xlf-row-view)
+// ==========================================================================
+
+.survey__row {
+    &.survey__row--selected {
+        > .survey__row__item {
+            > .card__header {
+                border: $cardInSortBorderStyle;
+            }
+            > .group__header {
+                border: $cardInSortBorderStyle;
+            }
+        }
+    }
+
+    .btn--addrow {
+        display: none;
+    }
+    &:hover {
+        > .survey__row__spacer > .btn--addrow {
+            display: block;
+        }
+    }
+}
+
+.insort {
+    .btn--addrow {
+        opacity: 0;
+    }
+}
+
+// ==========================================================================
+// Add new row button
+// ==========================================================================
+
+// these variables are mostly used in btn--addrow to determine
+// the clickable area of the add row buttons.
+$click-area-btn--addrow-padding-tb: 30px;
+$click-area-nested-btn--addrow-padding-tb: 15px;
+$btn--addrow-height: 24px;
+$nested-btn--addrow-height: 24px;
+$nested-last-inner-btn--addrow-Offset: 7px;
+$nested-btn--addrow-height: 24px;
+
+//== usage:
+//   div.btn--addrow
+//     i.fa.fa-plus ''
+.btn--addrow {
+    background-color: transparent;
+    width: 52px;
+    height: $btn--addrow-height + (2 * $click-area-btn--addrow-padding-tb);
+    // TODO: this below should be for desktop only
+    position: absolute;
+    left: -46px;
+    top: -15px - $click-area-btn--addrow-padding-tb;
+    padding: $click-area-btn--addrow-padding-tb 0 0 11px;
+
+    .fa {
+        background-color: $addButtonColor;
+        display: block;
+        width: 24px;
+        height: $btn--addrow-height;
+        line-height: $btn--addrow-height;
+        border-radius: $buttonBorderRadius;
+    }
+
+    // when debugging, it's helpful to mock :hover
+    // &:hover, &.hover {
+    &:hover {
+        background-color: transparent;
+        .fa {
+            background-color: $addButtonColorHover;
+        }
+    }
+
+    // inside group, the btn--addrow must show up differently
+    // note: this compiles to
+    // .group__rows .btn--addrow {...}
+    .group__rows & {
+        left: -9px;
+        width: 28px;
+        // padding: 5px 0 0 3px;
+        height: $nested-btn--addrow-height + (2 * $click-area-nested-btn--addrow-padding-tb);
+        top: -15px - $click-area-nested-btn--addrow-padding-tb;
+        padding: $click-area-nested-btn--addrow-padding-tb 0 0 3px;
+        .fa {
+            border-radius: 3px;
+            width: 14px;
+            font-weight: normal;
+            height: $nested-btn--addrow-height;
+            line-height: $nested-btn--addrow-height;
+            font-size: 11px;
+        }
+    }
+
+    // the last one was being pushed down too far
+    .group__rows > .survey__row:last-child > .survey__row__spacer > & {
+        top: (-14 - $click-area-nested-btn--addrow-padding-tb) - $nested-last-inner-btn--addrow-Offset;
+        .fa {
+            height: 22px;
+        }
+    }
+}

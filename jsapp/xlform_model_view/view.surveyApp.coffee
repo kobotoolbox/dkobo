@@ -1,4 +1,5 @@
 define 'cs!xlform/view.surveyApp', [
+        'underscore',
         'backbone',
         'cs!xlform/model.survey',
         'cs!xlform/model.utils',
@@ -9,6 +10,7 @@ define 'cs!xlform/view.surveyApp', [
         'cs!xlform/view.pluggedIn.backboneView',
         'cs!xlform/view.utils',
         ], (
+            _,
             Backbone,
             $survey,
             $modelUtils,
@@ -17,10 +19,35 @@ define 'cs!xlform/view.surveyApp', [
             $viewRowSelector,
             $rowView,
             $baseView,
-            $viewUtils
+            $viewUtils,
             )->
 
   surveyApp = {}
+
+  _notifyIfRowsOutOfOrder = do ->
+    # a temporary function to notify devs if rows are mysteriously falling out of order
+    fn = (surveyApp)->
+      survey = surveyApp.survey
+      elIds = []
+      surveyApp.$('.survey__row').each -> elIds.push $(@).data('rowId')
+
+      rIds = []
+      gatherId = (r)->
+        rIds.push(r.cid)
+        if 'forEachRow' of r
+          r.forEachRow(gatherId, flat: true, includeGroups: true)
+      survey.forEachRow(gatherId, flat: true, includeGroups: true)
+
+      _s = (i)-> JSON.stringify(i)
+      if _s(rIds) isnt _s(elIds)
+        console?.error "Order do not match"
+        console?.error _s(rIds)
+        console?.error _s(elIds)
+        false
+      else
+        true
+    _.debounce(fn, 2500)
+
 
   class SurveyFragmentApp extends $baseView
     className: "formbuilder-wrap container"
@@ -34,12 +61,39 @@ define 'cs!xlform/view.surveyApp', [
       "click #publish": "publishButtonClick"
       "click #settings": "toggleSurveyOptions"
       "update-sort": "updateSort"
+      "click .js-select-row": "selectRow"
+      "click .js-select-row--force": "forceSelectRow"
       "click .js-group-rows": "groupSelectedRows"
-      "question-select": "questionSelect"
+      "click .js-toggle-group-settings": "toggleGroupSettings"
+      "click .js-toggle-group-expansion": "toggleGroupExpansion"
+      "click .js-toggle-row-settings": "toggleRowSettings"
+      "click .js-toggle-row-multioptions": "toggleRowMultioptions"
+      "click .js-expand-row-selector": "expandRowSelector"
     @create: (params = {}) ->
       if _.isString params.el
         params.el = $(params.el).get 0
       return new @(params)
+
+    surveyRowSortableStop: (evt)->
+      $et = $(evt.target)
+      cid = $et.data('rowId')
+
+      survey_findRowByCid = (cid)=>
+        if cid
+          @survey.findRowByCid(cid, includeGroups: true)
+
+      row = survey_findRowByCid(cid)
+      [_prev, _par] = @_getRelatedElIds($et)
+      @survey._insertRowInPlace row,
+        previous: survey_findRowByCid _prev
+        parent: survey_findRowByCid _par
+        event: 'sort'
+      ``
+
+    _getRelatedElIds: ($el)->
+      prev = $el.prev('.survey__row').eq(0).data('rowId')
+      parent = $el.parents('.survey__row').eq(0).data('rowId')
+      [prev, parent]
 
     initialize: (options)->
       if options.survey and (options.survey instanceof $survey.Survey)
@@ -50,17 +104,21 @@ define 'cs!xlform/view.surveyApp', [
       @__rowViews = new Backbone.Model()
       @ngScope = options.ngScope
 
-      @survey.rows.on "add", @reset, @
-      @survey.rows.on "remove", @reset, @
+      @survey.on 'rows-add', @reset, @
+      @survey.on 'rows-remove', @reset, @
       @survey.on "row-detail-change", (row, key, val, ctxt)=>
         evtCode = "row-detail-change-#{key}"
         @$(".on-#{evtCode}").trigger(evtCode, row, key, val, ctxt)
       @$el.on "choice-list-update", (evt, clId) ->
         $(".on-choice-list-update[data-choice-list-cid='#{clId}']").trigger("rebuild-choice-list")
 
+      @$el.on "survey__row-sortablestop", _.bind @surveyRowSortableStop, @
+
       @onPublish = options.publish || $.noop
       @onSave = options.save || $.noop
       @onPreview = options.preview || $.noop
+
+      @expand_all_multioptions = null
 
       $(window).on "keydown", (evt)=>
         @onEscapeKeydown(evt)  if evt.keyCode is 27
@@ -80,6 +138,20 @@ define 'cs!xlform/view.surveyApp', [
       model.ordinal = position
       @survey.rows.add(model, at: position)
       ``
+
+    forceSelectRow: (evt)->
+      # forceSelectRow is used to mock the shift key
+      @selectRow($.extend({}, evt, shiftKey: true))
+    selectRow: (evt)->
+      if evt.shiftKey
+        $et = $(evt.target)
+        $ect = $(evt.currentTarget)
+        # a way to ensure the event is not run twice when in nested .js-select-row elements
+        _isIntendedTarget = $ect.closest('.survey__row').get(0) is $et.closest('.survey__row').get(0)
+        if _isIntendedTarget
+          $et.closest('.survey__row').toggleClass("survey__row--selected")
+          @questionSelect()
+
     questionSelect: (evt)->
       @activateGroupButton(@selectedRows().length > 0)
       ``
@@ -88,25 +160,62 @@ define 'cs!xlform/view.surveyApp', [
       @$('.btn--group-questions').toggleClass('btn--disabled', !active)
 
     getApp: -> @
+
     toggleSurveyOptions: ->
       if @features.surveySettings
         @$(".survey-header__options").toggle()
 
+    toggleGroupSettings: (evt)->
+      $et = $(evt.currentTarget)
+      $group = $et.closest('.group').toggleClass('group--expanded-settings')
+    toggleGroupExpansion: (evt)->
+      $et = $(evt.currentTarget)
+      $group = $et.closest('.group').toggleClass('group--shrunk')
+
+    toggleRowSettings: (evt)->
+      $et = $(evt.currentTarget)
+      $row = $et.closest('.card')
+      $row.removeClass('card--expandedchoices')
+      $row.toggleClass('card--expandedsettings')
+    toggleRowMultioptions: (evt)->
+      $et = $(evt.currentTarget)
+      $row = $et.closest('.card')
+      $row.removeClass('card--expandedsettings')
+      $row.toggleClass('card--expandedchoices')
+
+    expandRowSelector: (evt)->
+      $ect = $(evt.currentTarget)
+      if $ect.parents('.survey-editor__null-top-row').length > 0
+        # This is the initial row in the survey
+        new $viewRowSelector.RowSelector(el: @$el.find(".survey__row__spacer").get(0), survey: @survey, ngScope: @ngScope, surveyView: @).expand()
+      else
+        $row = $ect.parents('.survey__row').eq(0)
+        $spacer = $ect.parents('.survey__row__spacer')
+        rowId = $row.data('rowId')
+        view = @getViewForRow(cid: rowId)
+        if !view
+          # hopefully, this error is never triggered
+          throw new Error('View for row was not found: ' + rowId)
+        new $viewRowSelector.RowSelector(el: $spacer.get(0), ngScope: @ngScope, spawnedFromView: view, surveyView: @).expand()
+
     render: ()->
       @$el.removeClass("content--centered").removeClass("content")
-      @$el.html $viewTemplates.$$render('surveyApp', @survey)
+      @$el.html $viewTemplates.$$render('surveyApp', @)
       @survey.settings.on 'validated:invalid', (model, validations) ->
         for key, value of validations
             break
 
       @formEditorEl = @$(".-form-editor")
-      @$(".survey-editor__null-top-row .expanding-spacer-between-rows .add-row-btn").click (evt)=>
-        if !@emptySurveyXlfRowSelector
-          @emptySurveyXlfRowSelector = new $viewRowSelector.RowSelector(el: @$el.find(".expanding-spacer-between-rows").get(0), survey: @survey, ngScope: @ngScope)
-        @emptySurveyXlfRowSelector.expand()
+      # @$(".survey-editor__null-top-row .survey__row__spacer .btn--addrow").click (evt)=>
+      #   if !@emptySurveyXlfRowSelector
+      #     @emptySurveyXlfRowSelector = new $viewRowSelector.RowSelector(el: @$el.find(".survey__row__spacer").get(0), survey: @survey, ngScope: @ngScope)
+      #   @emptySurveyXlfRowSelector.expand()
 
       if @features.displayTitle
-        $viewUtils.makeEditable @, @survey.settings, '.form-title', property:'form_title'
+        $viewUtils.makeEditable @, @survey.settings, '.form-title', property:'form_title', options: validate: (value) ->
+          if value.length > 255
+            return "Length cannot exceed 255 characters, is " + value.length + " characters."
+          return
       else
         @$(".survey-header__inner").hide()
 
@@ -125,33 +234,83 @@ define 'cs!xlform/view.surveyApp', [
         @$(".survey-header__options-toggle").hide()
 
       if @features.multipleQuestions
-        @formEditorEl.sortable({
-            axis: "y"
-            cancel: "button,div.add-row-btn,.well,ul.list-view,li.editor-message, .editableform, .row-extras"
-            cursor: "move"
-            distance: 5
-            items: "> li"
-            placeholder: "placeholder"
-            opacity: 0.9
-            scroll: false
-            stop: (evt, ui)->
-              itemSet = ui.item.parent().find("> .xlf-row-view")
-              ui.item.trigger "drop", itemSet.index(ui.item)
-            activate: (evt, ui)=>
-              @formEditorEl.addClass("insort")
-              ui.item.addClass("sortable-active")
-            deactivate: (evt,ui)=>
-              @formEditorEl.removeClass("insort")
-              ui.item.removeClass("sortable-active")
-          })
+        @activateSortable()
       else
-        @$(".delete-row").hide()
-        @$(".expanding-spacer-between-rows").hide()
+        @$(".card__buttons__button--delete").hide()
+        @$(".survey__row__spacer").hide()
 
       if not @features.copyToLibrary
+        # TODO: what happened to this element?
         @$(".row-extras__add-to-question-library").hide()
 
+      
+      if @expand_all_multioptions is null
+        $expand_multioptions = @$(".js-expand-multioptions--all")
+        $expand_multioptions.click () =>
+          if @expand_all_multioptions
+            @expand_all_multioptions = false
+            $(".card.card--selectquestion").removeClass("card--expandedchoices")
+            $expand_multioptions.html($expand_multioptions.html().replace("Collapse", "Expand"));
+          else
+            @expand_all_multioptions = true
+            $(".card.card--selectquestion").addClass("card--expandedchoices")
+            $expand_multioptions.html($expand_multioptions.html().replace("Expand", "Collapse"));
+
       @
+
+    activateSortable: ->
+      $el = @formEditorEl
+      survey = @survey
+
+      sortable_activate_deactivate = (evt, ui)->
+        isActivateEvt = evt.type is 'sortactivate'
+        ui.item.toggleClass 'sortable-active', isActivateEvt
+        $el.toggleClass 'insort', isActivateEvt
+
+      sortable_stop = (evt, ui)=>
+        $(ui.item).trigger('survey__row-sortablestop')
+
+      @formEditorEl.sortable({
+          axis: "y"
+          cancel: "button, .btn--addrow, .well, ul.list-view, li.editor-message, .editableform, .row-extras, .js-cancel-sort"
+          cursor: "move"
+          distance: 5
+          items: "> li"
+          placeholder: "placeholder"
+          connectWith: ".group__rows"
+          opacity: 0.9
+          scroll: true
+          stop: sortable_stop
+          activate: sortable_activate_deactivate
+          deactivate: sortable_activate_deactivate
+        })
+      group_rows = @formEditorEl.find('.group__rows')
+      group_rows.off 'mouseenter', '> .survey__row', @_preventSortableIfGroupTooSmall
+      group_rows.off 'mouseleave', '> .survey__row', @_preventSortableIfGroupTooSmall
+      group_rows.on 'mouseenter', '> .survey__row', @_preventSortableIfGroupTooSmall
+      group_rows.on 'mouseleave', '> .survey__row', @_preventSortableIfGroupTooSmall
+      group_rows.sortable({
+          axis: "y"
+          cancel: '.js-cancel-sort, .js-cancel-group-sort'
+          cursor: "move"
+          distance: 5
+          items: "> li"
+          placeholder: "placeholder"
+          connectWith: ".group__rows, .survey-editor__list"
+          opacity: 0.9
+          scroll: true
+          stop: sortable_stop
+          activate: sortable_activate_deactivate
+          deactivate: sortable_activate_deactivate
+        })
+      ``
+    _preventSortableIfGroupTooSmall: (evt)->
+      $ect = $(evt.currentTarget)
+      if $ect.siblings('.survey__row').length is 0
+        if evt.type is 'mouseenter'
+          $ect.addClass('js-cancel-group-sort')
+        else
+          $ect.removeClass('js-cancel-group-sort')
 
     validateSurvey: ()->
       true
@@ -165,10 +324,38 @@ define 'cs!xlform/view.surveyApp', [
     ensureElInView: (row, parentView, $parentEl)->
       view = @getViewForRow(row)
       $el = view.$el
+      index = row._parent.indexOf(row)
+
+      if index > 0
+        prevRow = row._parent.at(index - 1)
+      if prevRow
+        prevRowEl = $parentEl.find(".survey__row[data-row-id=#{prevRow.cid}]")
+
+      requiresInsertion = false
+      detachRowEl = (detach)->
+        if detach
+          $el.detach()
+        requiresInsertion = true
+
+      # trying to avoid unnecessary reordering of DOM (very slow)
       if $el.parents($parentEl).length is 0
-        $parentEl.append($el)
+        detachRowEl()
       else if $el.parent().get(0) isnt $parentEl.get(0)
-        $el.detach().appendTo($parentEl)
+        # element does not have the correct parent
+        detachRowEl()
+      else if !prevRow
+        if $el.prev('.survey__row').not('.survey__row--deleted').data('rowId')
+          detachRowEl()
+      else if $el.prev('.survey__row').not('.survey__row--deleted').data('rowId') isnt prevRow.cid
+        # element is in the wrong location
+        detachRowEl()
+
+      if requiresInsertion
+        if prevRow
+          $el.insertAfter(prevRowEl)
+        else
+          $el.prependTo($parentEl)
+
       view
 
     getViewForRow: (row)->
@@ -182,6 +369,7 @@ define 'cs!xlform/view.surveyApp', [
       xlfrv
 
     reset: ->
+      _notifyIfRowsOutOfOrder(@)
       fe = @formEditorEl
       isEmpty = true
       fn = (row)=>
@@ -199,6 +387,7 @@ define 'cs!xlform/view.surveyApp', [
         null_top_row.removeClass("hidden")
       else
         null_top_row.addClass("hidden")
+      @activateSortable()
       # $viewUtils.reorderElemsByData(".xlf-row-view", @$el, "row-index")
       ``
 
@@ -206,24 +395,38 @@ define 'cs!xlform/view.surveyApp', [
       evt.preventDefault()
       if confirm("Are you sure you want to delete this question? This action cannot be undone.")
         $et = $(evt.target)
-        rowId = $et.parents("li").data("rowId")
-        rowEl = $et.parents("li").eq(0)
+        rowEl = $et.parents(".survey__row").eq(0)
+        rowId = rowEl.data("rowId")
 
-        matchingRow = @survey.rows.find (row)-> row.cid is rowId
+        matchingRow = false
+        findMatch = (r)->
+          if r.cid is rowId
+            matchingRow = r
+          ``
+
+        @survey.forEachRow findMatch, {
+          includeGroups: false
+        }
 
         if !matchingRow
           throw new Error("Matching row was not found.")
 
+        matchingRow.detach()
         # this slideUp is for add/remove row animation
+        rowEl.addClass('survey__row--deleted')
         rowEl.slideUp 175, "swing", ()=>
+          rowEl.remove()
           @survey.rows.remove matchingRow
 
     groupSelectedRows: ->
       rows = @selectedRows()
-      @$('.survey__row--selected').removeClass('survey__row--selected')
+      $q = @$('.survey__row--selected')
+      $q.remove()
+      $q.removeClass('survey__row--selected')
       @activateGroupButton(false)
       if rows.length > 0
         @survey._addGroup(__rows: rows)
+        @reset()
         true
       else
         false
