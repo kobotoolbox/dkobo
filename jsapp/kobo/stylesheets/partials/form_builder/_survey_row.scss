@@ -21,6 +21,12 @@
     &:hover {
         > .survey__row__spacer > .btn--addrow {
             display: block;
+
+            // duplicated inside .btn--addrow, where
+            // specificity is too low.
+            .survey-editor--singlequestion & {
+                display: none;
+            }
         }
     }
 }
@@ -103,6 +109,7 @@ $nested-btn--addrow-height: 24px;
         }
     }
 
+    // not specific enough for all :hover cases
     .survey-editor--singlequestion & {
         display: none;
     }
