@@ -91,7 +91,7 @@ function restApiFactory($resource, $timeout) {
                 }
             };
 
-            if (id !== undefined) {
+            if (id !== undefined && id !== 'new') {
                 custom_methods.save = {
                     method: 'PATCH'
                 };
