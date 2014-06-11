@@ -4,10 +4,23 @@
 
 @font-face {
   font-family: 'Lato';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Lato Regular'), local('Lato-Regular'), url(http://themes.googleusercontent.com/static/fonts/lato/v7/9k-RPmcnxYEPm8CNFsH2gg.woff) format('woff');
+  font-style:   normal;
+  font-weight:  normal;
+  src: url('/static/kobo/fonts/Lato-Regular.eot'); /* IE9 Compat Modes */
+  src: local('Lato Regular'), local('Lato-Regular'),
+       url('/static/kobo/fonts/Lato-Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('/static/kobo/fonts/Lato-Regular.woff') format('woff'), /* Modern Browsers */
+       url('/static/kobo/fonts/Lato-Regular.ttf')  format('truetype'), /* Safari, Android, iOS */
+       url('/static/kobo/fonts/Lato-Regular.svg#48e70b8825d557df57af3e4f7d4c31be') format('svg'); /* Legacy iOS */
 }
+
+// Old call using google file
+// @font-face {
+//   font-family: 'Lato';
+//   font-style: normal;
+//   font-weight: 400;
+//   src: local('Lato Regular'), local('Lato-Regular'), url(http://themes.googleusercontent.com/static/fonts/lato/v7/9k-RPmcnxYEPm8CNFsH2gg.woff) format('woff');
+// }
 
 // @font-face {
 //     font-family: 'LatoBlack';
@@ -17,7 +30,7 @@
 //          url('/static/css/Lato-Black.ttf') format('truetype');
 //     font-style: normal;
 //     font-weight: normal;
-//     text-rendering: optimizeLegibility;
+//     text-rendering: optimizeLegibilityo;
 // }
 
 // @font-face {
