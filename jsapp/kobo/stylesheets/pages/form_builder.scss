@@ -78,9 +78,12 @@
             top: 0px;
             z-index: 2;
             text-align: center;
-            h2 {
+            vertical-align: middle;
+            span {
+              position: relative;
+              top: 35%;
               font-weight: 600;
-              line-height: 1.5em;
+              font-size: 22px;
             }
             &.gray {
               background: rgba(#858F98, 0.4);

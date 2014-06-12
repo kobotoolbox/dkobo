@@ -124,7 +124,7 @@ standard_row = (variation='text', {note}) ->
     bText = $et.data('buttonText')
     $et.parents('.card__buttons').addClass('noborder')
     $et.parents('.card__header').append('<div class="bg">')
-    $et.parents('.card__header').find('.bg').addClass("#{bColor}").html("<h2>#{bText}</h2>")
+    $et.parents('.card__header').find('.bg').addClass("#{bColor}").html("<span>#{bText}</span>")
 
   $('body').on 'mouseleave', '.card__buttons .card__buttons__button', (evt)->
     $et = $(evt.target)
