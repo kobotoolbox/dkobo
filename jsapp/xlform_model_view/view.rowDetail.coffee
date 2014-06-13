@@ -213,7 +213,7 @@ define 'cs!xlform/view.rowDetail', [
       """
     afterRender: ->
       @$el.find('input').eq(0).val(@model.get("value"))
-      @listenForInputChange(transformFn: (value)-> $modelUtils.sluggify(value))
+      @listenForInputChange(transformFn: (value)-> $modelUtils.sluggify(value, lowerCase:false))
     insertInDom: (rowView)->
       rowView.rowExtras.append(@el)
 
