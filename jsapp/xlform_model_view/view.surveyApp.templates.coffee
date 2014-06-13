@@ -27,7 +27,7 @@ define 'cs!xlform/view.surveyApp.templates', [], ()->
             <button class="btn btn--utility" id="save"><i class="fa fa-check-circle green"></i> Save #{type_name}</button>
             <button class="btn btn--utility" id="xlf-preview"><i class="fa fa-eye"></i> Preview #{type_name}</button>
             <button class="btn btn--utility survey-editor__action--multiquestion js-expand-multioptions--all" ><i class="fa fa-eye"></i> Expand All Questions</button>
-            <button class="btn btn--utility survey-editor__action--multiquestion btn--group-questions btn--disabled js-group-rows js-expand-multioptions--all">Group Questions</button>
+            <button class="btn btn--utility survey-editor__action--multiquestion btn--group-questions btn--disabled js-group-rows">Group Questions</button>
           <button class="btn btn--utility pull-right survey-editor__action--multiquestion rowselector_toggle-library" id="question-library"><i class="fa fa-folder"></i> Question Library</button>
           </div>
         </div>
