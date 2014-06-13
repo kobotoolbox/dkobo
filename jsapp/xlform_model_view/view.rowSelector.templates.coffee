@@ -5,11 +5,11 @@ define 'cs!xlform/view.rowSelector.templates', [], ()->
       <button type="button" class="row__questiontypes__close js-close-row-selector shrink pull-right close close-button close-button--depr" aria-hidden="true">&times;</button>
   """
 
-  xlfRowSelector.line = () ->
+  xlfRowSelector.line = (name) ->
       """
           <div class="row__questiontypes row-fluid clearfix">
             #{closeRowSelectorButton}
-            <h4 class="menu-title">Choose question type</h4>
+            <input type="text" value="#{name}" class="row__questiontypes__new-question-name js-cancel-sort" />
             <div class="row__questiontypes__list clearfix"></div>
             <div>
               Or
