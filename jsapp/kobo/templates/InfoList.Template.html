@@ -18,12 +18,12 @@
       <div class="forms__card" ng-repeat="item in items|orderBy:'-date_modified'">
         <div class="forms__card__info">
           <a class="forms__card__title" href="#{{ getHashLink(item) }}">{{ item.name }}</a>
-          <p class="forms__card__description">Brief description of the card here</p>
+          <p class="forms__card__description">{{ item.description || '' }}</p>
           <p class="forms__card__date">
             {{item.date_modified.getMonth()+1}}/{{item.date_modified.getDate()}}/{{item.date_modified.getYear() + 1900}}
           </p>
           <p class="forms__card__question-count">
-            100 questions (static)
+            {{ item.rowCount }}
           </p>
         </div>
         <div class="forms__card__buttons">
