@@ -65,9 +65,17 @@ define 'cs!xlform/view.rowSelector', [
     selectMenuItem: (evt)->
       @question_name = @line.find('input').val()
       $('select.skiplogic__rowselect').select2('destroy')
+      rowType = $(evt.target).closest('.questiontypelist__item').data("menuItem")
+      value = @question_name || 'New Question'
+
       rowDetails =
-        type: $(evt.target).closest('.questiontypelist__item').data("menuItem")
-        label: @question_name || 'New Question'
+        type: rowType
+
+      if rowType is 'calculate'
+        rowDetails.calculation = value
+      else
+        rowDetails.label = value
+
       options = {}
       if (rowBefore = @options.spawnedFromView?.model)
         options.after = rowBefore
