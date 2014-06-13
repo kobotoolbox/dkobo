@@ -20,10 +20,14 @@ define 'cs!xlform/view.rowSelector', [
     initialize: (opts)->
       @options = opts
       @ngScope = opts.ngScope
-      @button = @$el.find(".btn")
+      @reversible = opts.reversible
+      @button = @$el.find(".btn").eq(0)
       @line = @$el.find(".line")
       if opts.action is "click-add-row"
         @expand()
+      if !@reversible
+        @button.hide()
+
     expand: ->
       @show_namer()
       @$('input').eq(0).focus()
