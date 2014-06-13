@@ -7,11 +7,16 @@
     font-weight: 600;
     margin-bottom: 15px;
     background: #3FA2EE;
-    border-bottom: 2px solid #2374B3;    
+    border-bottom: 2px solid #2374B3;
+    font-size: 14px;
+}
+
+.library__wrapper {
+    background: white;
+    height: 100%;
 }
 
 .library {
-    background: white;
     padding:0 12px;
     height: 100%;
     min-width: 750px;
@@ -25,7 +30,7 @@ $tagsHeight: 230px;
 // ==========================================================================
 
 .questions {
-    width: 70%;
+    width: 68%;
     position: relative;
     float: left;
     height: 100%;
@@ -55,7 +60,7 @@ $tagsHeight: 230px;
 
 .question__create {
     position: absolute;
-    width: 35%;
+    width: 170px;
     right: 0px;
     top:20px;
 }
@@ -184,6 +189,7 @@ $tagsHeight: 230px;
     margin-bottom: 0;
     border-bottom: 1px solid #e9ecee;
     padding: 10px 33px 10px 12px;
+    cursor: pointer;
 }
 
 .question__name--selected {
@@ -320,10 +326,10 @@ $tagsHeight: 230px;
    ========================================================================== */
 
 .tags {
-    width: 27%;
+    width: 29.5%;
     float: left;
     position: relative;
-    margin-right: 3%;
+    margin-right: 2.5%;
     height: 100%;
     padding-top:$tagsHeight;
 }
@@ -340,6 +346,17 @@ $tagsHeight: 230px;
     background-color: #e3e8ec;
     height: 100%;
     overflow-y:scroll;
+}
+
+.tags__empty {
+    border:1px solid #D9DDE1;
+    margin-bottom: 10px;
+    padding: 12px;
+    font-weight: 600;
+    font-style: italic;
+    text-align: center;
+    color: #85909B;
+    font-size: 13px;
 }
 
 .tag-filter {
@@ -380,6 +397,12 @@ $tagsHeight: 230px;
 .tags__tag {
     padding:10px;
     border-bottom: 1px solid #CCC;
+    position: relative;
+}
+
+.tags__tag--selected {
+    border:2px solid #B8D1EA;
+    background: white;
 }
 
 .tag__name {
@@ -387,6 +410,7 @@ $tagsHeight: 230px;
     padding:0px;
     font-size: 13px;
     line-height: 1em;
+    font-weight: normal;
 }
 
 .tag__question-count {
@@ -394,13 +418,16 @@ $tagsHeight: 230px;
     color: gray; 
 }
 
-.tags__title {}
-.tag-filter {}
-.tag-filter__searchbox {}
-.tag-filter__sorter {}
-.tags__container {}
-.tags__tag {}
-.tags__tag--selected {}
-.tag__name {}
-.tag__question--count {}
-.tag__delete-button {}
+input.tag__editbox {
+    border:none;
+    display: block;
+    font-size: 14px;
+}
+
+.tag__delete-button {
+    position: absolute;
+    right:10px;
+    top:20px;
+    color: #C41B20;
+    cursor: pointer;
+}
