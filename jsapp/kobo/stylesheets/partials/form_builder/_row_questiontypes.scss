@@ -45,14 +45,24 @@ input.row__questiontypes__new-question-name {
 }
 
 .row__questiontypes--namer {
-    height: 100px;
+    height: 68px;
+    padding:15px 10px;
     input {
-        width: 70%;
+        width: 78%;
+        border-color:#78C4FD; 
     }
     button {
-        @extend .btn;
-        margin-left: 12px;
-        width: 25%;
+        padding: 8px;
+        text-align: center;
+        color: white;
+        font-weight: 600;
+        margin-bottom: 15px;
+        background: #39BF6E;
+        border:none;
+        border-bottom: 2px solid darken(#39BF6E, 10%);
+        font-size: 14px;
+        width: 20%;
+        margin-left: 2%;
     }
     input, button {
         float: left;

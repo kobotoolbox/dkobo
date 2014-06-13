@@ -1,3 +1,140 @@
+.forms-header {
+    margin-bottom: 30px;
+    background-color: white;
+    padding:20px 0px;
+    padding-top: 70px;
+    position: relative;
+    text-align: left;
+}
+
+.forms-header__title {
+    margin-top: 0;
+}
+
+.forms-header__button, 
+.forms-empty__button {
+    width: 120px;
+    padding: 5px;
+    font-size: 12px;
+    color: white;
+    text-align: center;
+    font-weight: 600;
+    background: #39BF6E;
+    border-bottom: 2px solid darken(#39BF6E, 20%);
+}
+
+.forms-empty__button {
+    display: block;
+    margin:0 auto;
+}
+
+.forms-header__button {
+    position: absolute;
+    right:0px;
+    top:0px;    
+}
+
+.forms-filter {
+    height: 75px;
+    width: 100%;
+}
+
+.forms-filter__search {
+    position: relative;
+    float: left;
+    width: 220px;
+    .fa-search {
+        position: absolute;
+        z-index: 5;
+        margin-top:8px;
+        margin-left: 8px;
+        color:$linkColor;
+        font-size: 14px;
+    }
+}
+
+.forms-filter__searchbox {
+    width: 200px;
+    padding:8px;
+    padding-left:28px;
+    font-size: 13px;
+    border-radius: 0;
+    border:none;
+    border-bottom: 2px solid #CBD0D7;
+}
+.forms-filter__sorter {
+    border:none;
+    border-radius: 0;
+    border-bottom: 2px solid #CBD0D7;
+    padding:8px;
+    float: left;
+}
+
+
+.forms__card {
+    border-radius: 0px;
+    font-family: 'Lato';
+    margin-bottom: 12px;
+    font-size: 11px;
+    border: $cardBorderStyle;
+    padding: 20px;
+    display: block;
+    background: white;
+    position: relative;
+    .forms__card__title {
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 15px;
+    }
+    .forms__card__description {
+      margin-bottom: 1.5em;
+      margin-top: 0.5em;
+    }
+    .forms__card__date, .forms__card__question-count {
+      margin-bottom: 0em;
+      margin-top: 0em;
+    }
+}
+
+.forms__card__buttons {
+    border: $cardBorderStyle;
+    border-width: 0 0 0 2px;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 45px;
+    height: 100%;
+    cursor: pointer;
+    z-index: 4;
+}
+.forms__card__buttons__button {
+    height: 30px;
+    line-height: 30px;
+    width: 45px;
+    position: absolute;
+    right: -2px;
+    bottom: 0px;
+    text-align: center;
+    font-size: 15px;
+    &.blue {
+      color:$linkColor;
+      top:0px;
+    }
+    &.gray {
+      color: #858F98;
+      top:50%;
+      margin-top:-12px;
+    }
+    &.red {
+      color: #D08B8C;
+    }
+    &:hover {
+      color: #646D75;
+      background-color: #D9DDE1;
+    }
+}
+// LEGACY 
+
 /* ==========================================================================
    Info list (table rows/cells)
    ========================================================================== */

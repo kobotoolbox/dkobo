@@ -103,31 +103,33 @@
   {%verbatim %}
 
     <section top-level-menu class="top-level-menu" active-tab="activeTab" ng-class="topLevelMenuActive"></section>
-    <main class="main" ng-click="closeTopMenu()">
-      <header class="header-bar" ng-controller="HeaderController" ng-click="closeTopMenu()">
-        <span class="header-bar__top-level-menu-button">
-          <i class="fa fa-bars fa-lg fa-inverse" ng-click="toggleTopMenu($event)"></i>
-        </span>
-        <h1 class="header-bar__title">
-          <a href="#/{{icon_link}}">
-            <span class="header-bar__title-text">{{ activeTab }}</span>
-          </a>
-        </h1>
-          <span class="loader" ng-show="isLoading">
-  {% endverbatim %}
-            <img src="{% static 'img/ajax-loader.gif' %}" class="ajax-loader__image" />
-  {% verbatim %}
-            Your Form is Being Imported
+    <main class="main">
+      <header class="header-bar" ng-controller="HeaderController">
+        <div class="container__wide">
+          <span class="header-bar__top-level-menu-button">
+            <i class="fa fa-bars fa-lg fa-inverse" ng-click="toggleTopMenu()"></i>
           </span>
-          <span class="header-bar__top-logo pull-right"></span>
-          <a href="#/builder" ng-show="showCreateButton" class="btn--header-create-new btn  btn--s  pull-right">Create New</a>
-          <form action="/import_survey_draft" class="btn--fileupload js-import-fileupload pull-right">
-            <span ng-show="showImportButton" class="btn btn--s btn-success fileinput-button">
-              <span>Import form</span>
-              <input type="file" name="files">
+          <h1 class="header-bar__title">
+            <a href="#/{{icon_link}}">
+              <span class="header-bar__title-text">{{ activeTab }}</span>
+            </a>
+          </h1>
+            <span class="loader" ng-show="isLoading">
+    {% endverbatim %}
+              <img src="{% static 'img/ajax-loader.gif' %}" class="ajax-loader__image" />
+    {% verbatim %}
+              Your Form is Being Imported
             </span>
-          </form>
-
+            <span class="header-bar__top-logo pull-right"></span>
+  <!--           <a href="#/builder" ng-show="showCreateButton" class="btn--header-create-new btn  btn--s  pull-right">Create New A</a>
+            <form action="/import_survey_draft" class="btn--fileupload js-import-fileupload pull-right">
+              <span ng-show="showImportButton" class="btn btn--s btn-success fileinput-button">
+                <span>Import form</span>
+                <input type="file" name="files">
+              </span>
+            </form>
+   -->
+        </div>
       </header>
 
       <section ng-view class="content" ng-class="additionalClasses"></section>

@@ -15,8 +15,8 @@
     border-radius: 4px;
     color: white;
     background-color: #1daee3;
-    height: 40px;
-    line-height: 40px;
+    height: 30px;
+    line-height: 30px;
     padding: 0 20px;
     font-weight: 500;
     font-size: 14px;
@@ -84,11 +84,10 @@ input[type="button"].btn--block {
 }
 
 .btn--utility {
-    border: 1px solid #ddd;
     color: #222;
     background-color: transparent;
+    padding:0px 10px;
     &:hover {
-        border-color: #999;
         background-color: #e2e2e2;
     }
 }

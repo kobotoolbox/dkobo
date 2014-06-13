@@ -3,32 +3,37 @@
    ========================================================================== */
 
 .main {
-    margin-top: 40px;
     transition: padding-left 150ms;
+    height: 100%;
+}
+
+.main > section.content {
+    height: 100%;
+    padding-top:40px;
 }
 
 /* ==========================================================================
-   Content
+   Content containers
    ========================================================================== */
 
 .container {
     max-width: 700px;
     margin-right: auto;
     margin-left: auto;
+    position: relative;
+    &.empty {
+      text-align: center;
+      background: white;
+      padding: 20px;
+    }
 }
 
+.container__wide {
+  max-width: 1024px;
+  margin:0 auto;
+}
+
+// Legacy
 .content--centered {
-    text-align: center;
+  text-align: center;
 }
-
-.content__message {
-    width: 300px;
-    padding-top: 150px;
-    display: inline-block;
-}
-
-.content__message-text {
-    color: #cdcdcd;
-}
-
-.content__message-action {}
