@@ -76,3 +76,16 @@
     color: white;
     background-color: #fd8a25;
 }
+
+/* ==========================================================================
+   %incomplete
+    --used to denote incomplete (to-be-implented) functionality
+   ========================================================================== */
+
+%incomplete {
+    display: none;
+
+    .bleeding-edge & {
+        display: block;
+    }
+}
