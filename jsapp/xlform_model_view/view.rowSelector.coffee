@@ -15,7 +15,6 @@ define 'cs!xlform/view.rowSelector', [
   class viewRowSelector.RowSelector extends $baseView
     events:
       "click .js-close-row-selector": "shrink"
-      "click .rowselector_openlibrary": "openLibrary"
       "submit .row__questiontypes__form": "show_picker"
       "click .questiontypelist__item": "selectMenuItem"
     initialize: (opts)->
@@ -58,15 +57,6 @@ define 'cs!xlform/view.rowSelector', [
     hide: ->
       @button.show()
       @line.empty().removeClass("expanded").css "height": 0
-
-    openLibrary: ()->
-      @ngScope.displayQlib = true
-      @ngScope.$apply()
-      model = @options.spawnedFromView?.model
-      rowIndex = if model then model.collection.indexOf(model) else -1
-
-      $("section.koboform__questionlibrary").data("rowIndex", rowIndex)
-      ``
 
     selectMenuItem: (evt)->
       @question_name = @line.find('input').val()

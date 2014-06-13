@@ -175,7 +175,7 @@
     background-color: white;
 }
 .questions__container--scrolling {
-    height: 318px;
+    height: 100%;
     padding-top: 50px;
     overflow: auto;
 }
@@ -268,10 +268,10 @@
 
 .koboform__questionlibrary {
     position: fixed;
-    top: 92px;
-    left: 10%;
-    width: 80%;
-    height: 320px;
+    top: 87px;
+    right: 0;
+    width: 30%;
+    height: 90%;
     border: 1px solid #cbd0d7;
     background-color: #fff;
     overflow: hidden;

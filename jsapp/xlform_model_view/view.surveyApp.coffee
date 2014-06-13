@@ -69,6 +69,7 @@ define 'cs!xlform/view.surveyApp', [
       "click .js-toggle-row-settings": "toggleRowSettings"
       "click .js-toggle-row-multioptions": "toggleRowMultioptions"
       "click .js-expand-row-selector": "expandRowSelector"
+      "click .rowselector_toggle-library": "toggleLibrary"
     @create: (params = {}) ->
       if _.isString params.el
         params.el = $(params.el).get 0
@@ -475,6 +476,13 @@ define 'cs!xlform/view.surveyApp', [
     publishButtonClick: (evt)->
       # Publish = trigger publish action (ie. post to formhub)
       @onPublish.apply(@, arguments)
+    toggleLibrary: (evt)->
+      evt.stopPropagation()
+      @ngScope.displayQlib = !@ngScope.displayQlib
+      @ngScope.$apply()
+
+      $("section.koboform__questionlibrary").data("rowIndex", -1)
+      return
 
   class surveyApp.SurveyApp extends SurveyFragmentApp
     features:

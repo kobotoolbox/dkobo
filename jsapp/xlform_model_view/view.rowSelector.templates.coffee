@@ -11,10 +11,6 @@ define 'cs!xlform/view.rowSelector.templates', [], ()->
             #{closeRowSelectorButton}
             <input type="text" value="#{name}" class="row__questiontypes__new-question-name js-cancel-sort" />
             <div class="row__questiontypes__list clearfix"></div>
-            <div>
-              Or
-              <button class="menu-title btn rowselector_openlibrary">Add from Question Library</button>
-            </div>
           </div>
       """
 
