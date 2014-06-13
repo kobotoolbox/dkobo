@@ -11,7 +11,7 @@ define 'cs!xlform/view.rowSelector.templates', [], ()->
             #{closeRowSelectorButton}
             <h4 class="menu-title">Choose question type</h4>
             <div class="row__questiontypes__list clearfix"></div>
-            <div>
+            <div class="survey-editor__action--multiquestion">
               Or
               <button class="menu-title btn rowselector_openlibrary">Add from Question Library</button>
             </div>
