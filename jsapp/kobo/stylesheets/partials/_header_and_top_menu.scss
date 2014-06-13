@@ -8,7 +8,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 2;
+    z-index: 5;
     line-height: 40px;
     background-color: #3F3F3F;
     transition: width 150ms, left 150ms;
@@ -55,7 +55,7 @@
     position: fixed;
     top: 40px;
     left: 0;
-    z-index: 1;
+    z-index: 5;
     background-color: #FFF;
     transition: width 150ms, left 150ms;
 

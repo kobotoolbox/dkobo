@@ -1,139 +1,150 @@
-// ==========================================================================
-// Dependencies
-// ==========================================================================
+%library-button {
+    display: block;
+    padding: 8px;
+    text-align: center;
+    background: blue;
+    color: white;
+    font-weight: 600;
+    margin-bottom: 15px;
+    background: #3FA2EE;
+    border-bottom: 2px solid #2374B3;
+    font-size: 14px;
+}
+
+.library__wrapper {
+    background: white;
+    height: 100%;
+}
+
+.library {
+    padding:0 12px;
+    height: 100%;
+    min-width: 750px;
+}
+
+$questionsHeight: 180px;
+$tagsHeight: 230px;
 
 // ==========================================================================
 // Question Library - questions
 // ==========================================================================
 
 .questions {
-    min-width: 650px;
+    width: 68%;
     position: relative;
-    margin-left: auto;
-    margin-right: auto;
+    float: left;
+    height: 100%;
+    padding-top:$questionsHeight;
 }
+
 .questions__header {
-    position: fixed;
-    top: 64px;
+    height: $questionsHeight;
+    position: absolute;
+    top:0px;
+    width: 100%;
 }
 
-.questions__title {
-    font-size: 19px;
-    font-family: LatoBold;
-    color: #3f3f3f;
+.questions__container {
+    height: 100%;
+    overflow-y: scroll;
+    border-top: 2px solid #d9dde1;
 }
 
-.questions__question-count {
-    font-size: 12px;
-    color: gray;
+.questions__question-count, 
+.tags__tag-count {
+    font-size: 13px;
+    color: #888A8B;
     margin-left: 7px;
+    font-weight: normal;
+}
+
+.question__create {
+    position: absolute;
+    width: 170px;
+    right: 0px;
+    top:20px;
 }
 
 .question__create-new {
-    width: 170px;
-    height: 36px;
-    background-color: #38a1f1;
-    border-bottom: 2px solid #1c73b5;
-    display: inline-block;
-    color: white;
-    font-size: 13px;
-    text-align: center;
-    padding-top: 8px;
+    @extend %library-button;
 }
 
-.question-filter {
+// large form on full questions page
+.question-filter, .tag-filter {
     height: 93px;
     background-color: #e3e8ec;
     width: 100%;
     padding-top: 12px;
     padding-right: 10px;
     padding-left: 10px;
-    border-bottom: 2px solid #cbd0d7;
-}
-
-.question-filter--short {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 54px;
-    background-color: #e3e8ec;
-    padding: 10px 12px;
-    border-bottom: 2px solid #cbd0d7;
-}
-
-.question-filter__close {
-    position: absolute;
-    top: 8px;
-    right: 16px;
-    font-size: 24px;
+    margin-bottom: 12px;
 }
 
 .question-filter__filters {
     float: left;
     position: relative;
-}
+    width: 70%;
+    .question-filter__search {
+        position: relative;
+        float: left;
+        width: 220px;
+        .fa-search {
+            position: absolute;
+            z-index: 5;
+            margin-top:8px;
+            margin-left: 8px;
+            color:$linkColor;
+            font-size: 14px;
+        }
+    }
+    .question-filter__searchbox {
+        width: 200px;
+        padding:8px;
+        padding-left:28px;
+        font-size: 13px;
+        border-radius: 0;
+        border:none;
+        border-bottom: 2px solid #CBD0D7;
+    }
+    .question-filter__sorter {
+        border:none;
+        border-radius: 0;
+        border-bottom: 2px solid #CBD0D7;
+        padding:8px;
+        float: left;
+    }
 
-.question-filter__searchbox-icon {
-    font-size: 11px;
-    color: #38a1f1;
-    padding-left: 14px;
-    padding-right: 13px;
-    padding-top: 10px;
-    background-color: white;
-    height: 34px;
-    border-bottom: 2px solid #cbd0d7;
-    position: absolute;
-    top: 0px;
-}
+    .question-filter__select-all {
+        clear: both;
+        display: block;
+        float: left;
+        width: 220px;
+        margin-top:10px;
+        font-size: 12px;
+        input {
+            margin-right: 5px;
+        }
+    }
 
-.question-filter__searchbox {
-    height: 34px;
-    width: 211px;
-    border: none;
-    border-radius: 0;
-    border-bottom: 2px solid #cbd0d7;
-    position: absolute;
-    left: 37px;
-
-}
-
-.question-filter__sorter {
-    left: 255px;
-    position: absolute;
-    width: 180px;
-}
-
-.question-filter__select-all {
-    width: 200px;
-    position: absolute;
-    left: 0px;
-    top: 46px;
-}
-
-.question-filter__select-all-checkbox {
-}
-
-.question-filter__show-responses {
-    width: 200px;
-    position: absolute;
-    left: 255px;
-    top: 46px;
-}
-
-.question-filter__show-responses-icon {
-
+    .question-filter__show-responses {
+        float: left;
+        margin-top:10px;
+        font-size: 12px;
+        color: $textColor;
+        .fa {
+            margin-right: 5px;
+        }
+    }
 }
 
 .question-filter__actions {
     float: right;
     font-size: 11px;
-    margin-right: 52px;
+    width: 20%;
 }
 
 .question-filter__selected-count {
     font-size: 12px;
-    border-bottom: 2px solid gray;
     margin-bottom: 5px;
 }
 
@@ -158,32 +169,10 @@
     display: block;
 }
 
-.question-filter__add-to-new-icon {
-
-}
-
-.question-filter__add-to-block-icon {
-
-}
-
-.question-filter__delete-icon {
-
-}
-
-.questions__container {
-    width: 100%;
-    background-color: white;
-}
-.questions__container--scrolling {
-    height: 318px;
-    padding-top: 50px;
-    overflow: auto;
-}
-
 .questions__question {
     min-height: 66px;
     width: 100%;
-    border: 1px solid #d9dde1;
+    border-bottom: 2px solid #d9dde1;
     position: relative;
     overflow: hidden;
 }
@@ -194,14 +183,13 @@
 }
 
 .question__name {
-    font-family: 'Lato';
     font-weight: 600;
     font-size: 13px;
-    color: #3f3f3f;
     margin-top: 0;
     margin-bottom: 0;
     border-bottom: 1px solid #e9ecee;
     padding: 10px 33px 10px 12px;
+    cursor: pointer;
 }
 
 .question__name--selected {
@@ -212,11 +200,10 @@
     display: inline-block;
     min-width: 92px;
     border-right: 2px solid #e9ecee;
-    font-family: LatoBold;
-    color: #3f454c;
+    color: #555;
     font-size: 10px;
     margin-left: 3px;
-    padding: 7px 2px 7px 20px;
+    padding: 7px 2px 7px 10px;
 }
 
 .question__type-icon {
@@ -238,7 +225,6 @@
 .question__tag {
     height: 22px;
     min-width: 107px;
-    font-family: LatoBold;
     color: #3f454c;
     font-size: 10px;
     margin-left: 7px;
@@ -249,7 +235,6 @@
 .question__no-tag {
     height: 22px;
     min-width: 107px;
-    font-family: LatoBold;
     color: #3f454c;
     font-size: 10px;
     margin-left: 7px;
@@ -265,14 +250,184 @@
     color: #3f454c;
     font-size: 10px;
 }
+.question-filter__add-to-new-icon {}
+.question-filter__add-to-block-icon {}
+.question-filter__delete-icon {}
+
+// ==========================================================================
+// Sidebar Question Library
+// ==========================================================================
+
+.questions__sidebar--scrolling {
+    height: 600px;
+    padding-top: 70px;
+    overflow: auto;
+}
+
+.questions__sidebar--short-filters {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 54px;
+    background: white;
+    z-index: 6;
+    padding: 10px 12px;
+    label{
+        font-size: 13px;
+        color: #797F83;
+    }
+    .question-filter__close {
+        position: absolute;
+        top: 0px;
+        right: 10px;
+        font-size: 20px;
+    }
+    .question-filter__search {
+        position: relative;
+        .fa-search {
+            position: absolute;
+            z-index: 5;
+            margin-top:5px;
+            margin-left: 6px;
+            color:$linkColor;
+            font-size: 14px;
+        }
+    }
+    .question-filter__searchbox {
+        width: 100%;
+        padding:4px;
+        padding-left:24px;
+        font-size: 12px;
+        border-radius: 0;
+        border: 1px solid #DADEE2;
+        position: relative;
+    }
+}
 
 .koboform__questionlibrary {
     position: fixed;
-    top: 92px;
-    left: 10%;
-    width: 80%;
-    height: 320px;
+    top: 79px;
+    right: 10px;
+    width: 300px;
+    height: 600px;
+    z-index: 5;
     border: 1px solid #cbd0d7;
     background-color: #fff;
     overflow: hidden;
+}
+
+.survey-editor.library-sidebar-active {
+    padding-right:300px;
+}
+
+/* ==========================================================================
+   Question Library - tags
+   ========================================================================== */
+
+.tags {
+    width: 29.5%;
+    float: left;
+    position: relative;
+    margin-right: 2.5%;
+    height: 100%;
+    padding-top:$tagsHeight;
+}
+
+.tags__header {
+    height: $tagsHeight;
+    position: absolute;
+    top:0px;
+    width: 100%;
+    background: white;
+}
+
+.tags__container {
+    background-color: #e3e8ec;
+    height: 100%;
+    overflow-y:scroll;
+}
+
+.tags__empty {
+    border:1px solid #D9DDE1;
+    margin-bottom: 10px;
+    padding: 12px;
+    font-weight: 600;
+    font-style: italic;
+    text-align: center;
+    color: #85909B;
+    font-size: 13px;
+}
+
+.tag-filter {
+    .tag-filter__search {
+        position: relative;
+        .fa-search {
+            position: absolute;
+            z-index: 5;
+            margin-top:8px;
+            margin-left: 8px;
+            color:$linkColor;
+            font-size: 14px;
+        }
+    }
+    .tag-filter__searchbox {
+        width: 100%;
+        padding:8px;
+        padding-left:28px;
+        font-size: 13px;
+        border-radius: 0;
+        border:none;
+        border-bottom: 2px solid #CBD0D7;
+    }
+    .tag-filter__sorter {
+        border:none;
+        border-radius: 0;
+        border-bottom: 2px solid #CBD0D7;
+        padding:8px;
+        width: 100%;
+        margin-top:6px;
+    }
+}
+
+.tag__create-new {
+    @extend %library-button;
+}
+
+.tags__tag {
+    padding:10px;
+    border-bottom: 1px solid #CCC;
+    position: relative;
+}
+
+.tags__tag--selected {
+    border:2px solid #B8D1EA;
+    background: white;
+}
+
+.tag__name {
+    margin:0px;
+    padding:0px;
+    font-size: 13px;
+    line-height: 1em;
+    font-weight: normal;
+}
+
+.tag__question-count {
+    font-size: 12px;
+    color: gray; 
+}
+
+input.tag__editbox {
+    border:none;
+    display: block;
+    font-size: 14px;
+}
+
+.tag__delete-button {
+    position: absolute;
+    right:10px;
+    top:20px;
+    color: #C41B20;
+    cursor: pointer;
 }

@@ -1,18 +1,20 @@
-<section
-  class="content"
-  info-list items="infoListItems"
-  refresh-item-list="filterList"
-  can-add-new="true"
-  name="{{ activeTab }}"
-  delete-item="deleteSurvey(item)"
-  can-delete="true"
-  link-to="builder"
-  ng-show="infoListItems.length > 0">
-</section>
-<div class="content__message" ng-show="!items_loaded">
-    <h4 class="content__message-text">Your forms are loading...</h4>
-</div>
-<div class="content__message" ng-show="items_loaded && infoListItems.length === 0">
-    <h3 class="content__message-text">You have no forms. Go ahead and create your first one!</h3>
-    <a href="#/builder" class="content__message-action  btn  btn--block  btn--create-new-form">Create New Form</a>
+  <section class="content__inner" info-list items="infoListItems" refresh-item-list="filterList" can-add-new="true" name="{{ activeTab }}" delete-item="deleteSurvey(item)" can-delete="true"  link-to="builder" ng-show="infoListItems.length > 0">
+  </section>
+
+  <div class="content__message" ng-show="!items_loaded">
+    <div class="container">
+      <h4 class="content__message-text">Your forms are loading...</h4>
+    </div>
+  </div>
+  <div class="content__message" ng-show="items_loaded && infoListItems.length === 0">
+    <header class="forms-header">
+      <div class="container">
+        <h1 class="forms-header__title">Form Drafts</h1>
+      </div>
+    </header>
+    <div class="container empty">
+      <h4 class="content__message-text">You currently have no forms.</h4>
+      <a href="#/builder" class="content__message-action forms-empty__button">+ Add Form</a>
+    </div>
+  </div>
 </div>
