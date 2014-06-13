@@ -96,7 +96,6 @@
     <script src="{% static 'kobo.compiled/dkobo_xlform.js' %}"></script>
     <script src="{% static 'kobo/app.js' %}"></script>
 
-
   </head>
 
   <body ng-app="dkobo">
@@ -120,7 +119,7 @@
     {% verbatim %}
               Your Form is Being Imported
             </span>
-            <span class="header-bar__top-logo pull-right"></span>
+            <span class="header-bar__top-logo pull-right" ng-click="toggleBleedingEdge($event)"></span>
   <!--           <a href="#/builder" ng-show="showCreateButton" class="btn--header-create-new btn  btn--s  pull-right">Create New A</a>
             <form action="/import_survey_draft" class="btn--fileupload js-import-fileupload pull-right">
               <span ng-show="showImportButton" class="btn btn--s btn-success fileinput-button">
