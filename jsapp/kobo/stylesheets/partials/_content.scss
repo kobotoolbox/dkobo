@@ -13,18 +13,24 @@
 }
 
 /* ==========================================================================
-   Content
+   Content containers
    ========================================================================== */
 
 .container {
     max-width: 700px;
     margin-right: auto;
     margin-left: auto;
+    position: relative;
     &.empty {
       text-align: center;
       background: white;
       padding: 20px;
     }
+}
+
+.container__wide {
+  max-width: 1024px;
+  margin:0 auto;
 }
 
 // Legacy

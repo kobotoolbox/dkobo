@@ -147,8 +147,6 @@ $cardIndicatorIconWidth: 21px;
 
 // Displayed when parent .card has .card--shaded
 .card__header .card__text .bg {
-    display: none;
-
     position: absolute;
     width: 100%;
     height: 100%;
@@ -156,12 +154,13 @@ $cardIndicatorIconWidth: 21px;
     top: 0px;
     z-index: 2;
     text-align: center;
-
-    h2 {
+    vertical-align: middle;
+    span {
+        position: relative;
+        top: 35%;
         font-weight: 600;
-        line-height: 1.5em;
+        font-size: 22px;
     }
-
     &.gray {
         background: rgba(#858F98, 0.4);
     }
@@ -172,8 +171,6 @@ $cardIndicatorIconWidth: 21px;
         background:rgba($linkColor, 0.4);
     }
 }
-
-
 
 .card--insort {
     .card__buttons {

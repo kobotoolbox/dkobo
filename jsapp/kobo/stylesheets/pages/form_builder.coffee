@@ -13,6 +13,30 @@ elems:
   # $header = $wrap.find(".survey-header").eq(0)
   # $list = $wrap.find("ul").eq(0)
   $(el).html $wrap
+
+  $('body').on 'click', 'ul.card__settings__tabs li:not(.heading)', (evt)->
+    # evt.preventDefault()
+    $et = $(evt.target)
+    tabId = $et.data('cardSettingsTabId')
+    $et.parent('ul').find('.active').removeClass('active')
+    $et.addClass('active')
+    $et.parents('.card__settings').find(".card__settings__fields.active").removeClass('active')
+    $et.parents('.card__settings').find(".card__settings__fields--#{tabId}").addClass('active')
+
+  # button hover effects via JS
+  $('body').on 'mouseenter', '.card__buttons .card__buttons__button', (evt)->
+    $et = $(evt.target)
+    bColor = $et.data('buttonColor')
+    bText = $et.data('buttonText')
+    $et.parents('.card__buttons').addClass('noborder')
+    $et.parents('.card__header').append('<div class="bg">')
+    $et.parents('.card__header').find('.bg').addClass("#{bColor}").html("<span>#{bText}</span>")
+
+  $('body').on 'mouseleave', '.card__buttons .card__buttons__button', (evt)->
+    $et = $(evt.target)
+    $et.parents('.card__buttons').removeClass('noborder')
+    $et.parents('.card__header').find('.bg').remove()
+
   ``
 
 contents = ->
@@ -106,33 +130,7 @@ standard_row = (variation='text', {note}) ->
       <a href="#" class="card__buttons__button blue" data-button-color="blue" data-button-text="Duplicate Question"><i class="fa fa-copy"></i></a>
     </div>
   """
-  ###
-  i accidentally put this where it's triggered multiple times on the page load
 
-  # click event for question settings tab switching
-  $('body').on 'click', 'ul.card__settings__tabs li:not(.heading)', (evt)->
-    # evt.preventDefault()
-    $et = $(evt.target)
-    tabId = $et.data('cardSettingsTabId')
-    $et.parent('ul').find('.active').removeClass('active')
-    $et.addClass('active')
-    $et.parents('.card__settings').find(".card__settings__fields.active").removeClass('active')
-    $et.parents('.card__settings').find(".card__settings__fields--#{tabId}").addClass('active')
-
-  # button hover effects via JS
-  $('body').on 'mouseenter', '.card__buttons .card__buttons__button', (evt)->
-    $et = $(evt.target)
-    bColor = $et.data('buttonColor')
-    bText = $et.data('buttonText')
-    $et.parents('.card__buttons').addClass('noborder')
-    $et.parents('.card__header').append('<div class="bg">')
-    $et.parents('.card__header').find('.bg').addClass("#{bColor}").html("<h2>#{bText}</h2>")
-
-  $('body').on 'mouseleave', '.card__buttons .card__buttons__button', (evt)->
-    $et = $(evt.target)
-    $et.parents('.card__buttons').removeClass('noborder')
-    $et.parents('.card__header').find('.bg').remove()
-  ###
   """
   <li class="xlf-row-view">
     #{sidenote(note, 'absrt')}
