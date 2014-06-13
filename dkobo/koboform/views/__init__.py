@@ -69,6 +69,7 @@ def spa(request):
                         u'debug': settings.DEBUG})
     else:
         context['user_details'] = "{}"
+    context['livereload_address'] = "http://%s:35729/livereload.js" % request.META['REMOTE_ADDR']
     context['DEBUG'] = settings.DEBUG
     return render_to_response("index.html", context_instance=context)
 
