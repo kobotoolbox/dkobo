@@ -19,8 +19,8 @@
   <body>
     {% block content %}{% endblock %}
 
-    {% if DEBUG %}
-    <script src="http://localhost:35729/livereload.js"></script>
+    {% if livereload_address %}
+    <script src="{{livereload_address}}"></script>
     {% endif %}
 
     {% block foot %}{% endblock %}
