@@ -34,6 +34,14 @@
     &:hover {
         background-color: darken(#C5CACF, 20%);
     }
+
+    .survey-editor--singlequestion & {
+        display: none;
+    }
+}
+
+input.row__questiontypes__new-question-name {
+    border: 0;
 }
 
 .row__questiontypes--namer {

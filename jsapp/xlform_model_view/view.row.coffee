@@ -62,10 +62,11 @@ define 'cs!xlform/view.row', [
       @
     _renderRow: ->
       @$el.html $viewTemplates.$$render('row.xlfRowView')
+
       @$label = @$('.card__header-title')
       @$card = @$el.find('.card')
       if 'getList' of @model and (cl = @model.getList())
-        @$card.addClass('card--selectquestion')
+        @$card.addClass('card--selectquestion card--expandedchoices')
         @listView = new $viewChoices.ListView(model: cl, rowView: @).render()
 
       # @rowExtras = @$(".row-extras")

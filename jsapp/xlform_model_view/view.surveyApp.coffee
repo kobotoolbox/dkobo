@@ -69,6 +69,7 @@ define 'cs!xlform/view.surveyApp', [
       "click .js-toggle-row-settings": "toggleRowSettings"
       "click .js-toggle-row-multioptions": "toggleRowMultioptions"
       "click .js-expand-row-selector": "expandRowSelector"
+      "click .rowselector_toggle-library": "toggleLibrary"
     @create: (params = {}) ->
       if _.isString params.el
         params.el = $(params.el).get 0
@@ -236,8 +237,10 @@ define 'cs!xlform/view.surveyApp', [
       if @features.multipleQuestions
         @activateSortable()
       else
-        @$(".card__buttons__button--delete").hide()
-        @$(".survey__row__spacer").hide()
+        @$el.addClass('survey-editor--singlequestion')
+
+        if @survey.rows.length is 0
+          new $viewRowSelector.RowSelector(el: @$el.find(".survey__row__spacer").get(0), survey: @survey, ngScope: @ngScope, surveyView: @, reversible: false).expand()
 
       if not @features.copyToLibrary
         # TODO: what happened to this element?
@@ -387,7 +390,10 @@ define 'cs!xlform/view.surveyApp', [
         null_top_row.removeClass("hidden")
       else
         null_top_row.addClass("hidden")
-      @activateSortable()
+
+      if @features.multipleQuestions
+        @activateSortable()
+
       # $viewUtils.reorderElemsByData(".xlf-row-view", @$el, "row-index")
       ``
 
@@ -475,6 +481,13 @@ define 'cs!xlform/view.surveyApp', [
     publishButtonClick: (evt)->
       # Publish = trigger publish action (ie. post to formhub)
       @onPublish.apply(@, arguments)
+    toggleLibrary: (evt)->
+      evt.stopPropagation()
+      @ngScope.displayQlib = !@ngScope.displayQlib
+      @ngScope.$apply()
+
+      $("section.koboform__questionlibrary").data("rowIndex", -1)
+      return
 
   class surveyApp.SurveyApp extends SurveyFragmentApp
     features:
