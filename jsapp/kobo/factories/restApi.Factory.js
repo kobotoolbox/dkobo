@@ -45,8 +45,9 @@ function restApiFactory($resource, $timeout) {
                             var row = item.backbone_model.rows.at(0);
 
                             if(row) {
-                                item.label = row.getValue('label');
                                 item.type = row.get("type").get("typeId");
+
+                                item.label = item.type === 'calculate' ? row.getValue('calculation') : row.getValue('label');
 
                                 var list = row.getList();
                                 if (list) {
