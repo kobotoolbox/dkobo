@@ -25,6 +25,11 @@ function HeaderController($scope, $rootScope, $miscUtils, $location) {
     $scope.$on('$locationChangeSuccess', function() {
         $rootScope.showCreateButton = $rootScope.showImportButton = !(""+$location.path()).match(/\/builder\/?(\d+|new)?$/);
     });
+    $scope.toggleBleedingEdge = function ($event) {
+        if ($event.shiftKey) {
+            $('body').toggleClass('bleeding-edge');
+        }
+    }
 
     $miscUtils.bootstrapFileUploader();
 }
