@@ -15,8 +15,8 @@ function MiscUtilsService($rootScope) {
         event.preventDefault();
     };
 
-    this.bootstrapFileUploader = function (idx) {
-        _fileUpload = $('.js-import-fileupload').eq(idx || 0).fileupload({
+    this.bootstrapFileUploader = function () {
+        _fileUpload = $('.js-import-fileupload').eq(0).fileupload({
             headers: {
                 "X-CSRFToken": $('meta[name="csrf-token"]').attr('content')
             },

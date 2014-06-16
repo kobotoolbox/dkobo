@@ -15,7 +15,6 @@ define 'cs!xlform/view.rowSelector', [
   class viewRowSelector.RowSelector extends $baseView
     events:
       "click .js-close-row-selector": "shrink"
-      "click .rowselector_openlibrary": "openLibrary"
       "submit .row__questiontypes__form": "show_picker"
       "click .questiontypelist__item": "selectMenuItem"
     initialize: (opts)->
@@ -45,7 +44,7 @@ define 'cs!xlform/view.rowSelector', [
       @question_name = @line.find('input').val()
       @line.empty()
       $.scrollTo @line, 200, offset: -300
-      @line.html $viewTemplates.$$render('xlfRowSelector.line')
+      @line.html $viewTemplates.$$render('xlfRowSelector.line', @question_name)
       $menu = @line.find(".row__questiontypes__list")
       for mrow in $icons.grouped()
         menurow = $("<div>", class: "questiontypelist__row").appendTo $menu
@@ -63,20 +62,20 @@ define 'cs!xlform/view.rowSelector', [
       @button.show()
       @line.empty().removeClass("expanded").css "height": 0
 
-    openLibrary: ()->
-      @ngScope.displayQlib = true
-      @ngScope.$apply()
-      model = @options.spawnedFromView?.model
-      rowIndex = if model then model.collection.indexOf(model) else -1
-
-      $("section.koboform__questionlibrary").data("rowIndex", rowIndex)
-      ``
-
     selectMenuItem: (evt)->
+      @question_name = @line.find('input').val()
       $('select.skiplogic__rowselect').select2('destroy')
+      rowType = $(evt.target).closest('.questiontypelist__item').data("menuItem")
+      value = @question_name || 'New Question'
+
       rowDetails =
-        type: $(evt.target).closest('.questiontypelist__item').data("menuItem")
-        label: @question_name || 'New Question'
+        type: rowType
+
+      if rowType is 'calculate'
+        rowDetails.calculation = value
+      else
+        rowDetails.label = value
+
       options = {}
       if (rowBefore = @options.spawnedFromView?.model)
         options.after = rowBefore
