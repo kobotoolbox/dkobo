@@ -514,7 +514,7 @@ define 'cs!xlform/view.surveyApp', [
       @ngScope.displayQlib = !@ngScope.displayQlib
       @ngScope.$apply()
 
-      $("section.koboform__questionlibrary").data("rowIndex", -1)
+      $("section.koboform__questionlibrary").toggleClass('active').data("rowIndex", -1)
       return
 
   class surveyApp.SurveyApp extends SurveyFragmentApp
