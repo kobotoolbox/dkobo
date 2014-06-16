@@ -246,3 +246,7 @@ $cardIndicatorIconWidth: 21px;
         display: block;
     }
 }
+
+.survey-editor--singlequestion .card__buttons__button--delete {
+    display: none;
+}

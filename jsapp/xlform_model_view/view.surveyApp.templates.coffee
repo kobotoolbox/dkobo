@@ -15,18 +15,20 @@ define 'cs!xlform/view.surveyApp.templates', [], ()->
 
   surveyApp = (surveyApp) ->
       survey = surveyApp.survey
-      if surveyApp.features.multipleQuestions
+      multiple_questions = surveyApp.features.multipleQuestions
+      if multiple_questions
         type_name = "Survey"
       else
         type_name = "Question"
       """
         <div class="sub-header-bar">
           <div class="container__wide">
-            <button class="btn btn--utility" id="settings"><i class="fa fa-cog"></i> Form Settings</button>
-            <button class="btn btn--utility" id="save"><i class="fa fa-check-circle green"></i> Save Survey</button>
-            <button class="btn btn--utility" id="xlf-preview"><i class="fa fa-eye"></i> Preview Survey</button>
-            <button class="btn btn--utility btn--group-questions btn--disabled js-group-rows js-expand-multioptions--all">Group Questions</button>
-            <button class="btn btn--utility pull-right" id="question-library"><i class="fa fa-folder"></i> Question Library</button>
+            <button class="btn btn--utility survey-editor__action--multiquestion" id="settings"><i class="fa fa-cog"></i> Form Settings</button>
+            <button class="btn btn--utility" id="save"><i class="fa fa-check-circle green"></i> Save #{type_name}</button>
+            <button class="btn btn--utility" id="xlf-preview"><i class="fa fa-eye"></i> Preview #{type_name}</button>
+            <button class="btn btn--utility survey-editor__action--multiquestion js-expand-multioptions--all" ><i class="fa fa-eye"></i> Expand All Questions</button>
+            <button class="btn btn--utility survey-editor__action--multiquestion btn--group-questions btn--disabled js-group-rows js-expand-multioptions--all">Group Questions</button>
+            <button class="btn btn--utility survey-editor__action--multiquestion pull-right" id="question-library"><i class="fa fa-folder"></i> Question Library</button>
           </div>
         </div>
         <header class="survey-header">

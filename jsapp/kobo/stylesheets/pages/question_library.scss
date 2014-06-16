@@ -321,11 +321,13 @@ $tagsHeight: 230px;
 //     padding-right:300px;
 // }
 
+
 /* ==========================================================================
    Question Library - tags
    ========================================================================== */
 
 .tags {
+    @extend %incomplete;
     width: 29.5%;
     float: left;
     position: relative;
@@ -335,6 +337,7 @@ $tagsHeight: 230px;
 }
 
 .tags__header {
+    @extend %incomplete;
     height: $tagsHeight;
     position: absolute;
     top:0px;
@@ -343,6 +346,7 @@ $tagsHeight: 230px;
 }
 
 .tags__container {
+    @extend %incomplete;
     background-color: #e3e8ec;
     height: 100%;
     overflow-y:scroll;

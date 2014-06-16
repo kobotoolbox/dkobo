@@ -4,7 +4,7 @@
 'use strict';
 function AssetsController($scope, $rootScope, $resource, $restApi, $timeout, $filter, $miscUtils) {
     var assets = $restApi.create_question_api($scope);
-    $scope.sort_criteria = 'date_modified';
+    $scope.sort_criteria = '-date_modified';
     $rootScope.showImportButton = false;
     $rootScope.showCreateButton = false;
     $scope.filters = {};
