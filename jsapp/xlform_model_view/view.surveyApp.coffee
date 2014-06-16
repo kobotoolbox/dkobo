@@ -475,6 +475,13 @@ define 'cs!xlform/view.surveyApp', [
     publishButtonClick: (evt)->
       # Publish = trigger publish action (ie. post to formhub)
       @onPublish.apply(@, arguments)
+    toggleLibrary: (evt)->
+      evt.stopPropagation()
+      @ngScope.displayQlib = !@ngScope.displayQlib
+      @ngScope.$apply()
+
+      $("section.koboform__questionlibrary").toggleClass('active').data("rowIndex", -1)
+      return
 
   class surveyApp.SurveyApp extends SurveyFragmentApp
     features:

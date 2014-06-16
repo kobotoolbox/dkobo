@@ -13,10 +13,41 @@
 
 .row__questiontypes {
     border: $cardInSortBorderStyle;
-    padding: 23px 40px 23px 60px;
+    padding:0px;
+    padding-top:20px;
     background: white;
     margin: 4px 0px;
 }
+
+.row__questiontypes__list {
+    margin-top:20px;
+    border-top:$cardInSortBorderStyle;
+    padding:3px;
+    position: relative;
+    &:after, &:before {
+        bottom: 100%;
+        left: 50%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+    }
+    &:after {
+        border-color: rgba(255, 255, 255, 0);
+        border-bottom-color: #FFF;
+        border-width: 8px;
+        margin-left: -8px;
+    }
+    &:before {
+        border-color: rgba(217, 221, 225, 0);
+        border-bottom-color: #3fa2ee;
+        border-width: 10px;
+        margin-left: -11px;
+    }
+}
+
 
 .row__questiontypes__close {
     position: absolute;
@@ -34,6 +65,17 @@
     &:hover {
         background-color: darken(#C5CACF, 20%);
     }
+
+    .survey-editor--singlequestion & {
+        display: none;
+    }
+}
+
+input.row__questiontypes__new-question-name {
+    border: 0;
+    border-radius: 0px;
+    font-weight: 600;
+    padding:0px 40px;
 }
 
 .row__questiontypes--namer {
