@@ -17,7 +17,7 @@
     }
     .card__header {
         border: $cardBorderStyle;
-        padding: 23px 40px 23px 60px;
+        padding: 23px 40px 23px 75px;
         display: block;
         background: white;
         cursor: move;
@@ -128,7 +128,7 @@ $cardIndicatorIconWidth: 21px;
 // ==========================================================================
 .card__buttons {
     border: $cardBorderStyle;
-    border-width: 0 0 0 2px;
+    border-width: 0 0 0 1px;
     position: absolute;
     top: 0px;
     right: 2px;
@@ -218,10 +218,21 @@ $cardIndicatorIconWidth: 21px;
 }
 
 .placeholder {
-    height: 100px;
+    height: 80px;
     margin-bottom: 10px;
-    border: 2px dashed #ccc;
+    border: 2px solid #B4C1CD;
     border-radius: 4px;
+    position: relative;
+    &:before {
+        content: "Drag and drop to reorder. ";
+        position: absolute;
+        font-weight: bold;
+        color: #8595A5;
+        width: 100%;
+        text-align: center;
+        line-height: 75px;
+        font-size: 14px;
+    }
 }
 
 // overrides
