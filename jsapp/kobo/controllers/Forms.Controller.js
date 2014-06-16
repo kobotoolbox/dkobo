@@ -8,8 +8,17 @@ function FormsController ($scope, $rootScope, $resource, $miscUtils) {
 
     var load_forms = function () {
         formsApi.query(function (items) {
-            for (var i = 0; i < items.length; i++) {
-                var currentItem = items[i];
+            var currentItem, i, rc;
+
+            for (i = 0; i < items.length; i++) {
+                currentItem = items[i];
+
+                // populate "100 questions" string
+                if (currentItem.summary && !(''+currentItem !== '[Object object]') && 'rowCount' in currentItem.summary) {
+                    rc = currentItem.summary.rowCount;
+                    currentItem.rowCount = '' + rc + ' question' + (rc===1 ? '' : 's');
+                }
+
                 currentItem.date_modified = new Date(currentItem.date_modified);
             }
 

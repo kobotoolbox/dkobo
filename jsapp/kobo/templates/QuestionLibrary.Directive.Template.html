@@ -7,7 +7,7 @@
   </div>
 </div>
 <ul class="questions__sidebar--scrolling">
-  <li ng-class="item.meta.question_class" ng-repeat="item in info_list_items|filter:filters" ng-click="handle_click(item)">
+  <li ng-class="item.meta.question_class" ng-repeat="item in info_list_items|filter:filters" ng-mousedown="set_item(item)">
     <h4 class="question__name">{{ item.label }}</h4>
     <a href="" ng-click="toggle_response_list(item)" ng-class="item.meta.question_type_class">
       {{item.type | titlecase}}

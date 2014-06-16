@@ -69,6 +69,7 @@ define 'cs!xlform/view.surveyApp', [
       "click .js-toggle-row-settings": "toggleRowSettings"
       "click .js-toggle-row-multioptions": "toggleRowMultioptions"
       "click .js-expand-row-selector": "expandRowSelector"
+      "click .rowselector_toggle-library": "toggleLibrary"
     @create: (params = {}) ->
       if _.isString params.el
         params.el = $(params.el).get 0
@@ -260,6 +261,13 @@ define 'cs!xlform/view.surveyApp', [
 
       @
 
+    getItemPosition: (item) ->
+      i = 0
+      while item.length > 0
+        item = item.prev()
+        i++
+
+      return i
     activateSortable: ->
       $el = @formEditorEl
       survey = @survey
@@ -285,6 +293,11 @@ define 'cs!xlform/view.surveyApp', [
           stop: sortable_stop
           activate: sortable_activate_deactivate
           deactivate: sortable_activate_deactivate
+          receive: (evt, ui) =>
+            item = ui.item.prev()
+
+            @ngScope.add_item @getItemPosition(item)
+            ui.sender.sortable('cancel')
         })
       group_rows = @formEditorEl.find('.group__rows')
       group_rows.off 'mouseenter', '> .survey__row', @_preventSortableIfGroupTooSmall
@@ -480,6 +493,13 @@ define 'cs!xlform/view.surveyApp', [
     publishButtonClick: (evt)->
       # Publish = trigger publish action (ie. post to formhub)
       @onPublish.apply(@, arguments)
+    toggleLibrary: (evt)->
+      evt.stopPropagation()
+      @ngScope.displayQlib = !@ngScope.displayQlib
+      @ngScope.$apply()
+
+      $("section.koboform__questionlibrary").data("rowIndex", -1)
+      return
 
   class surveyApp.SurveyApp extends SurveyFragmentApp
     features:

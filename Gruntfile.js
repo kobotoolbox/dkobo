@@ -33,10 +33,11 @@ module.exports = function(grunt) {
              *  Changes in the source directory should rebuild the file, which ends up
              *    eventually triggering 'sourceChanged' as well.
              */
-            // retestXlform: {
-            //     files: ['jsapp/xlform_model_view/*.coffee'],
-            //     tasks: ['karma:amd']
-            // },
+            retestXlform: {
+                files: ['jsapp/test/xlform/*.coffee'],
+                options: { livereload: true },
+            },
+
             rebuildDkoboXlform: {
                 files: ['jsapp/xlform_model_view/**/*.js', 'jsapp/xlform_model_view/**/*.coffee'],
                 tasks: ['requirejs:compile_xlform'],
