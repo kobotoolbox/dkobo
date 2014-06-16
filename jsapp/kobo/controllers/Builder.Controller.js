@@ -22,10 +22,10 @@ function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo,
         });
     }
 
-    $scope.add_item = function (item) {
+    $scope.add_item = function (position) {
         //add item.backbone_model contains the survey representing the question
-        $scope.xlfSurvey.insertSurvey(item.backbone_model, $("section.koboform__questionlibrary").data("rowIndex") + 1|| -1);
-    }
+        $scope.xlfSurvey.insertSurvey($scope.currentItem.backbone_model, position);
+    };
 
     /*jshint validthis: true */
     var surveyDraftApi = $restApi.createSurveyDraftApi($scope.routeParams.id);

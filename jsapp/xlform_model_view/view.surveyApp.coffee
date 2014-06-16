@@ -261,6 +261,13 @@ define 'cs!xlform/view.surveyApp', [
 
       @
 
+    getItemPosition: (item) ->
+      i = 0
+      while item.length > 0
+        item = item.prev()
+        i++
+
+      return i
     activateSortable: ->
       $el = @formEditorEl
       survey = @survey
@@ -286,6 +293,11 @@ define 'cs!xlform/view.surveyApp', [
           stop: sortable_stop
           activate: sortable_activate_deactivate
           deactivate: sortable_activate_deactivate
+          receive: (evt, ui) =>
+            item = ui.item.prev()
+
+            @ngScope.add_item @getItemPosition(item)
+            ui.sender.sortable('cancel')
         })
       group_rows = @formEditorEl.find('.group__rows')
       group_rows.off 'mouseenter', '> .survey__row', @_preventSortableIfGroupTooSmall
