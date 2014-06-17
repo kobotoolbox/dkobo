@@ -14,6 +14,7 @@ admin.autodiscover()
 urlpatterns = patterns(
     '',
     url(r'^api/survey_drafts/(?P<pk>\d+)$', 'dkobo.koboform.views.survey_draft_detail'),
+    url(r'^api/survey_drafts/(?P<pk>\d+)/publish$', 'dkobo.koboform.views.publish_survey_draft'),
     url(r'^api/', include(router.urls)),
     url(r'^$', 'dkobo.koboform.views.spa', name='spa'),
     url(r'^admin/', include(admin.site.urls)),
@@ -24,7 +25,7 @@ urlpatterns = patterns(
     # fallback on koboform app-specific urls:
     url(r'^koboform/', include('dkobo.koboform.urls')),
     # we should re-think a RESTful accessor for the URLs below
-    url(r'^import_survey_draft$', 'dkobo.koboform.views.import_survey_draft'),
+    url(r'^import_survey_draft$', 'dkobo.koboform.views.survey_draft_views.import_survey_draft'),
     url(r'^forms/(?P<id>\d+)', 'dkobo.koboform.views.export_form'),
     url(r'^assets/(\d+)', 'dkobo.koboform.views.export_form'),
 )

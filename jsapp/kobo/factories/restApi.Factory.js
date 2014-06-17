@@ -13,10 +13,10 @@ function restApiFactory($resource, $timeout) {
                 return $resource('/api/survey_drafts');
             } else {
                 return $resource('/api/survey_drafts/:id', { id: id }, {
-                    save: { method: 'PATCH' }
+                    save: { method: 'PATCH' },
+                    publish: { method: 'POST', url: '/api/survey_drafts/:id/publish' }
                 });
             }
-
         },
         create_question_api: function ($scope, id) {
             var custom_methods = {
