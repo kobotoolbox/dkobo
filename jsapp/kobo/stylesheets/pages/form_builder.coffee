@@ -26,8 +26,10 @@ elems:
   # button hover effects via JS
   $('body').on 'mouseenter', '.card__buttons .card__buttons__button', (evt)->
     $et = $(evt.target)
-    bColor = $et.data('buttonColor')
-    bText = $et.data('buttonText')
+    bColor = $(this).data('buttonColor')
+    bText = $(this).data('buttonText')
+    console.log $(this)
+    console.log bColor
     $et.parents('.card__buttons').addClass('noborder')
     $et.parents('.card__header').append('<div class="bg">')
     $et.parents('.card__header').find('.bg').addClass("#{bColor}").html("<span>#{bText}</span>")
@@ -125,7 +127,7 @@ standard_row = (variation='text', {note}) ->
   """
   card__butons = """
     <div class="card__buttons">
-      <a href="#" class="card__buttons__button gray" data-button-color="gray" data-button-text="Settings"><i class="fa fa-cog"></i></a>
+      <a href="#" class="card__buttons__button card__buttons__button--settings gray js-advanced-toggle js-toggle-row-settings" data-button-color="gray" data-button-text="Settings"><i class="fa fa-cog"></i></a>
       <a href="#" class="card__buttons__button red" data-button-color="red" data-button-text="Delete Question"><i class="fa fa-trash-o"></i></a>
       <a href="#" class="card__buttons__button blue" data-button-color="blue" data-button-text="Duplicate Question"><i class="fa fa-copy"></i></a>
     </div>
@@ -135,12 +137,13 @@ standard_row = (variation='text', {note}) ->
   <li class="xlf-row-view">
     #{sidenote(note, 'absrt')}
 
-    <div class="card">
+    <div class="card card--expandedsettings">
       <div class="card__header">
         #{card__indicator}
         <div class="card__text">
           #{_text}
         </div>
+        
         #{card__butons}
       </div>
       <div class="card__settings card__settings--question-options">

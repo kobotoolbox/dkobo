@@ -74,7 +74,8 @@
 .card__settings__fields {
     display: none;
     transition: height .3s;
-    &.card__settings__fields--active {
+    // Temporary
+    &.card__settings__fields--active, &.active {
         display: block;
         transition: height .3s;
     }
