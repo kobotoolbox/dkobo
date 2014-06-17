@@ -35,6 +35,7 @@
 }
 
 .forms-filter {
+    @extend %incomplete;
     height: 75px;
     width: 100%;
 }
@@ -107,6 +108,11 @@
     cursor: pointer;
     z-index: 4;
 }
+
+.forms__card__buttons__button.blue {
+    @extend %incomplete;
+}
+
 .forms__card__buttons__button {
     height: 30px;
     line-height: 30px;
