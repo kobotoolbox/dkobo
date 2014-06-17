@@ -10,7 +10,8 @@
     }
 }
 
-.card__text {
+.card__buttons__multioptions, 
+.card__buttons__multioptions + .card__header-title {
     color: $indicatorColor;
 }
 
@@ -67,7 +68,7 @@
         border-radius: 5px;
         border:$thinBorderStyle;
         padding: 5px;
-        font-size: 12px;
+        font-size: 13px;
         display: inline-block;
         width: 74%;
         vertical-align: top;
@@ -77,13 +78,13 @@
         .editable-input input {
             line-height: 1em;
             vertical-align: middle;
-            margin-top:-2px;
+            margin-top:-3px;
         }
     }
     code {
         font-family: 'Lato';
         font-weight: 600;
-        font-size: 10px;
+        font-size: 11px;
         background-color: #E3E7EC;
         padding:2px;
         margin:3px;
@@ -117,8 +118,8 @@
             float: right;
             color: $linkColor;
             line-height: 1em;
-            font-size: 10px;
-            margin-top: 3px;
+            font-size: 11px;
+            margin-top: 4px;
         }
     }
     i.fa-trash-o {
@@ -127,5 +128,6 @@
         top:8px;
         color: #D08B8C;
         font-size: 16px;
+        cursor: pointer;
     }
 }
