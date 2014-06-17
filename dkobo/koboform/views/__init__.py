@@ -8,11 +8,13 @@ from django.conf import settings
 
 from dkobo.koboform import utils
 from dkobo.koboform import pyxform_utils
+from dkobo.koboform import kobocat_integration
 
 from sandbox import jasmine_spec, sandbox
 from survey_draft_views import ListSurveyDraftSerializer, DetailSurveyDraftSerializer, \
                                 export_form, create_survey_draft, survey_draft_detail, \
-                                import_survey_draft, publish_survey_draft
+                                import_survey_draft, publish_survey_draft, \
+                                published_survey_draft_url
 from survey_preview_views import survey_previews, get_survey_preview
 
 def csv_to_xform(request):
@@ -29,7 +31,7 @@ def csv_to_xform(request):
 @ensure_csrf_cookie
 def spa(request):
     context = RequestContext(request)
-    page_kobo_configs = {u'kobocatServer': (bool(settings.KOBOCAT_SERVER))}
+    page_kobo_configs = { u'kobocatServer': kobocat_integration._kobocat_url('/') }
     if request.user.is_authenticated():
         context['user_details'] = json.dumps({u'name': request.user.email,
                         u'gravatar': utils.gravatar_url(request.user.email),

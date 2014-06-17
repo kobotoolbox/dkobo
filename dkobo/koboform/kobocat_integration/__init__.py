@@ -1,6 +1,9 @@
+import requests
+
+from django.conf import settings
+
 from rest_framework.test import APIClient
 from rest_framework.authtoken.models import Token
-import requests
 
 def publish_survey_draft(survey_draft, kobocat_server):
     url, data, headers = _publish_survey_draft_params(survey_draft, kobocat_server)
@@ -20,7 +23,7 @@ def _get_token_for_user(user):
     (token, is_new) = Token.objects.get_or_create(user=user)
     return token.key
 
-def _kobocat_url(kf_server, path="accounts/login", query_string=False, append_origin_key=False):
+def _kobocat_url(path="/", query_string=False, append_origin_key=False):
     protocol = settings.KOBOCAT_SERVER_PROTOCOL
     server = settings.KOBOCAT_SERVER
     if settings.KOBOCAT_SERVER_PORT and str(settings.KOBOCAT_SERVER_PORT) != '80':
@@ -28,8 +31,6 @@ def _kobocat_url(kf_server, path="accounts/login", query_string=False, append_or
     query_string = []
     if query_string:
         query_string.append(query_string)
-    if append_origin_key:
-        query_string.append('%s=%s' % (append_origin_key, kf_server,))
     if len(query_string) > 0:
         path += "?%s" % ('&'.join(query_string))
-    return '%s://%s/%s' % (protocol, server, path)
+    return '%s://%s%s' % (protocol, server, path)
