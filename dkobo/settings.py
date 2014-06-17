@@ -27,6 +27,15 @@ if not SECRET_KEY and not DEBUG:
 elif not SECRET_KEY:
     SECRET_KEY = 'secretShouldBeSetInAnEnvironmentVariable3^*m3xck13'
 
+CSRF_COOKIE_DOMAIN = os.environ.get('CSRF_COOKIE_DOMAIN', None)
+
+if CSRF_COOKIE_DOMAIN:
+    SESSION_COOKIE_DOMAIN = CSRF_COOKIE_DOMAIN
+    SESSION_COOKIE_NAME = 'kobonaut'
+
+# default in django 1.6+
+SESSION_SERIALIZER='django.contrib.sessions.serializers.JSONSerializer'
+
 TEMPLATE_DEBUG = DEBUG
 
 TEMPLATE_LOADERS = (
@@ -92,8 +101,13 @@ INSTALLED_APPS = (
     'gunicorn',
     'south',
     'rest_framework',
+    'rest_framework.authtoken',
     'django_extensions',
 )
+
+KOBOCAT_SERVER = os.environ.get('KOBOCAT_SERVER', False)
+KOBOCAT_SERVER_PROTOCOL = os.environ.get('KOBOCAT_SERVER_PROTOCOL', 'http')
+KOBOCAT_SERVER_PORT = os.environ.get('KOBOCAT_SERVER_PORT', '80')
 
 # The number of surveys to import. -1 is all
 KOBO_SURVEY_IMPORT_COUNT = os.environ.get('KOBO_SURVEY_IMPORT_COUNT', 100)
@@ -126,6 +140,7 @@ import dj_database_url
 DATABASES = {
     'default': dj_database_url.config(default="sqlite:///%s/db.sqlite3" % BASE_DIR)
 }
+
 
 ALLOWED_HOSTS = ['*']
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

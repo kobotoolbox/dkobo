@@ -17,8 +17,7 @@
   <div class="info-list">
       <div class="forms__card" ng-repeat="item in items|orderBy:'-date_modified'">
         <div class="forms__card__kobocat" ng-show="kobocatLinkExists()">
-          <button class="forms__kobocat__btn forms__kobocat__btn--publish" ng-show="!kobocatFormPublished(item)" ng-click="kobocatPublishForm(item)">Publish form</button>
-          <a href="{{ getKobocatUrl(item) }}" class="forms__kobocat__btn forms__kobocat__btn--link" ng-show="kobocatFormPublished(item)">View in KoboCat</a>
+          <button class="forms__kobocat__btn forms__kobocat__btn--publish" ng-click="kobocatPublishForm(item)">Publish form</button>
         </div>
         <div class="forms__card__info">
           <a class="forms__card__title" href="#{{ getHashLink(item) }}">{{ item.name }}</a>

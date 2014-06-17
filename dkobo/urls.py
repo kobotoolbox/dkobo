@@ -15,6 +15,7 @@ urlpatterns = patterns(
     '',
     url(r'^api/survey_drafts/(?P<pk>\d+)$', 'dkobo.koboform.views.survey_draft_detail'),
     url(r'^api/survey_drafts/(?P<pk>\d+)/publish$', 'dkobo.koboform.views.publish_survey_draft'),
+    url(r'^api/survey_drafts/(?P<pk>\d+)/published$', 'dkobo.koboform.views.published_survey_draft_url'),
     url(r'^api/', include(router.urls)),
     url(r'^$', 'dkobo.koboform.views.spa', name='spa'),
     url(r'^admin/', include(admin.site.urls)),

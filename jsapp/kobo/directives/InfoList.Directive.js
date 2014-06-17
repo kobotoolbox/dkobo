@@ -19,18 +19,10 @@ function InfoListDirective($rootScope, $restApi) {
             scope.kobocatLinkExists = function (item) {
                 return window.koboConfigs && window.koboConfigs.kobocatServer;
             }
-            scope.kobocatFormPublished = function (item) {
-                var serverExists = window.koboConfigs && window.koboConfigs.kobocatServer;
-                // check to see if item already has an xform_id
-                return !!item.kobocat_published_form_id;
-            }
-            scope.getKobocatUrl = function (item) {
-                return "/survey_drafts/" + item.id + "/published?redirect=true";
-            }
             scope.kobocatPublishForm = function (item) {
                 function success (results, headers) {
-                    var kcUrl = results.kobocat_published_form_url || item.kobocat_published_form_url;
-                    window.location = kcUrl;
+                    // todo: friendly alert
+                    alert('Survey Publishing succeeded');
                 }
                 function fail () {
                     // todo: friendly alert

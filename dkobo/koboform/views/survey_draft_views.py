@@ -1,6 +1,6 @@
 import json
 
-from django.http import HttpResponseBadRequest, HttpResponse
+from django.http import HttpResponseBadRequest, HttpResponse, HttpResponseRedirect
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from rest_framework import status
@@ -149,3 +149,14 @@ def publish_survey_draft(request, pk, format=None):
         return Response(resp)
     else:
         return Response({'error': 'Form ID not in Kobocat Response'})
+
+
+def published_survey_draft_url(request, pk):
+    try:
+        survey_draft = SurveyDraft.objects.get(pk=pk, user=request.user)
+    except SurveyDraft.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    username = survey_draft.user.name
+
+    return HttpResponseRedirect(kobocat_integration._kobocat_url("/%s" % username))
