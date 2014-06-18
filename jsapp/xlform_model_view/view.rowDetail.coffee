@@ -145,7 +145,7 @@ define 'cs!xlform/view.rowDetail', [
       @$el.addClass("card__settings__fields--active")
       """
       <div class="card__settings__fields__field">
-        <label for="#{@cid}">Constraint message: </label>
+        <label for="#{@cid}">Error Message: </label>
         <span class="settings__input">
           <input type="text" name="#{@model.key}" id="#{@cid}" class="text" />
         </span>
