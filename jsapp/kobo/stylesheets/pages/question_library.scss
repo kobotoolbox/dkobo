@@ -30,7 +30,11 @@ $tagsHeight: 230px;
 // ==========================================================================
 
 .questions {
-    width: 68%;
+    width: 100%;
+    // while this feature is still being worked on, question need to take full width
+    .bleeding-edge & {
+        width: 68%;
+    }
     position: relative;
     float: left;
     height: 100%;
@@ -47,7 +51,6 @@ $tagsHeight: 230px;
 .questions__container {
     height: 100%;
     overflow-y: scroll;
-    border-top: 2px solid #d9dde1;
 }
 
 .questions__question-count, 
@@ -172,13 +175,16 @@ $tagsHeight: 230px;
 .questions__question {
     min-height: 66px;
     width: 100%;
-    border-bottom: 2px solid #d9dde1;
+    border-top: 2px solid #d9dde1;
     position: relative;
     overflow: hidden;
+    &:first-child {
+        border-top:none;
+    }
 }
 
 .questions__question--selected {
-    border-color: #38a1f1;
+    border:2px solid #38a1f1;
     background-color: #dbeefc;
 }
 
@@ -269,10 +275,11 @@ $tagsHeight: 230px;
     top: 0;
     left: 0;
     width: 100%;
-    height: 54px;
+    height: 70px;
     background: white;
     z-index: 6;
     padding: 10px 12px;
+    border-bottom: 2px solid #d9dde1;
     label{
         font-size: 13px;
         color: #797F83;
