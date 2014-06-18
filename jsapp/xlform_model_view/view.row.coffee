@@ -73,8 +73,9 @@ define 'cs!xlform/view.row', [
       @rowExtras = @$(".card__settings__content")
       for [key, val] in @model.attributesArray()
         new $viewRowDetail.DetailView(model: val, rowView: @).renderInRowView(@)
-      @
 
+
+      @
     add_row_to_question_library: (evt) ->
       evt.stopPropagation()
       @ngScope.add_row_to_question_library @model
