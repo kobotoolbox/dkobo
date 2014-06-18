@@ -511,6 +511,9 @@ define 'cs!xlform/view.surveyApp', [
       @onPublish.apply(@, arguments)
     toggleLibrary: (evt)->
       evt.stopPropagation()
+      $et = $(evt.target)
+      $et.toggleClass('active__sidebar')
+      $("section.form-builder").toggleClass('active__sidebar')
       @ngScope.displayQlib = !@ngScope.displayQlib
       @ngScope.$apply()
 

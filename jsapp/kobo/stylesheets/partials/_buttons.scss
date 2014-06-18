@@ -87,8 +87,13 @@ input[type="button"].btn--block {
     color: #222;
     background-color: transparent;
     padding:0px 10px;
+    font-weight: 600;
+    i {
+        margin-right: 5px;
+    }
     &:hover {
-        background-color: #e2e2e2;
+        background: transparent;
+        color: #5DB0EC;
     }
 }
 
