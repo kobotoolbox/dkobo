@@ -46,7 +46,8 @@ define 'cs!xlform/view.rowDetail', [
       changing = false
       reflectValueInEl = ()=>
         if !changing
-          if @model.get('value') in  $configs.truthyValues
+          val = @model.get('value')
+          if val is true or val in $configs.truthyValues
             $el.prop('checked', true)
       @model.on 'change:value', reflectValueInEl
       reflectValueInEl()
