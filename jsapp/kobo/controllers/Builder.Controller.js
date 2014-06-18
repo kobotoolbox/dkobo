@@ -83,5 +83,8 @@ function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo,
 
     $scope.close_library = function () {
         $scope.displayQlib = false
+        $("button.rowselector_toggle-library").removeClass('active__sidebar');
+        $("section.form-builder").removeClass('active__sidebar');
+
     }
 }

@@ -31,14 +31,8 @@ define 'cs!xlform/view.surveyApp.templates', [], ()->
           <button class="btn btn--utility pull-right survey-editor__action--multiquestion rowselector_toggle-library" id="question-library"><i class="fa fa-folder"></i> Question Library</button>
           </div>
         </div>
-        <header class="survey-header">
-          <p class="survey-header__description" hidden>
-            <hgroup class="survey-header__inner container">
-              <h1 class="survey-header__title">
-                <span class="form-title">#{survey.settings.get("form_title")}</span>
-              </h1>
-            </hgroup>
-          </p>
+        <div class="container__fixed">
+          <div class="container__wide">
           <div class="survey-header__options container">
             <h4 class="survey-header__options-table-title">Form settings</h4>
             <table class="survey-header__options-table">
@@ -75,7 +69,16 @@ define 'cs!xlform/view.surveyApp.templates', [], ()->
             </table>
             <h4 class="survey-header__options-table-title">Hidden meta questions to include in your form to help with analysis</h4>
             <div class="stats  row-details" id="additional-options"></div>
-          </div>
+          </div>          </div>
+        </div>
+        <header class="survey-header">
+          <p class="survey-header__description" hidden>
+            <hgroup class="survey-header__inner container">
+              <h1 class="survey-header__title">
+                <span class="form-title">#{survey.settings.get("form_title")}</span>
+              </h1>
+            </hgroup>
+          </p>
         </header>
         <div class="survey-editor form-editor-wrap container">
           <ul class="-form-editor survey-editor__list">

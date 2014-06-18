@@ -178,12 +178,14 @@ $tagsHeight: 230px;
     border-top: 2px solid #d9dde1;
     position: relative;
     overflow: hidden;
+    background: white;
     &:first-child {
         border-top:none;
     }
 }
 
-.questions__question--selected {
+.questions__question--selected, 
+.questions__question.sortable-active {
     border:2px solid #38a1f1;
     background-color: #dbeefc;
 }
@@ -260,9 +262,26 @@ $tagsHeight: 230px;
 .question-filter__add-to-block-icon {}
 .question-filter__delete-icon {}
 
+
 // ==========================================================================
-// Sidebar Question Library
+// Question Library Sidebar
 // ==========================================================================
+
+.koboform__questionlibrary {
+    position: relative;
+    width: 300px;
+    height: 600px;
+    z-index: 5;
+    border: 1px solid #cbd0d7;
+    background-color: #fff;
+    float: right;
+}
+
+// when sidebar active, add padding to container divs for form questions
+section.form-builder.active__sidebar .container {
+    padding-right: 150px;
+    transition:all .3s;
+}
 
 .questions__sidebar--scrolling {
     height: 600px;
@@ -283,12 +302,6 @@ $tagsHeight: 230px;
     label{
         font-size: 13px;
         color: #797F83;
-    }
-    .question-filter__close {
-        position: absolute;
-        top: 0px;
-        right: 10px;
-        font-size: 20px;
     }
     .question-filter__search {
         position: relative;
@@ -312,22 +325,14 @@ $tagsHeight: 230px;
     }
 }
 
-.koboform__questionlibrary {
-    position: fixed;
-    top: 79px;
-    right: 10px;
-    width: 300px;
-    height: 600px;
-    z-index: 5;
-    border: 1px solid #cbd0d7;
-    background-color: #fff;
-    overflow: visible;
+// switch icon when button is active for library sidebar
+.btn--utility.active__sidebar {
+    background: transparent;
+    color: #5DB0EC;
+    i:before {
+        content: "";
+    }
 }
-
-// .koboform__questionlibrary + .form-builder {
-//     padding-right:300px;
-// }
-
 
 /* ==========================================================================
    Question Library - tags

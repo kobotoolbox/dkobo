@@ -33,6 +33,15 @@
   margin:0 auto;
 }
 
+// Used to contain the question library sidebar
+.container__fixed {
+  position: fixed;
+  z-index: 8;
+  height: 10px;
+  top:80px;
+  width: 100%;
+}
+
 // Legacy
 .content--centered {
   text-align: center;
