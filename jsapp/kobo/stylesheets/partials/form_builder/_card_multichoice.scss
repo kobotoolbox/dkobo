@@ -10,14 +10,10 @@
     }
 }
 
-.card__buttons__multioptions, 
-.card__buttons__multioptions + .card__header-title {
-    color: $indicatorColor;
-}
-
 .card--selectquestion__expansion {
     @extend %card-expansion;
 }
+
 
 
 // ==========================================================================
@@ -34,6 +30,11 @@
             display: block;
         }
 
+        .card__buttons__multioptions, 
+        .card__buttons__multioptions + .card__header-title {
+            color: $indicatorColor;
+        }
+
         .caret {
             &:before {
                 // from fa-caret-down
@@ -45,10 +46,12 @@
 
 
 .option-placeholder {
-    height: 41px;
+    height: 32px;
     margin-bottom: 10px;
-    border: 2px dashed #ccc;
+    border: 2px solid #d9dde1;
     border-radius: 4px;
+    margin-right: 25px;
+    margin-left: 5px;
 }
 
 
@@ -130,4 +133,11 @@
         font-size: 16px;
         cursor: pointer;
     }
+}
+
+.card__addoptions {
+    opacity: 0.4;
+    .multioptions__option {
+        cursor: pointer;
+    }    
 }
