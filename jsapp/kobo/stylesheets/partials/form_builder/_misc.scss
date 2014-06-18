@@ -72,3 +72,9 @@
     text-align: center;
     color: #888;
 }
+
+.survey-editor__action--multiquestion {
+    .survey-editor--singlequestion & {
+        display: none;
+    }
+}
