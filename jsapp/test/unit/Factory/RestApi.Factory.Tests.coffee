@@ -6,7 +6,7 @@ rest_api_factory_tests = ->
       factory.createSurveyDraftApi()
       expect(resourceSpy).toHaveBeenCalledWith "/api/survey_drafts"
 
-    iit "should invoke $resource with a custom save object when an id is provided", ->
+    it "should invoke $resource with a custom save object when an id is provided", ->
       resourceSpy = sinon.spy()
       factory = restApiFactory(resourceSpy)
       factory.createSurveyDraftApi 1
