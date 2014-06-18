@@ -15,3 +15,6 @@ rest_api_factory_tests = ->
       ,
         save:
           method: "PATCH"
+        publish:
+          method: "POST"
+          url: "/api/survey_drafts/:id/publish"
