@@ -147,21 +147,18 @@ define 'cs!xlform/view.choices', [
       if lis.length == 1
         lis.find('.js-remove-option').addClass('hidden')
     saveValue: (ick, nval, oval, ctxt)->
-      if nval is ""
-        @remove()
-      else
-        @model.set("label", nval, silent: true)
-        other_names = @options.cl.getNames()
-        if !@model.get('setManually')
-          sluggifyOpts =
-            preventDuplicates: other_names
-            lowerCase: false
-            stripSpaces: true
-            lrstrip: true
-            incrementorPadding: 3
-            validXmlTag: true
-          @model.set("name", $modelUtils.sluggify(nval, sluggifyOpts))
-        @$el.trigger("choice-list-update", @options.cl.cid)
+      @model.set("label", nval, silent: true)
+      other_names = @options.cl.getNames()
+      if !@model.get('setManually')
+        sluggifyOpts =
+          preventDuplicates: other_names
+          lowerCase: false
+          stripSpaces: true
+          lrstrip: true
+          incrementorPadding: 3
+          validXmlTag: true
+        @model.set("name", $modelUtils.sluggify(nval, sluggifyOpts))
+      @$el.trigger("choice-list-update", @options.cl.cid)
       ``
 
   ListView: ListView
