@@ -33,43 +33,48 @@ define 'cs!xlform/view.surveyApp.templates', [], ()->
         </div>
         <div class="container__fixed">
           <div class="container__wide">
-          <div class="survey-header__options container">
-            <h4 class="survey-header__options-table-title">Form settings</h4>
-            <table class="survey-header__options-table">
-              <tr>
-                <td><span>Form ID</span></td>
-                <td><span class="form-id  editable  editable-click">#{survey.settings.get("form_id")}</span></td>
-                <td><span>(Unique form name)</span></td>
-              </tr>
-              <tr>
-                <td><span>Automatic IDs</span></td>
-                <td><span class="editable  editable-click">Standard mode</span></td>
-                <td><span>(Choose Statistics mode for question IDs like A01, A02, etc.)</span></td>
-              </tr>
-              <tr>
-                <td><span>Version</span></td>
-                <td><span class="editable  editable-click">1.0</span></td>
-                <td><span>(Any version number you'd like to include with the form - optional)</span></td>
-              </tr>
-              <tr>
-                <td><span>Form Language</span></td>
-                <td><span class="editable  editable-click">English</span></td>
-                <td><span>(The default language in which the form is written - optional)</span></td>
-              </tr>
-              <tr>
-                <td><span>Public Key</span></td>
-                <td><span class="editable  editable-click">[blank]</span></td>
-                <td><span>(The encryption key used for secure forms - optional)</span></td>
-              </tr>
-              <tr>
-                <td><span>Submission URL</span></td>
-                <td><span class="editable  editable-click">[blank]</span></td>
-                <td><span>(The specific server instance where the data should go to - optional)</span></td>
-              </tr>
-            </table>
-            <h4 class="survey-header__options-table-title">Hidden meta questions to include in your form to help with analysis</h4>
-            <div class="stats  row-details" id="additional-options"></div>
-          </div>          </div>
+          <div class="form__settings">
+            <label>Form ID</label>
+            <span class="poshytip" title="Unique form name">?</span>
+            <div class="form__settings-formid"><span class="form-id editable editable-click">#{survey.settings.get("form_id")}</span></div>
+
+            <div class="form__settings-fields bleeding-edge">
+              <div>
+              <label class="">Version</label>
+              <span class="poshytip" title="Version of the form">?</span>
+              <span class="editable  editable-click">Standard mode</span>
+              </div>
+              <div>
+              <label class="">Automatic ID</label>
+              <span class="poshytip" title="Choose Statistics mode for question IDs like A01, A02, etc.">?</span>
+              <span class="editable  editable-click">Standard mode</span>
+              </div>
+              <div>
+              <label class="">Default Language</label>
+              <span class="poshytip" title="The default language in which the form is written - optional">?</span>
+              <span class="editable  editable-click">English</span>
+              </div>
+            </div>
+
+            <div class="form__settings-meta__questions">
+              <h4 class="form__settings-meta__questions-title">Hidden meta questions to include in your form to help with analysis</h4>
+              <div class="stats  row-details" id="additional-options"></div>
+            </div>
+
+            <div class="form__settings-submission-url bleeding-edge">
+              <label class="">Manual submission URL (advanced)</label>
+              <span class="poshytip" title="The specific server instance where the data should go to - optional">?</span>
+              <div><span class="editable  editable-click">http://kobotoolbox.org/data/longish_username</span></div>
+            </div>
+
+            <div class="form__settings-public-key bleeding-edge">
+              <label class="">Public Key</label>
+              <span class="poshytip" title="The encryption key used for secure forms - optional">?</span>
+              <span class="editable  editable-click">12345-232</span>
+            </div>
+
+          </div>
+          </div>
         </div>
         <header class="survey-header">
           <p class="survey-header__description" hidden>
