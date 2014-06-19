@@ -59,7 +59,7 @@ define 'cs!xlform/view.surveyApp', [
       "click #xlf-download": "downloadButtonClick"
       "click #save": "saveButtonClick"
       "click #publish": "publishButtonClick"
-      "click #settings": "toggleSurveyOptions"
+      "click #settings": "toggleSurveySettings"
       "update-sort": "updateSort"
       "click .js-select-row": "selectRow"
       "click .js-select-row--force": "forceSelectRow"
@@ -184,9 +184,11 @@ define 'cs!xlform/view.surveyApp', [
 
     getApp: -> @
 
-    toggleSurveyOptions: ->
+    toggleSurveySettings: (evt) ->
+      $et = $(evt.currentTarget)
+      $et.toggleClass('active__settings')
       if @features.surveySettings
-        @$(".survey-header__options").toggle()
+        @$(".form__settings").toggle()
 
     toggleGroupSettings: (evt)->
       $et = $(evt.currentTarget)
