@@ -22,7 +22,7 @@ define 'cs!xlform/view.rowDetail', [
     of each row of the XLForm. When the view is initialized,
     a mixin from "DetailViewMixins" is applied.
     ###
-    className: "card__settings__fields  dt-view dt-view--depr"
+    className: "card__settings__fields__field  dt-view dt-view--depr"
     initialize: ({@rowView})->
       unless @model.key
         throw new Error "RowDetail does not have key"
@@ -95,10 +95,10 @@ define 'cs!xlform/view.rowDetail', [
         if transformFn
           $elVal = transformFn($elVal)
         changeModelValue($elVal)
-      ``
+      return
 
     insertInDOM: (rowView)->
-      rowView.rowExtras.append(@el)
+      rowView.rowExtras.find('.card__settings__fields--question-options').append(@el)
 
     renderInRowView: (rowView)->
       @render()
@@ -159,26 +159,16 @@ define 'cs!xlform/view.rowDetail', [
     html: ->
       @$el.addClass("card__settings__fields--active")
       """
-      <div class="card__settings__fields__field">
-        <label class="card__settings__fields__field_button align-top">
-          Skip Logic
-        </label>
-        <div class="settings__input">
-          <button>Skip Logic</button>
-          <div class="relevant__editor"></div>
-        </div>
+      <div class="card__settings__fields__field relevant__editor">
       </div>
       """
 
     afterRender: ->
-      button = @$el.find("button").eq(0)
-      button.click () =>
-        if @skipLogicEditor
-          @skipLogicEditor.toggle()
-        else
-          @skipLogicEditor = new $viewRowDetailSkipLogic.SkipLogicCollectionView(el: @$el.find(".relevant__editor"), model: @model)
-          @skipLogicEditor.builder = @model.builder
-          @skipLogicEditor.render()
+      @skipLogicEditor = new $viewRowDetailSkipLogic.SkipLogicCollectionView(el: @$el.find(".relevant__editor"), model: @model)
+      @skipLogicEditor.builder = @model.builder
+      @skipLogicEditor.render()
+    insertInDOM: (rowView) ->
+      rowView.rowExtras.find('.card__settings__fields--skip-logic').append(@el)
 
   viewRowDetail.DetailViewMixins.constraint =
     html: ->
@@ -196,6 +186,8 @@ define 'cs!xlform/view.rowDetail', [
       """
     afterRender: ->
       @listenForInputChange()
+    insertInDOM: (rowView) ->
+      rowView.rowExtras.find('.card__settings__fields--validation-criteria').append(@el)
 
   viewRowDetail.DetailViewMixins.name =
     html: ->
