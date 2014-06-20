@@ -89,62 +89,63 @@
 .top-level-menu {
     width: 230px;
     position: fixed;
-    top: 0;
+    top: 40px;
     bottom: 0;
     left: -230px;
     background-color: #444;
     transition: left 150ms;
+    z-index: 15;
 }
 
 .top-level-menu.is-active {
     left: 0;
 }
 
-.top-level-menu.is-active ~ .main {
-    padding-left: 230px;
-}
+// .top-level-menu.is-active ~ .main {
+//     padding-left: 230px;
+// }
 
-.top-level-menu.is-active ~ .main .header-bar,
-.top-level-menu.is-active ~ .main .sub-header-bar {
-    width: unquote("-webkit-calc(100% - 230px)");
-    width: unquote("-moz-calc(100% - 230px)");
-    width: calc(100% - 230px);
-    left: 230px;
-}
+// .top-level-menu.is-active ~ .main .header-bar,
+// .top-level-menu.is-active ~ .main .sub-header-bar {
+//     width: unquote("-webkit-calc(100% - 230px)");
+//     width: unquote("-moz-calc(100% - 230px)");
+//     width: calc(100% - 230px);
+//     left: 230px;
+// }
 
-.top-level-menu.is-active ~ .main .header-bar__top-level-menu-button > .fa {
-    color: #1daee3;
-}
+// .top-level-menu.is-active ~ .main .header-bar__top-level-menu-button > .fa {
+//     color: #1daee3;
+// }
 
 /* Top level menu user item
    -------------------------------------------------------------------------- */
 
-.top-level-menu__item--user {
-    margin-bottom: 10px;
-    border-bottom: 1px solid #727272;
-    background-color: black;
-}
+// .top-level-menu__item--user {
+//     margin-bottom: 10px;
+//     border-bottom: 1px solid #727272;
+//     background-color: black;
+// }
 
-.top-level-menu__item--user-avatar,
-.top-level-menu__item--user-name {
-    display: inline-block;
-}
+// .top-level-menu__item--user-avatar,
+// .top-level-menu__item--user-name {
+//     display: inline-block;
+// }
 
-.top-level-menu__item--user-avatar {
-    width: 40px;
-    height: 40px;
-    margin-right: 5px;
-    vertical-align: top;
-}
+// .top-level-menu__item--user-avatar {
+//     width: 40px;
+//     height: 40px;
+//     margin-right: 5px;
+//     vertical-align: top;
+// }
 
-.top-level-menu__item--user-name {
-    margin-top: 0;
-    margin-bottom: 0;
-    line-height: 40px;
-    font-size: 14px;
-    color: white;
-    font-family: 'Lato';
-}
+// .top-level-menu__item--user-name {
+//     margin-top: 0;
+//     margin-bottom: 0;
+//     line-height: 40px;
+//     font-size: 14px;
+//     color: white;
+//     font-family: 'Lato';
+// }
 
 
 
