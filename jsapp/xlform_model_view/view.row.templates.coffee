@@ -12,22 +12,48 @@ define 'cs!xlform/view.row.templates', [], ()->
   # """
 
   settingsView = (forWhat, blockName)->
-    """
-    <section class="#{blockName}  row-extras row-extras--depr">
-      <ul class="#{blockName}__tabs">
-        <li class="heading"><i class="fa fa-cog"></i> Settings</li>
-        <li>All #{forWhat} settings</li>
-        <!--
-        <li data-card-settings-tab-id="question-options">Question Options</li>
-        <li data-card-settings-tab-id="skip-logic" class="">Skip Logic</li>
-        <li data-card-settings-tab-id="validation-criteria" class="">Validation Criteria</li>
-        <li data-card-settings-tab-id="response-type" class="">Response Type</li>
-        -->
-      </ul>
-      <div class="#{blockName}__content">
-      </div>
-    </section>
-    """
+    if forWhat == 'group'
+      return """
+      <section class="#{blockName}  row-extras row-extras--depr">
+        <ul class="#{blockName}__tabs">
+          <li class="heading"><i class="fa fa-cog"></i> Settings</li>
+          <li>All #{forWhat} settings</li>
+          <!--
+          <li data-card-settings-tab-id="question-options">Question Options</li>
+          <li data-card-settings-tab-id="skip-logic" class="">Skip Logic</li>
+          <li data-card-settings-tab-id="validation-criteria" class="">Validation Criteria</li>
+          <li data-card-settings-tab-id="response-type" class="">Response Type</li>
+          -->
+        </ul>
+        <div class="#{blockName}__content">
+        </div>
+      </section>
+      """
+    else
+      return """
+      <section class="#{blockName}  row-extras row-extras--depr">
+        <ul class="#{blockName}__tabs">
+          <li class="heading"><i class="fa fa-cog"></i> Settings</li>
+          <li data-card-settings-tab-id="question-options">Question Options</li>
+          <li data-card-settings-tab-id="skip-logic" class="">Skip Logic</li>
+          <li data-card-settings-tab-id="validation-criteria" class="">Validation Criteria</li>
+          <li data-card-settings-tab-id="response-type" class="">Response Type</li>
+        </ul>
+        <div class="#{blockName}__content">
+          <ul class="card__settings__fields card__settings__fields--active card__settings__fields--question-options">
+          </ul>
+
+          <ul class="card__settings__fields card__settings__fields--skip-logic">
+          </ul>
+
+          <ul class="card__settings__fields card__settings__fields--validation-criteria">
+          </ul>
+
+          <ul class="card__settings__fields card__settings__fields--response-type">
+          </ul>
+        </div>
+      </section>
+      """
 
   xlfRowView = () ->
       """

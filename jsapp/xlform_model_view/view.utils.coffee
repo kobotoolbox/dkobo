@@ -2,15 +2,14 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
   viewUtils = {}
   viewUtils.Validator = Validator
 
-  viewUtils.makeEditable = (that, model, selector, {property, transformFunction, options}) ->
+  viewUtils.makeEditable = (that, model, selector, {property, transformFunction, options, edit_callback}) ->
     if !transformFunction?
       transformFunction = (value) -> value
     if !property?
       property = 'value'
 
-    opts =
-      type: 'text'
-      success: _.bind (uu, ent) ->
+    if !edit_callback?
+      edit_callback = _.bind (ent) ->
           ent = transformFunction ent
           ent = ent.replace(/\t/g, '')
           model.set(property, ent, validate: true)
@@ -20,13 +19,45 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
           newValue: ent
         , that
 
-    editableOpts = _.extend(opts, options)
-
     if !(selector instanceof jQuery)
       selector =that.$el.find(selector)
 
     selector.on 'shown', (e, obj) -> obj.input.$input.on 'paste', (e) -> e.stopPropagation()
-    selector.editable editableOpts
+
+
+    enable_edit = () ->
+      parent_element = selector.parent()
+      parent_element.find('.error-message').remove()
+      current_value = selector.text()
+      edit_box = $('<input type="text" value="' + current_value + '" class="js-cancel-sort"/>')
+      selector.replaceWith edit_box
+
+      commit_edit = () ->
+        parent_element.find('.error-message').remove()
+        if options? && options.validate? && options.validate(edit_box.val())?
+          new_value = options.validate(edit_box.val())
+        else
+          new_value = edit_callback edit_box.val()
+
+        if !new_value?
+          new_value = newValue: edit_box.val()
+
+        if new_value.newValue?
+          edit_box.replaceWith(selector)
+          selector.text new_value.newValue
+          selector.click enable_edit
+        else
+          error_box = $('<div class="error-message">' + new_value + '</div>')
+          parent_element.append(error_box)
+
+      edit_box.blur commit_edit
+      edit_box.keypress (event) ->
+        if event.which == 13
+          commit_edit event
+
+
+    selector.click enable_edit
+    #selector.editable editableOpts
 
 
   viewUtils.reorderElemsByData = (selector, parent, dataAttribute)->
@@ -42,7 +73,7 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
       val = $el.data(dataAttribute)
       arr[val] = $el  if _.isNumber(val)
     $el.appendTo(parentEl)  for $el in arr when $el
-    ``
+    return
 
   viewUtils.cleanStringify = (atts)->
     attArr = []

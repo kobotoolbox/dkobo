@@ -70,10 +70,21 @@ define 'cs!xlform/view.surveyApp', [
       "click .js-toggle-row-multioptions": "toggleRowMultioptions"
       "click .js-expand-row-selector": "expandRowSelector"
       "click .rowselector_toggle-library": "toggleLibrary"
+      "click .card__settings__tabs li": "switchTab"
     @create: (params = {}) ->
       if _.isString params.el
         params.el = $(params.el).get 0
       return new @(params)
+
+    switchTab: (event) ->
+      $et = $(event.target)
+      tabId = $et.data('cardSettingsTabId')
+      log tabId
+      $et.parent('ul').find('.card__settings__content--active').removeClass('card__settings__content--active')
+
+      $et.addClass('card__settings__content--active')
+      $et.parents('.card__settings').find(".card__settings__fields--active").removeClass('card__settings__fields--active')
+      $et.parents('.card__settings').find(".card__settings__fields--#{tabId}").addClass('card__settings__fields--active')
 
     surveyRowSortableStop: (evt)->
       $et = $(evt.target)
@@ -246,7 +257,7 @@ define 'cs!xlform/view.surveyApp', [
         # TODO: what happened to this element?
         @$(".row-extras__add-to-question-library").hide()
 
-      
+
       if @expand_all_multioptions is null
         $expand_multioptions = @$(".js-expand-multioptions--all")
         $expand_multioptions.click () =>
@@ -394,7 +405,6 @@ define 'cs!xlform/view.surveyApp', [
         isEmpty = false
         @ensureElInView(row, @, @formEditorEl).render()
 
-      @ngScope.displayQlib = false
       @survey.forEachRow(fn, includeErrors: true, includeGroups: true, flat: true)
 
       null_top_row = @formEditorEl.find(".survey-editor__null-top-row, .survey-editor__message").removeClass("expanded")

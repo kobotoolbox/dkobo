@@ -276,9 +276,9 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
     render: () ->
       @$el.html(
         """
-          <button class="skiplogic__select-builder">Add a condition</button>
-            or
-          <button class="skiplogic__select-handcode">Manually enter your skip logic in XLSForm code</button>
+          <button class="skiplogic__button skiplogic__select-builder">Add a condition</button>
+
+          <button class="skiplogic__button skiplogic__select-handcode">Manually enter your skip logic in XLSForm code</button>
         """
         )
       return @
