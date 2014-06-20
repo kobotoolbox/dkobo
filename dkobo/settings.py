@@ -21,6 +21,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # DEBUG is true unless an environment variable is set to something other than 'True'
 DEBUG = (os.environ.get('DJANGO_DEBUG', 'True') == 'True')
+LIVE_RELOAD = (os.environ.get('DJANGO_LIVE_RELOAD', str(DEBUG)) == 'True')
 
 if not SECRET_KEY and not DEBUG:
     raise ValueError("DJANGO_SECRET_KEY environment variable must be set in production")
@@ -141,9 +142,13 @@ DATABASES = {
     'default': dj_database_url.config(default="sqlite:///%s/db.sqlite3" % BASE_DIR)
 }
 
-
 ALLOWED_HOSTS = ['*']
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# For GeoDjango heroku buildpack
+GEOS_LIBRARY_PATH = os.environ.get('GEOS_LIBRARY_PATH')
+GDAL_LIBRARY_PATH = os.environ.get('GDAL_LIBRARY_PATH')
+POSTGIS_VERSION = (2, 0, 3)
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
@@ -171,7 +176,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 
-SITE_ID = os.environ.get('DJANGO_SITE_ID', 1)
+SITE_ID = os.environ.get('DJANGO_SITE_ID', None)
 
 ACCOUNT_ACTIVATION_DAYS = 3
 LOGIN_REDIRECT_URL = '/'
