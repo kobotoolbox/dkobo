@@ -18,18 +18,8 @@ function InfoListDirective($rootScope, $restApi) {
         link: function (scope) {
             scope.kobocatLinkExists = function (item) {
                 return window.koboConfigs && window.koboConfigs.kobocatServer;
-            }
-            scope.kobocatPublishForm = function (item) {
-                function success (results, headers) {
-                    // todo: friendly alert
-                    alert('Survey Publishing succeeded');
-                }
-                function fail () {
-                    // todo: friendly alert
-                    alert('Survey Publishing failed');
-                }
-                $restApi.createSurveyDraftApi(item.id).publish({}, success, fail);
-            }
+            };
+
 
             scope.getHashLink = function (item) {
                 var linkTo = scope.linkTo;

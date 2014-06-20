@@ -22,7 +22,8 @@ var kobo = angular.module('dkobo', [
 kobo.directive('topLevelMenu', TopLevelMenuDirective);
 kobo.directive('infoList', InfoListDirective);
 kobo.directive('koboformBuilder', BuilderDirective);
-kobo.directive('koboformQuestionLibrary', QuestionLibraryDirective)
+kobo.directive('koboformQuestionLibrary', QuestionLibraryDirective);
+kobo.directive('kobocatFormPublisher', KobocatFormPublisherDirective);
 
 kobo.factory('$userDetails', userDetailsFactory);
 kobo.factory('$restApi', restApiFactory);
