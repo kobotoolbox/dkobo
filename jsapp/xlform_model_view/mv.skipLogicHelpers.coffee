@@ -274,7 +274,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
         limit = limit || question is @current_question
         if !limit && question.get('type').get('typeId') not in non_selectable
           questions.push question
-
+      , includeGroups:true
       questions
 
     constructor: (@model_factory, @view_factory, @survey, @current_question, @helper_factory) ->
