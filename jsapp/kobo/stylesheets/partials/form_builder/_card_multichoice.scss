@@ -14,7 +14,14 @@
     @extend %card-expansion;
 }
 
-
+.survey__row--selected {
+    .card--selectquestion__expansion, 
+    .card__settings {
+        border-left-color: $linkColor;
+        border-right-color: $linkColor;
+        border-bottom-color: $linkColor;
+    }
+}
 
 // ==========================================================================
 // Overrides
