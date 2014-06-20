@@ -4,12 +4,14 @@ define 'cs!xlform/view.choices', [
         'cs!xlform/model.utils'
         'cs!xlform/view.pluggedIn.backboneView',
         'cs!xlform/view.templates',
+        'cs!xlform/view.utils',
         ], (
             Backbone,
             $choices,
             $modelUtils,
             $baseView,
             $viewTemplates,
+            $viewUtils,
             )->
 
   class ListView extends $baseView
@@ -99,10 +101,10 @@ define 'cs!xlform/view.choices', [
         @p.html("Option #{1+@options.i}").addClass("preliminary")
 
       @p.on 'shown', (e, obj) -> obj.input.$input.on 'paste', (e) -> e.stopPropagation()
-      @p.editable success: _.bind @saveValue, @
+      $viewUtils.makeEditable @, @model, @p, edit_callback: _.bind @saveValue, @
       @n = $('span', @c)
       @n.on 'shown', (e, obj) -> obj.input.$input.on 'paste', (e) -> e.stopPropagation()
-      @n.editable success: (ev, val) =>
+      $viewUtils.makeEditable @, @model, @n, edit_callback: (val) =>
         other_names = @options.cl.getNames()
         if val is ''
           @model.unset('name')
@@ -146,7 +148,7 @@ define 'cs!xlform/view.choices', [
       lis = $parent.find('li')
       if lis.length == 1
         lis.find('.js-remove-option').addClass('hidden')
-    saveValue: (ick, nval, oval, ctxt)->
+    saveValue: (nval)->
       @model.set("label", nval, silent: true)
       other_names = @options.cl.getNames()
       if !@model.get('setManually')
@@ -159,7 +161,7 @@ define 'cs!xlform/view.choices', [
           validXmlTag: true
         @model.set("name", $modelUtils.sluggify(nval, sluggifyOpts))
       @$el.trigger("choice-list-update", @options.cl.cid)
-      ``
+      return
 
   ListView: ListView
   OptionView: OptionView

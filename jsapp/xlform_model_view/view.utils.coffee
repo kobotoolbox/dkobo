@@ -2,13 +2,14 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
   viewUtils = {}
   viewUtils.Validator = Validator
 
-  viewUtils.makeEditable = (that, model, selector, {property, transformFunction, options}) ->
+  viewUtils.makeEditable = (that, model, selector, {property, transformFunction, options, edit_callback}) ->
     if !transformFunction?
       transformFunction = (value) -> value
     if !property?
       property = 'value'
 
-    edit_callback = _.bind (ent) ->
+    if !edit_callback?
+      edit_callback = _.bind (ent) ->
           ent = transformFunction ent
           ent = ent.replace(/\t/g, '')
           model.set(property, ent, validate: true)
@@ -33,15 +34,17 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
 
       commit_edit = () ->
         parent_element.find('.error-message').remove()
-        if options.validate? && options.validate(edit_box.val())?
+        if options? && options.validate? && options.validate(edit_box.val())?
           new_value = options.validate(edit_box.val())
         else
           new_value = edit_callback edit_box.val()
 
+        if !new_value?
+          new_value = newValue: edit_box.val()
+
         if new_value.newValue?
           edit_box.replaceWith(selector)
           selector.text new_value.newValue
-          selector.off 'click'
           selector.click enable_edit
         else
           error_box = $('<div class="error-message">' + new_value + '</div>')
@@ -70,7 +73,7 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
       val = $el.data(dataAttribute)
       arr[val] = $el  if _.isNumber(val)
     $el.appendTo(parentEl)  for $el in arr when $el
-    ``
+    return
 
   viewUtils.cleanStringify = (atts)->
     attArr = []
