@@ -64,10 +64,10 @@ define 'cs!xlform/view.row.templates', [], ()->
             <span class="card__header-title"></span>
           </div>
           <div class="card__buttons">
-            <span class="card__buttons__button card__buttons__button--settings gray js-advanced-toggle js-toggle-row-settings"><i class="fa fa-cog"></i></span>
-            <span class="card__buttons__button card__buttons__button--delete red js-delete-row"><i class="fa fa-trash-o"></i></span>
-            <span class="card__buttons__button card__buttons__button--copy blue hidden"><i class="fa fa-copy"></i></span>
-            <span class="card__buttons__button gray-green js-add-to-question-library"><i class="fa fa-folder-o"><i class="fa fa-plus"></i></i></span>
+            <span class="card__buttons__button card__buttons__button--settings gray js-advanced-toggle js-toggle-row-settings" data-button-color="gray" data-button-text="Settings"><i class="fa fa-cog"></i></span>
+            <span class="card__buttons__button card__buttons__button--delete red js-delete-row" data-button-color="red" data-button-text="Delete Question"><i class="fa fa-trash-o"></i></span>
+            <span class="card__buttons__button card__buttons__button--copy blue hidden" data-button-color="blue" data-button-text="Duplicate Question"><i class="fa fa-copy"></i></span>
+            <span class="card__buttons__button gray-green js-add-to-question-library" data-button-color="green" data-button-text="Add Question to Library"><i class="fa fa-folder-o"><i class="fa fa-plus"></i></i></span>
           </div>
         </div>
         #{settingsView('question', 'card__settings')}

@@ -26,6 +26,13 @@
             margin-left: -11px;
         }
     }
+    // settings wider than card in groups, EXPERIMENTAL
+    // .survey__row .card__settings {
+    //     margin-left: -20px;
+    //     margin-right: -8px;
+    //     border-right-width: 1px;
+    //     border-left-width: 1px;
+    // }
 }
 
 .group__name {
@@ -38,6 +45,15 @@
     margin: -4px -8px 0;
     padding: 4px 8px;
     min-height: 50px;
+    .editable-container {
+        div, form {
+            display: inline;
+        }
+        .editable-input input {
+            width: 94%;
+            font-weight: normal;
+        }
+    }
 }
 
 .group__rows {
@@ -115,4 +131,8 @@
     .survey__row {
         display: none;
     }
+}
+
+.group__rows .group {
+    background: #CBD3D9;
 }

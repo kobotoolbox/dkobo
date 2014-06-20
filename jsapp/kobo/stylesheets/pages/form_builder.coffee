@@ -28,8 +28,6 @@ elems:
     $et = $(evt.target)
     bColor = $(this).data('buttonColor')
     bText = $(this).data('buttonText')
-    console.log $(this)
-    console.log bColor
     $et.parents('.card__buttons').addClass('noborder')
     $et.parents('.card__header').append('<div class="bg">')
     $et.parents('.card__header').find('.bg').addClass("#{bColor}").html("<span>#{bText}</span>")

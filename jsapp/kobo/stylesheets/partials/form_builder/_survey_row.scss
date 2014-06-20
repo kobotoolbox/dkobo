@@ -85,7 +85,7 @@ $nested-btn--addrow-height: 24px;
     // note: this compiles to
     // .group__rows .btn--addrow {...}
     .group__rows & {
-        left: -9px;
+        left: -20px;
         width: 28px;
         // padding: 5px 0 0 3px;
         height: $nested-btn--addrow-height + (2 * $click-area-nested-btn--addrow-padding-tb);
@@ -93,7 +93,7 @@ $nested-btn--addrow-height: 24px;
         padding: $click-area-nested-btn--addrow-padding-tb 0 0 3px;
         .fa {
             border-radius: 3px;
-            width: 14px;
+            // width: 14px;
             font-weight: normal;
             height: $nested-btn--addrow-height;
             line-height: $nested-btn--addrow-height;
