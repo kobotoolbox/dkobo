@@ -30,6 +30,7 @@
     "angular-mocks": "~1.2.16",
     "angular-resource": "~1.2.16",
     "angular-route": "~1.2.16",
+    "angular-ui-utils": "0.1.1",
     "angular-ui-select2": "~0.0.5",
     "x-editable": "~1.5.1",
     "jquery.scrollTo": "1.4.12"
