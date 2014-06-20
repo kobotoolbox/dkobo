@@ -156,16 +156,19 @@ $cardIndicatorIconWidth: 21px;
         position: relative;
         top: 35%;
         font-weight: 600;
-        font-size: 22px;
+        font-size: 23px;
     }
     &.gray {
-        background: rgba(#858F98, 0.4);
+        background: rgba(#858F98, 0.6);
     }
     &.red {
-        background: rgba(#D08B8C, 0.4);
+        background: rgba(#D08B8C, 0.6);
     }
     &.blue {
-        background:rgba($linkColor, 0.4);
+        background:rgba($linkColor, 0.6);
+    }
+    &.green {
+        background: rgba(#39BF6E, 0.6);
     }
 }
 
