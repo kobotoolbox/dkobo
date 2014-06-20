@@ -80,8 +80,4 @@ function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo,
             $miscUtils.alert('Question added to library', 'Success!!');
         });
     };
-
-    $scope.close_library = function () {
-        $scope.displayQlib = false
-    }
 }
