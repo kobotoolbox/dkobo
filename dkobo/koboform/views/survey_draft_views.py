@@ -136,6 +136,18 @@ def publish_survey_draft(request, pk, format=None):
     except SurveyDraft.DoesNotExist:
         return Response({'error': 'SurveyDraft not found'}, status=status.HTTP_404_NOT_FOUND)
 
+    parsed = json.loads(request.body)
+
+    body = survey_draft.body.split('\n')
+    form_settings=body.pop()
+    form_settings_list=form_settings.split(',')
+    form_settings_list.pop(1)
+    form_settings_list.insert(1, '"' + parsed['label'] + '"')
+    form_settings_list.pop(2)
+    form_settings_list.insert(2, '"' + parsed['name'] + '"')
+    body.append(','.join(form_settings_list))
+    survey_draft.body = '\n'.join(body)
+
     (status_code, resp) = kobocat_integration.publish_survey_draft(survey_draft, "%s://%s:%s" % (settings.KOBOCAT_SERVER_PROTOCOL, \
                                                                                                 settings.KOBOCAT_SERVER, \
                                                                                                 settings.KOBOCAT_SERVER_PORT))

@@ -11,7 +11,7 @@
     margin-top: 0;
 }
 
-.forms-header__button, 
+.forms-header__button,
 .forms-empty__button {
     width: 120px;
     padding: 5px;
@@ -31,7 +31,7 @@
 .forms-header__button {
     position: absolute;
     right:0px;
-    top:0px;    
+    top:0px;
 }
 
 .forms-filter {
@@ -114,6 +114,17 @@
 
 }
 
+.forms__kobocat__publisher {
+  z-index: 10000;
+  background-color: white;
+  height: 400px;
+  width: 1000px;
+}
+
+.forms__kobocat__publisher__label {
+  display: block;
+}
+
 .forms__card__buttons {
     border: $cardBorderStyle;
     border-width: 0 0 0 2px;
@@ -156,7 +167,7 @@
       background-color: #D9DDE1;
     }
 }
-// LEGACY 
+// LEGACY
 
 /* ==========================================================================
    Info list (table rows/cells)
