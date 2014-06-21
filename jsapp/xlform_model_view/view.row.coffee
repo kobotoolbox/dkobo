@@ -108,7 +108,7 @@ define 'cs!xlform/view.row', [
       @$el.data("row-index", @model.getSurvey().rows.indexOf @model)
 
       for [key, val] in @model.attributesArray()
-        if key in ["name", "label", "_isRepeat", "appearance"]
+        if key in ["name", "label", "_isRepeat", "appearance", "relevant"]
           new $viewRowDetail.DetailView(model: val, rowView: @).renderInRowView(@)
       @
 

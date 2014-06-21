@@ -77,12 +77,16 @@ define 'cs!xlform/view.surveyApp', [
       return new @(params)
 
     switchTab: (event) ->
-      $et = $(event.target)
-      tabId = $et.data('cardSettingsTabId')
-      log tabId
-      $et.parent('ul').find('.card__settings__content--active').removeClass('card__settings__content--active')
+      $et = $(event.currentTarget)
+      if $et.hasClass("heading")
+        event.preventDefault()
+        return
 
-      $et.addClass('card__settings__content--active')
+      tabId = $et.data('cardSettingsTabId')
+
+      $et.parent('ul').find('.card__settings__tabs__tab--active').removeClass('card__settings__tabs__tab--active')
+      $et.addClass('card__settings__tabs__tab--active')
+
       $et.parents('.card__settings').find(".card__settings__fields--active").removeClass('card__settings__fields--active')
       $et.parents('.card__settings').find(".card__settings__fields--#{tabId}").addClass('card__settings__fields--active')
 
