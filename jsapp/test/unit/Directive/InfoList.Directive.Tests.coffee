@@ -1,6 +1,7 @@
 info_list_directive_tests = ->
   _build_directive = null
-  beforeEach inject(($compile, $rootScope) ->
+  beforeEach inject(($compile, $rootScope, $templateCache) ->
+    $templateCache.put('templates/InfoList.Template.html', $templateCache.get('templates/InfoList.Template.html').replace('kobocat-form-publisher', ''))
     $rootScope.items = [{}]
     _build_directive = (canAddNew, linkTo) ->
       test_helper.buildInfoListDirective $compile, $rootScope, canAddNew, linkTo
