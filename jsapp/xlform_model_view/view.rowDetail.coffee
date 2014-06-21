@@ -97,8 +97,15 @@ define 'cs!xlform/view.rowDetail', [
         changeModelValue($elVal)
       return
 
+    get_correct_element: (rowView, selector) ->
+      el = rowView.rowExtras.find(selector)
+      if el.length == 0
+        el = rowView.rowExtras
+      return el
+
     insertInDOM: (rowView)->
-      rowView.rowExtras.find('.card__settings__fields--question-options').append(@el)
+      el = @get_correct_element rowView, '.card__settings__fields--question-options'
+      el.append(@el)
 
     renderInRowView: (rowView)->
       @render()
@@ -141,7 +148,7 @@ define 'cs!xlform/view.rowDetail', [
     afterRender: ->
       @listenForInputChange()
 
-  viewRowDetail.DetailViewMixins.constraint_message = 
+  viewRowDetail.DetailViewMixins.constraint_message =
     html: ->
       @$el.addClass("card__settings__fields--active")
       """
@@ -168,7 +175,7 @@ define 'cs!xlform/view.rowDetail', [
       @skipLogicEditor.builder = @model.builder
       @skipLogicEditor.render()
     insertInDOM: (rowView) ->
-      rowView.rowExtras.find('.card__settings__fields--skip-logic').append(@el)
+      @get_correct_element(rowView, '.card__settings__fields--skip-logic').append(@el)
 
   viewRowDetail.DetailViewMixins.constraint =
     html: ->
@@ -187,7 +194,7 @@ define 'cs!xlform/view.rowDetail', [
     afterRender: ->
       @listenForInputChange()
     insertInDOM: (rowView) ->
-      rowView.rowExtras.find('.card__settings__fields--validation-criteria').append(@el)
+      @get_correct_element(rowView, '.card__settings__fields--validation-criteria').append(@el)
 
   viewRowDetail.DetailViewMixins.name =
     html: ->
