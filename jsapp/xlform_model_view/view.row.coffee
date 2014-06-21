@@ -69,8 +69,8 @@ define 'cs!xlform/view.row', [
         @$card.addClass('card--selectquestion card--expandedchoices')
         @listView = new $viewChoices.ListView(model: cl, rowView: @).render()
 
-      # @rowExtras = @$(".row-extras")
-      @rowExtras = @$(".card__settings__content")
+      @cardSettingsWrap = @$('.card__settings').eq(0)
+      @defaultRowDetailParent = @cardSettingsWrap.find('.card__settings__fields--question-options').eq(0)
       for [key, val] in @model.attributesArray()
         new $viewRowDetail.DetailView(model: val, rowView: @).renderInRowView(@)
 
@@ -100,14 +100,18 @@ define 'cs!xlform/view.row', [
       @$el.html $viewTemplates.row.groupView(@model)
       @$label = @$('.group__label').eq(0)
       @$rows = @$('.group__rows').eq(0)
-      @rowExtras = @$('.card__settings__content').eq(0)
 
+      @cardSettingsWrap = @$('.card__settings').eq(0)
+      @defaultRowDetailParent = @cardSettingsWrap.find('.card__settings__fields--active').eq(0)
       @model.rows.each (row)=>
         @getApp().ensureElInView(row, @, @$rows).render()
       @$el.data("row-index", @model.getSurvey().rows.indexOf @model)
 
       for [key, val] in @model.attributesArray()
-        new $viewRowDetail.DetailView(model: val, rowView: @).renderInRowView(@)
+        if key in ["name", "label", "_isRepeat", "appearance"]
+          new $viewRowDetail.DetailView(model: val, rowView: @).renderInRowView(@)
+        else
+          log "don't create rowDetailView", key
       @
 
   class RowView extends BaseRowView
