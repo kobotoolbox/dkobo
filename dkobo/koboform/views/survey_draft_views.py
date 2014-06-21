@@ -141,10 +141,12 @@ def publish_survey_draft(request, pk, format=None):
     body = survey_draft.body.split('\n')
     form_settings=body.pop()
     form_settings_list=form_settings.split(',')
-    form_settings_list.pop(1)
-    form_settings_list.insert(1, '"' + parsed['label'] + '"')
-    form_settings_list.pop(2)
-    form_settings_list.insert(2, '"' + parsed['name'] + '"')
+    if parsed['label'] != '':
+        form_settings_list.pop(1)
+        form_settings_list.insert(1, '"' + parsed['label'] + '"')
+    if parsed['name'] != '':
+        form_settings_list.pop(2)
+        form_settings_list.insert(2, '"' + parsed['name'] + '"')
     body.append(','.join(form_settings_list))
     survey_draft.body = '\n'.join(body)
 
