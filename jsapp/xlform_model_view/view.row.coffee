@@ -110,8 +110,6 @@ define 'cs!xlform/view.row', [
       for [key, val] in @model.attributesArray()
         if key in ["name", "label", "_isRepeat", "appearance"]
           new $viewRowDetail.DetailView(model: val, rowView: @).renderInRowView(@)
-        else
-          log "don't create rowDetailView", key
       @
 
   class RowView extends BaseRowView
