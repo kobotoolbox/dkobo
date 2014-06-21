@@ -11,6 +11,7 @@ module.exports = function(config) {
             'components/angular-mocks/angular-mocks.js',
             'components/angular-resource/angular-resource.js',
             'components/angular-route/angular-route.js',
+            'components/angular-ui-utils/ui-utils.js',
 
             'components/sinon/index.js',
             'components/jasmine-sinon/lib/jasmine-sinon.js',
