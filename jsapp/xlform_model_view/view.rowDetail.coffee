@@ -98,7 +98,7 @@ define 'cs!xlform/view.rowDetail', [
       return
 
     insertInDOM: (rowView)->
-      rowView.rowExtras.find('.card__settings__fields--question-options').append(@el)
+      rowView.defaultRowDetailParent.append(@el)
 
     renderInRowView: (rowView)->
       @render()
@@ -141,7 +141,7 @@ define 'cs!xlform/view.rowDetail', [
     afterRender: ->
       @listenForInputChange()
 
-  viewRowDetail.DetailViewMixins.constraint_message = 
+  viewRowDetail.DetailViewMixins.constraint_message =
     html: ->
       @$el.addClass("card__settings__fields--active")
       """
@@ -168,7 +168,7 @@ define 'cs!xlform/view.rowDetail', [
       @skipLogicEditor.builder = @model.builder
       @skipLogicEditor.render()
     insertInDOM: (rowView) ->
-      rowView.rowExtras.find('.card__settings__fields--skip-logic').append(@el)
+      rowView.cardSettingsWrap.find('.card__settings__fields--skip-logic').eq(0).append(@el)
 
   viewRowDetail.DetailViewMixins.constraint =
     html: ->
@@ -187,7 +187,7 @@ define 'cs!xlform/view.rowDetail', [
     afterRender: ->
       @listenForInputChange()
     insertInDOM: (rowView) ->
-      rowView.rowExtras.find('.card__settings__fields--validation-criteria').append(@el)
+      rowView.cardSettingsWrap.find('.card__settings__fields--validation-criteria').append(@el)
 
   viewRowDetail.DetailViewMixins.name =
     html: ->
@@ -207,8 +207,9 @@ define 'cs!xlform/view.rowDetail', [
     afterRender: ->
       @$el.find('input').eq(0).val(@model.get("value"))
       @listenForInputChange(transformFn: (value)-> $modelUtils.sluggify(value, lowerCase:false))
-    insertInDom: (rowView)->
-      rowView.rowExtras.append(@el)
+    # insertInDom: (rowView)->
+    #   # default behavior...
+    #   rowView.defaultRowDetailParent.append(@el)
 
   viewRowDetail.DetailViewMixins.default =
     html: ->
@@ -229,8 +230,9 @@ define 'cs!xlform/view.rowDetail', [
       @$el.find('input').eq(0).val(@model.get("value"))
       @listenForInputChange()
 
-    insertInDom: (rowView)->
-      rowView.rowExtras.append(@el)
+    # insertInDom: (rowView)->
+    #   # default behavior...
+    #   rowView.defaultRowDetailParent.append(@el)
 
   viewRowDetail.DetailViewMixins.calculation =
     html: -> false

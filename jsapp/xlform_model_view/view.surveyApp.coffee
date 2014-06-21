@@ -77,12 +77,16 @@ define 'cs!xlform/view.surveyApp', [
       return new @(params)
 
     switchTab: (event) ->
-      $et = $(event.target)
-      tabId = $et.data('cardSettingsTabId')
-      log tabId
-      $et.parent('ul').find('.card__settings__content--active').removeClass('card__settings__content--active')
+      $et = $(event.currentTarget)
+      if $et.hasClass("heading")
+        event.preventDefault()
+        return
 
-      $et.addClass('card__settings__content--active')
+      tabId = $et.data('cardSettingsTabId')
+
+      $et.parent('ul').find('.card__settings__tabs__tab--active').removeClass('card__settings__tabs__tab--active')
+      $et.addClass('card__settings__tabs__tab--active')
+
       $et.parents('.card__settings').find(".card__settings__fields--active").removeClass('card__settings__fields--active')
       $et.parents('.card__settings').find(".card__settings__fields--#{tabId}").addClass('card__settings__fields--active')
 
@@ -100,7 +104,7 @@ define 'cs!xlform/view.surveyApp', [
         previous: survey_findRowByCid _prev
         parent: survey_findRowByCid _par
         event: 'sort'
-      ``
+      return
 
     _getRelatedElIds: ($el)->
       prev = $el.prev('.survey__row').eq(0).data('rowId')
@@ -149,7 +153,7 @@ define 'cs!xlform/view.surveyApp', [
         m.ordinal = if index >= position then (index + 1) else index
       model.ordinal = position
       @survey.rows.add(model, at: position)
-      ``
+      return
 
     forceSelectRow: (evt)->
       # forceSelectRow is used to mock the shift key
@@ -166,7 +170,7 @@ define 'cs!xlform/view.surveyApp', [
 
     questionSelect: (evt)->
       @activateGroupButton(@selectedRows().length > 0)
-      ``
+      return
 
     activateGroupButton: (active=true)->
       @$('.btn--group-questions').toggleClass('btn--disabled', !active)
@@ -305,6 +309,8 @@ define 'cs!xlform/view.surveyApp', [
           activate: sortable_activate_deactivate
           deactivate: sortable_activate_deactivate
           receive: (evt, ui) =>
+            if ui.sender.hasClass('group__rows')
+              return
             item = ui.item.prev()
 
             @ngScope.add_item @getItemPosition(item)
@@ -329,7 +335,7 @@ define 'cs!xlform/view.surveyApp', [
           activate: sortable_activate_deactivate
           deactivate: sortable_activate_deactivate
         })
-      ``
+      return
     _preventSortableIfGroupTooSmall: (evt)->
       $ect = $(evt.currentTarget)
       if $ect.siblings('.survey__row').length is 0
@@ -345,7 +351,7 @@ define 'cs!xlform/view.surveyApp', [
       scsv = @survey.toCSV()
       console?.clear()
       log scsv
-      ``
+      return
 
     ensureElInView: (row, parentView, $parentEl)->
       view = @getViewForRow(row)
@@ -417,7 +423,7 @@ define 'cs!xlform/view.surveyApp', [
         @activateSortable()
 
       # $viewUtils.reorderElemsByData(".xlf-row-view", @$el, "row-index")
-      ``
+      return
 
     clickRemoveRow: (evt)->
       evt.preventDefault()
@@ -430,7 +436,7 @@ define 'cs!xlform/view.surveyApp', [
         findMatch = (r)->
           if r.cid is rowId
             matchingRow = r
-          ``
+          return
 
         @survey.forEachRow findMatch, {
           includeGroups: false
@@ -485,7 +491,7 @@ define 'cs!xlform/view.surveyApp', [
           onSuccess: => @onEscapeKeydown = $viewUtils.enketoIframe.close
           onError: (errArgs...)=>
             @alert errArgs
-      ``
+      return
 
     alert: (message) ->
         $('.alert-modal').text(message).dialog('option', {

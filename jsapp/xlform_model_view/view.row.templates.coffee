@@ -14,32 +14,30 @@ define 'cs!xlform/view.row.templates', [], ()->
   settingsView = (forWhat, blockName)->
     if forWhat == 'group'
       return """
-      <section class="#{blockName}  row-extras row-extras--depr">
-        <ul class="#{blockName}__tabs">
+      <section class="card__settings  row-extras row-extras--depr">
+        <ul class="card__settings__tabs">
           <li class="heading"><i class="fa fa-cog"></i> Settings</li>
-          <li>All #{forWhat} settings</li>
-          <!--
-          <li data-card-settings-tab-id="question-options">Question Options</li>
+          <li data-card-settings-tab-id="all" class="card__settings__tabs__tab--active">All #{forWhat} settings</li>
           <li data-card-settings-tab-id="skip-logic" class="">Skip Logic</li>
-          <li data-card-settings-tab-id="validation-criteria" class="">Validation Criteria</li>
-          <li data-card-settings-tab-id="response-type" class="">Response Type</li>
-          -->
         </ul>
-        <div class="#{blockName}__content">
+        <div class="card__settings__content">
+          <div class="card__settings__fields card__settings__fields--active card__settings__fields--all">
+          </div>
+          <div class="card__settings__fields card__settings__fields--skip-logic"></div>
         </div>
       </section>
       """
     else
       return """
-      <section class="#{blockName}  row-extras row-extras--depr">
-        <ul class="#{blockName}__tabs">
+      <section class="card__settings  row-extras row-extras--depr">
+        <ul class="card__settings__tabs">
           <li class="heading"><i class="fa fa-cog"></i> Settings</li>
-          <li data-card-settings-tab-id="question-options">Question Options</li>
+          <li data-card-settings-tab-id="question-options" class="card__settings__tabs__tab--active">Question Options</li>
           <li data-card-settings-tab-id="skip-logic" class="">Skip Logic</li>
           <li data-card-settings-tab-id="validation-criteria" class="">Validation Criteria</li>
-          <li data-card-settings-tab-id="response-type" class="">Response Type</li>
+          <li data-card-settings-tab-id="response-type" class="card__settings__tab--response-type">Response Type</li>
         </ul>
-        <div class="#{blockName}__content">
+        <div class="card__settings__content">
           <ul class="card__settings__fields card__settings__fields--active card__settings__fields--question-options">
           </ul>
 

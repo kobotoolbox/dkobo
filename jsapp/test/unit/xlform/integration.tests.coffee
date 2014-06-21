@@ -162,6 +162,13 @@ define [
         ,text,q4,Question4
         """
 
+      it 'can view group settings', ->
+        $groupEl = @div.find('.group').eq(0)
+        $groupEl.find('.js-toggle-group-settings').click()
+        $groupSettings = $groupEl.find('.card__settings').eq(0)
+        expect($groupSettings.find('.xlf-dv-name').find('input').length).toBe(1)
+        ``
+
       it 'can group all rows and groups together', ->
         firstLevelRows = @div.find('.survey-editor__list > .survey__row')
         expect(firstLevelRows.length).toBe(5)
