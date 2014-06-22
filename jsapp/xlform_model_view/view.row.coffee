@@ -7,6 +7,7 @@ define 'cs!xlform/view.row', [
         'cs!xlform/view.utils',
         'cs!xlform/view.choices',
         'cs!xlform/view.rowDetail',
+        'cs!xlform/model.utils',
         ], (
             Backbone,
             $,
@@ -16,6 +17,7 @@ define 'cs!xlform/view.row', [
             $viewUtils,
             $viewChoices,
             $viewRowDetail,
+            $modelUtils,
             )->
   class BaseRowView extends Backbone.View
     tagName: "li"
@@ -72,8 +74,12 @@ define 'cs!xlform/view.row', [
       @cardSettingsWrap = @$('.card__settings').eq(0)
       @defaultRowDetailParent = @cardSettingsWrap.find('.card__settings__fields--question-options').eq(0)
       for [key, val] in @model.attributesArray()
-        new $viewRowDetail.DetailView(model: val, rowView: @).renderInRowView(@)
-
+        view = new $viewRowDetail.DetailView(model: val, rowView: @)
+        if key == 'label' and @model.get('type').get('value') == 'calculate'
+          view.model = @model.get('calculation')
+          @model.finalize()
+          val.set('value', '')
+        view.renderInRowView(@)
 
       @
     add_row_to_question_library: (evt) ->
