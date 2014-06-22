@@ -1,7 +1,15 @@
 <header class="forms-header">
   <div class="container">
     <h1 class="forms-header__title">Form Drafts</h1>
-    <a href="#/builder" class="forms-header__button">+ Add Form</a>
+    <button class="forms-header__button" ng-click="showAddFormDropdown = ! showAddFormDropdown">+ Add Form</button>
+    <div class="forms__addform__drop" ng-class="{ 'hidden': ! showAddFormDropdown }">
+      <a href="#/builder/new" class="forms__addform__button forms__addform__start">Start from Scratch</a>
+      <form action="/import_survey_draft" class="forms__addform__button forms__addform__xls js-import-fileupload">
+          <span>Upload XLS Form</span>
+          <input type="file" name="files">
+      </form>
+      <a href="#" class="forms__addform__button forms__addform__template">Start from a Template</a>
+    </div>
   </div>
 </header>
 <div class="container">
@@ -17,7 +25,7 @@
   <div class="info-list">
       <div class="forms__card" ng-repeat="item in items|orderBy:'-date_modified'">
         <div class="forms__card__kobocat" ng-show="kobocatLinkExists()">
-          <button class="forms__kobocat__btn forms__kobocat__btn--publish" ng-click="kobocatPublishForm(item)">Publish form</button>
+          <button class="forms__kobocat__btn forms__kobocat__btn--publish forms__poshytip" ng-click="kobocatPublishForm(item)" title="Deploy as New Survey Project"><i class="fa fa-arrow-up"></i></button>
         </div>
         <div class="forms__card__info">
           <a class="forms__card__title" href="#{{ getHashLink(item) }}">{{ item.name }}</a>
