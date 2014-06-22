@@ -46,7 +46,7 @@ kobo.config(function ($routeProvider, $locationProvider, $httpProvider) {
         });
 
         $routeProvider.when('/builder/:id', {
-            template: '<div class="container__fixed"><div class="container__wide"><section koboform-question-library class="koboform__questionlibrary" ng-show="displayQlib" click-handler="add_item(item)" current-item="currentItem"></section></div></div><section koboform-builder class="form-builder" ng-click="close_library()"></section>',
+            template: '<div class="container__fixed"><div class="container__wide"><section koboform-question-library class="koboform__questionlibrary" ng-show="displayQlib" click-handler="add_item(item)" current-item="currentItem"></section></div></div><section koboform-builder class="form-builder"></section>',
             controller: 'BuilderController'
         });
 

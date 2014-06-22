@@ -35,6 +35,7 @@
 }
 
 .forms-filter {
+    @extend %incomplete;
     height: 75px;
     width: 100%;
 }
@@ -96,6 +97,23 @@
     }
 }
 
+.forms__card__kobocat {
+    position: absolute;
+    top: 5px;
+    left: -135px;
+}
+.forms__kobocat__btn {
+    @extend .btn;
+    padding: 0;
+    width: 125px;
+}
+.forms__kobocat__btn--link {
+    color: #fff;
+}
+.forms__kobocat__btn--publish {
+
+}
+
 .forms__card__buttons {
     border: $cardBorderStyle;
     border-width: 0 0 0 1px;
@@ -107,6 +125,11 @@
     cursor: pointer;
     z-index: 4;
 }
+
+.forms__card__buttons__button.blue {
+    @extend %incomplete;
+}
+
 .forms__card__buttons__button {
     height: 30px;
     line-height: 30px;
@@ -149,10 +172,12 @@
 .info-list tr:hover td {
     background-color: #f3f5f6;
 }
-.info-list a {
+//a.forms__card__title
+.forms__card__title {
     color: #333333;
     display: block;
 }
+
 .info-list .info-list__links a {
     width: 40px;
     display: inline-block;

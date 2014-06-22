@@ -23,8 +23,9 @@ function TopLevelMenuDirective ($userDetails, $configuration) {
                 };
             }
 
+            var kobocatUrl = (window.koboConfigs && window.koboConfigs.kobocatServer) || 'http://kobocat.dev.kobotoolbox.org/';
             scope.kobocatLink = {
-              url: 'http://kobocat.dev.kobotoolbox.org/',
+              url: kobocatUrl,
               name: 'KoBoCat'
             };
 

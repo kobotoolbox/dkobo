@@ -39,18 +39,56 @@ define [
         @survey.forEachRow(getName, includeGroups: true)
         names
 
-      @load_csv("""
-        survey,,,
-        ,type,name,label
-        ,text,q1,Question1
-        ,begin group,grp,
-        ,text,g1q1,Group1Question1
-        ,text,g1q2,Group1Question2
-        ,end group,,
-        """)
-    afterEach -> $('.test-div').remove()
+      @load_group_csv = ()=>
+        @load_csv("""
+          survey,,,
+          ,type,name,label
+          ,text,q1,Question1
+          ,begin group,grp,
+          ,text,g1q1,Group1Question1
+          ,text,g1q2,Group1Question2
+          ,end group,,
+          """)
+    afterEach ->
+      $('.test-div').remove()
+
+    describe 'represents required checkbox properly', ->
+      beforeEach ->
+        @load_csv("""
+          survey,,,
+          ,type,name,label,required
+          ,text,q1,Question1,true
+          ,text,q2,Question2,false
+          """)
+        @expectReqCheckbox = (r0)->
+          r0.find('.js-advanced-toggle').eq(0).click()
+          box = r0.find('.xlf-dv-required').find('input[type=checkbox]')
+          expect(box.prop('checked'))
+
+      it 'works with imported questions', ->
+        @div.find('.js-advanced-toggle').eq(0).click()
+        rows = @div.find('.survey__row')
+        @expectReqCheckbox(rows.eq(0)).toBe(true)
+        @expectReqCheckbox(rows.eq(1)).toBe(false)
+        ``
+      it 'new text questions marked as required', ->
+        @app.survey.rows.add(type: 'text', label: 'hello world')
+        last_row = @app.survey.rows.last()
+        last_row_reqd = last_row.getValue('required')
+        # depends on model configs
+        # expect(last_row_reqd).toBe(true)
+        @expectReqCheckbox(@div.find('.survey__row').eq(2)).toBe(last_row_reqd)
+
+      it 'new gps questions not marked as required', ->
+        @app.survey.rows.add(type: 'geopoint', label: 'hello world')
+        last_row = @app.survey.rows.last()
+        last_row_reqd = last_row.getValue('required')
+        # depends on model configs
+        expect(last_row_reqd).toBe(false)
+        @expectReqCheckbox(@div.find('.survey__row').eq(2)).toBe(last_row_reqd)
 
     it 'has group html structure', ->
+      @load_group_csv()
       expect(@survey.rows.length).toBe(2)
       ul = @div.find('.survey-editor__list').eq(0)
       expect(ul.find('> .survey__row').length).toBe(2)
@@ -59,6 +97,7 @@ define [
       expect(group__rows.find('> .survey__row').length).toBe(2)
 
     it 'has selectable rows', ->
+      @load_group_csv()
       rowItems = @div.find('.survey-editor__list > .survey__row')
       row1 = rowItems.eq(0)
       jsSelectRow1 = @ensure_selectrow(row1)
@@ -122,6 +161,13 @@ define [
         ,text,q3,Question3
         ,text,q4,Question4
         """
+
+      it 'can view group settings', ->
+        $groupEl = @div.find('.group').eq(0)
+        $groupEl.find('.js-toggle-group-settings').click()
+        $groupSettings = $groupEl.find('.card__settings').eq(0)
+        expect($groupSettings.find('.xlf-dv-name').find('input').length).toBe(1)
+        ``
 
       it 'can group all rows and groups together', ->
         firstLevelRows = @div.find('.survey-editor__list > .survey__row')

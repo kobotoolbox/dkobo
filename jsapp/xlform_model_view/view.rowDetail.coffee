@@ -22,7 +22,7 @@ define 'cs!xlform/view.rowDetail', [
     of each row of the XLForm. When the view is initialized,
     a mixin from "DetailViewMixins" is applied.
     ###
-    className: "card__settings__fields  dt-view dt-view--depr"
+    className: "card__settings__fields__field  dt-view dt-view--depr"
     initialize: ({@rowView})->
       unless @model.key
         throw new Error "RowDetail does not have key"
@@ -46,7 +46,8 @@ define 'cs!xlform/view.rowDetail', [
       changing = false
       reflectValueInEl = ()=>
         if !changing
-          if @model.get('value') in  $configs.truthyValues
+          val = @model.get('value')
+          if val is true or val in $configs.truthyValues
             $el.prop('checked', true)
       @model.on 'change:value', reflectValueInEl
       reflectValueInEl()
@@ -94,10 +95,10 @@ define 'cs!xlform/view.rowDetail', [
         if transformFn
           $elVal = transformFn($elVal)
         changeModelValue($elVal)
-      ``
+      return
 
     insertInDOM: (rowView)->
-      rowView.rowExtras.append(@el)
+      rowView.defaultRowDetailParent.append(@el)
 
     renderInRowView: (rowView)->
       @render()
@@ -140,12 +141,12 @@ define 'cs!xlform/view.rowDetail', [
     afterRender: ->
       @listenForInputChange()
 
-  viewRowDetail.DetailViewMixins.constraint_message = 
+  viewRowDetail.DetailViewMixins.constraint_message =
     html: ->
       @$el.addClass("card__settings__fields--active")
       """
       <div class="card__settings__fields__field">
-        <label for="#{@cid}">Constraint message: </label>
+        <label for="#{@cid}">Error Message: </label>
         <span class="settings__input">
           <input type="text" name="#{@model.key}" id="#{@cid}" class="text" />
         </span>
@@ -158,26 +159,16 @@ define 'cs!xlform/view.rowDetail', [
     html: ->
       @$el.addClass("card__settings__fields--active")
       """
-      <div class="card__settings__fields__field">
-        <label class="card__settings__fields__field_button align-top">
-          Skip Logic
-        </label>
-        <div class="settings__input">
-          <button>Skip Logic</button>
-          <div class="relevant__editor"></div>
-        </div>
+      <div class="card__settings__fields__field relevant__editor">
       </div>
       """
 
     afterRender: ->
-      button = @$el.find("button").eq(0)
-      button.click () =>
-        if @skipLogicEditor
-          @skipLogicEditor.toggle()
-        else
-          @skipLogicEditor = new $viewRowDetailSkipLogic.SkipLogicCollectionView(el: @$el.find(".relevant__editor"), model: @model)
-          @skipLogicEditor.builder = @model.builder
-          @skipLogicEditor.render()
+      @skipLogicEditor = new $viewRowDetailSkipLogic.SkipLogicCollectionView(el: @$el.find(".relevant__editor"), model: @model)
+      @skipLogicEditor.builder = @model.builder
+      @skipLogicEditor.render()
+    insertInDOM: (rowView) ->
+      rowView.cardSettingsWrap.find('.card__settings__fields--skip-logic').eq(0).append(@el)
 
   viewRowDetail.DetailViewMixins.constraint =
     html: ->
@@ -195,6 +186,8 @@ define 'cs!xlform/view.rowDetail', [
       """
     afterRender: ->
       @listenForInputChange()
+    insertInDOM: (rowView) ->
+      rowView.cardSettingsWrap.find('.card__settings__fields--validation-criteria').append(@el)
 
   viewRowDetail.DetailViewMixins.name =
     html: ->
@@ -214,8 +207,9 @@ define 'cs!xlform/view.rowDetail', [
     afterRender: ->
       @$el.find('input').eq(0).val(@model.get("value"))
       @listenForInputChange(transformFn: (value)-> $modelUtils.sluggify(value, lowerCase:false))
-    insertInDom: (rowView)->
-      rowView.rowExtras.append(@el)
+    # insertInDom: (rowView)->
+    #   # default behavior...
+    #   rowView.defaultRowDetailParent.append(@el)
 
   viewRowDetail.DetailViewMixins.default =
     html: ->
@@ -236,8 +230,9 @@ define 'cs!xlform/view.rowDetail', [
       @$el.find('input').eq(0).val(@model.get("value"))
       @listenForInputChange()
 
-    insertInDom: (rowView)->
-      rowView.rowExtras.append(@el)
+    # insertInDom: (rowView)->
+    #   # default behavior...
+    #   rowView.defaultRowDetailParent.append(@el)
 
   viewRowDetail.DetailViewMixins.calculation =
     html: -> false

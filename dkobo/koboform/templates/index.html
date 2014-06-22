@@ -46,6 +46,7 @@
     </script>
     <script type="text/javascript">
       window.userDetails = {{user_details|safe}};
+      window.koboConfigs = {{page_kobo_configs|safe}};
       $.fn.editable.defaults.mode = 'inline';
       $.fn.editable.defaults.onblur = 'submit';
       $.fn.editable.defaults.showbuttons = false;
@@ -102,11 +103,11 @@
   {%verbatim %}
 
     <section top-level-menu class="top-level-menu" active-tab="activeTab" ng-class="topLevelMenuActive"></section>
-    <main class="main">
-      <header class="header-bar" ng-controller="HeaderController">
+    <main class="main" ng-click="closeTopMenu()">
+      <header class="header-bar" ng-controller="HeaderController" ng-click="closeTopMenu()">
         <div class="container__wide">
           <span class="header-bar__top-level-menu-button">
-            <i class="fa fa-bars fa-lg fa-inverse" ng-click="toggleTopMenu()"></i>
+            <i class="fa fa-bars fa-lg fa-inverse" ng-click="toggleTopMenu($event)"></i>
           </span>
           <h1 class="header-bar__title">
             <a href="#/{{icon_link}}">

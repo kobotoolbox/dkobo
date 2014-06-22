@@ -1,11 +1,15 @@
-from django.http import HttpResponseBadRequest
-from rest_framework.response import Response
+import json
+
+from django.http import HttpResponseBadRequest, HttpResponse, HttpResponseRedirect
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from rest_framework import status
+from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
 from dkobo.koboform.models import SurveyDraft
 from dkobo.koboform.serializers import ListSurveyDraftSerializer, DetailSurveyDraftSerializer
-
+from dkobo.koboform import pyxform_utils, kobocat_integration
 
 def export_form(request, id):
     survey_draft = SurveyDraft.objects.get(pk=id)
@@ -119,3 +123,40 @@ def import_survey_draft(request):
         response_code = 204  # Error 204: No input
         output[u'error'] = "No file posted"
     return HttpResponse(json.dumps(output), content_type="application/json", status=response_code)
+
+
+@login_required
+@api_view(['GET', 'POST'])
+def publish_survey_draft(request, pk, format=None):
+    if not settings.KOBOCAT_SERVER:
+        return Response({'error': 'KoBoCat Server not specified'}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+
+    try:
+        survey_draft = SurveyDraft.objects.get(pk=pk, user=request.user)
+    except SurveyDraft.DoesNotExist:
+        return Response({'error': 'SurveyDraft not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    (status_code, resp) = kobocat_integration.publish_survey_draft(survey_draft, "%s://%s:%s" % (settings.KOBOCAT_SERVER_PROTOCOL, \
+                                                                                                settings.KOBOCAT_SERVER, \
+                                                                                                settings.KOBOCAT_SERVER_PORT))
+
+    if 'formid' in resp:
+        survey_draft.kobocat_published_form_id = resp[u'formid']
+        survey_draft.save()
+        serializer = DetailSurveyDraftSerializer(survey_draft)
+        resp = {u'message': 'Successfully published form'}
+        resp.update(serializer.data)
+        return Response(resp)
+    else:
+        return Response({'error': 'Form ID not in Kobocat Response'})
+
+
+def published_survey_draft_url(request, pk):
+    try:
+        survey_draft = SurveyDraft.objects.get(pk=pk, user=request.user)
+    except SurveyDraft.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    username = survey_draft.user.name
+
+    return HttpResponseRedirect(kobocat_integration._kobocat_url("/%s" % username))

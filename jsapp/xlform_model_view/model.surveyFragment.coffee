@@ -163,8 +163,9 @@ define 'cs!xlform/model.surveyFragment', [
       for key, obj of grpDefaults
         if !@has key
           if typeof obj.value is 'function'
-            obj.value = obj.value(@)
-          @set key, obj
+            @set key, obj.value(@)
+          else
+            @set key, obj
       typeIsRepeat = @get('type') is 'repeat'
       @set('_isRepeat', typeIsRepeat)
       @convertAttributesToRowDetails()

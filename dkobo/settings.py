@@ -21,11 +21,21 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # DEBUG is true unless an environment variable is set to something other than 'True'
 DEBUG = (os.environ.get('DJANGO_DEBUG', 'True') == 'True')
+LIVE_RELOAD = (os.environ.get('DJANGO_LIVE_RELOAD', str(DEBUG)) == 'True')
 
 if not SECRET_KEY and not DEBUG:
     raise ValueError("DJANGO_SECRET_KEY environment variable must be set in production")
 elif not SECRET_KEY:
     SECRET_KEY = 'secretShouldBeSetInAnEnvironmentVariable3^*m3xck13'
+
+CSRF_COOKIE_DOMAIN = os.environ.get('CSRF_COOKIE_DOMAIN', None)
+
+if CSRF_COOKIE_DOMAIN:
+    SESSION_COOKIE_DOMAIN = CSRF_COOKIE_DOMAIN
+    SESSION_COOKIE_NAME = 'kobonaut'
+
+# default in django 1.6+
+SESSION_SERIALIZER='django.contrib.sessions.serializers.JSONSerializer'
 
 TEMPLATE_DEBUG = DEBUG
 
@@ -92,8 +102,13 @@ INSTALLED_APPS = (
     'gunicorn',
     'south',
     'rest_framework',
+    'rest_framework.authtoken',
     'django_extensions',
 )
+
+KOBOCAT_SERVER = os.environ.get('KOBOCAT_SERVER', False)
+KOBOCAT_SERVER_PROTOCOL = os.environ.get('KOBOCAT_SERVER_PROTOCOL', 'http')
+KOBOCAT_SERVER_PORT = os.environ.get('KOBOCAT_SERVER_PORT', '80')
 
 # The number of surveys to import. -1 is all
 KOBO_SURVEY_IMPORT_COUNT = os.environ.get('KOBO_SURVEY_IMPORT_COUNT', 100)
@@ -130,6 +145,11 @@ DATABASES = {
 ALLOWED_HOSTS = ['*']
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
+# For GeoDjango heroku buildpack
+GEOS_LIBRARY_PATH = os.environ.get('GEOS_LIBRARY_PATH')
+GDAL_LIBRARY_PATH = os.environ.get('GDAL_LIBRARY_PATH')
+POSTGIS_VERSION = (2, 0, 3)
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
@@ -156,7 +176,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 
-SITE_ID = os.environ.get('DJANGO_SITE_ID', 1)
+SITE_ID = os.environ.get('DJANGO_SITE_ID', None)
 
 ACCOUNT_ACTIVATION_DAYS = 3
 LOGIN_REDIRECT_URL = '/'

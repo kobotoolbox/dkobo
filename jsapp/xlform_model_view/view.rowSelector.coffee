@@ -33,6 +33,8 @@ define 'cs!xlform/view.rowSelector', [
       @$('input').eq(0).focus()
 
     show_namer: () ->
+      $('.line').empty()
+
       @line.addClass "expanded"
       @line.parents(".survey-editor__null-top-row").addClass "expanded"
       @line.css "height", "inherit"
