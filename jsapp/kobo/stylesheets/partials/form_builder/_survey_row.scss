@@ -81,32 +81,24 @@ $nested-btn--addrow-height: 24px;
         }
     }
 
-    // inside group, the btn--addrow must show up differently
+    // inside group, the btn--addrow must be placed slightly differently
     // note: this compiles to
     // .group__rows .btn--addrow {...}
     .group__rows & {
         left: -20px;
         width: 28px;
-        // padding: 5px 0 0 3px;
         height: $nested-btn--addrow-height + (2 * $click-area-nested-btn--addrow-padding-tb);
-        top: -15px - $click-area-nested-btn--addrow-padding-tb;
+        top: -45px - $click-area-nested-btn--addrow-padding-tb;
         padding: $click-area-nested-btn--addrow-padding-tb 0 0 3px;
+        // added border for differentiation when background is the same as button
         .fa {
-            border-radius: 3px;
-            // width: 14px;
-            font-weight: normal;
-            height: $nested-btn--addrow-height;
-            line-height: $nested-btn--addrow-height;
-            font-size: 11px;
+            border:1px solid white;
         }
     }
 
-    // the last one was being pushed down too far
-    .group__rows > .survey__row:last-child > .survey__row__spacer > & {
-        top: (-14 - $click-area-nested-btn--addrow-padding-tb) - $nested-last-inner-btn--addrow-Offset;
-        .fa {
-            height: 22px;
-        }
+    // separate the last button within subgroup from group's 
+    .group__rows > .survey__row--group:last-child > .survey__row__spacer > & {
+        top: (-25 - $click-area-nested-btn--addrow-padding-tb) - $nested-last-inner-btn--addrow-Offset;
     }
 
     // not specific enough for all :hover cases

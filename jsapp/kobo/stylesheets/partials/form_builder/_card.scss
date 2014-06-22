@@ -9,6 +9,15 @@
     font-size: 13px;
     line-height: 18px;
     margin-bottom: 4px;
+    position: relative;
+    // pseudo-rule used only to increase card hover area to the left of the card
+    &:before {
+        content: " ";
+        height: 100%;
+        left: -60px;
+        position: absolute;
+        width: 80px;
+    }
     &.card--movable {
       cursor: move;
     }
