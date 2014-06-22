@@ -13,7 +13,7 @@
 
     // make space for the .btn--addrow on the left
     .card, .row__questiontypes {
-        margin-left: 12px;
+        margin-left: 0px;
     }
 
     > .card__settings {
@@ -43,16 +43,24 @@
     border-bottom: 1px solid #ddd;
     position: relative;
     margin: -4px -8px 0;
-    padding: 4px 8px;
+    padding: 12px;
     min-height: 50px;
-    .editable-container {
-        div, form {
-            display: inline;
-        }
-        .editable-input input {
-            width: 94%;
-            font-weight: normal;
-        }
+    .group__label {
+        font-size: 16px;
+        font-weight: 600;
+    }
+    input {
+        width: 94%;
+        font-weight: normal;
+        display: inline;
+        border: none;
+        border-radius: none;
+        background: none;
+        font-size: 16px;
+        font-weight: 600;
+        padding:0px;
+        height: auto;
+        vertical-align: inherit;
     }
 }
 
