@@ -17,9 +17,16 @@ function MiscUtilsService($rootScope, $userDetails) {
         event.preventDefault();
     };
 
-    this.bootstrapFileUploader = function (which) {
-        which = which || '';
-        _fileUpload = $('.js-import-fileupload' + which).eq(0).fileupload({
+    this.bootstrapSurveyUploader = function () {
+        this.bootstrapFileUploader('.js-import-survey');
+    };
+
+    this.bootstrapQuestionUploader = function () {
+        this.bootstrapFileUploader('.js-import-questions');
+    };
+
+    this.bootstrapFileUploader = function (selector) {
+        _fileUpload = $('.js-import-fileupload' + selector).fileupload({
             headers: {
                 "X-CSRFToken": $('meta[name="csrf-token"]').attr('content')
             },

@@ -26,12 +26,12 @@
     -o-user-select: none;
     user-select: none;
     position: relative;
-  
+
     &:hover {
         background-color: #179dd0;
         text-decoration: none;
     }
-  
+
     &:active, .is-active {
         outline: 0;
         background-image: none;
@@ -120,6 +120,7 @@ input[type="button"].btn--block {
     /* form */
     margin-top: -1px;
     overflow: hidden;
+    position: relative;
 }
 
 .btn--fileupload input {
@@ -128,8 +129,11 @@ input[type="button"].btn--block {
     right: 0;
     margin: 0;
     opacity: 0;
+    display: inline-block;
+    width: 77px;
+    height: 33px;
     -ms-filter: 'alpha(opacity=0)';
-    font-size: 200px;
+    font-size: 0px;
     direction: ltr;
     cursor: pointer;
 }

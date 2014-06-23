@@ -14,7 +14,7 @@ from sandbox import jasmine_spec, sandbox
 from survey_draft_views import ListSurveyDraftSerializer, DetailSurveyDraftSerializer, \
                                 export_form, create_survey_draft, survey_draft_detail, \
                                 import_survey_draft, publish_survey_draft, \
-                                published_survey_draft_url, export_all_questions
+                                published_survey_draft_url, export_all_questions, import_questions
 from survey_preview_views import survey_previews, get_survey_preview
 
 def csv_to_xform(request):

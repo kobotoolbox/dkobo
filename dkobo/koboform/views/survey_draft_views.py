@@ -45,7 +45,7 @@ def export_all_questions(request):
     queryset = queryset.exclude(asset_type=None)
     bodies = list(question.body.split('\n') for question in queryset)
 
-    concentrated_questions = ['"survey",,,,,,,,,', ',"name","type","label","hint","required","relevant","default","constraint","constraint_message"']
+    concentrated_questions = ['"survey",,,,,,,,,', ',"name","type","label","hint","required","relevant","default","constraint","constraint_message","calculation"']
 
     for body in bodies:
         body.pop(0)
@@ -138,7 +138,7 @@ def import_survey_draft(request):
     response_code = 200
     if posted_file:
         try:
-            # create and validate the xform but ignore the resultss
+            # create and validate the xform but ignore the results
             pyxform_utils.convert_xls_to_xform(posted_file)
             output[u'xlsform_valid'] = True
 
@@ -159,6 +159,77 @@ def import_survey_draft(request):
         except Exception, err:
             response_code = 500
             output[u'error'] = str(err)
+    else:
+        response_code = 204  # Error 204: No input
+        output[u'error'] = "No file posted"
+    return HttpResponse(json.dumps(output), content_type="application/json", status=response_code)
+
+@login_required
+def import_questions(request):
+    """
+    Imports an XLS or CSV file into the user's SurveyDraft list.
+    Returns an error in JSON if the survey was not valid.
+    """
+    output = {}
+    posted_file = request.FILES.get(u'files')
+    response_code = 200
+    if posted_file:
+        #try:
+
+            posted_file.seek(0)
+            if posted_file.content_type in XLS_CONTENT_TYPES:
+                csv = pyxform_utils.convert_xls_to_csv_string(posted_file)
+            elif posted_file.content_type == "text/csv":
+                csv = posted_file.read()
+            else:
+                raise Exception("Content-type not recognized: '%s'" % posted_file.content_type)
+
+            csv_list = csv.split('"settings"\r\n')
+            settings = csv_list.pop().split('\r\n')
+            csv_list = csv_list.pop().split('"choices"\r\n')
+            choices = csv_list.pop().split('\r\n')
+            questions = csv_list.pop().split('\r\n')
+
+            survey_header = questions.pop(0) + '\r\n' + questions.pop(0)
+
+            questions.pop()
+            start_end = questions.pop()
+            start_end = questions.pop() + '\r\n' + start_end
+
+            choices_header = '"choices"'
+            settings_header = '"settings"'
+
+            question_lists = list()
+
+            for question in questions:
+
+                question_list = list([survey_header, question, start_end])
+                if 'select_multiple' in question or 'select_one' in question:
+                    question_detail = question.split(',')
+                    choicelist_id = question_detail[2].split(' ')[1]
+                    choicelist = (choice for choice in choices if choicelist_id in choice)
+                    question_list.append(choices_header)
+                    question_list.extend(choicelist)
+
+                question_list.append(settings_header)
+                question_list.extend(settings)
+
+                question_lists.append(question_list)
+
+
+
+            for question_list in question_lists:
+                new_survey_draft = SurveyDraft.objects.create(**{
+                    u'body': '\n'.join(question_list),
+                    u'name': 'New Form',
+                    u'user': request.user,
+                    u'asset_type':'question'
+                })
+
+            output[u'survey_draft_id'] = new_survey_draft.id
+        #except Exception, err:
+            #response_code = 500
+            #output[u'error'] = str(err)
     else:
         response_code = 204  # Error 204: No input
         output[u'error'] = "No file posted"
