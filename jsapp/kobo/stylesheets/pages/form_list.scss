@@ -199,7 +199,6 @@
     width: 44px;
     height: 100%;
     cursor: pointer;
-    z-index: 4;
 }
 
 .forms__card__buttons__button.blue {
@@ -231,6 +230,53 @@
       color: #646D75;
       background-color: #D9DDE1;
     }
+}
+
+/* ==========================================================================
+   Form Download Dropdown
+   ========================================================================== */
+
+.forms__download__drop {
+    position: absolute;
+    right: -18px;
+    top:62px;
+    width: 80px;
+    border:1px solid #E7E8E9;
+    background: white;
+    z-index: 5;
+    &:before {
+      content:'';
+      position: absolute;
+      left: 32px;
+      top: -8px;
+      width: 0; 
+      height: 0; 
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent; 
+      border-bottom:8px solid #E7E8E9;
+    }
+
+}
+
+.forms__download__button {
+    border:none;
+    background: white;
+    color: #3f3f3f;
+    display: block;
+    width: 78px;
+    font-size: 14px;
+    text-align: left;
+    padding:5px 5px;
+    padding-left: 15px;
+    font-weight: 600;
+    &:hover {
+        background: #5DB0EC;
+        color: white;
+    }
+}
+
+.forms__addform__button.forms__addform__template {
+    @extend %incomplete;
 }
 // LEGACY 
 
