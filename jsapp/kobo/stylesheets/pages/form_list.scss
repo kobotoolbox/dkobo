@@ -105,7 +105,7 @@
 // end fileupload fix
 
 .forms-filter {
-    @extend %incomplete;
+    // @extend %incomplete;
     height: 75px;
     width: 100%;
 }
@@ -133,12 +133,13 @@
     border:none;
     border-bottom: 2px solid #CBD0D7;
 }
+
 .forms-filter__sorter {
-    border:none;
-    border-radius: 0;
-    border-bottom: 2px solid #CBD0D7;
-    padding:8px;
-    float: left;
+    // border:none;
+    // border-radius: 0;
+    // border-bottom: 2px solid #CBD0D7;
+    // padding:8px;
+    // float: left;
 }
 
 
