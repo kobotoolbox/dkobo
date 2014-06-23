@@ -32,4 +32,5 @@ urlpatterns = patterns(
     url(r'^import_survey_draft$', 'dkobo.koboform.views.survey_draft_views.import_survey_draft'),
     url(r'^forms/(?P<id>\d+)', 'dkobo.koboform.views.export_form'),
     url(r'^assets/(\d+)', 'dkobo.koboform.views.export_form'),
+    url(r'^assets', 'dkobo.koboform.views.export_all_questions'),
 )
