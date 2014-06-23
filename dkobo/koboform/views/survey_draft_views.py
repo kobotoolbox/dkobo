@@ -38,6 +38,43 @@ def export_form(request, id):
     # response['Content-Length'] = content_length
     return response
 
+def export_all_questions(request):
+    queryset = SurveyDraft.objects.filter(user=request.user)
+    queryset = queryset.exclude(asset_type=None)
+    bodies = list(question.body.split('\n') for question in queryset)
+
+    concentrated_questions = ['"survey",,,,,,,,,', ',"name","type","label","hint","required","relevant","default","constraint","constraint_message"']
+
+    for body in bodies:
+        body.pop(0)
+        body.pop(0)
+        concentrated_questions.append(body.pop(0))
+        body.pop(0)
+        body.pop(0)
+
+    concentrated_questions.append(',"start","start",,,,,,,')
+    concentrated_questions.append(',"end","end",,,,,,,')
+    concentrated_questions.append('"choices",,,')
+
+    for body in bodies:
+        if body[0] == '"choices",,,':
+            body.pop(0)
+            while body[0] != '"settings",,':
+                concentrated_questions.append(body.pop(0))
+
+    concentrated_questions.append('"settings",,')
+    concentrated_questions.append(',"form_title","form_id"')
+    concentrated_questions.append(',"New form","new_form"')
+
+    concentrated_csv = '\n'.join(concentrated_questions)
+
+    from dkobo.koboform import pyxform_utils
+
+    response = HttpResponse(pyxform_utils.convert_csv_to_xls(concentrated_csv), mimetype='application/vnd.ms-excel; charset=utf-8')
+    response['Content-Disposition'] = 'attachment; filename=all_questions.xls'
+
+    return response
+
 @login_required
 def create_survey_draft(request):
 
