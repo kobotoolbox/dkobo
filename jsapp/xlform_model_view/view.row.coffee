@@ -84,14 +84,14 @@ define 'cs!xlform/view.row', [
     className: "survey__row survey__row--group  xlf-row-view xlf-row-view--depr"
     events:
       "click .js-delete-group": "deleteGroup"
-      # "click .js-expand-row-selector": "expandRowSelector"
     initialize: (opts)->
       @options = opts
       @_shrunk = !!opts.shrunk
       @$el.attr("data-row-id", @model.cid)
       @surveyView = @options.surveyView
     deleteGroup: (evt)->
-      if confirm('Are you sure you want to split apart this group?')
+      skipConfirm = $(evt.currentTarget).hasClass('js-force-delete-group')
+      if skipConfirm or confirm('Are you sure you want to split apart this group?')
         @model.splitApart()
         @$el.remove()
       evt.preventDefault()
