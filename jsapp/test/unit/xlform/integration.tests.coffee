@@ -205,3 +205,33 @@ define [
         expect(@app.selectedRows().length).toBe(2)
         @app.groupSelectedRows()
         # dump @survey.toCSV()
+    describe 'tests of small groups', ->
+      beforeEach ->
+        @load_csv """
+        survey,,,
+        ,type,name,label
+        ,begin group,grp,
+        ,text,g1q1,Group1Question1
+        ,text,g1q2,Group1Question2
+        ,end group,,
+        """
+      it 'can group and break apart', ->
+        @div.find('.js-delete-group').addClass('js-force-delete-group').eq(0).click()
+
+        firstLevelRows = @div.find('.survey-editor__list > .survey__row')
+        expect(firstLevelRows.length).toBe(2)
+
+        firstLevelRows.addClass('survey__row--selected')
+        expect(@app.selectedRows().length).toBe(2)
+
+        @app.groupSelectedRows()
+
+        # there should be one "first-level row": the group
+        firstLevelRows = @div.find('.survey-editor__list > .survey__row')
+        expect(firstLevelRows.length).toBe(1)
+
+        # split is apart again
+        @div.find('.js-delete-group').addClass('js-force-delete-group').eq(0).click()
+        firstLevelRows = @div.find('.survey-editor__list > .survey__row')
+        expect(firstLevelRows.length).toBe(2)
+        ``
