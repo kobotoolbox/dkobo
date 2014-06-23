@@ -18,9 +18,17 @@
       <i class="fa fa-search"></i> <input class="forms-filter__searchbox" placeholder="Search forms"  ng-model="searchCriteria" />
     </div>
     <select class="forms-filter__sorter">
-      <option>Sort</option>
+      <option>Sort: <span>Newest</span></option>
+      <option>Sort: <span>Oldest</span></option>
+      <option>Sort: <span>Last Modified</span></option>
     </select>
   </div>
+    <!-- THIS IS HERE TEMPORARILY -->
+    <script type="text/javascript">
+      $('select.forms-filter__sorter').select2({
+        minimumResultsForSearch: -1
+      });
+    </script>
 
   <div class="info-list">
       <div class="forms__card" ng-repeat="item in items|orderBy:'-date_modified'">
