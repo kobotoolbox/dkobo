@@ -131,6 +131,7 @@ $cardIndicatorIconWidth: 21px;
 // ==========================================================================
 // Card quick buttons
 // ==========================================================================
+
 .card__buttons {
     border: $cardBorderStyle;
     border-width: 0 0 0 1px;
@@ -221,12 +222,6 @@ $cardIndicatorIconWidth: 21px;
 }
 
 // Misc...
-
-.card__text {
-    .editable-container {
-        width: 100%;
-    }
-}
 
 .placeholder {
     height: 80px;
