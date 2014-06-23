@@ -29,6 +29,5 @@ function HeaderController($scope, $rootScope, $miscUtils, $location) {
         if ($event.shiftKey) {
             $('body').toggleClass('bleeding-edge');
         }
-    }
-
+    };
 }
