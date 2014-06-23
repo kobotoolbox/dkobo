@@ -229,4 +229,9 @@ define [
         # there should be one "first-level row": the group
         firstLevelRows = @div.find('.survey-editor__list > .survey__row')
         expect(firstLevelRows.length).toBe(1)
+
+        # split is apart again
+        @div.find('.js-delete-group').addClass('js-force-delete-group').eq(0).click()
+        firstLevelRows = @div.find('.survey-editor__list > .survey__row')
+        expect(firstLevelRows.length).toBe(2)
         ``
