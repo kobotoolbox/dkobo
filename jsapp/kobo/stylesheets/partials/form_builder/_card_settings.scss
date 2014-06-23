@@ -34,7 +34,7 @@
     font-weight: normal;
     font-family: 'Lato';
     cursor: pointer;
-    &.active {
+    &.card__settings__tabs__tab--active {
         background: #E5E8EB;
         font-weight: 600;
     }
