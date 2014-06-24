@@ -25,15 +25,17 @@ define 'cs!xlform/view.rowSelector', [
       @line = @$el.find(".line")
       if opts.action is "click-add-row"
         @expand()
-      if !@reversible
-        @button.hide()
 
     expand: ->
       @show_namer()
       @$('input').eq(0).focus()
 
     show_namer: () ->
-      $('.line').empty()
+      $surveyViewEl = @options.surveyView.$el
+      $surveyViewEl.find('.line.expanded').removeClass('expanded').empty()
+      $surveyViewEl.find('.btn--hidden').removeClass('btn--hidden')
+
+      @button.addClass('btn--hidden')
 
       @line.addClass "expanded"
       @line.parents(".survey-editor__null-top-row").addClass "expanded"
@@ -60,8 +62,10 @@ define 'cs!xlform/view.rowSelector', [
       @line.parents(".survey-editor__null-top-row").removeClass "expanded"
       @line.removeClass "expanded"
       @line.animate height: "0"
+      if @reversible
+        @button.removeClass('btn--hidden')
     hide: ->
-      @button.show()
+      @button.removeClass('btn--hidden')
       @line.empty().removeClass("expanded").css "height": 0
 
     selectMenuItem: (evt)->
