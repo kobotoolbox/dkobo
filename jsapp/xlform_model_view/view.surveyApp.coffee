@@ -167,7 +167,7 @@ define 'cs!xlform/view.surveyApp', [
         if !evt.ctrlKey
           selected_rows = @selectedRows()
           target = $et.closest('.survey__row')
-          if target.hasClass('survey__row--selected') || selected_rows.length > 1
+          if !target.hasClass('survey__row--selected') || selected_rows.length > 1
             $('.survey__row').removeClass('survey__row--selected')
 
 
