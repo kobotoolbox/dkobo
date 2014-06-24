@@ -10,12 +10,12 @@ function KobocatFormPublisherDirective($restApi, $miscUtils) {
                 function success (results, headers) {
                     $miscUtils.alert('Survey Publishing succeeded');
                 }
-                function fail () {
-                    $miscUtils.alert('Survey Publishing failed');
+                function fail (response) {
+                    $miscUtils.alert('Survey Publishing failed. <br/><br/>' + response.data.text);
                 }
 
                 $restApi.createSurveyDraftApi(scope.item.id)
-                    .publish({label:scope.form_label, name: scope.form_name}, success, fail);
+                    .publish({title:scope.form_label, id_string: dkobo_xlform.model.utils.sluggifyLabel(scope.form_name)}, success, fail);
             };
 
             scope.open = function () {
