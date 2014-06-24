@@ -100,12 +100,13 @@ define 'cs!xlform/view.choices', [
         @options.cl.options.add(@model)
         @p.html("Option #{1+@options.i}").addClass("preliminary")
 
-      @p.on 'shown', (e, obj) -> obj.input.$input.on 'paste', (e) -> e.stopPropagation()
       $viewUtils.makeEditable @, @model, @p, edit_callback: _.bind @saveValue, @
       @n = $('span', @c)
-      @n.on 'shown', (e, obj) -> obj.input.$input.on 'paste', (e) -> e.stopPropagation()
       $viewUtils.makeEditable @, @model, @n, edit_callback: (val) =>
         other_names = @options.cl.getNames()
+
+        if @model.get('name')? && val.toLowerCase() == @model.get('name').toLowerCase()
+          other_names.splice _.indexOf(other_names, @model.get('name')), 1
         if val is ''
           @model.unset('name')
           @model.set('setManually', false)
