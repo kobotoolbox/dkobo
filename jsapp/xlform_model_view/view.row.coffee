@@ -7,7 +7,6 @@ define 'cs!xlform/view.row', [
         'cs!xlform/view.utils',
         'cs!xlform/view.choices',
         'cs!xlform/view.rowDetail',
-        'cs!xlform/model.utils',
         ], (
             Backbone,
             $,
@@ -17,7 +16,6 @@ define 'cs!xlform/view.row', [
             $viewUtils,
             $viewChoices,
             $viewRowDetail,
-            $modelUtils,
             )->
   class BaseRowView extends Backbone.View
     tagName: "li"
