@@ -48,12 +48,16 @@ define 'cs!xlform/view.row', [
     #   new $rowSelector.RowSelector(el: @$el.find(".survey__row__spacer").get(0), ngScope: @ngScope, spawnedFromView: @).expand()
 
     render: ->
+      if @already_rendered
+        @is_expanded = @$card.hasClass('card--expandedchoices')
       if @model instanceof $row.RowError
         @_renderError()
       else
         @_renderRow()
       @$el.data("row-index", @model._parent.indexOf @model)
       # @$el.data("row-parent", @model.parentRow().cid)
+      @already_rendered = true
+      
       @
     _renderError: ->
       @$el.addClass("xlf-row-view-error")
@@ -66,7 +70,9 @@ define 'cs!xlform/view.row', [
       @$label = @$('.card__header-title')
       @$card = @$el.find('.card')
       if 'getList' of @model and (cl = @model.getList())
-        @$card.addClass('card--selectquestion card--expandedchoices')
+        @$card.addClass('card--selectquestion')
+        if !@already_rendered || @is_expanded
+          @$card.addClass('card--expandedchoices')
         @listView = new $viewChoices.ListView(model: cl, rowView: @).render()
 
       @cardSettingsWrap = @$('.card__settings').eq(0)
