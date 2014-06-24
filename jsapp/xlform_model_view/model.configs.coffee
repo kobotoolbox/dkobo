@@ -128,6 +128,11 @@ define 'cs!xlform/model.configs', ["underscore", "backbone"], (_, Backbone)->
     calculate:
       calculation:
         value: ""
+      label:
+        value: "calculation"
+      required:
+        value: false
+        _hideUnlessChanged: true
     datetime:
       label:
         value: "Enter a date and time"

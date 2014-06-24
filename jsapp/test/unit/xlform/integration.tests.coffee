@@ -147,6 +147,57 @@ define [
           expect(@viewedNames()).toEqual(['qa','qc','qb'])
           expect(@surveyNames()).toEqual(['qa','qc','qb'])
 
+    describe 'question type behavior', ->
+      beforeEach ->
+        @expectRowDefinedValues = (r)->
+          outObj = {}
+          for k, v of r.toJSON() when v
+            outObj[k] = v
+          expect(outObj)
+
+        @load_csv """
+        survey,,,
+        ,type,name,label
+        ,text,q1,Question1
+        """
+      it 'for calculation question through the interface', ->
+        click_set_val = (v)->
+          survey_row.find('.card__header-title').eq(0).click()
+          inp = survey_row.find('input').eq(0)
+          inp.val(v)
+          inp.blur()
+
+        @div.find('.js-expand-row-selector').eq(-1).click()
+        line = @div.find('.survey__row .line').eq(0)
+        line.find('input').eq(0).val("4 + 4")
+        line.find('button').eq(0).click()
+
+        # Preview value is correct
+        expect(line.find('.row__questiontypes__new-question-name').val()).toBe("4 + 4")
+        line.find(".questiontypelist__item[data-menu-item='calculate']").click()
+
+        expectedLastRow =
+          type: 'calculate'
+          calculation: '4 + 4'
+          name: 'calculation'
+          required: 'false'
+        @expectRowDefinedValues(@survey.rows.last()).toEqual(expectedLastRow)
+
+        survey_row = @div.find('.survey__row').eq(-1)
+
+        expect(survey_row.find('.card__header-title').text()).toBe("4 + 4")
+        click_set_val("5 + 5")
+        expect(survey_row.find('.card__header-title').text()).toBe("5 + 5")
+
+        expectedLastRow =
+          type: 'calculate'
+          calculation: '5 + 5'
+          name: 'calculation'
+          required: 'false'
+        @expectRowDefinedValues(@survey.rows.last()).toEqual(expectedLastRow)
+
+        ``
+
     describe 'grouping selected rows', ->
       beforeEach ->
         @load_csv """
