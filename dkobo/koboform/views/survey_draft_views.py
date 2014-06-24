@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework.authtoken.models import Token
 
 from dkobo.koboform.models import SurveyDraft
 from dkobo.koboform.serializers import ListSurveyDraftSerializer, DetailSurveyDraftSerializer
@@ -136,9 +137,39 @@ def publish_survey_draft(request, pk, format=None):
     except SurveyDraft.DoesNotExist:
         return Response({'error': 'SurveyDraft not found'}, status=status.HTTP_404_NOT_FOUND)
 
-    (status_code, resp) = kobocat_integration.publish_survey_draft(survey_draft, "%s://%s:%s" % (settings.KOBOCAT_SERVER_PROTOCOL, \
-                                                                                                settings.KOBOCAT_SERVER, \
-                                                                                                settings.KOBOCAT_SERVER_PORT))
+    body = survey_draft.body.split('\n')
+
+    title = request.DATA.get('title', False)
+    id_string = request.DATA.get('id_string', False)
+
+    form_settings=body.pop()
+    form_settings_list=form_settings.split(',')
+
+    if title and title != '':
+        form_settings_list.pop(1)
+        form_settings_list.insert(1, '"' + title + '"')
+    if id_string and id_string != '':
+        form_settings_list.pop(2)
+        form_settings_list.insert(2, '"' + id_string + '"')
+
+    body.append(','.join(form_settings_list))
+    body = '\n'.join(body)
+
+    #(status_code, resp) = kobocat_integration.publish_survey_draft(survey_draft, "%s://%s:%s" % (settings.KOBOCAT_SERVER_PROTOCOL, \settings.KOBOCAT_SERVER, \settings.KOBOCAT_SERVER_PORT))
+
+    import requests
+
+    (token, is_new) = Token.objects.get_or_create(user=request.user)
+    headers = {u'Authorization':'Token ' + token.key}
+
+    payload = {u'text_xls_form': body}
+
+    url = kobocat_integration._kobocat_url('/api/v1/forms')
+
+    response = requests.post(url, headers=headers, data=payload)
+
+    status_code = response.status_code
+    resp = response.json()
 
     if 'formid' in resp:
         survey_draft.kobocat_published_form_id = resp[u'formid']
@@ -146,9 +177,8 @@ def publish_survey_draft(request, pk, format=None):
         serializer = DetailSurveyDraftSerializer(survey_draft)
         resp = {u'message': 'Successfully published form'}
         resp.update(serializer.data)
-        return Response(resp)
-    else:
-        return Response({'error': 'Form ID not in Kobocat Response'})
+
+    return Response(resp, status=status_code)
 
 
 def published_survey_draft_url(request, pk):

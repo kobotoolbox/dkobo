@@ -44,7 +44,7 @@ function MiscUtilsService($rootScope) {
 
     this.alert = function (message, type) {
         type = type || 'Information';
-        $('.alert-modal').text(message).dialog('option', {
+        $('.alert-modal').html(message).dialog('option', {
             title: type,
             width: 500
         }).dialog('open');
