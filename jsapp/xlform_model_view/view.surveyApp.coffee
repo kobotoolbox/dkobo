@@ -156,8 +156,8 @@ define 'cs!xlform/view.surveyApp', [
       return
 
     forceSelectRow: (evt)->
-      # forceSelectRow is used to mock the shift key
-      @selectRow($.extend({}, evt, shiftKey: true))
+      # forceSelectRow is used to mock the multiple-select key
+      @selectRow($.extend({}, evt))
     selectRow: (evt)->
       $et = $(evt.target)
       $ect = $(evt.currentTarget)
@@ -167,7 +167,7 @@ define 'cs!xlform/view.surveyApp', [
         if !evt.ctrlKey
           selected_rows = @selectedRows()
           target = $et.closest('.survey__row')
-          if $('.survey__row.survey__row--selected').filter(target).length == 0 || selected_rows.length > 1
+          if target.hasClass('survey__row--selected') || selected_rows.length > 1
             $('.survey__row').removeClass('survey__row--selected')
 
 
