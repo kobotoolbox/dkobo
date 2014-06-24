@@ -152,6 +152,8 @@ define 'cs!xlform/view.rowDetail', [
         </span>
       </div>
       """
+    insertInDOM: (rowView)->
+      rowView.cardSettingsWrap.find('.card__settings__fields--validation-criteria').eq(0).append(@el)
     afterRender: ->
       @listenForInputChange()
 
