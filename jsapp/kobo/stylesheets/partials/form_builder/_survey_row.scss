@@ -114,3 +114,9 @@ $nested-btn--addrow-height: 24px;
         display: none;
     }
 }
+
+// helper class
+.btn--hidden {
+    // https://github.com/csswizardry/CSS-Guidelines#important
+    display: none !important;
+}
