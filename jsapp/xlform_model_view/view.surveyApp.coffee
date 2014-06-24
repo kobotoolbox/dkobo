@@ -159,14 +159,21 @@ define 'cs!xlform/view.surveyApp', [
       # forceSelectRow is used to mock the shift key
       @selectRow($.extend({}, evt, shiftKey: true))
     selectRow: (evt)->
-      if evt.shiftKey
-        $et = $(evt.target)
-        $ect = $(evt.currentTarget)
-        # a way to ensure the event is not run twice when in nested .js-select-row elements
-        _isIntendedTarget = $ect.closest('.survey__row').get(0) is $et.closest('.survey__row').get(0)
-        if _isIntendedTarget
-          $et.closest('.survey__row').toggleClass("survey__row--selected")
-          @questionSelect()
+      $et = $(evt.target)
+      $ect = $(evt.currentTarget)
+      # a way to ensure the event is not run twice when in nested .js-select-row elements
+      _isIntendedTarget = $ect.closest('.survey__row').get(0) is $et.closest('.survey__row').get(0)
+      if _isIntendedTarget
+        if !evt.ctrlKey
+          selected_rows = @selectedRows()
+          target = $et.closest('.survey__row')
+          if $('.survey__row.survey__row--selected').filter(target).length == 0 || selected_rows.length > 1
+            $('.survey__row').removeClass('survey__row--selected')
+
+
+        $et.closest('.survey__row').toggleClass("survey__row--selected")
+
+        @questionSelect()
 
     questionSelect: (evt)->
       @activateGroupButton(@selectedRows().length > 0)
