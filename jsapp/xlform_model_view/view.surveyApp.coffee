@@ -203,7 +203,7 @@ define 'cs!xlform/view.surveyApp', [
       $ect = $(evt.currentTarget)
       if $ect.parents('.survey-editor__null-top-row').length > 0
         # This is the initial row in the survey
-        new $viewRowSelector.RowSelector(el: @$el.find(".survey__row__spacer").get(0), survey: @survey, ngScope: @ngScope, surveyView: @).expand()
+        new $viewRowSelector.RowSelector(el: @$el.find(".survey__row__spacer").get(0), survey: @survey, ngScope: @ngScope, surveyView: @, reversible:true).expand()
       else
         $row = $ect.parents('.survey__row').eq(0)
         $spacer = $ect.parents('.survey__row__spacer')
@@ -212,7 +212,7 @@ define 'cs!xlform/view.surveyApp', [
         if !view
           # hopefully, this error is never triggered
           throw new Error('View for row was not found: ' + rowId)
-        new $viewRowSelector.RowSelector(el: $spacer.get(0), ngScope: @ngScope, spawnedFromView: view, surveyView: @).expand()
+        new $viewRowSelector.RowSelector(el: $spacer.get(0), ngScope: @ngScope, spawnedFromView: view, surveyView: @, reversible:true).expand()
 
     render: ()->
       @$el.removeClass("content--centered").removeClass("content")
