@@ -236,13 +236,7 @@ define 'cs!xlform/view.rowDetail', [
 
   viewRowDetail.DetailViewMixins.calculation =
     html: -> false
-    insertInDOM: (rowView)->
-      if rowView.model.get("type").get("typeId") is "calculate"
-        cht = rowView.$el.find(".card__header-title")
-        cht.html(@model.get("value"))
-        $viewUtils.makeEditable @, @model, cht, options:
-          placement: 'right'
-          rows: 3
+    insertInDOM: (rowView)-> ``
 
   viewRowDetail.DetailViewMixins._isRepeat =
     html: ->
