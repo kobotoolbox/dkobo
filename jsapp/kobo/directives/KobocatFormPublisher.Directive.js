@@ -8,9 +8,11 @@ function KobocatFormPublisherDirective($restApi, $miscUtils) {
             var dialog = element.find('.forms__kobocat__publisher');
             scope.publish = function () {
                 function success (results, headers) {
+                    scope.close();
                     $miscUtils.alert('Survey Publishing succeeded');
                 }
                 function fail (response) {
+                    scope.close();
                     $miscUtils.alert('Survey Publishing failed. <br/><br/>' + response.data.text);
                 }
 
