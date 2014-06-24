@@ -170,6 +170,10 @@ define 'cs!xlform/model.surveyFragment', [
       @set('_isRepeat', typeIsRepeat)
       @convertAttributesToRowDetails()
 
+
+    addRowAtIndex: (row, index) ->
+      row._parent = @rows
+      @rows.add(row, at:index)
     _isRepeat: ()->
       !!(@get("_isRepeat")?.get("value"))
 

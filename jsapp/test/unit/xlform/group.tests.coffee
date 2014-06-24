@@ -170,3 +170,28 @@ define [
         expect(@getNames(@survey)).toEqual(['q1', 'grp1', 'g1q1', 'q2'])
         @g1.splitApart()
         expect(@getNames(@survey)).toEqual(['q1', 'g1q1', 'q2'])
+      describe 'nested group can be split apart', ->
+        beforeEach ->
+          @survey = $survey.Survey.load("""
+          survey,,,
+          ,type,name,label
+          ,begin group,grp1,Group1
+          ,begin group,grp2,Group2
+          ,text,q1,Q1
+          ,end group,,,
+          ,end group,,,
+          ,text,q2,Q2
+          """)
+          @g1 = _firstGroup @survey
+          @g2 = @g1.rows.at(0)
+        it 'is set up', ->
+          expect(@g2.constructor.key).toEqual("group")
+          expect(@getNames(@survey)).toEqual(['grp1', 'grp2', 'q1', 'q2'])
+
+        it 'can break apart outer group', ->
+          @g1.splitApart()
+          expect(@getNames(@survey)).toEqual(['grp2', 'q1', 'q2'])
+
+        it 'can break apart outer group', ->
+          @g2.splitApart()
+          expect(@getNames(@survey)).toEqual(['grp1', 'q1', 'q2'])
