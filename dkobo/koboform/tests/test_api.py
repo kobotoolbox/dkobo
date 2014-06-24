@@ -29,6 +29,14 @@ class CreateReadUpdateDeleteSurveyDraftsTests(TestCase):
         return self.client.post('/api/survey_drafts', json.dumps(survey_dict), \
                                 content_type='application/json')
 
+    def post_asset(self, client, survey={}):
+        survey_dict = {u'name': "Test Form",
+                        u'body': 'body',
+                        u'asset_type': 'question'}
+        survey_dict.update(survey)
+        return self.client.post('/api/library_assets', json.dumps(survey_dict), \
+                                content_type='application/json')
+
     def test_anonymous_list(self):
         resp = self.anonymousClient.get('/api/survey_drafts')
         self.assertEqual(resp.status_code, 403)
@@ -81,3 +89,17 @@ class CreateReadUpdateDeleteSurveyDraftsTests(TestCase):
         resp = self.client.get('/api/survey_drafts')
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(len(resp.data), 0)
+
+    def test_patch_asset(self):
+        def make_body(question_label):
+            return """survey,,,\n,type,name,label\n,text,q1,%s""" % question_label
+        self.post_asset(self.client, {
+            u'body': make_body("Question1")
+        })
+        resp = self.client.get('/api/library_assets')
+        self.assertEqual(resp.data[0]['id'], 1)
+        resp2 = self.client.patch('/api/library_assets/1', json.dumps({
+            u'body': make_body("Question2"),
+            u'asset_type':'question'
+        }), content_type='application/json')
+        self.assertEqual(SurveyDraft.objects.get(id=1).body, make_body("Question2"))
