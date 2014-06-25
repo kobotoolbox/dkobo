@@ -73,8 +73,6 @@ define 'cs!xlform/view.surveyApp', [
       "mouseenter .card__buttons__button": "buttonHoverIn"
       "mouseleave .card__buttons__button": "buttonHoverOut"
       "click .card__settings__tabs li": "switchTab"
-      "mouseenter .card__buttons__button": "buttonHoverIn"
-      "mouseleave .card__buttons__button": "buttonHoverOut"
     @create: (params = {}) ->
       if _.isString params.el
         params.el = $(params.el).get 0
