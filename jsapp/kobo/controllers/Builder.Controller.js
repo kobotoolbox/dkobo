@@ -80,4 +80,7 @@ function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo,
             $miscUtils.alert('Question added to library', 'Success!!');
         });
     };
+        // $("button.rowselector_toggle-library").removeClass('active__sidebar');
+        // $("section.form-builder").removeClass('active__sidebar');
+
 }

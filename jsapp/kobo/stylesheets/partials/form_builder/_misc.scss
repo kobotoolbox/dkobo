@@ -22,6 +22,34 @@
 // Editable forms
 // ==========================================================================
 
+// inputs in edit-in-place
+.card__text input, 
+.editable-wrapper input {
+    border:none;
+    padding:0px;
+    margin:0px;
+    font-weight: 600;
+    display: inline;
+    height:auto !important;
+    font-size: 13px;
+}
+
+code input[type="text"] {
+    border:none;
+    padding:0px;
+    padding-right: 4px;
+    margin:0px;
+    font-weight: 600;
+    display: inline;
+    background: none;
+    font-size: 11px;
+    color: $linkColor;
+    float: right;
+    width: 64%;
+    height: auto !important;
+    text-align: right;
+}
+
 //.editable-container is a $.poshytip className
 .editable-container {
     vertical-align: top;
@@ -31,7 +59,7 @@
         border-radius: 0px;
         border:none;
         padding: 0px !important;
-        font-size: 12px;
+        font-size: 13px;
         width: 100%;
         display: inline-block;
         margin:0px;
@@ -53,6 +81,7 @@
 
 .survey-editor {
     padding-bottom: 36px;
+    transition:all .3s;
 }
 
 .survey-editor__null-top-row {

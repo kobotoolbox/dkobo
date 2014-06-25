@@ -1,10 +1,10 @@
 <ul ng-controller="HeaderController">
-  <li class="top-level-menu__item--user">
+<!--   <li class="top-level-menu__item--user">
     <img ng-src="{{ user.avatar }}" class="top-level-menu__item--user-avatar">
     <h2 class="top-level-menu__item--user-name">
       {{ user.name }}
     </h2>
-  </li>
+  </li> -->
   <li class="top-level-menu__item" ng-repeat="section in sections" ng-class="isActive('{{ section.title }}')" ng-click="toggleTopMenu()">
     <a href="#/{{ section.name }}">
       <i class="header-bar__page-icon  fa  fa-fw  {{ section.icon }}"></i>

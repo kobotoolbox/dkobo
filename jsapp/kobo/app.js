@@ -48,7 +48,7 @@ kobo.config(function ($routeProvider, $locationProvider, $httpProvider) {
         });
 
         $routeProvider.when('/builder/:id', {
-            template: '<section koboform-builder class="form-builder"></section><section koboform-question-library class="koboform__questionlibrary" ng-show="displayQlib" click-handler="add_item(item)" current-item="currentItem"></section>',
+            template: '<div class="container__fixed"><div class="container__wide"><section koboform-question-library class="koboform__questionlibrary" ng-show="displayQlib" click-handler="add_item(item)" current-item="currentItem"></section></div></div><section koboform-builder class="form-builder"></section>',
             controller: 'BuilderController'
         });
 
@@ -88,6 +88,26 @@ kobo.run(function ($http, $cookies, $miscUtils) {
         $('.alert-modal').dialog({
             autoOpen: false,
             modal: true
+        });
+
+        // forms__list poshytip effect on publish button
+        $('.forms__poshytip').poshytip({
+            className: 'tip__rightarrow',
+            showTimeout: 1,
+            alignTo: 'target',
+            offsetX: 10,
+            offsetY: -16,
+            liveEvents: true
+        });
+
+        // question mark poshytip effect (in form__settings)
+        $('span.poshytip').poshytip({
+            className: 'tip__bottomarrow',
+            showTimeout: 1,
+            alignTo: 'target',
+            alignX: 'right',
+            alignY: 'inner-bottom',
+            liveEvents: true
         });
     });
     // jQuery.fileupload for importing forms to the user's form list.
