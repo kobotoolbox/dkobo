@@ -20,6 +20,7 @@
     text-align: center;
     font-weight: 600;
     background: #39BF6E;
+    border:none;
     border-bottom: 2px solid darken(#39BF6E, 20%);
 }
 
@@ -32,7 +33,76 @@
     position: absolute;
     right:0px;
     top:0px;
+    &:hover {
+        background: lighten(#39BF6E, 10%);
+    }  
 }
+
+.forms__addform__drop {
+    position: absolute;
+    right: -30px;
+    top:28px;
+    width: 150px;
+    border:1px solid #CCC;
+    z-index: 8;
+    &:before {
+      content:'';
+      position: absolute;
+      left: 55px;
+      top: -6px;
+      width: 0; 
+      height: 0; 
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent; 
+      border-bottom:6px solid white;
+    }
+
+}
+
+.forms__addform__button {
+    border:none;
+    background: white;
+    color: #3f3f3f;
+    display: block;
+    width: 148px;
+    font-size: 14px;
+    text-align: left;
+    padding:5px 5px;
+    &:hover {
+        background: #5DB0EC;
+        color: white;
+    }
+}
+
+.forms__addform__button.forms__addform__template {
+    @extend %incomplete;
+}
+
+// ==========================================================================
+// Fileupload fix
+// ==========================================================================
+
+.forms__addform__xls {
+    /* form */
+    margin-top: -1px;
+    overflow: hidden;
+    position: relative;
+}
+
+.forms__addform__xls input {
+    /* invisible input button above label */
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    opacity: 0;
+    -ms-filter: 'alpha(opacity=0)';
+    width: 150px;
+    height: 30px;
+    cursor: pointer;
+}
+
+// end fileupload fix
 
 .forms-filter {
     @extend %incomplete;
@@ -63,12 +133,13 @@
     border:none;
     border-bottom: 2px solid #CBD0D7;
 }
+
 .forms-filter__sorter {
-    border:none;
-    border-radius: 0;
-    border-bottom: 2px solid #CBD0D7;
-    padding:8px;
-    float: left;
+    // border:none;
+    // border-radius: 0;
+    // border-bottom: 2px solid #CBD0D7;
+    // padding:8px;
+    // float: left;
 }
 
 
@@ -99,19 +170,24 @@
 
 .forms__card__kobocat {
     position: absolute;
-    top: 5px;
-    left: -135px;
+    bottom: 5px;
+    left: -35px;
 }
-.forms__kobocat__btn {
-    @extend .btn;
-    padding: 0;
-    width: 125px;
-}
-.forms__kobocat__btn--link {
-    color: #fff;
-}
-.forms__kobocat__btn--publish {
 
+.forms__kobocat__btn {
+    border:none;
+    width: 25px;
+    height: 25px;
+    color: #E9EDF0;
+    background: #BEC9D0;
+    border-radius: 5px;
+    font-size: 20px;
+    i {
+        transform:rotate(45deg);
+    }    
+    &:hover {
+        background: #5DB0EC;
+    }
 }
 
 .forms__kobocat__publisher {
@@ -127,14 +203,13 @@
 
 .forms__card__buttons {
     border: $cardBorderStyle;
-    border-width: 0 0 0 2px;
+    border-width: 0 0 0 1px;
     position: absolute;
     top: 0px;
     right: 0px;
-    width: 45px;
+    width: 44px;
     height: 100%;
     cursor: pointer;
-    z-index: 4;
 }
 
 .forms__card__buttons__button.blue {
@@ -166,6 +241,53 @@
       color: #646D75;
       background-color: #D9DDE1;
     }
+}
+
+/* ==========================================================================
+   Form Download Dropdown
+   ========================================================================== */
+
+.forms__download__drop {
+    position: absolute;
+    right: -18px;
+    top:62px;
+    width: 80px;
+    border:1px solid #E7E8E9;
+    background: white;
+    z-index: 5;
+    &:before {
+      content:'';
+      position: absolute;
+      left: 32px;
+      top: -8px;
+      width: 0; 
+      height: 0; 
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent; 
+      border-bottom:8px solid #E7E8E9;
+    }
+
+}
+
+.forms__download__button {
+    border:none;
+    background: white;
+    color: #3f3f3f;
+    display: block;
+    width: 78px;
+    font-size: 14px;
+    text-align: left;
+    padding:5px 5px;
+    padding-left: 15px;
+    font-weight: 600;
+    &:hover {
+        background: #5DB0EC;
+        color: white;
+    }
+}
+
+.forms__addform__button.forms__addform__template {
+    @extend %incomplete;
 }
 // LEGACY
 

@@ -34,17 +34,18 @@
     font-weight: normal;
     font-family: 'Lato';
     cursor: pointer;
-    &.card__settings__tabs__tab--active {
-        background: #E5E8EB;
-        font-weight: 600;
-    }
 }
 
 //== ul.card__settings__tabs li.card__settings__tabs__tab
 // proposed: .card__settings__tabs__tab
 .card__settings__tabs li {
     @extend %card__settings__tabs__tab;
+    &.card__settings__tabs__tab--active {
+        background: #E5E8EB;
+        font-weight: 600;        
+    }
 }
+
 
 //== ul.card__settings__tabs li.card__settings__tabs__heading
 // proposed: .card__settings__tabs__heading
@@ -68,13 +69,14 @@
     padding: 20px 30px;
     margin-left: 20%;
     border-left: $thinBorderStyle;
-    min-height: 132px;
+    min-height: 152px;
 }
 
 .card__settings__fields {
     display: none;
     transition: height .3s;
-    &.card__settings__fields--active {
+    // Temporary
+    &.card__settings__fields--active, &.active {
         display: block;
         transition: height .3s;
     }
@@ -106,7 +108,7 @@
     }
 }
 
-// TEMP
+// SKIP Logic
 // ------
 .card__settings__fields.skip-logic {
     margin-top: 10px;
@@ -121,8 +123,10 @@
         text-align: center;
         padding: 12px 0px;
         font-weight: 600;
+        margin-bottom: 5px;
         i {
-            margin-right: 10px;
+            margin-right: 1 0px;
+            font-style: normal;
         }
         &.skiplogic__select-builder {
             background: #B3E6C9;
@@ -189,6 +193,28 @@
     margin-bottom: 10px;
 }
 
+.skiplogic__handcode-edit {
+    width: 100%;
+    min-height: 120px;
+}
+
+.skiplogic-handcode__cancel {
+    border:none;
+    background: #C5CACF;
+    color: white;
+    position: absolute;
+    right: 10px;
+    top:10px;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 15px;
+    height: 18px;
+    width: 18px;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 5px;
+    padding-bottom: 4px;
+}
 
 // ==========================================================================
 // Edit buttons

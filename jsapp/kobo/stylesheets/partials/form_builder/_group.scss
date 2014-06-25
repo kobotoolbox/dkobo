@@ -13,7 +13,7 @@
 
     // make space for the .btn--addrow on the left
     .card, .row__questiontypes {
-        margin-left: 12px;
+        margin-left: 0px;
     }
 
     > .card__settings {
@@ -26,6 +26,13 @@
             margin-left: -11px;
         }
     }
+    // settings wider than card in groups, EXPERIMENTAL
+    // .survey__row .card__settings {
+    //     margin-left: -20px;
+    //     margin-right: -8px;
+    //     border-right-width: 1px;
+    //     border-left-width: 1px;
+    // }
 }
 
 .group__name {
@@ -36,8 +43,25 @@
     border-bottom: 1px solid #ddd;
     position: relative;
     margin: -4px -8px 0;
-    padding: 4px 8px;
+    padding: 12px;
     min-height: 50px;
+    .group__label {
+        font-size: 16px;
+        font-weight: 600;
+    }
+    input {
+        width: 94%;
+        font-weight: normal;
+        display: inline;
+        border: none;
+        border-radius: none;
+        background: none;
+        font-size: 16px;
+        font-weight: 600;
+        padding:0px;
+        height: auto;
+        vertical-align: inherit;
+    }
 }
 
 .group__rows {
@@ -115,4 +139,8 @@
     .survey__row {
         display: none;
     }
+}
+
+.group__rows .group {
+    background: #CBD3D9;
 }
