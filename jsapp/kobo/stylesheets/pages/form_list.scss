@@ -11,7 +11,7 @@
     margin-top: 0;
 }
 
-.forms-header__button, 
+.forms-header__button,
 .forms-empty__button {
     width: 120px;
     padding: 5px;
@@ -101,7 +101,6 @@
     height: 30px;
     cursor: pointer;
 }
-
 // end fileupload fix
 
 .forms-filter {
@@ -188,6 +187,17 @@
     &:hover {
         background: #5DB0EC;
     }
+}
+
+.forms__kobocat__publisher {
+  z-index: 10000;
+  background-color: white;
+  height: 400px;
+  width: 1000px;
+}
+
+.forms__kobocat__publisher__label {
+  display: block;
 }
 
 .forms__card__buttons {
@@ -278,6 +288,7 @@
 .forms__addform__button.forms__addform__template {
     @extend %incomplete;
 }
+
 // LEGACY 
 
 /* ==========================================================================

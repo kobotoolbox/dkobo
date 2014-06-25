@@ -73,6 +73,8 @@ define 'cs!xlform/view.surveyApp', [
       "mouseenter .card__buttons__button": "buttonHoverIn"
       "mouseleave .card__buttons__button": "buttonHoverOut"
       "click .card__settings__tabs li": "switchTab"
+      "mouseenter .card__buttons__button": "buttonHoverIn"
+      "mouseleave .card__buttons__button": "buttonHoverOut"
     @create: (params = {}) ->
       if _.isString params.el
         params.el = $(params.el).get 0
@@ -522,7 +524,25 @@ define 'cs!xlform/view.surveyApp', [
       @ngScope.displayQlib = !@ngScope.displayQlib
       @ngScope.$apply()
 
-      $("section.koboform__questionlibrary").data("rowIndex", -1)
+      $("section.koboform__questionlibrary").toggleClass('active').data("rowIndex", -1)
+      return
+    buttonHoverIn: (evt)->
+      evt.stopPropagation()
+      $et = $(evt.target)
+      if $et.is('i')
+        $et = $(evt.target).parent()
+
+      bColor = $et.data('buttonColor')
+      bText = $et.data('buttonText')
+      $et.parents('.card__buttons').addClass('noborder')
+      $et.parents('.card__header').append('<div class="bg">')
+      $et.parents('.card__header').find('.bg').addClass("#{bColor}").html("<span>#{bText}</span>")
+      return
+    buttonHoverOut: (evt)->
+      evt.stopPropagation()
+      $et = $(evt.target)
+      $et.parents('.card__buttons').removeClass('noborder')
+      $et.parents('.card__header').find('.bg').remove()
       return
     buttonHoverIn: (evt)->
       evt.stopPropagation()

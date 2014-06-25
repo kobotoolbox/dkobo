@@ -16,13 +16,15 @@
 var kobo = angular.module('dkobo', [
     'ngRoute',
     'ngCookies',
-    'ngResource'
+    'ngResource',
+    'ui.utils'
 ]);
 
 kobo.directive('topLevelMenu', TopLevelMenuDirective);
 kobo.directive('infoList', InfoListDirective);
 kobo.directive('koboformBuilder', BuilderDirective);
-kobo.directive('koboformQuestionLibrary', QuestionLibraryDirective)
+kobo.directive('koboformQuestionLibrary', QuestionLibraryDirective);
+kobo.directive('kobocatFormPublisher', KobocatFormPublisherDirective);
 
 kobo.factory('$userDetails', userDetailsFactory);
 kobo.factory('$restApi', restApiFactory);

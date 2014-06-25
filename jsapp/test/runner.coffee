@@ -3,6 +3,7 @@ test_helper =
     module "dkobo"
     module "templates/TopLevelMenu.Template.html"
     module "templates/InfoList.Template.html"
+    module "templates/KobocatFormPublisher.Template.html"
   initializeController: (@$controller, name, $rootScope, $userDetails = {}) ->
     @$rs = $rootScope
     @$scope = $rootScope

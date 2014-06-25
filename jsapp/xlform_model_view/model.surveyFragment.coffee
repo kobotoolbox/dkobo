@@ -195,7 +195,8 @@ define 'cs!xlform/model.surveyFragment', [
       startingIndex = @_parent.models.indexOf(@)
       @detach()
       for row, n in @rows.models
-        @_parent.add(row, at: startingIndex + n)
+        row._parent = @_parent
+        @_parent._parent.addRowAtIndex(row, startingIndex + n)
 
     _beforeIterator: (cb, ctxt)->
       cb(@groupStart())  if ctxt.includeGroupEnds
@@ -253,4 +254,4 @@ define 'cs!xlform/model.surveyFragment', [
     comparator: (m)-> m.ordinal
 
   surveyFragment
-  
+

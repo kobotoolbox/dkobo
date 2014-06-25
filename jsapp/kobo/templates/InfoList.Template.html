@@ -32,7 +32,7 @@
 
   <div class="info-list">
       <div class="forms__card" ng-repeat="item in items|orderBy:'-date_modified'">
-        <div class="forms__card__kobocat" ng-show="kobocatLinkExists()">
+        <div kobocat-form-publisher class="forms__card__kobocat" item="item" ng-show="kobocatLinkExists()">
           <button class="forms__kobocat__btn forms__kobocat__btn--publish forms__poshytip" ng-click="kobocatPublishForm(item)" title="Deploy as New Survey Project"><i class="fa fa-arrow-up"></i></button>
         </div>
         <div class="forms__card__info">
