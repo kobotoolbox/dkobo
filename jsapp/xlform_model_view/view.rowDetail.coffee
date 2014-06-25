@@ -254,7 +254,7 @@ define 'cs!xlform/view.rowDetail', [
     afterRender: ->
       @listenForCheckboxChange()
 
-  viewRowDetail.DetailViewMixins.required =
+  viewRowDetail.DetailViewMixins.required = viewRowDetail.DetailViewMixins.appearance =
     html: ->
       @$el.addClass("card__settings__fields--active")
       """

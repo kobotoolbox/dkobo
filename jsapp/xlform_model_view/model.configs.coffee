@@ -230,6 +230,9 @@ define 'cs!xlform/model.configs', ["underscore", "backbone"], (_, Backbone)->
     relevant:
       value: ""
       _hideUnlessChanged: true
+    appearance:
+      value: ''
+      _hideUnlessChanged: true
 
 
   configs.question_types = {}
