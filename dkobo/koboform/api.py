@@ -21,7 +21,7 @@ class SurveyAssetViewset(viewsets.ModelViewSet):
             queryset = queryset.exclude(asset_type=None)
         else:
             queryset = queryset.filter(asset_type=None)
-        return queryset
+        return queryset.order_by('-date_modified')
 
     def create(self, request):
         user = self.request.user
