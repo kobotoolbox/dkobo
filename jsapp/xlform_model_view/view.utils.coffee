@@ -29,7 +29,8 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
       parent_element = selector.parent()
       parent_element.find('.error-message').remove()
       current_value = selector.text()
-      edit_box = $('<input type="text" value="' + current_value + '" class="js-cancel-sort"/>')
+
+      edit_box = $('<input />', type:'text', value:current_value, class:'js-cancel-sort js-blur-on-select-row')
       selector.replaceWith edit_box
       edit_box.focus()
 
