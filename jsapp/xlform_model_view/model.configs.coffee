@@ -11,7 +11,7 @@ survey.
 Details pulled from ODK documents / google docs. Notably this one:
   https://docs.google.com/spreadsheet/ccc?key=0AgpC5gsTSm_4dDRVOEprRkVuSFZUWTlvclJ6UFRvdFE#gid=0
 ###
-define 'cs!xlform/model.configs', ["underscore", "backbone"], (_, Backbone)->
+define 'cs!xlform/model.configs', ["underscore", 'cs!xlform/model.utils', "backbone"], (_, $utils, Backbone)->
   configs = {}
   configs.defaultSurveyDetails =
     start_time:
@@ -219,10 +219,16 @@ define 'cs!xlform/model.configs', ["underscore", "backbone"], (_, Backbone)->
       value: ""
     label:
       value: (s)->
-        n = 1
-        count_grps = (r)-> n++  if r.constructor.kls is "Group"
-        s.getSurvey().forEachRow count_grps, includeGroups: true
-        "Group #{n}"
+        last_group_number = 1
+        group_name = ''
+        create_group_name = () =>
+          group_name = "Group #{last_group_number++}"
+
+        while s.getSurvey().findRowByName($utils.sluggifyLabel(create_group_name()), includeGroups:true)
+          continue
+
+        group_name
+
     type:
       value: "group"
     _isRepeat:

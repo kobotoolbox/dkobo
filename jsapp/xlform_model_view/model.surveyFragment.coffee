@@ -69,14 +69,15 @@ define 'cs!xlform/model.surveyFragment', [
       @forEachRow fn, options
       match
 
-    findRowByName: (name)->
+    findRowByName: (name, opts)->
       match = false
       @forEachRow (row)->
-        if row.getValue("name") is name
+        if (row.getValue("name") || $utils.sluggifyLabel row.getValue('label')) is name
           match = row
         # maybe implement a way to bust out
         # of this loop with false response.
         !match
+      ,opts
       match
     addRowAtIndex: (r, index)-> @addRow(r, at: index)
     addRow: (r, opts={})->
