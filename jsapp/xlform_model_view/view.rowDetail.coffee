@@ -37,6 +37,8 @@ define 'cs!xlform/view.rowDetail', [
       rendered = @html()
       if rendered
         @$el.html rendered
+
+      @afterRender && @afterRender()
       @
     html: ()->
       $viewTemplates.$$render('xlfDetailView', @)
@@ -97,15 +99,10 @@ define 'cs!xlform/view.rowDetail', [
         changeModelValue($elVal)
       return
 
+    _insertInDOM: (where, how) ->
+      where[how || 'append'](@el)
     insertInDOM: (rowView)->
-      rowView.defaultRowDetailParent.append(@el)
-
-    renderInRowView: (rowView)->
-      @render()
-      @afterRender && @afterRender()
-      @insertInDOM(rowView)
-      @
-
+      @_insertInDOM rowView.defaultRowDetailParent
 
   viewRowDetail.DetailViewMixins = {}
 
@@ -153,7 +150,7 @@ define 'cs!xlform/view.rowDetail', [
       </div>
       """
     insertInDOM: (rowView)->
-      rowView.cardSettingsWrap.find('.card__settings__fields--validation-criteria').eq(0).append(@el)
+      @_insertInDOM rowView.cardSettingsWrap.find('.card__settings__fields--validation-criteria').eq(0)
     afterRender: ->
       @listenForInputChange()
 
@@ -170,7 +167,7 @@ define 'cs!xlform/view.rowDetail', [
       @skipLogicEditor.builder = @model.builder
       @skipLogicEditor.render()
     insertInDOM: (rowView) ->
-      rowView.cardSettingsWrap.find('.card__settings__fields--skip-logic').eq(0).append(@el)
+      @_insertInDOM rowView.cardSettingsWrap.find('.card__settings__fields--skip-logic').eq(0)
 
   viewRowDetail.DetailViewMixins.constraint =
     html: ->
@@ -189,7 +186,7 @@ define 'cs!xlform/view.rowDetail', [
     afterRender: ->
       @listenForInputChange()
     insertInDOM: (rowView) ->
-      rowView.cardSettingsWrap.find('.card__settings__fields--validation-criteria').append(@el)
+      @_insertInDOM rowView.cardSettingsWrap.find('.card__settings__fields--validation-criteria')
 
   viewRowDetail.DetailViewMixins.name =
     html: ->

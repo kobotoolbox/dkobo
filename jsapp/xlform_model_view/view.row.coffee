@@ -83,7 +83,7 @@ define 'cs!xlform/view.row', [
           view.model = @model.get('calculation')
           @model.finalize()
           val.set('value', '')
-        view.renderInRowView(@)
+        view.render().insertInDOM(@)
 
       @
     add_row_to_question_library: (evt) =>
@@ -118,7 +118,7 @@ define 'cs!xlform/view.row', [
 
       for [key, val] in @model.attributesArray()
         if key in ["name", "label", "_isRepeat", "appearance", "relevant"]
-          new $viewRowDetail.DetailView(model: val, rowView: @).renderInRowView(@)
+          new $viewRowDetail.DetailView(model: val, rowView: @).render().insertInDOM(@)
       @
 
   class RowView extends BaseRowView
