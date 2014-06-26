@@ -103,3 +103,31 @@ class CreateReadUpdateDeleteSurveyDraftsTests(TestCase):
             u'asset_type':'question'
         }), content_type='application/json')
         self.assertEqual(SurveyDraft.objects.get(id=1).body, make_body("Question2"))
+
+    def test_library_assets_get_loaded_in_correct_order(self):
+        def make_body(question_label):
+            return """survey,,,\n,type,name,label\n,text,q1,%s""" % question_label
+
+        self.post_asset(self.client, {
+            u'body': make_body("Question1"),
+            u'asset_type': 'question'
+        })
+
+        self.post_asset(self.client, {
+            u'body': make_body("Question2"),
+            u'asset_type': 'question'
+        })
+
+        self.post_asset(self.client, {
+            u'body': make_body("Question3"),
+            u'asset_type': 'question'
+        })
+
+        resp = self.client.get('/api/library_assets')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(len(resp.data), 3)
+
+        self.assertEqual(resp.data[0].get('body'), make_body("Question3"))
+        self.assertEqual(resp.data[1].get('body'), make_body("Question2"))
+        self.assertEqual(resp.data[2].get('body'), make_body("Question1"))
+
