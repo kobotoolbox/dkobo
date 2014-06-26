@@ -218,11 +218,9 @@ define 'cs!xlform/model.configs', ["underscore", "backbone"], (_, Backbone)->
     name:
       value: ""
     label:
+      last_group_number: 1
       value: (s)->
-        n = 1
-        count_grps = (r)-> n++  if r.constructor.kls is "Group"
-        s.getSurvey().forEachRow count_grps, includeGroups: true
-        "Group #{n}"
+        "Group #{@last_group_number++}"
     type:
       value: "group"
     _isRepeat:
