@@ -16,12 +16,12 @@
 
 //== h1.survey-header__title
 .survey-header__title {
-    .editable-container {
-        width: 90%; // TEMPORARY
-        display: inline-block;
-        .editable-input input {
-            font-size: 32px;
-        }
+    input {
+        font-size: 32px;
+        min-height: 38px;
+        padding:0px;
+        border:none;
+        font-weight: 600;
     }
 }
 
