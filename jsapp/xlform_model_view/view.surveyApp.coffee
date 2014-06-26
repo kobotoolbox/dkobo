@@ -178,7 +178,7 @@ define 'cs!xlform/view.surveyApp', [
         $et.closest('.survey__row').toggleClass("survey__row--selected")
 
         @questionSelect()
-        $('input.js-blur-on-select-row').blur()
+        @$('.js-blur-on-select-row').blur()
 
     questionSelect: (evt)->
       @activateGroupButton(@selectedRows().length > 0)
