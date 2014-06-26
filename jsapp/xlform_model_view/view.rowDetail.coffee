@@ -254,7 +254,7 @@ define 'cs!xlform/view.rowDetail', [
     afterRender: ->
       @listenForCheckboxChange()
 
-  viewRowDetail.DetailViewMixins.required = viewRowDetail.DetailViewMixins.appearance =
+  viewRowDetail.DetailViewMixins.required =
     html: ->
       @$el.addClass("card__settings__fields--active")
       """
@@ -273,5 +273,37 @@ define 'cs!xlform/view.rowDetail', [
       # isTrueValue = (@model.get("value") || "").toLowerCase() in $configs.truthyValues
       # inp.prop("checked", isTrueValue)
       # inp.change ()=> @model.set("value", inp.prop("checked"))
+
+  viewRowDetail.DetailViewMixins.appearance =
+    html: ->
+      @$el.addClass("card__settings__fields--active")
+      if @model._parent.constructor.key == 'group'
+        """
+        <div class="card__settings__fields__field">
+          <label for="#{@cid}">Appearance: </label>
+          <span class="settings__input">
+            <input type="checkbox" name="#{@model.key}" id="#{@cid}"/><label for="#{@cid}">Show all questions in this groups on the same screen</label>
+          </span>
+        </div>
+        """
+      else
+        """
+        <div class="card__settings__fields__field">
+          <label for="#{@cid}">#{@model.key}: </label>
+          <span class="settings__input">
+            <input type="text" name="#{@model.key}" id="#{@cid}" class="text" />
+          </span>
+        </div>
+        """
+    afterRender: ->
+      if @model._parent.constructor.key == 'group'
+        $checkbox = @$('input[type=checkbox]').eq(0)
+        $checkbox.on 'change', () =>
+          if $checkbox.prop('checked')
+            @model.set('value', 'field-list')
+          else
+            @model.set('value', '')
+      else
+        @listenForInputChange()
 
   viewRowDetail
