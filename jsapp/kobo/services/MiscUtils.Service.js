@@ -3,20 +3,23 @@
 /*global log*/
 'use strict';
 
-function MiscUtilsService($rootScope) {
+function MiscUtilsService($rootScope, $userDetails) {
     var _this = this,
         _fileUpload,
         _successFn;
 
     this.confirm = function (message) {
-        return confirm(message);
+        if (!$userDetails.debug)
+            return confirm(message);
+        return true;
     };
     this.preventDefault = function (event) {
         event.preventDefault();
     };
 
-    this.bootstrapFileUploader = function () {
-        _fileUpload = $('.js-import-fileupload').eq(0).fileupload({
+    this.bootstrapFileUploader = function (which) {
+        which = which || '';
+        _fileUpload = $('.js-import-fileupload' + which).eq(0).fileupload({
             headers: {
                 "X-CSRFToken": $('meta[name="csrf-token"]').attr('content')
             },
