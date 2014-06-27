@@ -45,9 +45,11 @@ def spa(request):
     return render_to_response("index.html", context_instance=context)
 
 from dkobo.koboform import kobocat_integration
-def kobocat_redirect(request, path):
+def kobocat_redirect(request, path=''):
     if settings.KOBOCAT_SERVER:
-        url = kobocat_integration._kobocat_url("/%s" % path)
+        if path:
+            path = "/%s" % path
+        url = kobocat_integration._kobocat_url(path)
         return HttpResponseRedirect(url)
     else:
         return HttpResponseRedirect("/")
