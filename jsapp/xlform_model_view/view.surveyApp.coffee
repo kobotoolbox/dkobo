@@ -162,6 +162,8 @@ define 'cs!xlform/view.surveyApp', [
       @selectRow($.extend({}, evt))
     selectRow: (evt)->
       $et = $(evt.target)
+      if $et.hasClass('js-blur-on-select-row')
+        return
       $ect = $(evt.currentTarget)
       # a way to ensure the event is not run twice when in nested .js-select-row elements
       _isIntendedTarget = $ect.closest('.survey__row').get(0) is $et.closest('.survey__row').get(0)
@@ -176,6 +178,7 @@ define 'cs!xlform/view.surveyApp', [
         $et.closest('.survey__row').toggleClass("survey__row--selected")
 
         @questionSelect()
+        @$('.js-blur-on-select-row').blur()
 
     questionSelect: (evt)->
       @activateGroupButton(@selectedRows().length > 0)
