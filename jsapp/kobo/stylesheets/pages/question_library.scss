@@ -46,6 +46,7 @@ $tagsHeight: 230px;
     position: absolute;
     top:0px;
     width: 100%;
+    border-bottom: 2px solid #d9dde1;
 }
 
 .questions__container {
@@ -159,15 +160,6 @@ $tagsHeight: 230px;
     display: block;
 }
 
-.question__edit-link {
-    padding: 0.3em;
-    position: absolute;
-    top: 0;
-    right: 0;
-    font-size: 1em;
-    color: #bbb;
-}
-
 .question-filter__delete {
     display: block;
 }
@@ -182,8 +174,27 @@ $tagsHeight: 230px;
     &:first-child {
         border-top:none;
     }
+    &:hover {
+        background: #F3F5F6;
+    }
 }
 
+.question__edit-link {
+    padding: 0.3em;
+    position: absolute;
+    top: 0;
+    right: 5px;
+    font-size: 22px;
+    color:#d9dde1;
+    display: none;
+    &:hover {
+        color: $linkColor;
+    }
+}
+
+.questions__question:hover .question__edit-link {
+    display: block;
+}
 .questions__question--selected, 
 .questions__question.sortable-active {
     border:2px solid #38a1f1;
