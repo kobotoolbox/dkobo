@@ -31,5 +31,4 @@ function HeaderController($scope, $rootScope, $miscUtils, $location) {
         }
     }
 
-    $miscUtils.bootstrapFileUploader();
 }
