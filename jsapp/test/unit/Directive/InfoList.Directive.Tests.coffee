@@ -1,5 +1,6 @@
 info_list_directive_tests = ->
   _build_directive = null
+  beforeEach test_helper.mockUserDetails(null)
   beforeEach inject(($compile, $rootScope, $templateCache) ->
     $templateCache.put('templates/InfoList.Template.html', $templateCache.get('templates/InfoList.Template.html').replace('kobocat-form-publisher', ''))
     $rootScope.items = [{}]

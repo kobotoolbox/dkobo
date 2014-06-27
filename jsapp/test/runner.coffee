@@ -60,6 +60,7 @@ test_helper =
       $provide.provider "$miscUtils", ->
         @$get = ->
           bootstrapFileUploader: sinon.stub()
+          changeFileUploaderSuccess: sinon.stub()
 
         return
 
