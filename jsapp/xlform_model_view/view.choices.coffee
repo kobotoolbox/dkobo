@@ -87,7 +87,7 @@ define 'cs!xlform/view.choices', [
       @t = $("<i class=\"fa fa-trash-o js-remove-option\">")
       @pw = $("<div class=\"editable-wrapper\">")
       @p = $("<span>")
-      @c = $("<code><label>Value:</label> <span>AUTOMATIC</span></code>")
+      @c = $("<code><label>Value:</label> <span>Automatic</span></code>")
       @d = $('<div>')
       if @model
         @p.html @model.get("label")
@@ -104,9 +104,6 @@ define 'cs!xlform/view.choices', [
       @n = $('span', @c)
       $viewUtils.makeEditable @, @model, @n, edit_callback: (val) =>
         other_names = @options.cl.getNames()
-
-        if @model.get('name')? && val.toLowerCase() == @model.get('name').toLowerCase()
-          other_names.splice _.indexOf(other_names, @model.get('name')), 1
         if val is ''
           @model.unset('name')
           @model.set('setManually', false)
@@ -120,6 +117,7 @@ define 'cs!xlform/view.choices', [
                     incrementorPadding: false
                     characterLimit: 14
                     validXmlTag: false
+                    nonWordCharsExceptions: '+-'
                   })
           @model.set('name', val)
           @model.set('setManually', true)
