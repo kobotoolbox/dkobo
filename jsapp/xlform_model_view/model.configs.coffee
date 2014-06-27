@@ -213,6 +213,9 @@ define 'cs!xlform/model.configs', ["underscore", 'cs!xlform/model.utils', "backb
     constraint_message:
       value: ""
       _hideUnlessChanged: true
+    appearance:
+      value: ''
+      _hideUnlessChanged: true
 
   configs.newGroupDetails =
     name:
@@ -235,6 +238,9 @@ define 'cs!xlform/model.configs', ["underscore", 'cs!xlform/model.utils', "backb
       value: false
     relevant:
       value: ""
+      _hideUnlessChanged: true
+    appearance:
+      value: ''
       _hideUnlessChanged: true
 
 
