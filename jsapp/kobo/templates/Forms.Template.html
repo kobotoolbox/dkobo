@@ -14,7 +14,15 @@
     </header>
     <div class="container empty">
       <h4 class="content__message-text">You currently have no forms.</h4>
-      <a href="#/builder" class="content__message-action forms-empty__button">+ Add Form</a>
+      <button class="forms-empty__button" ng-click="showAddFormDropdown = ! showAddFormDropdown">+ Add Form</button>
+        <div class="forms__addform__drop--bottom-centered" ng-class="{ 'hidden': ! showAddFormDropdown }">
+          <a href="#/builder/new" class="forms__addform__button forms__addform__start">Start from Scratch</a>
+          <form action="/import_survey_draft" class="forms__addform__button forms__addform__xls js-import-fileupload-emptyformlist">
+              <span>Upload XLS Form</span>
+              <input type="file" name="files">
+          </form>
+          <a href="#" class="forms__addform__button forms__addform__template">Start from a Template</a>
+        </div>
     </div>
   </div>
 </div>
