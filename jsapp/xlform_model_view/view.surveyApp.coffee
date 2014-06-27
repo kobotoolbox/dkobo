@@ -163,7 +163,7 @@ define 'cs!xlform/view.surveyApp', [
     selectRow: (evt)->
       $et = $(evt.target)
       $ect = $(evt.currentTarget)
-      if $et.closest('.card__settings').length > 0
+      if $et.closest('.card__settings, .card__buttons').length > 0
         return
       # a way to ensure the event is not run twice when in nested .js-select-row elements
       _isIntendedTarget = $ect.closest('.survey__row').get(0) is $et.closest('.survey__row').get(0)
