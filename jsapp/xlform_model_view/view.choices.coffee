@@ -117,7 +117,7 @@ define 'cs!xlform/view.choices', [
                     incrementorPadding: false
                     characterLimit: 14
                     validXmlTag: false
-                    nonWordCharsExceptions: '+-'
+                    nonWordCharsExceptions: '+-.'
                   })
           @model.set('name', val)
           @model.set('setManually', true)
