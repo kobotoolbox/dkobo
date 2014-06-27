@@ -111,5 +111,4 @@ kobo.run(function ($http, $cookies, $miscUtils) {
         });
     });
     // jQuery.fileupload for importing forms to the user's form list.
-//    $miscUtils.bootstrapFileUploader();
 });
