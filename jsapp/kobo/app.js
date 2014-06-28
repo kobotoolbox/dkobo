@@ -18,7 +18,6 @@ var kobo = angular.module('dkobo', [
     'ngCookies',
     'ngResource',
     'ui.utils',
-    'ui.select2'
 ]);
 
 kobo.directive('topLevelMenu', TopLevelMenuDirective);
