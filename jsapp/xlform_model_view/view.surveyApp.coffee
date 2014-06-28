@@ -219,7 +219,7 @@ define 'cs!xlform/view.surveyApp', [
       $ect = $(evt.currentTarget)
       if $ect.parents('.survey-editor__null-top-row').length > 0
         # This is the initial row in the survey
-        new $viewRowSelector.RowSelector(el: @$el.find(".survey__row__spacer").get(0), survey: @survey, ngScope: @ngScope, surveyView: @, reversible:true).expand()
+        @null_top_row_view_selector.expand()
       else
         $row = $ect.parents('.survey__row').eq(0)
         $spacer = $ect.parents('.survey__row__spacer')
@@ -242,6 +242,8 @@ define 'cs!xlform/view.surveyApp', [
       #   if !@emptySurveyXlfRowSelector
       #     @emptySurveyXlfRowSelector = new $viewRowSelector.RowSelector(el: @$el.find(".survey__row__spacer").get(0), survey: @survey, ngScope: @ngScope)
       #   @emptySurveyXlfRowSelector.expand()
+
+      @null_top_row_view_selector = new $viewRowSelector.RowSelector(el: @$el.find(".survey__row__spacer").get(0), survey: @survey, ngScope: @ngScope, surveyView: @, reversible:true)
 
       if @features.displayTitle
         $viewUtils.makeEditable @, @survey.settings, '.form-title', property:'form_title', options: validate: (value) ->
