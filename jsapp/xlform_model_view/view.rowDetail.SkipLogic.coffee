@@ -197,7 +197,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       @operator_picker_view.render().attach_to @$el
       @response_value_view.render().attach_to @$el
 
-      @$el.append $("""<button class="skiplogic__deletecriterion" data-criterion-id="#{@model.cid}"><i class="fa fa-trash-o"></i></button>""")
+      @$el.append $("""<i class="skiplogic__deletecriterion fa fa-trash-o" data-criterion-id="#{@model.cid}"></i>""")
 
       @$question_picker = @$('.skiplogic__rowselect')
       @$operator_picker = @$('.skiplogic__expressionselect')
