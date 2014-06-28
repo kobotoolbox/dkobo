@@ -268,11 +268,11 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       questions = []
       limit = false
 
-      non_selectable = ['datetime', 'time', 'note', 'calculate']
+      non_selectable = ['datetime', 'time', 'note', 'calculate', 'group']
 
       @survey.forEachRow (question) =>
         limit = limit || question is @current_question
-        if !limit && question.get('type').get('typeId') not in non_selectable
+        if !limit && question.getValue('type') not in non_selectable
           questions.push question
       , includeGroups:true
       questions

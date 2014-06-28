@@ -162,7 +162,11 @@ define 'cs!xlform/view.surveyApp', [
       @selectRow($.extend({}, evt))
     selectRow: (evt)->
       $et = $(evt.target)
+      if $et.hasClass('js-blur-on-select-row')
+        return
       $ect = $(evt.currentTarget)
+      if $et.closest('.card__settings, .card__buttons').length > 0
+        return
       # a way to ensure the event is not run twice when in nested .js-select-row elements
       _isIntendedTarget = $ect.closest('.survey__row').get(0) is $et.closest('.survey__row').get(0)
       if _isIntendedTarget
@@ -176,6 +180,7 @@ define 'cs!xlform/view.surveyApp', [
         $et.closest('.survey__row').toggleClass("survey__row--selected")
 
         @questionSelect()
+        @$('.js-blur-on-select-row').blur()
 
     questionSelect: (evt)->
       @activateGroupButton(@selectedRows().length > 0)
@@ -335,7 +340,7 @@ define 'cs!xlform/view.surveyApp', [
       group_rows.on 'mouseleave', '> .survey__row', @_preventSortableIfGroupTooSmall
       group_rows.sortable({
           axis: "y"
-          cancel: '.js-cancel-sort, .js-cancel-group-sort'
+          cancel: 'button, .btn--addrow, .well, ul.list-view, li.editor-message, .editableform, .row-extras, .js-cancel-sort, .js-cancel-group-sort'
           cursor: "move"
           distance: 5
           items: "> li"

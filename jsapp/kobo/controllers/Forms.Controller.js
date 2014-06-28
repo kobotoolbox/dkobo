@@ -29,6 +29,12 @@ function FormsController ($scope, $rootScope, $resource, $miscUtils) {
 
     load_forms();
 
+    $miscUtils.bootstrapFileUploader('-emptyformlist');
+
+    $miscUtils.changeFileUploaderSuccess(function (response) {
+        $location.path('/builder/' + response.survey_draft_id);
+    });
+
     $rootScope.canAddNew = true;
     $rootScope.activeTab = 'Forms';
     $rootScope.icon_link = 'forms';

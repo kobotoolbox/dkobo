@@ -2,7 +2,7 @@
 /* global staticFilesUri */
 'use strict';
 
-function InfoListDirective($rootScope, $restApi) {
+function InfoListDirective($rootScope, $restApi, $miscUtils, $location) {
     return {
         restrict: 'A',
         templateUrl: staticFilesUri + 'templates/InfoList.Template.html',
@@ -20,6 +20,12 @@ function InfoListDirective($rootScope, $restApi) {
                 return window.koboConfigs && window.koboConfigs.kobocatServer;
             };
 
+
+            $miscUtils.bootstrapFileUploader();
+
+            $miscUtils.changeFileUploaderSuccess(function (response) {
+                $location.path('/builder/' + response.survey_draft_id);
+            });
 
             scope.getHashLink = function (item) {
                 var linkTo = scope.linkTo;

@@ -53,11 +53,6 @@ kobo.config(function ($routeProvider, $locationProvider, $httpProvider) {
             controller: 'BuilderController'
         });
 
-        $routeProvider.when('/builder', {
-            templateUrl: staticFilesUri + 'templates/PreBuilder.Template.html',
-            controller: 'PreBuilderController'
-        });
-
         $routeProvider.when('/library/questions', {
             templateUrl: staticFilesUri + 'templates/QuestionLibrary.Template.html',
             controller: 'AssetsController'
@@ -112,5 +107,4 @@ kobo.run(function ($http, $cookies, $miscUtils) {
         });
     });
     // jQuery.fileupload for importing forms to the user's form list.
-//    $miscUtils.bootstrapFileUploader();
 });
