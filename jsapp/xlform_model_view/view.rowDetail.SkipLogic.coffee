@@ -140,10 +140,6 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
 
       @
 
-    attach_to: (target) ->
-      super(target)
-      @$el.select2({ minimumResultsForSearch: -1 })
-
     constructor: (@operators) ->
       super()
 
@@ -219,9 +215,11 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
     bind_question_picker: () ->
       @mark_question_specified false
 
-      @$question_picker.on 'change', () =>
+      @$question_picker.on 'change', (e) =>
         @mark_question_specified true
-        @presenter.change_question @$question_picker.val()
+        # @presenter.change_question @$question_picker.val()
+        # replaced with e.val because of select2
+        @presenter.change_question e.val
 
     bind_operator_picker: () ->
       @$operator_picker.on 'change', () =>
