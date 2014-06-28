@@ -108,112 +108,18 @@
     }
 }
 
-// SKIP Logic
-// ------
-.card__settings__fields.skip-logic {
-    margin-top: 10px;
-    clear: both;
-}
-
-.card__settings__fields {
-    .skiplogic__button {
-        border: none;
-        width: 100%;
-        display: block;
-        text-align: center;
-        padding: 12px 0px;
-        font-weight: 600;
-        margin-bottom: 5px;
-        i {
-            margin-right: 1 0px;
-            font-style: normal;
-        }
-        &.skiplogic__select-builder {
-            background: #B3E6C9;
-            border-bottom: 1px solid #54A174;
-            i {
-                color: #54A174;
-            }
-        }
-        &.skiplogic__select-handcode {
-            background: #A3DBFD;
-            border-bottom: 1px solid #4A82A5;
-            i {
-                color: #4A82A5;
-            }
-        }
-    }
-}
-
-
-// ==========================================================================
-// Skip logic
-// ==========================================================================
-
-.skiplogic__criterion {
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 10px 14px;
-    position: relative;
-    background-color: #eee;
-
-    &.skiplogic__criterion--unspecified-question {
-        .skiplogic__expressionselect {
-            display: none;
-        }
-        .skiplogic__rowselect {
-            width: 100%;
-        }
-    }
-}
-
-.skiplogic__deletecriterion {
-    height: auto;
-    margin: 0;
-    border: 0;
-    border-radius: 0;
-    padding: 0;
-    position: absolute;
-    top: 2px;
-    right: 7px;
-    opacity: 0.6;
-    -webkit-appearance: none;
-    text-transform: none;
-    color: #333;
-    background-color: transparent;
-
-    &:hover {
-        opacity: 1;
-    }
-}
-
-.skiplogic__responseval {
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-.skiplogic__handcode-edit {
-    width: 100%;
-    min-height: 120px;
-}
-
-.skiplogic-handcode__cancel {
-    border:none;
+.card__settings-close {
     background: #C5CACF;
-    color: white;
     position: absolute;
-    right: 10px;
-    top:10px;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 15px;
-    height: 18px;
-    width: 18px;
-    text-align: center;
-    vertical-align: middle;
-    border-radius: 5px;
-    padding-bottom: 4px;
+    right: 6px;
+    top:6px;
+    color: white;
+    padding: 3px;
+    border-radius: 3px;
+    cursor: pointer;
+    &:hover {
+        background: $linkColor;
+    }
 }
 
 // ==========================================================================
@@ -231,15 +137,12 @@
     text-transform: capitalize;
     color: #333;
     background-color: #f8f8f8;
-
     &:hover {
         background-color: #f0f0f0;
     }
 }
 
 // ==========================================================================
-
-
 
 // Overrides
 // --------------------------------------------------------------------------
