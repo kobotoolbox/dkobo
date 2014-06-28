@@ -152,12 +152,13 @@ define 'cs!xlform/model.surveyFragment', [
     @key = "group"
     constructor: (a={}, b)->
       __rows = a.__rows or []
+      @_parent = a._parent
       delete a.__rows
       @rows = new Rows([], _parent: @)
-      super(a,b)
       @rows.add __rows  if __rows
       for row in __rows
         row._parent = row.collection = @rows
+      super(a,b)
 
     initialize: ->
       grpDefaults = $configs.newGroupDetails
