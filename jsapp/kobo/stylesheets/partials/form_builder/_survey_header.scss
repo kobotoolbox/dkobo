@@ -7,15 +7,14 @@
     background-color: white;
     padding:20px 0px;
     padding-top: 70px;
-}
-
-.survey-header__title,
-.survey-header__hashtag {
-    margin-top: 0;
+    .container {
+        transition:all .3s;        
+    }
 }
 
 //== h1.survey-header__title
 .survey-header__title {
+    margin-top: 0;
     input {
         font-size: 32px;
         min-height: 38px;
@@ -23,9 +22,4 @@
         border:none;
         font-weight: 600;
     }
-}
-
-.survey-header__hashtag {
-    font-size: 14px;
-    color: #aaa;
 }

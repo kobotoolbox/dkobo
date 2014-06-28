@@ -25,8 +25,12 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
     render: () ->
       tempId = _.uniqueId("skiplogic_expr")
       @$el.html("""
+        <p>
+          This question will only be displayed if the following conditions apply
+        </p>
+        <div class="skiplogic__criterialist"></div>
         <p class="skiplogic__addnew">
-          <button class="skiplogic__addcriterion">Add new</button>
+          <button class="skiplogic__addcriterion">+ Add a condition</button>
         </p>
         <p class="skiplogic__delimselect">
           Match all or any of these criteria?
@@ -40,10 +44,6 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
             Any
           </label>
         </p>
-        <p>
-          Only show this question if...
-        </p>
-        <div class="skiplogic__criterialist"></div>
       """)
 
       delimSelect = @$(".skiplogic__delimselect")
@@ -102,7 +102,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
     className: 'skiplogic__rowselect'
     render: () ->
       render_questions = () =>
-        options = '<option value="-1">Question...</option>'
+        options = '<option value="-1">Select question from list</option>'
         _.each @questions, (row) ->
           name = row.cid
           label = row.getValue("label")
@@ -115,6 +115,10 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
         @$el.children(':first').prop('disabled', true)
 
       @
+
+    attach_to: (target) ->
+      super(target)
+      @$el.select2({ minimumResultsForSearch: -1 })
 
     constructor: (@questions, @survey) ->
       super()
@@ -193,7 +197,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       @operator_picker_view.render().attach_to @$el
       @response_value_view.render().attach_to @$el
 
-      @$el.append $("""<button class="skiplogic__deletecriterion" data-criterion-id="#{@model.cid}">&times;</button>""")
+      @$el.append $("""<i class="skiplogic__deletecriterion fa fa-trash-o" data-criterion-id="#{@model.cid}"></i>""")
 
       @$question_picker = @$('.skiplogic__rowselect')
       @$operator_picker = @$('.skiplogic__expressionselect')
@@ -211,9 +215,11 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
     bind_question_picker: () ->
       @mark_question_specified false
 
-      @$question_picker.on 'change', () =>
+      @$question_picker.on 'change', (e) =>
         @mark_question_specified true
-        @presenter.change_question @$question_picker.val()
+        # @presenter.change_question @$question_picker.val()
+        # replaced with e.val because of select2
+        @presenter.change_question e.val
 
     bind_operator_picker: () ->
       @$operator_picker.on 'change', () =>

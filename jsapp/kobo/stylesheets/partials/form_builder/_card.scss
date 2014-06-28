@@ -31,29 +31,34 @@
         background: white;
         cursor: move;
         position: relative;
-        .card__text {
-            margin:auto;
-            display: inline-block;
+    }
+
+    .card__text {
+        margin:auto;
+        display: inline-block;
+        vertical-align: middle;
+        width: 99%;
+        position: relative;
+        &.activated {
+            color: #8595A5;
+        }
+        .card__buttons__multioptions {
+            cursor: pointer;
             vertical-align: middle;
-            width: 99%;
-            position: relative;
-            &.activated {
-                color: #8595A5;
-            }
-            .card__buttons__multioptions {
-                cursor: pointer;
-                vertical-align: middle;
-                position: absolute;
-                left:-14px;
-                top:50%;
-                margin-top:-8px;
-              
-                .fa {
-                    width: 12px;
-                    font-size: 15px;
-                }
+            position: absolute;
+            left:-14px;
+            top:50%;
+            margin-top:-8px;
+          
+            .fa {
+                width: 12px;
+                font-size: 15px;
             }
         }
+    }
+
+    .card__header-title {
+        cursor:text;
     }
 }
 
