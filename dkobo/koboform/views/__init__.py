@@ -39,7 +39,7 @@ def spa(request):
     else:
         context['user_details'] = "{}"
     if settings.LIVE_RELOAD:
-        context['livereload_address'] = "http://%s:35729/livereload.js" % request.META['REMOTE_ADDR']
+        context['livereload_address'] = "http://%s:35729/livereload.js" % request.META['HTTP_HOST'].split(':')[0]
     context['DEBUG'] = settings.DEBUG
     context['page_kobo_configs'] = json.dumps(page_kobo_configs)
     return render_to_response("index.html", context_instance=context)
