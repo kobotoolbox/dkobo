@@ -1,4 +1,4 @@
-function KobocatFormPublisherDirective($restApi, $miscUtils) {
+function KobocatFormPublisherDirective($restApi, $miscUtils, $routeTo) {
     return {
         scope: {
             item: '='
@@ -10,6 +10,7 @@ function KobocatFormPublisherDirective($restApi, $miscUtils) {
                 function success (results, headers) {
                     scope.close();
                     $miscUtils.alert('Survey Publishing succeeded');
+                    $routeTo.external(results.published_form_url);
                 }
                 function fail (response) {
                     scope.show_form_name_exists_message = true;
