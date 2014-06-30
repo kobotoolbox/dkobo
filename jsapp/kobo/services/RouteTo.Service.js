@@ -16,4 +16,8 @@ function RouteToService($location) {
     this.question_library = function () {
         $$path('/library/questions')
     }
+
+    this.external = function (url) {
+        window.location = url;
+    };
 }

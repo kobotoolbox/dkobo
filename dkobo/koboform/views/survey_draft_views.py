@@ -175,8 +175,10 @@ def publish_survey_draft(request, pk, format=None):
         survey_draft.kobocat_published_form_id = resp[u'formid']
         survey_draft.save()
         serializer = DetailSurveyDraftSerializer(survey_draft)
-        resp = {u'message': 'Successfully published form'}
-        resp.update(serializer.data)
+        resp.update({
+            u'message': 'Successfully published form',
+            u'published_form_url': kobocat_integration._kobocat_url('/%s/forms/%s' % (request.user.username, resp.get('id_string')))
+            })
 
     return Response(resp, status=status_code)
 

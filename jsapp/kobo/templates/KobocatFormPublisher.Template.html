@@ -1,6 +1,6 @@
 <button class="forms__kobocat__btn forms__kobocat__btn--publish forms__poshytip" ng-click="open()" title="Deploy as New Survey Project"><i class="fa fa-external-link-square"></i></button>
 <div class="forms__kobocat__publisher" ng-show="show_publisher">
     <label for="form-label" class="forms__kobocat__publisher__label">Confirm the title of your project<br/><input placeholder="{{ item.name }}" class="forms__kobocat__publisher__input" id="form-label" ng-model="form_label" /></label>
-    <label for="form-name" class="forms__kobocat__publisher__label">Confirm the unique ID of your project<br/><input class="forms__kobocat__publisher__input" id="form-name" ng-model="form_name" /></label>
-    <span class="error-message" ng-show="show_form_name_exists_message">A project with the ID already exists!</span>
+    <label for="form-name" class="forms__kobocat__publisher__label">Confirm the unique ID of your project<br/><input placeholder="{{ get_form_id(item) }}" class="forms__kobocat__publisher__input" id="form-name" ng-model="form_name" /></label>
+    <span class="error-message" ng-show="show_form_name_exists_message">{{ error_message }}</span>
 </div>
