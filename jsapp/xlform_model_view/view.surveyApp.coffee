@@ -165,7 +165,7 @@ define 'cs!xlform/view.surveyApp', [
       if $et.hasClass('js-blur-on-select-row')
         return
       $ect = $(evt.currentTarget)
-      if $et.closest('.card__settings, .card__buttons').length > 0
+      if $et.closest('.card__settings, .card__buttons, .group__header__buttons').length > 0
         return
       # a way to ensure the event is not run twice when in nested .js-select-row elements
       _isIntendedTarget = $ect.closest('.survey__row').get(0) is $et.closest('.survey__row').get(0)

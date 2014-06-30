@@ -152,6 +152,7 @@ define 'cs!xlform/model.surveyFragment', [
     @key = "group"
     constructor: (a={}, b)->
       __rows = a.__rows or []
+      @_parent = a._parent
       delete a.__rows
       @rows = new Rows([], _parent: @)
       super(a,b)

@@ -119,7 +119,9 @@ define [
           expect(@survey._allRows().length).toBe(5)
         it 'has the right order of names', ->
           @survey.finalize()
-          expect(@getNames(@survey)).toEqual(["My_Group", "q1", "q3", "q5", "q2", "q4"])
+          names = @getNames(@survey)
+          names[0] = 'group_xxxxxxx'
+          expect(names).toEqual(["group_xxxxxxx", "q1", "q3", "q5", "q2", "q4"])
 
         describe 'can generate missing names on finalize', ->
           beforeEach ->
@@ -133,7 +135,9 @@ define [
             expect(@grp.finalize).toHaveBeenCalled()
           it 'has the correct name', ->
             @survey.finalize()
-            expect(@getNames(@survey)).toEqual(['My_Group', 'q1', 'q3', 'q5', 'q2', 'q4'])
+            names = @getNames(@survey)
+            names[0] = 'group_xxxxxxx'
+            expect(names).toEqual(['group_xxxxxxx', 'q1', 'q3', 'q5', 'q2', 'q4'])
 
     describe 'group manipulation', ->
       beforeEach ->

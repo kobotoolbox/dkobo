@@ -72,7 +72,7 @@ define 'cs!xlform/model.base', [
       if value.constructor is base.RowDetail
         @set(what, value)
       else
-        @set(what, new base.RowDetail({value: value}, {_parent: @}))
+        @set(what, new base.RowDetail({key:what, value: value}, {_parent: @}))
     parentRow: ->
       @_parent._parent
     precedingRow: ->

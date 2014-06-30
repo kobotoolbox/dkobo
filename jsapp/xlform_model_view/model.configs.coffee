@@ -219,18 +219,10 @@ define 'cs!xlform/model.configs', ["underscore", 'cs!xlform/model.utils', "backb
 
   configs.newGroupDetails =
     name:
-      value: ""
+      value: ->
+        "group_#{$utils.txtid()}"
     label:
-      value: (s)->
-        last_group_number = 1
-        group_name = ''
-        create_group_name = () =>
-          group_name = "Group #{last_group_number++}"
-
-        while s.getSurvey().findRowByName($utils.sluggifyLabel(create_group_name()), includeGroups:true)
-          continue
-
-        group_name
+      value: "Group"
 
     type:
       value: "group"
