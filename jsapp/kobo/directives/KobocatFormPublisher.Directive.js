@@ -12,12 +12,13 @@ function KobocatFormPublisherDirective($restApi, $miscUtils) {
                     $miscUtils.alert('Survey Publishing succeeded');
                 }
                 function fail (response) {
-                    scope.close();
-                    $miscUtils.alert('Survey Publishing failed. <br/><br/>' + response.data.text);
+                    scope.show_form_name_exists_message = true;
+                    scope.error_message = 'Survey Publishing failed: ' + (response.data.text || response.data.error);
                 }
 
+                var id = scope.form_name ? dkobo_xlform.model.utils.sluggifyLabel(scope.form_name) : '';
                 $restApi.createSurveyDraftApi(scope.item.id)
-                    .publish({title:scope.form_label, id_string: dkobo_xlform.model.utils.sluggifyLabel(scope.form_name)}, success, fail);
+                    .publish({title:scope.form_label, id_string: id}, success, fail);
             };
 
             scope.open = function () {
@@ -30,6 +31,12 @@ function KobocatFormPublisherDirective($restApi, $miscUtils) {
             };
 
             scope.show_publisher = false;
+            scope.show_form_name_exists_message = false;
+            scope.get_form_id = function (item) {
+                name = item.body.split('\n').pop().split(',')[2];
+                return name.substring(1, name.length -1);
+            };
+
             dialog.dialog({
                 modal: true,
                 height: 400,
