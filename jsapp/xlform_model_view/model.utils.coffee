@@ -73,7 +73,7 @@ define 'cs!xlform/model.utils', [
         descriptor: "slug"
         lowerCase: true
         removeNonWordChars: true
-        nonWordCharsExceptions: ''
+        nonWordCharsExceptions: false
         validXmlTag: false
         underscores: true
         characterLimit: 30
@@ -99,7 +99,11 @@ define 'cs!xlform/model.utils', [
       str = str.replace(/\s/g, "_").replace(/[_]+/g, "_")
 
     if opts.removeNonWordChars
-      str = str.replace(///\W^[#{opts.nonWordCharsExceptions}]///g, '')
+      if opts.nonWordCharsExceptions
+        regex = ///\W^[#{opts.nonWordCharsExceptions}]///g
+      else
+        regex = /\W/g
+      str = str.replace(regex, '')
 
     if _.isNumber opts.characterLimit
       str = str.slice(0, opts.characterLimit)

@@ -41,6 +41,17 @@ define [
       ,yesno,Yes,yes
       ,yesno,No,no
       """
+  describe 'survey.tests: Row content', ->
+    it 'properly sluggifies row labels', ->
+      survey = new $model.Survey()
+      survey.rows.add(type: 'text', label: 'how many people?')
+      expect(survey.rows.length).toBe(1)
+      lastRow = survey.rows.at(0)
+      expect(lastRow.get('name').get('value')).toBe('')
+      expect(lastRow.get('label').get('value')).toBe('how many people?')
+      lastRow.finalize()
+      expect(lastRow.get('name').get('value')).toBe('how_many_people')
+
   describe 'survey.tests: Row types', ->
     beforeEach ->
       window.xlfHideWarnings = true
