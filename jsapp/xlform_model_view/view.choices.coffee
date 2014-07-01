@@ -90,7 +90,7 @@ define 'cs!xlform/view.choices', [
       @c = $("<code><label>Value:</label> <span>AUTOMATIC</span></code>")
       @d = $('<div>')
       if @model
-        @p.html @model.get("label")
+        @p.html @model.get("label") || 'Empty'
         @$el.attr("data-option-id", @model.cid)
         if @model.get('name') != $modelUtils.sluggify(@model.get('label') || '')
           $('span', @c).html @model.get("name")
