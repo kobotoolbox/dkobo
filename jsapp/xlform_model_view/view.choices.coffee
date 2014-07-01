@@ -104,6 +104,8 @@ define 'cs!xlform/view.choices', [
       @n = $('span', @c)
       $viewUtils.makeEditable @, @model, @n, edit_callback: (val) =>
         other_names = @options.cl.getNames()
+        if @model.get('name')? && val.toLowerCase() == @model.get('name').toLowerCase()
+          other_names.splice _.indexOf(other_names, @model.get('name')), 1
         if val is ''
           @model.unset('name')
           @model.set('setManually', false)
