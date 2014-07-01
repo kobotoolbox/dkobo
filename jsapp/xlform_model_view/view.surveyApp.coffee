@@ -197,10 +197,21 @@ define 'cs!xlform/view.surveyApp', [
       if @features.surveySettings
         $settings = @$(".form__settings")
         $settings.toggle()
-        $('body').click (e) ->
-          if e.target not in [$et[0], $settings[0]] && $settings.find(e.target).length == 0
+        close_settings = (e) ->
+          $settings_toggle = $('#settings')
+
+          is_in_settings = (element) ->
+            element == $settings[0] || $settings.find(element).length > 0
+          is_in_settings_toggle = (element) ->
+            element == $settings_toggle[0] || $settings_toggle.find(element).length > 0
+
+          if !(is_in_settings(e.target) || is_in_settings_toggle(e.target))
             $settings.hide()
             $et.removeClass('active__settings')
+            $('body').off 'click', close_settings
+
+        $('body').on 'click', close_settings
+
 
     toggleGroupSettings: (evt)->
       $et = $(evt.currentTarget)

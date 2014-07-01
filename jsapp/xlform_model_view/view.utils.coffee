@@ -30,8 +30,9 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
       parent_element.find('.error-message').remove()
       current_value = selector.text()
 
+      selector.parent().append edit_box
       edit_box = $('<input />', type:'text', value:current_value, class:'js-cancel-sort js-blur-on-select-row')
-      selector.replaceWith edit_box
+      selector.hide()
       edit_box.focus()
 
       commit_edit = () ->
@@ -45,7 +46,8 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
           new_value = newValue: edit_box.val()
 
         if new_value.newValue?
-          edit_box.replaceWith(selector)
+          edit_box.remove()
+          selector.show()
           selector.text new_value.newValue
           selector.click enable_edit
         else
@@ -58,7 +60,7 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
           commit_edit event
 
 
-    selector.click enable_edit
+    selector.on 'click', enable_edit
     #selector.editable editableOpts
 
 
