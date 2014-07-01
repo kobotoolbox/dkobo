@@ -357,11 +357,10 @@ define 'cs!xlform/view.surveyApp', [
       return
     _preventSortableIfGroupTooSmall: (evt)->
       $ect = $(evt.currentTarget)
-      if $ect.siblings('.survey__row').length is 0
-        if evt.type is 'mouseenter'
-          $ect.addClass('js-cancel-group-sort')
-        else
-          $ect.removeClass('js-cancel-group-sort')
+      if evt.type is 'mouseenter' && $ect.siblings('.survey__row').length is 0
+        $ect.addClass('js-cancel-group-sort')
+      else
+        $ect.removeClass('js-cancel-group-sort')
 
     validateSurvey: ()->
       true
