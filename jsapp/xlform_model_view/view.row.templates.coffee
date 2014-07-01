@@ -15,7 +15,7 @@ define 'cs!xlform/view.row.templates', [], ()->
     if forWhat == 'group'
       return """
       <section class="card__settings  row-extras row-extras--depr">
-        <i class="fa fa-times js-close-settings"></i>
+        <i class="card__settings-close fa fa-times js-toggle-group-settings"></i>
         <ul class="card__settings__tabs">
           <li class="heading"><i class="fa fa-cog"></i> Settings</li>
           <li data-card-settings-tab-id="all" class="card__settings__tabs__tab--active">All #{forWhat} settings</li>
