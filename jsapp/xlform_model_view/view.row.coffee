@@ -23,7 +23,7 @@ define 'cs!xlform/view.row', [
     events:
      # "click .js-expand-row-selector": "expandRowSelector"
      "drop": "drop"
-     "click .js-add-to-question-library": "add_row_to_question_library"
+     #"click .js-add-to-question-library": "add_row_to_question_library"
 
     initialize: (opts)->
       @options = opts
@@ -57,7 +57,7 @@ define 'cs!xlform/view.row', [
       @$el.data("row-index", @model._parent.indexOf @model)
       # @$el.data("row-parent", @model.parentRow().cid)
       @already_rendered = true
-      
+
       @
     _renderError: ->
       @$el.addClass("xlf-row-view-error")
@@ -66,7 +66,7 @@ define 'cs!xlform/view.row', [
       @
     _renderRow: ->
       @$el.html $viewTemplates.$$render('row.xlfRowView')
-
+      @$('.js-add-to-question-library').click @add_row_to_question_library
       @$label = @$('.card__header-title')
       @$card = @$el.find('.card')
       if 'getList' of @model and (cl = @model.getList())
@@ -86,7 +86,7 @@ define 'cs!xlform/view.row', [
         view.renderInRowView(@)
 
       @
-    add_row_to_question_library: (evt) ->
+    add_row_to_question_library: (evt) =>
       evt.stopPropagation()
       @ngScope.add_row_to_question_library @model
 
