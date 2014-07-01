@@ -506,7 +506,7 @@ define 'cs!xlform/view.surveyApp', [
         @onEscapeKeydown = $viewUtils.debugFrame.close
       else
         $viewUtils.enketoIframe.fromCsv @survey.toCSV(),
-          previewServer: "http://kform.prod.kobotoolbox.org"
+          previewServer: window.koboConfigs?.previewServer or "http://kf.kobotoolbox.org"
           onSuccess: => @onEscapeKeydown = $viewUtils.enketoIframe.close
           onError: (errArgs...)=>
             @alert errArgs
