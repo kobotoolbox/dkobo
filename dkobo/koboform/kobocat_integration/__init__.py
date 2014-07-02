@@ -26,6 +26,8 @@ def _get_token_for_user(user):
 def _kobocat_url(path="/", query_string=False, append_origin_key=False):
     protocol = settings.KOBOCAT_SERVER_PROTOCOL
     server = settings.KOBOCAT_SERVER
+    if not server:
+        return False
     if settings.KOBOCAT_SERVER_PORT and str(settings.KOBOCAT_SERVER_PORT) != '80':
         server += ':%s' % (settings.KOBOCAT_SERVER_PORT)
     query_string = []

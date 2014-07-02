@@ -34,6 +34,8 @@ def spa(request):
     page_kobo_configs = {
         u'kobocatServer': kobocat_integration._kobocat_url('/'),
         u'previewServer': settings.KOBOFORM_PREVIEW_SERVER,
+        u'enketoServer': settings.ENKETO_SERVER,
+        u'enketoPreviewUri': settings.ENKETO_PREVIEW_URI,
         }
     if request.user.is_authenticated():
         context['user_details'] = json.dumps({u'name': request.user.email,
