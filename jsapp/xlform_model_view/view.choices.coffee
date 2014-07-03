@@ -87,10 +87,10 @@ define 'cs!xlform/view.choices', [
       @t = $("<i class=\"fa fa-trash-o js-remove-option\">")
       @pw = $("<div class=\"editable-wrapper\">")
       @p = $("<span>")
-      @c = $("<code><label>Value:</label> <span>Automatic</span></code>")
+      @c = $("<code><label>Value:</label> <span>AUTOMATIC</span></code>")
       @d = $('<div>')
       if @model
-        @p.html @model.get("label")
+        @p.html @model.get("label") || 'Empty'
         @$el.attr("data-option-id", @model.cid)
         if @model.get('name') != $modelUtils.sluggify(@model.get('label') || '')
           $('span', @c).html @model.get("name")
@@ -109,7 +109,7 @@ define 'cs!xlform/view.choices', [
         if val is ''
           @model.unset('name')
           @model.set('setManually', false)
-          val = 'Automatic'
+          val = 'AAUTOMATIC'
           @$el.trigger("choice-list-update", @options.cl.cid)
         else
           val = $modelUtils.sluggify(val, {
