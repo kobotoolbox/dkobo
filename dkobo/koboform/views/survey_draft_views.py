@@ -137,24 +137,27 @@ def publish_survey_draft(request, pk, format=None):
     except SurveyDraft.DoesNotExist:
         return Response({'error': 'SurveyDraft not found'}, status=status.HTTP_404_NOT_FOUND)
 
-    body = survey_draft.body
-    #body = survey_draft.body.split('\n')
+    body = survey_draft.body.split('\n')
 
-    #title = request.DATA.get('title', False)
-    #id_string = request.DATA.get('id_string', False)
+    title = request.DATA.get('title', False)
+    id_string = request.DATA.get('id_string', False)
 
-    #form_settings=body.pop()
-    #form_settings_list=form_settings.split(',')
+    form_settings=body.pop()
+    import pdb
+    pdb.set_trace()
+    if form_settings is u'':
+        form_settings = body.pop() + '\n'
+    form_settings_list=form_settings.split(',')
 
-    #if title and title != '':
-        #form_settings_list.pop(1)
-        #form_settings_list.insert(1, '"' + title + '"')
-    #if id_string and id_string != '':
-        #form_settings_list.pop(2)
-        #form_settings_list.insert(2, '"' + id_string + '"')
+    if title and title != '':
+        form_settings_list.pop(1)
+        form_settings_list.insert(1, '"' + title + '"')
+    if id_string and id_string != '':
+        form_settings_list.pop(2)
+        form_settings_list.insert(2, '"' + id_string + '"')
 
-    #body.append(','.join(form_settings_list))
-    #body = '\n'.join(body)
+    body.append(','.join(form_settings_list))
+    body = '\n'.join(body)
 
     #(status_code, resp) = kobocat_integration.publish_survey_draft(survey_draft, "%s://%s:%s" % (settings.KOBOCAT_SERVER_PROTOCOL, \settings.KOBOCAT_SERVER, \settings.KOBOCAT_SERVER_PORT))
 
