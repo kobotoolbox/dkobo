@@ -143,8 +143,6 @@ def publish_survey_draft(request, pk, format=None):
     id_string = request.DATA.get('id_string', False)
 
     form_settings=body.pop()
-    import pdb
-    pdb.set_trace()
     if form_settings is u'':
         form_settings = body.pop() + '\n'
     form_settings_list=form_settings.split(',')
