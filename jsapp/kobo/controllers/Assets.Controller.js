@@ -12,7 +12,7 @@ function AssetsController($scope, $rootScope, $resource, $restApi, $timeout, $fi
 
     assets.list();
 
-    $miscUtils.bootstrapQuestionUploader();
+    $miscUtils.bootstrapQuestionUploader(assets.list);
 
     $scope.toggle_selected = function (item, $event) {
         var i,
