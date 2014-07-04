@@ -63,6 +63,7 @@ test_helper =
         @$get = ->
           bootstrapFileUploader: sinon.stub()
           changeFileUploaderSuccess: sinon.stub()
+          bootstrapSurveyUploader: sinon.spy()
 
         return
 
