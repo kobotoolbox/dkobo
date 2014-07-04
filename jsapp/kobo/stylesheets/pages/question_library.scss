@@ -63,7 +63,7 @@ $tagsHeight: 230px;
 
 .question__create {
     position: absolute;
-    width: 400px;
+    width: 600px;
     right: 0px;
     top:20px;
 }
@@ -196,7 +196,7 @@ $tagsHeight: 230px;
 .questions__question:hover .question__edit-link {
     display: block;
 }
-.questions__question--selected, 
+.questions__question--selected,
 .questions__question.sortable-active {
     border:2px solid #38a1f1;
     background-color: #dbeefc;

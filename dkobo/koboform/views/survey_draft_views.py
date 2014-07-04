@@ -47,20 +47,29 @@ def export_all_questions(request):
 
     concentrated_questions = ['"survey",,,,,,,,,', ',"name","type","label","hint","required","relevant","default","constraint","constraint_message","calculation"']
 
+    question_fields = concentrated_questions[1].split(',')
+
     for body in bodies:
         body.pop(0)
-        body.pop(0)
-        concentrated_questions.append(body.pop(0))
-        body.pop(0)
-        body.pop(0)
+        current_question_fields = body.pop(0).split(',')
+        current_question = body.pop(0).split(',')
+        final_question = ['']
+        for field in question_fields:
+            if field is '':
+                continue
 
-    concentrated_questions.append(',"start","start",,,,,,,')
-    concentrated_questions.append(',"end","end",,,,,,,')
+            try:
+                final_question.append(current_question[current_question_fields.index(field)])
+            except ValueError:
+                final_question.append('')
+
+        concentrated_questions.append(','.join(final_question))
+
     concentrated_questions.append('"choices",,,')
+    concentrated_questions.append('"","list name","name","label"')
 
     for body in bodies:
         if body[0] == '"choices",,,':
-            body.pop(0)
             while body[0] != '"settings",,':
                 concentrated_questions.append(body.pop(0))
 
@@ -201,8 +210,8 @@ def import_questions(request):
 
         questions.pop()
 
-        choices_header = '"choices"'
-        settings_header = '"settings"'
+        choices_header = '"choices",,,'
+        settings_header = '"settings",,'
 
         question_lists = list()
 
