@@ -1,4 +1,6 @@
 import json
+import requests
+from guardian.shortcuts import assign_perm
 
 from django.http import HttpResponseBadRequest, HttpResponse, HttpResponseRedirect
 from django.conf import settings
@@ -160,8 +162,7 @@ def publish_survey_draft(request, pk, format=None):
 
     #(status_code, resp) = kobocat_integration.publish_survey_draft(survey_draft, "%s://%s:%s" % (settings.KOBOCAT_SERVER_PROTOCOL, \settings.KOBOCAT_SERVER, \settings.KOBOCAT_SERVER_PORT))
 
-    import requests
-
+    _set_necessary_permissions(request.user)
     (token, is_new) = Token.objects.get_or_create(user=request.user)
     headers = {u'Authorization':'Token ' + token.key}
 
@@ -173,7 +174,6 @@ def publish_survey_draft(request, pk, format=None):
 
     status_code = response.status_code
     resp = response.json()
-
     if 'formid' in resp:
         survey_draft.kobocat_published_form_id = resp[u'formid']
         survey_draft.save()
@@ -185,6 +185,17 @@ def publish_survey_draft(request, pk, format=None):
 
     return Response(resp, status=status_code)
 
+def _set_necessary_permissions(user):
+    """
+    defeats the point of permissions, yes. But might get things working for now until we understand
+    the way kobocat uses permissions.
+    """
+    necessary_perms = {'logger': ['add_datadictionary', 'add_xform', 'change_datadictionary', \
+                                    'change_xform', 'delete_datadictionary', 'delete_xform', \
+                                    'report_xform', 'view_xform',]}
+    for app, perms in necessary_perms.items():
+        for perm in perms:
+            assign_perm('%s.%s' % (app, perm), user)
 
 def published_survey_draft_url(request, pk):
     try:

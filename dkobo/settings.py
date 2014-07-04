@@ -242,3 +242,6 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticatedOrReadOnly'
     ]
 }
+
+# needed by guardian
+ANONYMOUS_USER_ID = -1
