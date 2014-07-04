@@ -1,8 +1,8 @@
 <header class="forms-header">
   <div class="container">
     <h1 class="forms-header__title">Form Drafts</h1>
-    <button class="forms-header__button" ng-click="showAddFormDropdown = ! showAddFormDropdown">+ Add Form</button>
-    <div class="forms__addform__drop" ng-class="{ 'hidden': ! showAddFormDropdown }">
+    <button class="forms-header__button" ng-click="toggleAddFormDropdown()">+ Add Form</button>
+    <div class="forms__addform__drop" ng-class="{ 'hidden': ! showAddFormDropdown }" outside-click close-method="hideAddFormDropdown()" is-showing="isShowAddFormDropdownShowing">
       <a href="#/builder/new" class="forms__addform__button forms__addform__start">Start from Scratch</a>
       <form action="/import_survey_draft" class="forms__addform__button forms__addform__xls js-import-fileupload">
           <span>Upload XLS Form</span>
@@ -47,8 +47,8 @@
         </div>
         <div class="forms__card__buttons">
           <a class="forms__card__buttons__button blue" href="{{ getLink(item, 'xml') }}"><i class="fa fa-copy"></i></a>
-          <a class="forms__card__buttons__button gray" href="javascript:;" ng-click="showDownloadDropdown = ! showDownloadDropdown"><i class="fa fa-download"></i></a>
-            <div class="forms__download__drop" ng-class="{ 'hidden': ! showDownloadDropdown }">
+          <a class="forms__card__buttons__button gray" href="javascript:;" ng-click="toggleDownloadFormDropdown(item)"><i class="fa fa-download"></i></a>
+            <div class="forms__download__drop" ng-class="{ 'hidden': ! item.showDownloadDropdown }" outside-click close-method="hideDownloadFormDropdown(item)" is-showing="item.isShowing">
               <a href="{{ getLink(item, 'xls') }}" class="forms__download__button">XLS</a>
               <a href="{{ getLink(item, 'xml') }}" class="forms__download__button">XML</a>
             </div>

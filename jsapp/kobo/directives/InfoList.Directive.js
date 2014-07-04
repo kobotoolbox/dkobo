@@ -39,6 +39,24 @@ function InfoListDirective($rootScope, $restApi, $miscUtils, $location) {
                 return scope.name.toLowerCase() + '/' + item.id + "?format=" + format;
             };
 
+            scope.toggleAddFormDropdown = function () {
+                scope.showAddFormDropdown = scope.isShowAddFormDropdownShowing = !scope.showAddFormDropdown
+            };
+
+            scope.hideAddFormDropdown = function () {
+                scope.showAddFormDropdown = false;
+                scope.$apply();
+            };
+
+            scope.hideDownloadFormDropdown = function (item) {
+                item.showDownloadDropdown = false;
+                scope.$apply();
+            };
+
+            scope.toggleDownloadFormDropdown = function (item) {
+                item.showDownloadDropdown = item.isShowing = !item.showDownloadDropdown
+            };
+
             scope.canDelete = scope.canDelete === 'true';
             $rootScope.canAddNew = scope.canAddNew === 'true';
 

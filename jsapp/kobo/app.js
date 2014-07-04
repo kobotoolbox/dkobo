@@ -22,6 +22,7 @@ var kobo = angular.module('dkobo', [
 
 kobo.directive('topLevelMenu', TopLevelMenuDirective);
 kobo.directive('infoList', InfoListDirective);
+kobo.directive('outsideClick', OutsideClickDirective);
 kobo.directive('koboformBuilder', BuilderDirective);
 kobo.directive('koboformQuestionLibrary', QuestionLibraryDirective);
 kobo.directive('kobocatFormPublisher', KobocatFormPublisherDirective);
