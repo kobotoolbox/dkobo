@@ -12,6 +12,8 @@ function AssetsController($scope, $rootScope, $resource, $restApi, $timeout, $fi
 
     assets.list();
 
+    $miscUtils.bootstrapQuestionUploader(assets.list);
+
     $scope.toggle_selected = function (item, $event) {
         var i,
             currently_selected = item.meta.is_selected,
