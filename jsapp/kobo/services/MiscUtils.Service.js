@@ -17,15 +17,16 @@ function MiscUtilsService($rootScope, $userDetails) {
         event.preventDefault();
     };
 
-    this.bootstrapSurveyUploader = function () {
-        this.bootstrapFileUploader('.js-import-survey');
+    this.bootstrapSurveyUploader = function (callback, which) {
+        this.bootstrapFileUploader('.js-import-survey' + (which || ''), callback);
     };
 
-    this.bootstrapQuestionUploader = function () {
-        this.bootstrapFileUploader('.js-import-questions');
+    this.bootstrapQuestionUploader = function (callback) {
+        this.bootstrapFileUploader('.js-import-questions', callback);
     };
 
-    this.bootstrapFileUploader = function (selector) {
+    this.bootstrapFileUploader = function (selector, callback) {
+        callback = callback || function () {};
         _fileUpload = $('.js-import-fileupload' + selector).fileupload({
             headers: {
                 "X-CSRFToken": $('meta[name="csrf-token"]').attr('content')
@@ -46,6 +47,7 @@ function MiscUtilsService($rootScope, $userDetails) {
                 });
             }
         });
+        this.changeFileUploaderSuccess(callback);
     };
 
     this.changeFileUploaderSuccess = function (successFn) {

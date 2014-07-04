@@ -174,60 +174,68 @@ def import_questions(request):
     if posted_file:
         #try:
 
-            posted_file.seek(0)
-            if posted_file.content_type in XLS_CONTENT_TYPES:
-                csv = pyxform_utils.convert_xls_to_csv_string(posted_file)
-            elif posted_file.content_type == "text/csv":
-                csv = posted_file.read()
-            else:
-                raise Exception("Content-type not recognized: '%s'" % posted_file.content_type)
-
-            csv_list = csv.split('"settings"\r\n')
-            settings = csv_list.pop().split('\r\n')
-            csv_list = csv_list.pop().split('"choices"\r\n')
-            choices = csv_list.pop().split('\r\n')
-            questions = csv_list.pop().split('\r\n')
-
-            survey_header = questions.pop(0) + '\r\n' + questions.pop(0)
-
-            questions.pop()
-            start_end = questions.pop()
-            start_end = questions.pop() + '\r\n' + start_end
-
-            choices_header = '"choices"'
-            settings_header = '"settings"'
-
-            question_lists = list()
-
-            for question in questions:
-
-                question_list = list([survey_header, question, start_end])
-                if 'select_multiple' in question or 'select_one' in question:
-                    question_detail = question.split(',')
-                    choicelist_id = question_detail[2].split(' ')[1]
-                    choicelist = (choice for choice in choices if choicelist_id in choice)
-                    question_list.append(choices_header)
-                    question_list.extend(choicelist)
-
-                question_list.append(settings_header)
-                question_list.extend(settings)
-
-                question_lists.append(question_list)
+        posted_file.seek(0)
 
 
+        if posted_file.content_type in XLS_CONTENT_TYPES:
+            csv = pyxform_utils.convert_xls_to_csv_string(posted_file)
+        elif posted_file.content_type == "text/csv":
+            csv = posted_file.read()
+        else:
+            raise Exception("Content-type not recognized: '%s'" % posted_file.content_type)
 
-            for question_list in question_lists:
-                new_survey_draft = SurveyDraft.objects.create(**{
-                    u'body': '\n'.join(question_list),
-                    u'name': 'New Form',
-                    u'user': request.user,
-                    u'asset_type':'question'
-                })
+        csv_list = csv.split('"settings"\r\n')
+        settings = csv_list.pop().split('\r\n')
+        csv_list = csv_list.pop().split('"choices"\r\n')
+        choices = csv_list.pop().split('\r\n')
+        questions = csv_list.pop().split('\r\n')
 
-            output[u'survey_draft_id'] = new_survey_draft.id
+        choices_field = choices.pop(0)
+
+        survey_header = questions.pop(0)
+        survey_fields_template = questions.pop(0)
+        survey_fields = survey_fields_template.split(',')
+        type_index = survey_fields.index('"type"')
+
+        questions.pop()
+
+        choices_header = '"choices"'
+        settings_header = '"settings"'
+
+        question_lists = list()
+
+        for question in questions:
+            if '"start"' in question:
+                break
+
+            question_list = list([survey_header, survey_fields_template, question])
+            if 'select_multiple' in question or 'select_one' in question:
+                question_detail = question.split(',')
+                choicelist_id = question_detail[type_index].split(' ')[1]
+                choicelist = (choice for choice in choices if choicelist_id in choice)
+                question_list.append(choices_header)
+                question_list.append(choices_field)
+                question_list.extend(choicelist)
+
+            question_list.append(settings_header)
+            question_list.extend(settings)
+
+            question_lists.append(question_list)
+
+
+
+        for question_list in question_lists:
+            new_survey_draft = SurveyDraft.objects.create(**{
+                u'body': '\n'.join(question_list),
+                u'name': 'New Form',
+                u'user': request.user,
+                u'asset_type':'question'
+            })
+
+        output[u'survey_draft_id'] = new_survey_draft.id
         #except Exception, err:
-            #response_code = 500
-            #output[u'error'] = str(err)
+        #response_code = 500
+        #output[u'error'] = str(err)
     else:
         response_code = 204  # Error 204: No input
         output[u'error'] = "No file posted"
