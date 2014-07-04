@@ -117,14 +117,22 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
     launch
 
   viewUtils.enketoIframe = do ->
-
+    enketoServer = "https://enketo.org"
+    enketoPreviewUri = "/webform/preview"
     buildUrl = (previewUrl)->
-      """https://enketo.org/webform/preview?form=#{previewUrl}"""
+      """#{enketoServer}#{enketoPreviewUri}?form=#{previewUrl}"""
+
+    _loadConfigs = (options)->
+      if options.enketoPreviewUri
+        enketoPreviewUri = options.enketoPreviewUri
+      if options.enketoServer
+        enketoServer = options.enketoServer
 
     clickCloserBackground = ->
       $("<div>", class: "js-click-remove-iframe")
 
-    launch = (previewUrl)->
+    launch = (previewUrl, options={})->
+      _loadConfigs(options)
       wrap = $("<div>", class: "js-click-remove-iframe iframe-bg-shade")
       $("<iframe>", src: buildUrl(previewUrl)).appendTo(wrap)
       wrap.click ()-> wrap.remove()
@@ -136,6 +144,7 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
     launch.fromCsv = (surveyCsv, options={})->
       previewServer = options.previewServer or ""
       data = JSON.stringify(body: surveyCsv)
+      loadConfigs(options)
       onError = options.onError or (args...)-> console?.error.apply(console, args)
       $.ajax
         url: "#{previewServer}/koboform/survey_preview/"
