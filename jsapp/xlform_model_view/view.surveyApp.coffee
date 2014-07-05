@@ -122,6 +122,8 @@ define 'cs!xlform/view.surveyApp', [
       @__rowViews = new Backbone.Model()
       @ngScope = options.ngScope
 
+      $(document).on 'click', @deselect_rows
+
       @survey.on 'rows-add', @reset, @
       @survey.on 'rows-remove', @reset, @
       @survey.on "row-detail-change", (row, key, val, ctxt)=>
@@ -160,7 +162,17 @@ define 'cs!xlform/view.surveyApp', [
     forceSelectRow: (evt)->
       # forceSelectRow is used to mock the multiple-select key
       @selectRow($.extend({}, evt))
+    deselect_all_rows: () ->
+      @$('.survey__row').removeClass('survey__row--selected')
+
+    deselect_rows: (evt) =>
+      if @is_selecting
+        @is_selecting = false
+      else
+        @deselect_all_rows()
+
     selectRow: (evt)->
+      @is_selecting = true
       $et = $(evt.target)
       if $et.hasClass('js-blur-on-select-row')
         return
@@ -170,17 +182,28 @@ define 'cs!xlform/view.surveyApp', [
       # a way to ensure the event is not run twice when in nested .js-select-row elements
       _isIntendedTarget = $ect.closest('.survey__row').get(0) is $et.closest('.survey__row').get(0)
       if _isIntendedTarget
+        $target = $et.closest('.survey__row')
         if !evt.ctrlKey
-          selected_rows = @selectedRows()
-          target = $et.closest('.survey__row')
-          if !target.hasClass('survey__row--selected') || selected_rows.length > 1
-            $('.survey__row').removeClass('survey__row--selected')
+          selected_rows = $target.siblings('.survey__row--selected')
+          if !$target.hasClass('survey__row--selected') || selected_rows.length > 1
+            @deselect_all_rows()
 
 
-        $et.closest('.survey__row').toggleClass("survey__row--selected")
+
+        $target.toggleClass("survey__row--selected")
+        if $target.hasClass('survey__row--group')
+          $target.find('li').toggleClass("survey__row--selected", $target.hasClass("survey__row--selected"))
+
+        $group = $target.parents('.survey__row')
+        if $group.length > 0
+          @select_group_if_all_items_selected($group)
 
         @questionSelect()
         @$('.js-blur-on-select-row').blur()
+
+    select_group_if_all_items_selected: ($group) ->
+      $rows = $group.find('.survey__row')
+      $group.toggleClass('survey__row--selected', $rows.length == $rows.filter('.survey__row--selected').length)
 
     questionSelect: (evt)->
       @activateGroupButton(@selectedRows().length > 0)
@@ -313,6 +336,14 @@ define 'cs!xlform/view.surveyApp', [
       sortable_stop = (evt, ui)=>
         $(ui.item).trigger('survey__row-sortablestop')
 
+      sortable_start = (event, ui) =>
+        if ui.item.hasClass('survey__row--selected')
+          $selected_rows = @formEditorEl.find('survey__row--selected')
+          if $selected_rows.length > 1
+            $wrapper = $('div')
+            $selected_rows.remove().appendTo($wrapper)
+            ui.item = $wrapper
+
       @formEditorEl.sortable({
           # PM: commented out axis, because it's better if cards move horizontally and vertically
           # axis: "y"
@@ -324,6 +355,7 @@ define 'cs!xlform/view.surveyApp', [
           connectWith: ".group__rows"
           opacity: 0.9
           scroll: true
+          start: sortable_start
           stop: sortable_stop
           activate: sortable_activate_deactivate
           deactivate: sortable_activate_deactivate
