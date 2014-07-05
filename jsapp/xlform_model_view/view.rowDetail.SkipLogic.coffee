@@ -140,6 +140,12 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
 
       @
 
+    attach_to: (target) ->
+      target.find('.skiplogic__expressionselect').remove()
+      super(target)
+
+      @$el.select2({ minimumResultsForSearch: -1 })
+
     constructor: (@operators) ->
       super()
 
@@ -148,10 +154,18 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
     className: 'skiplogic__responseval'
     fill_value: (value) ->
 
+    attach_to: (target) ->
+      target.find('.skiplogic__responseval').remove()
+      super(target)
+
   class viewRowDetailSkipLogic.SkipLogicTextResponse extends viewRowDetailSkipLogic.Base
     render: () ->
       @setElement('<input placeholder="response value" class="skiplogic__responseval" type="text" />')
       @
+
+    attach_to: (target) ->
+      target.find('.skiplogic__responseval').remove()
+      super(target)
 
   class viewRowDetailSkipLogic.SkipLogicValidatingTextResponseView extends viewRowDetailSkipLogic.SkipLogicTextResponse
     render: () ->
@@ -170,6 +184,10 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
     fill_value: (value) ->
       @$('input').val(value)
 
+    attach_to: (target) ->
+      target.find('.skiplogic__responseval').remove()
+      super(target)
+
 
   class viewRowDetailSkipLogic.SkipLogicDropDownResponse extends viewRowDetailSkipLogic.Base
     tagName: 'select'
@@ -184,6 +202,12 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       @$el.html render_response_values()
 
       @
+
+    attach_to: (target) ->
+      target.find('.skiplogic__responseval').remove()
+      super(target)
+
+      @$el.select2({ minimumResultsForSearch: -1 })
 
     constructor: (@responses) ->
       super()
@@ -233,10 +257,10 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       @presenter.change_response @$response_value.val()
 
     change_operator: (@operator_picker_view) ->
-      @operator_picker_view.render()
-      @$operator_picker.replaceWith(@operator_picker_view.el)
+      @operator_picker_view.render().attach_to(@$el)
 
-      @$operator_picker = @$('.skiplogic__expressionselect')
+
+      @$operator_picker = @$('select.skiplogic__expressionselect')
       @bind_operator_picker()
 
     change_response: (@response_value_view) ->
@@ -244,9 +268,9 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       if @$('.skiplogic__responseval-wrapper').length > 0
         @$('.skiplogic__responseval-wrapper').replaceWith(@response_value_view.el)
       else
-        @$response_value.replaceWith(@response_value_view.el)
+        @response_value_view.attach_to(@$el)
 
-      @$response_value = @$('.skiplogic__responseval')
+      @$response_value = @$('select.skiplogic__responseval')
 
       @bind_response_value()
 
