@@ -160,9 +160,9 @@ define 'cs!xlform/view.surveyApp', [
     forceSelectRow: (evt)->
       # forceSelectRow is used to mock the multiple-select key
       @selectRow($.extend({}, evt))
-    selectRow: (evt)->
+    selectRow: (evt) ->
       $et = $(evt.target)
-      if $et.hasClass('js-blur-on-select-row')
+      if $et.hasClass('js-blur-on-select-row') || $et.hasClass('editable-wrapper')
         return
       $ect = $(evt.currentTarget)
       if $et.closest('.card__settings, .card__buttons, .group__header__buttons').length > 0
