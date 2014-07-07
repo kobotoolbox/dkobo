@@ -120,6 +120,7 @@ define 'cs!xlform/view.rowDetail', [
         </span>
       </div>
       """
+  }
 
   viewRowDetail.DetailViewMixins = {}
 
