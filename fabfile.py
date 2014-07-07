@@ -4,6 +4,13 @@ import json
 from fabric.api import local, hosts, run, env
 
 DEPLOYMENTS = {
+    'prod': {
+        'heroku_app_name': 'kobotoolbox',
+        'cookie_domain':    '.kobotoolbox.org',
+        'domain':           'kf.kobotoolbox.org',
+        'kobocat_domain':   'kc.kobotoolbox.org',
+        'django_site_id': 1,
+    },
     'staging': {
         'heroku_app_name': 'kobo-dev',
         'cookie_domain':    '.staging.kobotoolbox.org',

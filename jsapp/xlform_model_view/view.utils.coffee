@@ -144,7 +144,7 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
     launch.fromCsv = (surveyCsv, options={})->
       previewServer = options.previewServer or ""
       data = JSON.stringify(body: surveyCsv)
-      loadConfigs(options)
+      _loadConfigs(options)
       onError = options.onError or (args...)-> console?.error.apply(console, args)
       $.ajax
         url: "#{previewServer}/koboform/survey_preview/"
