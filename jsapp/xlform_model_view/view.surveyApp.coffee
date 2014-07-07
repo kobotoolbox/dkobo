@@ -336,14 +336,6 @@ define 'cs!xlform/view.surveyApp', [
       sortable_stop = (evt, ui)=>
         $(ui.item).trigger('survey__row-sortablestop')
 
-      sortable_start = (event, ui) =>
-        if ui.item.hasClass('survey__row--selected')
-          $selected_rows = @formEditorEl.find('survey__row--selected')
-          if $selected_rows.length > 1
-            $wrapper = $('div')
-            $selected_rows.remove().appendTo($wrapper)
-            ui.item = $wrapper
-
       @formEditorEl.sortable({
           # PM: commented out axis, because it's better if cards move horizontally and vertically
           # axis: "y"
@@ -355,7 +347,6 @@ define 'cs!xlform/view.surveyApp', [
           connectWith: ".group__rows"
           opacity: 0.9
           scroll: true
-          start: sortable_start
           stop: sortable_stop
           activate: sortable_activate_deactivate
           deactivate: sortable_activate_deactivate
