@@ -479,6 +479,7 @@ define 'cs!xlform/view.surveyApp', [
       if rows.length > 0
         @survey._addGroup(__rows: rows)
         @reset()
+        @$('.js-group-rows').blur()
         true
       else
         false
