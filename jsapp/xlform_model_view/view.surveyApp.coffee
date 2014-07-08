@@ -162,7 +162,7 @@ define 'cs!xlform/view.surveyApp', [
       @selectRow($.extend({}, evt))
     selectRow: (evt) ->
       $et = $(evt.target)
-      if $et.hasClass('js-blur-on-select-row') || $et.hasClass('editable-wrapper')
+      if $et.hasClass('js-blur-on-select-row') || $et.hasClass('editable-wrapper') || $et.hasClass('js-cancel-select-row')
         return
       $ect = $(evt.currentTarget)
       if $et.closest('.card__settings, .card__buttons, .group__header__buttons').length > 0

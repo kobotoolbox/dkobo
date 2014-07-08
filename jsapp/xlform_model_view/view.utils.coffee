@@ -49,7 +49,6 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
           edit_box.remove()
           selector.show()
           selector.text new_value.newValue
-          selector.click enable_edit
         else
           error_box = $('<div class="error-message">' + new_value + '</div>')
           parent_element.append(error_box)

@@ -63,7 +63,7 @@ define 'cs!xlform/view.row.templates', [], ()->
             <div class="noop card__indicator__icon"><i class="fa fa-fw card__header-icon"></i></div>
           </div>
           <div class="card__text">
-            <span class="card__header-title"></span>
+            <span class="card__header-title js-cancel-select-row"></span>
           </div>
           <div class="card__buttons">
             <span class="card__buttons__button card__buttons__button--settings gray js-advanced-toggle js-toggle-row-settings" data-button-color="gray" data-button-text="Settings"><i class="fa fa-cog"></i></span>
@@ -82,7 +82,7 @@ define 'cs!xlform/view.row.templates', [], ()->
     <div class="survey__row__item survey__row__item--group group js-select-row">
       <header class="group__header">
         <i class="group__caret js-toggle-group-expansion fa fa-fw"></i>
-        <span class="group__label">#{g.getValue('label')}</span>
+        <span class="group__label js-cancel-select-row">#{g.getValue('label')}</span>
           <div class="group__header__buttons">
             <span class="group__header__buttons__button group__header__buttons__button--settings  gray js-toggle-group-settings"><i class="fa fa-cog"></i></span>
             <span class="group__header__buttons__button group__header__buttons__button--delete  red js-delete-group"><i class="fa fa-trash-o"></i></span>
