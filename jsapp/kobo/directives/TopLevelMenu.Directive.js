@@ -14,7 +14,8 @@ function TopLevelMenuDirective ($userDetails, $configuration) {
             if ($userDetails) {
                 scope.user = {
                     name: userDetails.name ? userDetails.name : 'KoBoForm User',
-                    avatar: userDetails.gravatar ? userDetails.gravatar: (staticFilesUri + '/img/avatars/example-photo.jpg')
+                    avatar: userDetails.gravatar ? userDetails.gravatar: (staticFilesUri + '/img/avatars/example-photo.jpg'),
+                    username: userDetails.username
                 };
             } else {
                 scope.user = {
