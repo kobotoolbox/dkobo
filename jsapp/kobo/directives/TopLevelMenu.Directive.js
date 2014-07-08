@@ -27,7 +27,7 @@ function TopLevelMenuDirective ($userDetails, $configuration) {
             var kobocatUrl = (window.koboConfigs && window.koboConfigs.kobocatServer) || 'http://kobocat.dev.kobotoolbox.org/';
             scope.kobocatLink = {
               url: kobocatUrl,
-              name: 'KoBoCat'
+              name: 'Projects'
             };
 
             scope.sections = $configuration.sections();
