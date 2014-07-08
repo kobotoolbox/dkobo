@@ -126,6 +126,10 @@ define 'cs!xlform/view.choices', [
           @$el.trigger("choice-list-update", @options.cl.cid)
         newValue: val
       @pw.html(@p)
+
+      @pw.click () =>
+        @p.click()
+
       @d.append(@pw)
       @d.append(@t)
       @d.append(@c)
