@@ -32,19 +32,19 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       @view.change_response response_view
       @view.response_value_view.fill_value @model.get('response_value').get('value')
 
-
     change_operator: (operator_id) ->
       @model.change_operator operator_id
       question_type = @model._get_question().get_type()
 
       @builder.operator_type = operator_type = @model.get('operator').get_type()
 
-
       response_view = @builder.build_response_view @model._get_question(), question_type, operator_type
       response_view.model = @model.get('response_value')
 
       @view.change_response response_view
       @view.response_value_view.fill_value @model.get('response_value').get('value')
+
+      @view.operator_picker_view.set_style()
 
     change_response: (response_text) ->
       @model.change_response response_text
@@ -164,6 +164,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
     # build_hand_code_criteria: (criteria) ->
     #   new XLF.SkipLogicHandCodeFacade criteria, @, @view_factory
     build: () ->
+
       serialized_criteria = @current_question.get('relevant').get('value')
 
       return new skipLogicHelpers.SkipLogicHelperContext @model_factory, @view_factory, @, serialized_criteria
@@ -338,6 +339,8 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       type: 'existence'
       label: 'Was Answered'
       negated_label: 'Was not Answered'
+      abbreviated_label: 'Was Answered'
+      abbreviated_negated_label: 'Was not Answered'
       parser_name: ['ans_notnull','ans_null']
       symbol: {
         ans_notnull: '!=',
@@ -350,6 +353,8 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       type: 'equality'
       label: 'Was'
       negated_label: 'Was not'
+      abbreviated_label: '='
+      abbreviated_negated_label: '!='
       parser_name: ['resp_equals', 'resp_notequals', 'multiplechoice_selected', 'multiplechoice_notselected']
       symbol: {
         resp_equals: '=',
@@ -363,6 +368,8 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       type: 'equality'
       label: 'Was Greater Than'
       negated_label: 'Was Less Than'
+      abbreviated_label: '>'
+      abbreviated_negated_label: '<'
       parser_name: ['resp_greater', 'resp_less']
       symbol: {
         resp_greater: '>'
@@ -374,6 +381,8 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       type: 'equality'
       label: 'Was Greater Than or Equal to'
       negated_label: 'Was Less Than or Equal to'
+      abbreviated_label: '>='
+      abbreviated_negated_label: '<='
       parser_name: ['resp_greaterequals', 'resp_lessequals']
       symbol: {
         resp_greaterequals: '>=',

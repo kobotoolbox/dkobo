@@ -604,6 +604,8 @@ skip_logic_helpers = (dkobo_xlform) ->
     #********************************************************************#
 
     describe 'change operator', () ->
+      beforeEach () ->
+        _model.get('operator').get_type = () -> {}
       it 'changes the operator model using the operator type id', () ->
         _presenter.change_operator 'test'
 

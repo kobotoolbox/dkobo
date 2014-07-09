@@ -124,27 +124,47 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       super()
 
   class viewRowDetailSkipLogic.OperatorPicker extends viewRowDetailSkipLogic.Base
-    tagName: 'select'
+    tagName: 'div'
     className: 'skiplogic__expressionselect'
     render: () ->
-      render_operators = () =>
-        options = ''
-        _.each @operators, (operator) ->
-          options += '<option value="' + operator.id + '">' + operator.label + '</option>'
-          options += '<option value="-' + operator.id + '">' + operator.negated_label + '</option>'
-        options
-
-      @$el.html render_operators()
-      if @value
-        @fill_value @value
-
       @
 
     attach_to: (target) ->
       target.find('.skiplogic__expressionselect').remove()
       super(target)
 
-      @$el.select2({ minimumResultsForSearch: -1 })
+      @$el.select2({
+        minimumResultsForSearch: -1
+        data: do () =>
+          operators = []
+          _.each @operators, (operator) ->
+            operators.push id: operator.id, text: operator.label + (if operator.id != 1 then ' (' + operator.symbol[operator.parser_name[0]] + ')' else '')
+            operators.push id: '-' + operator.id, text: operator.negated_label + (if operator.id != 1 then ' (' + operator.symbol[operator.parser_name[0]] + ')' else '')
+
+          operators
+      })
+
+      if @value
+        @fill_value @value
+      else
+        @value = @$el.select2('val')
+
+    fill_value: (@value) ->
+      @$el.select2 'val', value
+      @set_style()
+
+    set_style: () -> #violates LSP
+      @$el.toggleClass 'skiplogic__expressionselect--no-response-value', +@value == 1 || +@value == -1
+      absolute_value = if @value >= 0 then +@value else -@value
+      if absolute_value == 0
+        return
+
+      operator = _.find @operators, (operator) ->
+        operator.id == absolute_value
+
+      abbreviated_label = operator['abbreviated_' + (if +@value < 0 then 'negated_' else '') + 'label']
+      chosen_element = @$el.parents('.skiplogic__criterion').find('.select2-container.skiplogic__expressionselect .select2-chosen')
+      chosen_element.text(abbreviated_label)
 
     constructor: (@operators) ->
       super()
@@ -218,18 +238,14 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
     render: () ->
 
       @question_picker_view.render().attach_to @$el
-      @operator_picker_view.render().attach_to @$el
-      @response_value_view.render().attach_to @$el
 
       @$el.append $("""<i class="skiplogic__deletecriterion fa fa-trash-o" data-criterion-id="#{@model.cid}"></i>""")
 
       @$question_picker = @$('.skiplogic__rowselect')
-      @$operator_picker = @$('.skiplogic__expressionselect')
-      @$response_value = @$('.skiplogic__responseval')
 
       @bind_question_picker()
-      @bind_response_value()
-      @bind_operator_picker()
+      @change_operator @operator_picker_view
+      @change_response @response_value_view
 
       @
 
@@ -247,7 +263,8 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
 
     bind_operator_picker: () ->
       @$operator_picker.on 'change', () =>
-        @presenter.change_operator @$operator_picker.val()
+        @operator_picker_view.value = @$operator_picker.select2 'val'
+        @presenter.change_operator @operator_picker_view.value
 
     bind_response_value: () ->
       @$response_value.on (if @$response_value.prop('tagName') == 'select' then 'change' else 'blur'), () =>
@@ -259,8 +276,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
     change_operator: (@operator_picker_view) ->
       @operator_picker_view.render().attach_to(@$el)
 
-
-      @$operator_picker = @$('select.skiplogic__expressionselect')
+      @$operator_picker = @operator_picker_view.$el
       @bind_operator_picker()
 
     change_response: (@response_value_view) ->
@@ -270,7 +286,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       else
         @response_value_view.attach_to(@$el)
 
-      @$response_value = @$('select.skiplogic__responseval')
+      @$response_value = @response_value_view.$el
 
       @bind_response_value()
 
