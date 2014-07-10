@@ -216,7 +216,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       target.find('.skiplogic__responseval').remove()
       super(target)
 
-      @$el.select2({ minimumResultsForSearch: -1 })
+      @$el.select2({ minimumResultsForSearch: -1, width: '20%' })
 
     constructor: (@responses) ->
       super()
@@ -239,7 +239,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       @$el.toggleClass("skiplogic__criterion--unspecified-question", not is_specified)
 
     bind_question_picker: () ->
-      @mark_question_specified @$question_picker.find('select.skiplogic__rowselect').attr('selectedIndex') != 0
+      @mark_question_specified +@$question_picker.val() != -1
 
       @$question_picker.on 'change', (e) =>
         @mark_question_specified true
