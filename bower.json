@@ -34,7 +34,7 @@
     "angular-ui-select2": "~0.0.5",
     "x-editable": "~1.5.1",
     "jquery.scrollTo": "1.4.12",
-    "select2": "3.5.0"
+    "select2": "3.4.8"
   },
   "devDependencies": {
     "jasmine-sinon": "~0.3.1",
