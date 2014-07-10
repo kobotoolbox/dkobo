@@ -21,7 +21,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
     events:
       "click .skiplogic__deletecriterion": "deleteCriterion"
       "click .skiplogic__addcriterion": "addCriterion"
-      "click .skiplogic__delimselectcb": "markChangedDelimSelector"
+      "change .skiplogic__delimselect": "markChangedDelimSelector"
     render: () ->
       tempId = _.uniqueId("skiplogic_expr")
       @$el.html("""
@@ -32,24 +32,13 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
         <p class="skiplogic__addnew">
           <button class="skiplogic__addcriterion">+ Add a condition</button>
         </p>
-        <p class="skiplogic__delimselect">
-          Match all or any of these criteria?
-          <br>
-          <label>
-            <input type="radio" class="skiplogic__delimselectcb" name="#{tempId}" value="and" />
-            All
-          </label>
-          <label>
-            <input type="radio" class="skiplogic__delimselectcb" name="#{tempId}" value="or" />
-            Any
-          </label>
-        </p>
+        <select class="skiplogic__delimselect">
+          <option value="and">Question should match all of these criteria</option>
+          <option value="or">Question should match any of these criteria</option>
+        </select>
       """)
 
-      delimSelect = @$(".skiplogic__delimselect")
-
-      for checkbox in delimSelect.find("input") when checkbox.value is @criterion_delimiter
-        checkbox.checked = "checked"
+      delimSelect = @$(".skiplogic__delimselect").val(@criterion_delimiter)
 
       @
 
@@ -237,13 +226,10 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
     className: 'skiplogic__criterion'
     render: () ->
 
-      @question_picker_view.render().attach_to @$el
+      @question_picker_view.render()
 
       @$el.append $("""<i class="skiplogic__deletecriterion fa fa-trash-o" data-criterion-id="#{@model.cid}"></i>""")
 
-      @$question_picker = @$('.skiplogic__rowselect')
-
-      @bind_question_picker()
       @change_operator @operator_picker_view
       @change_response @response_value_view
 
@@ -253,7 +239,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       @$el.toggleClass("skiplogic__criterion--unspecified-question", not is_specified)
 
     bind_question_picker: () ->
-      @mark_question_specified false
+      @mark_question_specified @$question_picker.find('select.skiplogic__rowselect').attr('selectedIndex') != 0
 
       @$question_picker.on 'change', (e) =>
         @mark_question_specified true
@@ -274,21 +260,33 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       @presenter.change_response @$response_value.val()
 
     change_operator: (@operator_picker_view) ->
-      @operator_picker_view.render().attach_to(@$el)
+      @operator_picker_view.render()
 
       @$operator_picker = @operator_picker_view.$el
-      @bind_operator_picker()
 
     change_response: (@response_value_view) ->
       @response_value_view.render()
+
+      @$response_value = @response_value_view.$el
+
+    attach_operator: () ->
+      @operator_picker_view.attach_to @$el
+      @bind_operator_picker()
+
+    attach_response: () ->
       if @$('.skiplogic__responseval-wrapper').length > 0
         @$('.skiplogic__responseval-wrapper').replaceWith(@response_value_view.el)
       else
         @response_value_view.attach_to(@$el)
-
-      @$response_value = @response_value_view.$el
-
       @bind_response_value()
+
+    attach_to: (element) ->
+      @question_picker_view.attach_to @$el
+      @$question_picker = @question_picker_view.$el
+      @bind_question_picker()
+      @attach_operator()
+      @attach_response()
+      super(element)
 
     constructor: (@question_picker_view, @operator_picker_view, @response_value_view, @presenter) ->
       super()

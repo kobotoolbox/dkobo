@@ -24,13 +24,16 @@ define 'cs!xlform/mv.skipLogicHelpers', [
 
       @view.change_operator @builder.build_operator_view question_type
       @view.operator_picker_view.fill_value @model.get('operator').get_value()
+      @view.attach_operator()
 
       @builder.question_type = question_type
 
       response_view = @builder.build_response_view @question, question_type, operator_type
       response_view.model = @model.get 'response_value'
       @view.change_response response_view
+      @view.attach_response()
       @view.response_value_view.fill_value @model.get('response_value').get('value')
+      @determine_add_new_criterion_visibility()
 
     change_operator: (operator_id) ->
       @model.change_operator operator_id
@@ -42,24 +45,42 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       response_view.model = @model.get('response_value')
 
       @view.change_response response_view
+      @view.attach_response()
       @view.response_value_view.fill_value @model.get('response_value').get('value')
 
       @view.operator_picker_view.set_style()
+      @determine_add_new_criterion_visibility()
 
     change_response: (response_text) ->
       @model.change_response response_text
+      @determine_add_new_criterion_visibility()
+
+    determine_add_new_criterion_visibility: () ->
+      $add_new_criterion_button = @$add_new_criterion_button
+      if !@model._get_question()
+        $add_new_criterion_button.hide()
+      else if @model.get('operator').get_type().id == 1
+        $add_new_criterion_button.show()
+      else if @model.get('response_value').get('value') == ''
+        $add_new_criterion_button.hide()
+      else
+        $add_new_criterion_button.show()
+
     constructor: (@model, @view, @builder) ->
       @view.presenter = @
       @question = @model._get_question()
     render: (destination) ->
-      @view.render().attach_to(destination)
+      @view.render()
       @view.question_picker_view.fill_value(@model.get('question_cid'))
       @view.operator_picker_view.fill_value(@model.get('operator').get_value())
       @view.response_value_view.fill_value(@model.get('response_value')?.get('value'))
+      @view.attach_to(destination)
 
       @builder.survey.on 'row-detail-change', (row, key) =>
         if key == 'label'
           @render(destination)
+
+      @determine_add_new_criterion_visibility()
 
     serialize: () ->
       @model.serialize()
@@ -110,11 +131,13 @@ define 'cs!xlform/mv.skipLogicHelpers', [
     render: (destination) ->
       @view.render().attach_to destination
       @$criterion_delimiter = @view.$(".skiplogic__delimselect")
+      @$add_new_criterion_button = @view.$('.skiplogic__addcriterion')
 
       @determine_criterion_delimiter_visibility()
 
       @destination = @view.$('.skiplogic__criterialist')
       _.each @presenters, (presenter) =>
+        presenter.$add_new_criterion_button = @$add_new_criterion_button
         presenter.render @destination
     serialize: () ->
       serialized = _.map @presenters, (presenter) ->
@@ -122,6 +145,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       _.filter(serialized, (crit) -> crit).join(' ' + @view.criterion_delimiter + ' ')
     add_empty: () ->
       presenter = @builder.build_empty_criterion_logic()
+      presenter.$add_new_criterion_button = @$add_new_criterion_button
       presenter.render @destination
       @presenters.push presenter
       @determine_criterion_delimiter_visibility()
@@ -158,7 +182,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       return ''
     constructor: (@view_factory, context) ->
       @view = @view_factory.create_skip_logic_picker_view(context)
-    switch_editing_mode: () ->
+    switch_editing_mode: () -> return
 
   class skipLogicHelpers.SkipLogicBuilder
     # build_hand_code_criteria: (criteria) ->
@@ -278,7 +302,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       , includeGroups:true
       questions
 
-    constructor: (@model_factory, @view_factory, @survey, @current_question, @helper_factory) ->
+    constructor: (@model_factory, @view_factory, @survey, @current_question, @helper_factory) -> return
 
 
   skipLogicHelpers.question_types =
