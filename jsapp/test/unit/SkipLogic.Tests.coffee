@@ -562,9 +562,13 @@ skip_logic_helpers = (dkobo_xlform) ->
       _view.operator_picker_view = sinon.stubObject $vRdsl.OperatorPicker
       _view.response_value_view = sinon.stubObject $vRdsl.SkipLogicEmptyResponse
 
+      _view.attach_operator = sinon.spy()
+      _view.attach_response = sinon.spy()
+
       _builder = sinon.stubObject $slh.SkipLogicBuilder
       _builder.build_response_view.returns(sinon.stubObject $vRdsl.SkipLogicEmptyResponse)
       _presenter = new $slh.SkipLogicPresenter _model, _view, _builder
+      _presenter.determine_add_new_criterion_visibility = sinon.spy()
 
     describe 'change question', () ->
       it 'changes the question in the model', () ->

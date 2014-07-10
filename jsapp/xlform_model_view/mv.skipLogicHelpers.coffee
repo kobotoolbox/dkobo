@@ -80,6 +80,9 @@ define 'cs!xlform/mv.skipLogicHelpers', [
         if key == 'label'
           @render(destination)
 
+      @builder.survey.on 'choice-list-update', (row, key) =>
+        @render(destination)
+
       @determine_add_new_criterion_visibility()
 
     serialize: () ->
