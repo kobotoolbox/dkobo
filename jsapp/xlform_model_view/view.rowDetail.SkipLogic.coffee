@@ -253,7 +253,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
         @presenter.change_operator @operator_picker_view.value
 
     bind_response_value: () ->
-      @$response_value.on (if @$response_value.prop('tagName') == 'select' then 'change' else 'blur'), () =>
+      @$response_value.on (if @$response_value.prop('tagName').toLowerCase() == 'select' then 'change' else 'blur'), () =>
         @presenter.change_response @$response_value.val()
 
     response_value_handler: () ->
