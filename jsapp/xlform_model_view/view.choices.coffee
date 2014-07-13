@@ -109,7 +109,7 @@ define 'cs!xlform/view.choices', [
         if val is ''
           @model.unset('name')
           @model.set('setManually', false)
-          val = 'AAUTOMATIC'
+          val = 'AUTOMATIC'
           @$el.trigger("choice-list-update", @options.cl.cid)
         else
           val = $modelUtils.sluggify(val, {
