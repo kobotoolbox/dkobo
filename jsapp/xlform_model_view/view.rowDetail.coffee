@@ -209,14 +209,8 @@ define 'cs!xlform/view.rowDetail', [
     afterRender: ->
       @$el.find('input').eq(0).val(@model.get("value"))
       @listenForInputChange(transformFn: (value)=>
-        names = []
-        @model.getSurvey().forEachRow (r)=>
-          name = r.getValue("name")
-          if name && name != @model.get("value")
-            names.push(name)
-        , includeGroups: true
-
-        $modelUtils.sluggifyLabel value, names
+        @model.set 'value', value
+        @model.deduplicate @model.getSurvey()
       )
     # insertInDom: (rowView)->
     #   # default behavior...

@@ -2,10 +2,12 @@ define 'cs!xlform/model.rowDetailMixins', [
         'cs!xlform/mv.skipLogicHelpers',
         'xlform/model.rowDetails.skipLogic',
         'cs!xlform/view.rowDetail.SkipLogic',
+        'cs!xlform/model.utils',
         ], (
             $skipLogicHelpers,
             $modelRowDetailsSkipLogic,
             $viewRowDetailSkipLogic,
+            $modelUtils
             )->
   # To be extended ontop of a RowDetail when the key matches
   # the attribute in XLF.RowDetailMixin
@@ -43,4 +45,14 @@ define 'cs!xlform/model.rowDetailMixins', [
         @on "change:value", => @_parent.finalize()
         ``
 
+    name:
+      deduplicate: (survey) ->
+        names = []
+        survey.forEachRow (r)=>
+          if @get('name') != @
+            name = r.getValue("name")
+            names.push(name)
+        , includeGroups: true
+
+        $modelUtils.sluggifyLabel @get('value'), names
   rowDetailMixins
