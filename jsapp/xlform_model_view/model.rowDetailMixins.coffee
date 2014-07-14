@@ -42,7 +42,6 @@ define 'cs!xlform/model.rowDetailMixins', [
     label:
       postInitialize: ()->
         # When the row's name changes, trigger the row's [finalize] function.
-        @on "change:value", => @_parent.finalize()
         ``
 
     name:
