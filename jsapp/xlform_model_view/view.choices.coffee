@@ -127,8 +127,9 @@ define 'cs!xlform/view.choices', [
         newValue: val
       @pw.html(@p)
 
-      @pw.click () =>
-        @p.click()
+      @pw.on 'click', (event) =>
+        if event.target != @p[0]
+          @p.click()
 
       @d.append(@pw)
       @d.append(@t)
