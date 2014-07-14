@@ -208,6 +208,10 @@ define 'cs!xlform/view.rowDetail', [
       """
     afterRender: ->
       @listenForInputChange(transformFn: (value)=>
+        value_chars = value.split('')
+        if !/[\w_]/.test(value_chars[0])
+          value_chars.unshift('_')
+
         @model.set 'value', value
         @model.deduplicate @model.getSurvey()
       )
