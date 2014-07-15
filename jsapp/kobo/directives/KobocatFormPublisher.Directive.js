@@ -22,6 +22,8 @@ function KobocatFormPublisherDirective($restApi, $miscUtils, $routeTo) {
                     .publish({title:scope.form_label, id_string: id}, success, fail);
             };
 
+            scope.form_label = scope.item.name;
+
             scope.open = function () {
                 scope.show_publisher = true;
                 dialog.dialog('open');
@@ -30,13 +32,14 @@ function KobocatFormPublisherDirective($restApi, $miscUtils, $routeTo) {
                 scope.show_publisher = false;
                 dialog.dialog('close');
             };
-
             scope.show_publisher = false;
+
             scope.show_form_name_exists_message = false;
             scope.get_form_id = function (item) {
                 name = item.body.split('\n').pop().split(',')[2];
                 return name.substring(1, name.length -1);
             };
+            scope.form_name = scope.get_form_id(scope.item);
 
             dialog.dialog({
                 modal: true,
