@@ -92,9 +92,8 @@ define 'cs!xlform/view.choices', [
       if @model
         @p.html @model.get("label") || 'Empty'
         @$el.attr("data-option-id", @model.cid)
-        if @model.get('name') != $modelUtils.sluggify(@model.get('label') || '')
-          $('span', @c).html @model.get("name")
-          @model.set('setManually', true)
+        $('span', @c).html @model.get("name")
+        @model.set('setManually', true)
       else
         @model = new $choices.Option()
         @options.cl.options.add(@model)
