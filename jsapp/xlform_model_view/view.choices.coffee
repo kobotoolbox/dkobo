@@ -85,9 +85,9 @@ define 'cs!xlform/view.choices', [
     initialize: (@options)->
     render: ->
       @t = $("<i class=\"fa fa-trash-o js-remove-option\">")
-      @pw = $("<div class=\"editable-wrapper js-cancel-select-row\">")
-      @p = $("<span class=\"js-cancel-select-row\">")
-      @c = $("<code><label>Value:</label> <span class=\"js-cancel-select-row\">AUTOMATIC</span></code>")
+      @pw = $("<div class=\"editable-wrapper\">")
+      @p = $("<span>")
+      @c = $("<code><label>Value:</label> <span>AUTOMATIC</span></code>")
       @d = $('<div>')
       if @model
         @p.html @model.get("label") || 'Empty'
