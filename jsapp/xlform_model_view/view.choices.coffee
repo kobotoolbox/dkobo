@@ -29,8 +29,9 @@ define 'cs!xlform/view.choices', [
       if @row.get("type").get("rowType").specifyChoice
         for option, i in @model.options.models
           new OptionView(model: option, cl: @model).render().$el.appendTo @ul
-        while i < 2
-          @addEmptyOption("Option #{++i}")
+        if i == 0
+          while i < 2
+            @addEmptyOption("Option #{++i}")
 
         @$el.removeClass("hidden")
       else
