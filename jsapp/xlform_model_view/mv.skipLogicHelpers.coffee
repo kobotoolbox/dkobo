@@ -34,6 +34,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       @view.attach_response()
       @view.response_value_view.fill_value @model.get('response_value').get('value')
       @determine_add_new_criterion_visibility()
+      @builder.current_question.get('relevant').set 'value', @serialize_all()
 
     change_operator: (operator_id) ->
       @model.change_operator operator_id
@@ -50,10 +51,12 @@ define 'cs!xlform/mv.skipLogicHelpers', [
 
       @view.operator_picker_view.set_style()
       @determine_add_new_criterion_visibility()
+      @builder.current_question.get('relevant').set 'value', @serialize_all()
 
     change_response: (response_text) ->
       @model.change_response response_text
       @determine_add_new_criterion_visibility()
+      @builder.current_question.get('relevant').set 'value', @serialize_all()
 
     determine_add_new_criterion_visibility: () ->
       $add_new_criterion_button = @$add_new_criterion_button
@@ -141,6 +144,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       @destination = @view.$('.skiplogic__criterialist')
       _.each @presenters, (presenter) =>
         presenter.$add_new_criterion_button = @$add_new_criterion_button
+        presenter.serialize_all = _.bind @serialize, @
         presenter.render @destination
     serialize: () ->
       serialized = _.map @presenters, (presenter) ->
