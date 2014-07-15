@@ -40,7 +40,8 @@ def spa(request):
     if request.user.is_authenticated():
         context['user_details'] = json.dumps({u'name': request.user.email,
                         u'gravatar': utils.gravatar_url(request.user.email),
-                        u'debug': settings.DEBUG})
+                        u'debug': settings.DEBUG,
+                        u'username': request.user.username})
     else:
         context['user_details'] = "{}"
     if settings.LIVE_RELOAD:

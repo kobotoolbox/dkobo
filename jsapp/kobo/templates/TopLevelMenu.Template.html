@@ -1,10 +1,4 @@
 <ul ng-controller="HeaderController">
-<!--   <li class="top-level-menu__item--user">
-    <img ng-src="{{ user.avatar }}" class="top-level-menu__item--user-avatar">
-    <h2 class="top-level-menu__item--user-name">
-      {{ user.name }}
-    </h2>
-  </li> -->
   <li class="top-level-menu__item" ng-repeat="section in sections" ng-class="isActive('{{ section.title }}')" ng-click="toggleTopMenu()">
     <a href="#/{{ section.name }}">
       <i class="header-bar__page-icon  fa  fa-fw  {{ section.icon }}"></i>
@@ -18,9 +12,15 @@
     </a>
   </li>
   <li class="top-level-menu__item">
+    <a href="{{ kobocatLink.url }}{{ user.username }}/settings">
+      <i class="header-bar__page-icon  fa  fa-fw  fa-globe"></i>
+      Settings
+    </a>
+  </li>
+  <li class="top-level-menu__item">
     <a href="/accounts/logout/">
       <i class="header-bar__page-icon  fa  fa-fw  fa-sign-out"></i>
-      Log out
+      Sign out
     </a>
   </li>
 </ul>

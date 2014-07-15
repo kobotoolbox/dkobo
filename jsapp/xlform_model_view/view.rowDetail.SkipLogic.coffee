@@ -21,7 +21,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
     events:
       "click .skiplogic__deletecriterion": "deleteCriterion"
       "click .skiplogic__addcriterion": "addCriterion"
-      "click .skiplogic__delimselectcb": "markChangedDelimSelector"
+      "change .skiplogic__delimselect": "markChangedDelimSelector"
     render: () ->
       tempId = _.uniqueId("skiplogic_expr")
       @$el.html("""
@@ -32,24 +32,13 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
         <p class="skiplogic__addnew">
           <button class="skiplogic__addcriterion">+ Add a condition</button>
         </p>
-        <p class="skiplogic__delimselect">
-          Match all or any of these criteria?
-          <br>
-          <label>
-            <input type="radio" class="skiplogic__delimselectcb" name="#{tempId}" value="and" />
-            All
-          </label>
-          <label>
-            <input type="radio" class="skiplogic__delimselectcb" name="#{tempId}" value="or" />
-            Any
-          </label>
-        </p>
+        <select class="skiplogic__delimselect">
+          <option value="and">Question should match all of these criteria</option>
+          <option value="or">Question should match any of these criteria</option>
+        </select>
       """)
 
-      delimSelect = @$(".skiplogic__delimselect")
-
-      for checkbox in delimSelect.find("input") when checkbox.value is @criterion_delimiter
-        checkbox.checked = "checked"
+      delimSelect = @$(".skiplogic__delimselect").val(@criterion_delimiter)
 
       @
 
@@ -124,21 +113,47 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       super()
 
   class viewRowDetailSkipLogic.OperatorPicker extends viewRowDetailSkipLogic.Base
-    tagName: 'select'
+    tagName: 'div'
     className: 'skiplogic__expressionselect'
     render: () ->
-      render_operators = () =>
-        options = ''
-        _.each @operators, (operator) ->
-          options += '<option value="' + operator.id + '">' + operator.label + '</option>'
-          options += '<option value="-' + operator.id + '">' + operator.negated_label + '</option>'
-        options
+      @
 
-      @$el.html render_operators()
+    attach_to: (target) ->
+      target.find('.skiplogic__expressionselect').remove()
+      super(target)
+
+      @$el.select2({
+        minimumResultsForSearch: -1
+        data: do () =>
+          operators = []
+          _.each @operators, (operator) ->
+            operators.push id: operator.id, text: operator.label + (if operator.id != 1 then ' (' + operator.symbol[operator.parser_name[0]] + ')' else '')
+            operators.push id: '-' + operator.id, text: operator.negated_label + (if operator.id != 1 then ' (' + operator.symbol[operator.parser_name[0]] + ')' else '')
+
+          operators
+      })
+
       if @value
         @fill_value @value
+      else
+        @value = @$el.select2('val')
 
-      @
+    fill_value: (@value) ->
+      @$el.select2 'val', value
+      @set_style()
+
+    set_style: () -> #violates LSP
+      @$el.toggleClass 'skiplogic__expressionselect--no-response-value', +@value == 1 || +@value == -1
+      absolute_value = if @value >= 0 then +@value else -@value
+      if absolute_value == 0
+        return
+
+      operator = _.find @operators, (operator) ->
+        operator.id == absolute_value
+
+      abbreviated_label = operator['abbreviated_' + (if +@value < 0 then 'negated_' else '') + 'label']
+      chosen_element = @$el.parents('.skiplogic__criterion').find('.select2-container.skiplogic__expressionselect .select2-chosen')
+      chosen_element.text(abbreviated_label)
 
     constructor: (@operators) ->
       super()
@@ -148,10 +163,18 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
     className: 'skiplogic__responseval'
     fill_value: (value) ->
 
+    attach_to: (target) ->
+      target.find('.skiplogic__responseval').remove()
+      super(target)
+
   class viewRowDetailSkipLogic.SkipLogicTextResponse extends viewRowDetailSkipLogic.Base
     render: () ->
       @setElement('<input placeholder="response value" class="skiplogic__responseval" type="text" />')
       @
+
+    attach_to: (target) ->
+      target.find('.skiplogic__responseval').remove()
+      super(target)
 
   class viewRowDetailSkipLogic.SkipLogicValidatingTextResponseView extends viewRowDetailSkipLogic.SkipLogicTextResponse
     render: () ->
@@ -170,6 +193,10 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
     fill_value: (value) ->
       @$('input').val(value)
 
+    attach_to: (target) ->
+      target.find('.skiplogic__responseval').remove()
+      super(target)
+
 
   class viewRowDetailSkipLogic.SkipLogicDropDownResponse extends viewRowDetailSkipLogic.Base
     tagName: 'select'
@@ -185,6 +212,12 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
 
       @
 
+    attach_to: (target) ->
+      target.find('.skiplogic__responseval').remove()
+      super(target)
+
+      @$el.select2({ minimumResultsForSearch: -1, width: '20%' })
+
     constructor: (@responses) ->
       super()
 
@@ -193,19 +226,12 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
     className: 'skiplogic__criterion'
     render: () ->
 
-      @question_picker_view.render().attach_to @$el
-      @operator_picker_view.render().attach_to @$el
-      @response_value_view.render().attach_to @$el
+      @question_picker_view.render()
 
       @$el.append $("""<i class="skiplogic__deletecriterion fa fa-trash-o" data-criterion-id="#{@model.cid}"></i>""")
 
-      @$question_picker = @$('.skiplogic__rowselect')
-      @$operator_picker = @$('.skiplogic__expressionselect')
-      @$response_value = @$('.skiplogic__responseval')
-
-      @bind_question_picker()
-      @bind_response_value()
-      @bind_operator_picker()
+      @change_operator @operator_picker_view
+      @change_response @response_value_view
 
       @
 
@@ -213,7 +239,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       @$el.toggleClass("skiplogic__criterion--unspecified-question", not is_specified)
 
     bind_question_picker: () ->
-      @mark_question_specified false
+      @mark_question_specified +@$question_picker.val() != -1
 
       @$question_picker.on 'change', (e) =>
         @mark_question_specified true
@@ -223,10 +249,11 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
 
     bind_operator_picker: () ->
       @$operator_picker.on 'change', () =>
-        @presenter.change_operator @$operator_picker.val()
+        @operator_picker_view.value = @$operator_picker.select2 'val'
+        @presenter.change_operator @operator_picker_view.value
 
     bind_response_value: () ->
-      @$response_value.on (if @$response_value.prop('tagName') == 'select' then 'change' else 'blur'), () =>
+      @$response_value.on (if @$response_value.prop('tagName').toLowerCase() == 'select' then 'change' else 'blur'), () =>
         @presenter.change_response @$response_value.val()
 
     response_value_handler: () ->
@@ -234,21 +261,32 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
 
     change_operator: (@operator_picker_view) ->
       @operator_picker_view.render()
-      @$operator_picker.replaceWith(@operator_picker_view.el)
 
-      @$operator_picker = @$('.skiplogic__expressionselect')
-      @bind_operator_picker()
+      @$operator_picker = @operator_picker_view.$el
 
     change_response: (@response_value_view) ->
       @response_value_view.render()
+
+      @$response_value = @response_value_view.$el
+
+    attach_operator: () ->
+      @operator_picker_view.attach_to @$el
+      @bind_operator_picker()
+
+    attach_response: () ->
       if @$('.skiplogic__responseval-wrapper').length > 0
         @$('.skiplogic__responseval-wrapper').replaceWith(@response_value_view.el)
       else
-        @$response_value.replaceWith(@response_value_view.el)
-
-      @$response_value = @$('.skiplogic__responseval')
-
+        @response_value_view.attach_to(@$el)
       @bind_response_value()
+
+    attach_to: (element) ->
+      @question_picker_view.attach_to @$el
+      @$question_picker = @question_picker_view.$el
+      @bind_question_picker()
+      @attach_operator()
+      @attach_response()
+      super(element)
 
     constructor: (@question_picker_view, @operator_picker_view, @response_value_view, @presenter) ->
       super()

@@ -31,7 +31,8 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
       current_value = selector.text()
 
       edit_box = $('<input />', type:'text', value:current_value, class:'js-cancel-sort js-blur-on-select-row')
-      selector.replaceWith edit_box
+      selector.parent().append edit_box
+      selector.hide()
       edit_box.focus()
 
       commit_edit = () ->
@@ -45,9 +46,9 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
           new_value = newValue: edit_box.val()
 
         if new_value.newValue?
-          edit_box.replaceWith(selector)
+          edit_box.remove()
+          selector.show()
           selector.text new_value.newValue
-          selector.click enable_edit
         else
           error_box = $('<div class="error-message">' + new_value + '</div>')
           parent_element.append(error_box)
@@ -58,7 +59,7 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
           commit_edit event
 
 
-    selector.click enable_edit
+    selector.on 'click', enable_edit
     #selector.editable editableOpts
 
 
@@ -144,7 +145,7 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
     launch.fromCsv = (surveyCsv, options={})->
       previewServer = options.previewServer or ""
       data = JSON.stringify(body: surveyCsv)
-      loadConfigs(options)
+      _loadConfigs(options)
       onError = options.onError or (args...)-> console?.error.apply(console, args)
       $.ajax
         url: "#{previewServer}/koboform/survey_preview/"
