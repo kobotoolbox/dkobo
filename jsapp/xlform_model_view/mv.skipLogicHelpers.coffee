@@ -161,6 +161,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
     add_empty: () ->
       presenter = @builder.build_empty_criterion_logic()
       presenter.$add_new_criterion_button = @$add_new_criterion_button
+      presenter.serialize_all = _.bind @serialize, @
       presenter.render @destination
       @presenters.push presenter
       @determine_criterion_delimiter_visibility()
