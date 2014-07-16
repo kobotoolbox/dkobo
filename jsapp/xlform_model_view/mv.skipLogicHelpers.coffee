@@ -72,19 +72,27 @@ define 'cs!xlform/mv.skipLogicHelpers', [
     constructor: (@model, @view, @builder) ->
       @view.presenter = @
       @question = @model._get_question()
-    render: (destination) ->
+      if @builder.survey
+        @builder.survey.on 'choice-list-update', (row, key) =>
+          if @destination
+            @render(@destination)
+
+        @builder.survey.on 'row-detail-change', (row, key) =>
+          if @destination
+            if key == 'label'
+              @render(@destination)
+      else
+        console.error "this.builder.survey is not yet available"
+
+
+    render: (@destination) ->
       @view.render()
       @view.question_picker_view.fill_value(@model.get('question_cid'))
       @view.operator_picker_view.fill_value(@model.get('operator').get_value())
       @view.response_value_view.fill_value(@model.get('response_value')?.get('value'))
       @view.attach_to(destination)
 
-      @builder.survey.on 'row-detail-change', (row, key) =>
-        if key == 'label'
-          @render(destination)
 
-      @builder.survey.on 'choice-list-update', (row, key) =>
-        @render(destination)
 
       @determine_add_new_criterion_visibility()
 
