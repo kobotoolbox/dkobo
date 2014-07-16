@@ -127,8 +127,9 @@ define 'cs!xlform/view.surveyApp', [
       @survey.on "row-detail-change", (row, key, val, ctxt)=>
         evtCode = "row-detail-change-#{key}"
         @$(".on-#{evtCode}").trigger(evtCode, row, key, val, ctxt)
-      @$el.on "choice-list-update", (evt, clId) ->
+      @$el.on "choice-list-update", (evt, clId) =>
         $(".on-choice-list-update[data-choice-list-cid='#{clId}']").trigger("rebuild-choice-list")
+        @survey.trigger 'choice-list-update'
 
       @$el.on "survey__row-sortablestop", _.bind @surveyRowSortableStop, @
 
@@ -160,9 +161,9 @@ define 'cs!xlform/view.surveyApp', [
     forceSelectRow: (evt)->
       # forceSelectRow is used to mock the multiple-select key
       @selectRow($.extend({}, evt))
-    selectRow: (evt)->
+    selectRow: (evt) ->
       $et = $(evt.target)
-      if $et.hasClass('js-blur-on-select-row')
+      if $et.hasClass('js-blur-on-select-row') || $et.hasClass('editable-wrapper') || $et.hasClass('js-cancel-select-row')
         return
       $ect = $(evt.currentTarget)
       if $et.closest('.card__settings, .card__buttons, .group__header__buttons').length > 0
@@ -195,7 +196,23 @@ define 'cs!xlform/view.surveyApp', [
       $et = $(evt.currentTarget)
       $et.toggleClass('active__settings')
       if @features.surveySettings
-        @$(".form__settings").toggle()
+        $settings = @$(".form__settings")
+        $settings.toggle()
+        close_settings = (e) ->
+          $settings_toggle = $('#settings')
+
+          is_in_settings = (element) ->
+            element == $settings[0] || $settings.find(element).length > 0
+          is_in_settings_toggle = (element) ->
+            element == $settings_toggle[0] || $settings_toggle.find(element).length > 0
+
+          if !(is_in_settings(e.target) || is_in_settings_toggle(e.target))
+            $settings.hide()
+            $et.removeClass('active__settings')
+            $('body').off 'click', close_settings
+
+        $('body').on 'click', close_settings
+
 
     toggleGroupSettings: (evt)->
       $et = $(evt.currentTarget)
@@ -479,6 +496,7 @@ define 'cs!xlform/view.surveyApp', [
       if rows.length > 0
         @survey._addGroup(__rows: rows)
         @reset()
+        @$('.js-group-rows').blur()
         true
       else
         false

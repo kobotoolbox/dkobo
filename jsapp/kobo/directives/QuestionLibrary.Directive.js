@@ -22,7 +22,11 @@ function QuestionLibraryDirective($restApi) {
 
             sort_ul.sortable({
                 items: "> li",
-                connectWith: ".survey-editor__list"
+                connectWith: ".survey-editor__list",
+                helper: 'clone',
+                start: function () {
+                    sort_ul.find('li:hidden').show();
+                }
             });
         }
     };
