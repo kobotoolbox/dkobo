@@ -58,33 +58,6 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       @$el.on 'paste', (e) -> e.stopPropagation()
       @
 
-  ###
-  SkipLogicCollectionView
-  ###
-  class viewRowDetailSkipLogic.SkipLogicCollectionView extends Backbone.View
-    render: ()->
-      @$el.html("""
-        <div class="skiplogic__main"></div>
-        <p class="skiplogic__extras">
-        </p>
-      """)
-
-      @target_element = @$('.skiplogic__main')
-
-      @facade = @builder.build()
-      @facade.render @target_element
-      @model.facade = @facade
-
-      @$('.skiplogic__handcode').click(_.bind @switchEditingMode, @)
-      @
-    toggle: ->
-      @$el.toggle()
-    switchEditingMode: () =>
-      @facade = @facade.switch_editing_mode()
-      @target_element.empty()
-      @facade.render @target_element
-      @model.facade = @facade
-
   class viewRowDetailSkipLogic.QuestionPicker extends viewRowDetailSkipLogic.Base
     tagName: 'select'
     className: 'skiplogic__rowselect'

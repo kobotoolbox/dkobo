@@ -10,7 +10,20 @@ define 'cs!xlform/mv.skipLogicHelpers', [
     create_presenter: (criterion_model, criterion_view, builder) ->
       return new skipLogicHelpers.SkipLogicPresenter criterion_model, criterion_view, builder
     create_builder: () ->
-    constructor: (@view_factory) ->
+      return new skipLogicHelpers.SkipLogicBuilder @model_factory, @view_factory, @survey, @current_question, @
+    create_context: () ->
+      serialized_criteria = @current_question.get('relevant').get('value')
+      return new skipLogicHelpers.SkipLogicHelperContext @model_factory, @view_factory, @, serialized_criteria
+    constructor: (@model_factory, @view_factory, @survey, @current_question) ->
+
+  class skipLogicHelpers.SkipLogicPresentationFacade
+    constructor: (@model_factory, @helper_factory, @view_factory) ->
+    serialize: () ->
+      @context ?= @helper_factory.create_context()
+      @context.serialize()
+    render: (target) ->
+      @context ?= @helper_factory.create_context()
+      @context.render target
 
   class skipLogicHelpers.SkipLogicPresenter
     change_question: (question_name) ->
@@ -108,6 +121,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
     serialize: () ->
       return @state.serialize()
     use_criterion_builder_helper: () ->
+      @builder ?= @helper_factory.create_builder()
       presenters = @builder.build_criterion_builder(@state.serialize())
 
       if presenters == false
@@ -124,7 +138,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       @state = new skipLogicHelpers.SkipLogicModeSelectorHelper(@view_factory, @)
       @render @destination
       return
-    constructor: (@model_factory, @view_factory, @builder, serialized_criteria) ->
+    constructor: (@model_factory, @view_factory, @helper_factory, serialized_criteria) ->
       @state = serialize: () -> return serialized_criteria
       if !serialized_criteria? || serialized_criteria == ''
         serialized_criteria = ''
@@ -203,12 +217,6 @@ define 'cs!xlform/mv.skipLogicHelpers', [
   class skipLogicHelpers.SkipLogicBuilder
     # build_hand_code_criteria: (criteria) ->
     #   new XLF.SkipLogicHandCodeFacade criteria, @, @view_factory
-    build: () ->
-
-      serialized_criteria = @current_question.get('relevant').get('value')
-
-      return new skipLogicHelpers.SkipLogicHelperContext @model_factory, @view_factory, @, serialized_criteria
-
     parse_skip_logic_criteria: (criteria) ->
       return $skipLogicParser criteria
 
