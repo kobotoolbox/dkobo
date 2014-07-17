@@ -194,16 +194,15 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       @builder.build_hand_code_criteria @serialize()
 
   class skipLogicHelpers.SkipLogicHandCodeHelper
-    render: (destination) ->
-      @view.render().attach_to(destination)
-      @view.$('textarea').val(@criteria)
-      @view.$('.skiplogic-handcode__cancel').click(() => @context.use_mode_selector_helper())
+    render: ($destination) ->
+      @textarea.render().attach_to $destination
+      @button.render().attach_to $destination
+      @button.bind_event 'click', () => @context.use_mode_selector_helper()
     serialize: () ->
-      @view.$('textarea').val() || @criteria
+      @textarea.$el.val() || @criteria
     constructor: (@criteria, @builder, @view_factory, @context) ->
-      @view = @view_factory.create_hand_code_view()
-    switch_editing_mode: () ->
-      @builder.build_criterion_builder @serialize()
+      @textarea = @view_factory.create_textarea @criteria, 'skiplogic__handcode-edit'
+      @button = @view_factory.create_button 'x', 'skiplogic-handcode__cancel'
 
   class skipLogicHelpers.SkipLogicModeSelectorHelper
     render: (destination) ->
