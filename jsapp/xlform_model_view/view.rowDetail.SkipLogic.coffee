@@ -34,7 +34,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
   class viewRowDetailSkipLogic.Button extends viewRowDetailSkipLogic.Base
     tagName: 'button'
     render: () ->
-      @$el.text @text
+      @$el.html @text
       @$el.addClass @className
 
       @
@@ -294,40 +294,13 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
         when 'integer', 'decimal' then new viewRowDetailSkipLogic.SkipLogicTextResponse
     create_criterion_view: (question_picker_view, operator_picker_view, response_value_view, presenter) ->
       return new viewRowDetailSkipLogic.SkipLogicCriterion question_picker_view, operator_picker_view, response_value_view, presenter
-    constructor: (@survey) ->
     create_criterion_builder_view: () ->
       return new viewRowDetailSkipLogic.SkipLogicCriterionBuilderView()
-    create_hand_code_view: (text) ->
-      return new viewRowDetailSkipLogic.SkipLogicHandCodeView(text)
-    create_skip_logic_picker_view: (context) ->
-      return new viewRowDetailSkipLogic.SkipLogicPickerView(context)
     create_textarea: (text, className) ->
       return new viewRowDetailSkipLogic.TextArea text, className
     create_button: (text, className) ->
       return new viewRowDetailSkipLogic.Button text, className
+    constructor: (@survey) ->
 
-  class viewRowDetailSkipLogic.SkipLogicPickerView extends viewRowDetailSkipLogic.Base
-    tagName: 'div'
-    events:
-      'click .skiplogic__select-builder' : 'use_criterion_builder_helper'
-      'click .skiplogic__select-handcode' : 'use_hand_code_helper'
-    render: () ->
-      @$el.html(
-        """
-          <button class="skiplogic__button skiplogic__select-builder"><i class="fa fa-plus"></i> Add a condition</button>
-
-          <button class="skiplogic__button skiplogic__select-handcode"><i>${}</i> Manually enter your skip logic in XLSForm code</button>
-        """
-        )
-      return @
-
-    constructor: (@context) ->
-      super()
-
-    use_hand_code_helper: () ->
-      @context.use_hand_code_helper()
-
-    use_criterion_builder_helper: () ->
-      @context.use_criterion_builder_helper()
 
   viewRowDetailSkipLogic

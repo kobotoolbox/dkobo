@@ -195,8 +195,10 @@ define 'cs!xlform/mv.skipLogicHelpers', [
 
   class skipLogicHelpers.SkipLogicHandCodeHelper
     render: ($destination) ->
-      @textarea.render().attach_to $destination
-      @button.render().attach_to $destination
+      $parent = $('<div>')
+      $destination.append $parent
+      @textarea.render().attach_to $parent
+      @button.render().attach_to $parent
       @button.bind_event 'click', () => @context.use_mode_selector_helper()
     serialize: () ->
       @textarea.$el.val() || @criteria
@@ -205,12 +207,21 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       @button = @view_factory.create_button 'x', 'skiplogic-handcode__cancel'
 
   class skipLogicHelpers.SkipLogicModeSelectorHelper
-    render: (destination) ->
-      @view.render().attach_to(destination)
+    render: ($destination) ->
+      $parent = $('<div>')
+      $destination.append $parent
+      @criterion_builder_button.render().attach_to $parent
+      @handcode_button.render().attach_to $parent
+
+      @criterion_builder_button.bind_event 'click', () => @context.use_criterion_builder_helper()
+      @handcode_button.bind_event 'click', () => @context.use_hand_code_helper()
+
     serialize: () ->
       return ''
-    constructor: (@view_factory, context) ->
-      @view = @view_factory.create_skip_logic_picker_view(context)
+    constructor: (view_factory, @context) ->
+      @criterion_builder_button = view_factory.create_button '<i class="fa fa-plus"></i> Add a condition', 'skiplogic__button skiplogic__select-builder'
+      @handcode_button = view_factory.create_button '<i>${}</i> Manually enter your skip logic in XLSForm code', 'skiplogic__button skiplogic__select-handcode'
+      ###@view = @view_factory.create_skip_logic_picker_view(context)###
     switch_editing_mode: () -> return
 
   class skipLogicHelpers.SkipLogicBuilder
