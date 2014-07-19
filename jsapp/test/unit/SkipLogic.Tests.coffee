@@ -768,72 +768,9 @@ skip_logic_helpers = (dkobo_xlform) ->
         expect(_presenter_stubs[0].model.cid).toBe 2
 
   describe 'hand code helper', () ->
-    _view_factory = sinon.stubObject $vRdsl.SkipLogicViewFactory
-    _builder = null
-    _facade = null
-    _view = null
 
-    beforeEach () ->
-      _view = sinon.stubObject $vRdsl.SkipLogicHandCodeView
-      _builder = sinon.stubObject($slh.SkipLogicBuilder)
-      _view_factory.create_hand_code_view.returns _view
-      _view.render.returns _view
-      _view.$.withArgs('.skiplogic-handcode__cancel').returns(click: sinon.spy())
-      _facade = new $slh.SkipLogicHandCodeHelper(
-        'test criteria'
-        _builder
-        _view_factory
-        sinon.stubObject($slh.SkipLogicHelperContext)
-      )
-
-
-    describe 'render', () ->
-      _textarea_spy = null
-
-      beforeEach () ->
-        _textarea_spy = val: sinon.spy()
-
-        _view.$.withArgs('textarea').returns _textarea_spy
-        _facade.render 'test'
-
-      it 'renders the view', () ->
-        expect(_view.render).toHaveBeenCalledOnce()
-      it 'attaches root view to provided destination', () ->
-        expect(_view.attach_to).toHaveBeenCalledWith 'test'
-      it "set the view's text area to the passed criteria", () ->
-        expect(_textarea_spy.val).toHaveBeenCalledWith 'test criteria'
-    describe 'serialize', () ->
-      it "returns the value of the view's text area", ->
-        textarea_stub = val: sinon.stub()
-        _view.$.withArgs('textarea').returns textarea_stub
-        textarea_stub.val.returns 'test criteria'
-        expect(_facade.serialize()).toBe 'test criteria'
-
-    describe 'constructor', () ->
 
   describe 'mode selector helper', () ->
-    describe 'render', () ->
-      initialize_mode_selector_helper = () ->
-
-        view_factory_stub = sinon.stubObject($vRdsl.SkipLogicViewFactory)
-        view_stub = sinon.stubObject($vRdsl.SkipLogicPickerView)
-
-        view_stub.render.returns view_stub
-        view_factory_stub.create_skip_logic_picker_view.returns view_stub
-
-
-        return new $slh.SkipLogicModeSelectorHelper(view_factory_stub)
-
-      it 'renders the view', () ->
-        helper = initialize_mode_selector_helper()
-        helper.render('destination')
-
-        expect(helper.view.render).toHaveBeenCalledOnce()
-      it 'attaches the view to passed destination', () ->
-        helper = initialize_mode_selector_helper()
-        helper.render('destination')
-        expect(helper.view.attach_to).toHaveBeenCalledWith('destination')
-
     describe 'serialize', () ->
       it 'returns an empty string', () ->
         helper = new $slh.SkipLogicModeSelectorHelper(sinon.stubObject($vRdsl.SkipLogicViewFactory))
@@ -870,26 +807,7 @@ skip_logic_helpers = (dkobo_xlform) ->
         expect(state_spy.serialize).toHaveBeenCalledOnce()
 
     describe 'use criterion builder helper', () ->
-      it 'switches inner state to criterion builder helper', () ->
-        context = initialize_helper_context()
-        context.state = serialize: sinon.stub().returns 'test'
 
-        context.view_factory.create_criterion_builder_view.returns {}
-        context.builder.build_criterion_builder.withArgs('test').returns('test presenter', 'and')
-
-        context.use_criterion_builder_helper()
-
-        expect(context.state).toBeInstanceOf $slh.SkipLogicCriterionBuilderHelper
-      it 'sets state to null when builder can`t build criterion builder', () ->
-        context = initialize_helper_context()
-        context.state = serialize: sinon.stub().returns 'test'
-
-        context.view_factory.create_criterion_builder_view.returns {}
-        context.builder.build_criterion_builder.withArgs('test').returns(false)
-
-        context.use_criterion_builder_helper()
-
-        expect(context.state).toBeNull()
     describe 'use hand code helper', () ->
       it 'switches inner state to hand code helper', () ->
         context = initialize_helper_context()
@@ -935,24 +853,6 @@ skip_logic_helpers = (dkobo_xlform) ->
       helper_factory = sinon.stubObject $slh.SkipLogicHelperFactory
 
       new $slh.SkipLogicBuilder(model_factory, view_factory, survey, current_question, helper_factory)
-    describe 'build', () ->
-      it "returns a helper context", () ->
-        relevant_stub = get: sinon.stub()
-        relevant_stub.get.withArgs('value').returns('test criteria')
-
-        builder = initialize_builder()
-
-        builder.build_criterion_builder = sinon.stub()
-        builder.build_criterion_builder.withArgs('test criteria').returns('test criterion builder')
-
-        builder.current_question.get.withArgs('relevant').returns(relevant_stub)
-
-        original_skip_logic_helper_context = $slh.SkipLogicHelperContext
-        $slh.SkipLogicHelperContext =  () -> return
-        result = builder.build()
-        expect(result).toBeInstanceOf $slh.SkipLogicHelperContext
-
-        $slh.SkipLogicHelperContext = original_skip_logic_helper_context
 
     describe 'build criterion builder', () ->
       _builder = null
