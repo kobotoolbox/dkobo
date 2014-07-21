@@ -978,5 +978,35 @@ skip_logic_helpers = (dkobo_xlform) ->
 
         actual instanceof expectedInstance
 
+skip_logic_views = (dkobo_xlform) ->
+  $model  = dkobo_xlform.model
+  $mRdsl  = $modelRowDetailsSkipLogic = $model.rowDetailsSkipLogic
+  $vRdsl  = $viewRowDetailSkipLogic   = dkobo_xlform.view.rowDetailSkipLogic
+  $slh    = $skipLogicHelpers         = dkobo_xlform.helper.skipLogic
+
+  describe 'view composer', () ->
+    describe 'add method', () ->
+      it 'adds a view to the end of the view array', () ->
+      it 'hashes the view with the passed id', () ->
+      it 'doesn`t hash the view when no id is passed', () ->
+    describe 'remove method', () ->
+      it 'removes the view at a given index when a number is passed', () ->
+      it 'removes the view with the given id when a string is passed', () ->
+      it 'removes the passed view', () ->
+    describe 'get_view method', () ->
+      it 'returns view at given index when number is passed', () ->
+      it 'returns view with given id when string is passed', () ->
+      it 'returns null when no view with given id exists', () ->
+    describe 'render method', () ->
+      it 'renders all views', () ->
+    describe 'attach_to method', () ->
+      it 'attaches all views in order of addition', () ->
+    describe 'bind event method', () ->
+      it 'binds event to all views when no id provided', () ->
+      it 'binds event to specific view when id provided', () ->
+      it 'throws ItemNotFound error when no view matches passed id', () ->
+
+
 describe 'skip logic model', -> skip_logic_model.call(@, dkobo_xlform)
 describe 'skip logic helpers', -> skip_logic_helpers.call(@, dkobo_xlform)
+describe 'skip logic views', -> skip_logic_views.call(@, dkobo_xlform)
