@@ -29,8 +29,9 @@ define 'cs!xlform/view.choices', [
       if @row.get("type").get("rowType").specifyChoice
         for option, i in @model.options.models
           new OptionView(model: option, cl: @model).render().$el.appendTo @ul
-        while i < 2
-          @addEmptyOption("Option #{++i}")
+        if i == 0
+          while i < 2
+            @addEmptyOption("Option #{++i}")
 
         @$el.removeClass("hidden")
       else
@@ -92,9 +93,8 @@ define 'cs!xlform/view.choices', [
       if @model
         @p.html @model.get("label") || 'Empty'
         @$el.attr("data-option-id", @model.cid)
-        if @model.get('name') != $modelUtils.sluggify(@model.get('label') || '')
-          $('span', @c).html @model.get("name")
-          @model.set('setManually', true)
+        $('span', @c).html @model.get("name")
+        @model.set('setManually', true)
       else
         @model = new $choices.Option()
         @options.cl.options.add(@model)
