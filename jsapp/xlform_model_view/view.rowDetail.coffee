@@ -188,17 +188,21 @@ define 'cs!xlform/view.rowDetail', [
       @$el.addClass("card__settings__fields--#{@fieldTab}")
       viewRowDetail.Templates.textbox @cid, @model.key, @model.key, 'text'
     afterRender: ->
-      @$el.find('input').eq(0).val(@model.get("value"))
       @listenForInputChange(transformFn: (value)=>
-        names = []
-        @model.getSurvey().forEachRow (r)=>
-          name = r.getValue("name")
-          if name && name != @model.get("value")
-            names.push(name)
-        , includeGroups: true
+        value_chars = value.split('')
+        if !/[\w_]/.test(value_chars[0])
+          value_chars.unshift('_')
 
-        $modelUtils.sluggifyLabel value, names
+        @model.set 'value', value
+        @model.deduplicate @model.getSurvey()
       )
+      update_view = () => @$el.find('input').eq(0).val(@model.get("value") || $modelUtils.sluggifyLabel @model._parent.getValue('label'))
+      update_view()
+
+      @model._parent.get('label').on 'change:value', update_view
+  # insertInDom: (rowView)->
+    #   # default behavior...
+    #   rowView.defaultRowDetailParent.append(@el)
 
   viewRowDetail.DetailViewMixins.default =
     html: ->
