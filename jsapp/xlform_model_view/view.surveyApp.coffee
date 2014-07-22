@@ -440,7 +440,6 @@ define 'cs!xlform/view.surveyApp', [
       xlfrv
 
     _reset: ->
-      log "resetting"
       _notifyIfRowsOutOfOrder(@)
       fe = @formEditorEl
       isEmpty = true
