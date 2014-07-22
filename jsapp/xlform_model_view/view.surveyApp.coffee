@@ -114,10 +114,9 @@ define 'cs!xlform/view.surveyApp', [
       [prev, parent]
 
     initialize: (options)->
-      # @reset = _.throttle(@_reset, 1000)
       @reset = ()=>
         clearTimeout(@_timedReset)  if @_timedReset
-        @_timedReset = setTimeout(_.bind(@_reset, @), 100)
+        @_timedReset = setTimeout _.bind(@_reset, @), 0
 
       if options.survey and (options.survey instanceof $survey.Survey)
         @survey = options.survey
@@ -441,6 +440,7 @@ define 'cs!xlform/view.surveyApp', [
       xlfrv
 
     _reset: ->
+      log "resetting"
       _notifyIfRowsOutOfOrder(@)
       fe = @formEditorEl
       isEmpty = true
