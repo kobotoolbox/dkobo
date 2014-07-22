@@ -50,6 +50,8 @@ define 'cs!xlform/model.survey', [
       for row, row_i in survey.rows.models
         if rowlist = row.getList()
           @choices.add(name: rowlist.get("name"), options: rowlist.options.toJSON())
+        name_detail = row.get('name')
+        name_detail.set 'value', name_detail.deduplicate(@)
         index_incr = index + row_i
         @rows.add(row.toJSON(), at: index_incr)
       ``
@@ -80,7 +82,7 @@ define 'cs!xlform/model.survey', [
           tabs.push('-')
           r.forEachRow(logr, flat: true, includeGroups: true)
           tabs.pop()
-        else 
+        else
           logFn tabs.join(''), r.get('label').get('value')
       @forEachRow(logr, flat: true, includeGroups: true)
       ``
