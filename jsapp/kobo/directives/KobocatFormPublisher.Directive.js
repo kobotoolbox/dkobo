@@ -36,8 +36,13 @@ function KobocatFormPublisherDirective($restApi, $miscUtils, $routeTo) {
 
             scope.show_form_name_exists_message = false;
             scope.get_form_id = function (item) {
-                name = item.body.split('\n').pop().split(',')[2];
-                return name.substring(1, name.length -1);
+                if (item.formid) {
+                    return item.formid;
+                }
+                if (item.body) {
+                    var s = dkobo_xlform.model.Survey.create(item.body)
+                    return s.settings.get('form_id');
+                }
             };
             scope.form_name = scope.get_form_id(scope.item);
 

@@ -50,6 +50,9 @@ define 'cs!xlform/view.row', [
     render: ->
       if @already_rendered
         @is_expanded = @$card.hasClass('card--expandedchoices')
+        # this will cause problems, but prevents re-rendering
+        return
+
       if @model instanceof $row.RowError
         @_renderError()
       else

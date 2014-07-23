@@ -139,26 +139,8 @@ def publish_survey_draft(request, pk, format=None):
     except SurveyDraft.DoesNotExist:
         return Response({'error': 'SurveyDraft not found'}, status=status.HTTP_404_NOT_FOUND)
 
-    body = survey_draft.body.split('\n')
-
-    title = request.DATA.get('title', False)
-    id_string = request.DATA.get('id_string', False)
-
-    form_settings=body.pop()
-
-    if form_settings is u'':
-        form_settings = body.pop() + '\n'
-    form_settings_list=form_settings.split(',')
-
-    if title and title != '':
-        form_settings_list.pop(1)
-        form_settings_list.insert(1, '"' + title + '"')
-    if id_string and id_string != '':
-        form_settings_list.pop(2)
-        form_settings_list.insert(2, '"' + id_string + '"')
-
-    body.append(','.join(form_settings_list))
-    body = '\n'.join(body)
+    form_id_string = request.DATA.get('id_string', False)
+    survey_draft._set_form_id_string(form_id_string, title=request.DATA.get('title', False))
 
     #(status_code, resp) = kobocat_integration.publish_survey_draft(survey_draft, "%s://%s:%s" % (settings.KOBOCAT_SERVER_PROTOCOL, \settings.KOBOCAT_SERVER, \settings.KOBOCAT_SERVER_PORT))
 
@@ -166,7 +148,7 @@ def publish_survey_draft(request, pk, format=None):
     (token, is_new) = Token.objects.get_or_create(user=request.user)
     headers = {u'Authorization':'Token ' + token.key}
 
-    payload = {u'text_xls_form': body}
+    payload = {u'text_xls_form': survey_draft.body}
 
     url = kobocat_integration._kobocat_url('/api/v1/forms')
 

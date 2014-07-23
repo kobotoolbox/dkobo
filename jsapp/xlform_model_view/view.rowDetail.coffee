@@ -127,7 +127,7 @@ define 'cs!xlform/view.rowDetail', [
   viewRowDetail.DetailViewMixins.type =
     html: -> false
     insertInDOM: (rowView)->
-      typeStr = @model.get("value").split(" ")[0]
+      typeStr = @model.get("typeId")
       if !(@model._parent.constructor.kls is "Group")
         faClass = $icons.get(typeStr).get("faClass")
         rowView.$el.find(".card__header-icon").addClass("fa-#{faClass}")

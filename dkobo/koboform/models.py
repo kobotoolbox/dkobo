@@ -31,6 +31,29 @@ class SurveyDraft(models.Model):
         # and this method of finding the id_string is (at least) consistent.
         return self._pyxform_survey.id_string
 
+    def _set_form_id_string(self, form_id_string, title=False):
+        '''
+        goal: rewrite this to avoid csv manipulation
+        '''
+        body = self.body.split('\n')
+
+        form_settings=body.pop()
+
+        if form_settings is u'':
+            form_settings = body.pop() + '\n'
+        form_settings_list = form_settings.split(',')
+
+        if title and title != '':
+            form_settings_list.pop(1)
+            form_settings_list.insert(1, '"' + title + '"')
+        if form_id_string and form_id_string != '':
+            form_settings_list.pop(2)
+            form_settings_list.insert(2, '"' + form_id_string + '"')
+
+        body.append(','.join(form_settings_list))
+        self.body = '\n'.join(body)
+
+
     def summarize_survey(self):
         try:
             # json_summary = self._pyxform_survey.to_json()
