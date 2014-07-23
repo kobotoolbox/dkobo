@@ -46,9 +46,9 @@ class SurveyDraft(models.Model):
         if title and title != '':
             form_settings_list.pop(1)
             form_settings_list.insert(1, '"' + title + '"')
-        if id_string and id_string != '':
+        if form_id_string and form_id_string != '':
             form_settings_list.pop(2)
-            form_settings_list.insert(2, '"' + id_string + '"')
+            form_settings_list.insert(2, '"' + form_id_string + '"')
 
         body.append(','.join(form_settings_list))
         self.body = '\n'.join(body)

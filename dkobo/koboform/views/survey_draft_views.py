@@ -148,7 +148,7 @@ def publish_survey_draft(request, pk, format=None):
     (token, is_new) = Token.objects.get_or_create(user=request.user)
     headers = {u'Authorization':'Token ' + token.key}
 
-    payload = {u'text_xls_form': body}
+    payload = {u'text_xls_form': survey_draft.body}
 
     url = kobocat_integration._kobocat_url('/api/v1/forms')
 
