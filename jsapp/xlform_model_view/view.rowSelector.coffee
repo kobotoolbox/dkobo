@@ -48,7 +48,8 @@ define 'cs!xlform/view.rowSelector', [
       @question_name = @line.find('input').val()
       @line.empty()
       $.scrollTo @line, 200, offset: -300
-      @line.html $viewTemplates.$$render('xlfRowSelector.line', @question_name)
+      @line.html $viewTemplates.$$render('xlfRowSelector.line', "")
+      @line.find('.row__questiontypes__new-question-name').val(@question_name)
       $menu = @line.find(".row__questiontypes__list")
       for mrow in $icons.grouped()
         menurow = $("<div>", class: "questiontypelist__row").appendTo $menu
