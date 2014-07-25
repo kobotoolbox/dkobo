@@ -223,7 +223,17 @@
 }
 
 .forms__kobocat__publisher__label {
-  display: block;
+    display: block;
+    font-size: 16px;
+    font-family: 'Lato';
+    font-weight: 600;
+    margin: 10px 0 30px 0;
+}
+
+.forms__kobocat__publisher__label input {
+    width: 100%;
+    margin: 5px 0 0;
+    padding: 4px 13px;
 }
 
 .forms__card__buttons {
