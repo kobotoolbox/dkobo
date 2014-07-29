@@ -51,7 +51,7 @@ function KobocatFormPublisherDirective($restApi, $miscUtils, $routeTo) {
                 height: 400,
                 width: 600,
                 autoOpen: false,
-                title: 'Publish Survey',
+                title: 'Deploy as New Survey Project',
                 draggable: false,
                 resizable: false,
                 buttons: {
