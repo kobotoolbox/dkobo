@@ -1,4 +1,3 @@
-// browserNoActivityTimeout
 module.exports = function(config) {
     var path = require('path');
     function project(pattern, included, watched, served) {
