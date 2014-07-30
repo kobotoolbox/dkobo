@@ -69,6 +69,7 @@ module.exports = function(config) {
         autoWatch: false,
         browsers: ['PhantomJS'],
         captureTimeout: 60000,
+        browserNoActivityTimeout: 20000,
         singleRun: true,
     });
 };

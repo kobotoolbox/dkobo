@@ -69,6 +69,7 @@ define 'cs!xlform/view.surveyApp', [
       "click .js-toggle-row-settings": "toggleRowSettings"
       "click .js-toggle-row-multioptions": "toggleRowMultioptions"
       "click .js-expand-row-selector": "expandRowSelector"
+      "click .js-expand-multioptions--all": "expandMultioptions"
       "click .rowselector_toggle-library": "toggleLibrary"
       "mouseenter .card__buttons__button": "buttonHoverIn"
       "mouseleave .card__buttons__button": "buttonHoverOut"
@@ -274,69 +275,75 @@ define 'cs!xlform/view.surveyApp', [
           throw new Error('View for row was not found: ' + rowId)
         new $viewRowSelector.RowSelector(el: $spacer.get(0), ngScope: @ngScope, spawnedFromView: view, surveyView: @, reversible:true).expand()
 
-    render: ()->
-      @$el.removeClass("content--centered").removeClass("content")
+    _render_html: ->
       @$el.html $viewTemplates.$$render('surveyApp', @)
+      @formEditorEl = @$(".-form-editor")
+      @settingsBox = @$("#additional-options")
+
+    _render_attachEvents: ->
       @survey.settings.on 'validated:invalid', (model, validations) ->
         for key, value of validations
             break
-
-      @formEditorEl = @$(".-form-editor")
-      # @$(".survey-editor__null-top-row .survey__row__spacer .btn--addrow").click (evt)=>
-      #   if !@emptySurveyXlfRowSelector
-      #     @emptySurveyXlfRowSelector = new $viewRowSelector.RowSelector(el: @$el.find(".survey__row__spacer").get(0), survey: @survey, ngScope: @ngScope)
-      #   @emptySurveyXlfRowSelector.expand()
-
-      @null_top_row_view_selector = new $viewRowSelector.RowSelector(el: @$el.find(".survey__row__spacer").get(0), survey: @survey, ngScope: @ngScope, surveyView: @, reversible:true)
 
       if @features.displayTitle
         $viewUtils.makeEditable @, @survey.settings, '.form-title', property:'form_title', options: validate: (value) ->
           if value.length > 255
             return "Length cannot exceed 255 characters, is " + value.length + " characters."
           return
-      else
-        @$(".survey-header__inner").hide()
 
-      # see this page for info on what should be in a form_id
-      # http://opendatakit.org/help/form-design/guidelines/
-      $viewUtils.makeEditable @, @survey.settings, '.form-id', property:'form_id', transformFunction: $modelUtils.sluggify
-      # @.survey.on 'change:form_id', _.bind viewUtils.handleChange('form_id', XLF.sluggify), @
+      if @features.surveySettings
+        $viewUtils.makeEditable @, @survey.settings, '.form-id', property:'form_id', transformFunction: $modelUtils.sluggify
 
-      addOpts = @$("#additional-options")
+
+    _render_addSubViews: ->
       for detail in @survey.surveyDetails.models
-        addOpts.append((new $surveyDetailView.SurveyDetailView(model: detail)).render().el)
+        @settingsBox.append((new $surveyDetailView.SurveyDetailView(model: detail)).render().el)
 
-      @reset()
+      # in which cases is the null_top_row_view_selector viewed
+      @null_top_row_view_selector = new $viewRowSelector.RowSelector(el: @$el.find(".survey__row__spacer").get(0), survey: @survey, ngScope: @ngScope, surveyView: @, reversible:true)
+
+    _render_hideConditionallyDisplayedContent: ->
+      if not @features.displayTitle
+        @$(".survey-header__inner").hide()
 
       if not @features.surveySettings
         @$(".survey-header__options-toggle").hide()
 
-      if @features.multipleQuestions
-        @activateSortable()
-      else
+      if !@features.multipleQuestions
         @$el.addClass('survey-editor--singlequestion')
-
+        @$el.find(".survey-editor__null-top-row").find(".survey-editor__message").addClass("hidden")
         if @survey.rows.length is 0
-          new $viewRowSelector.RowSelector(el: @$el.find(".survey__row__spacer").get(0), survey: @survey, ngScope: @ngScope, surveyView: @, reversible: false).expand()
+          @null_top_row_view_selector.expand()
 
-      if not @features.copyToLibrary
-        # TODO: what happened to this element?
-        @$(".row-extras__add-to-question-library").hide()
+    render: ()->
+      @$el.addClass("survey-editor--loading")
+      @$el.removeClass("content--centered").removeClass("content")
 
+      try
+        @_render_html()
+        @_render_attachEvents()
+        @_render_addSubViews()
+        @_render_hideConditionallyDisplayedContent()
 
-      if @expand_all_multioptions is null
-        $expand_multioptions = @$(".js-expand-multioptions--all")
-        $expand_multioptions.click () =>
-          if @expand_all_multioptions
-            @expand_all_multioptions = false
-            $(".card.card--selectquestion").removeClass("card--expandedchoices")
-            $expand_multioptions.html($expand_multioptions.html().replace("Collapse", "Expand"));
-          else
-            @expand_all_multioptions = true
-            $(".card.card--selectquestion").addClass("card--expandedchoices")
-            $expand_multioptions.html($expand_multioptions.html().replace("Expand", "Collapse"));
+        @_reset()
 
+      catch error
+        @$el.addClass("survey-editor--error")
+        throw error
+
+      @$el.removeClass("survey-editor--loading")
       @
+
+    expandMultioptions: ->
+      $expand_multioptions = @$(".js-expand-multioptions--all")
+      if @expand_all_multioptions
+        @expand_all_multioptions = false
+        @$(".card.card--selectquestion").removeClass("card--expandedchoices")
+        $expand_multioptions.html($expand_multioptions.html().replace("Collapse", "Show"));
+      else
+        @expand_all_multioptions = true
+        @$(".card.card--selectquestion").addClass("card--expandedchoices")
+        $expand_multioptions.html($expand_multioptions.html().replace("Show", "Collapse"));
 
     getItemPosition: (item) ->
       i = 0
@@ -476,16 +483,16 @@ define 'cs!xlform/view.surveyApp', [
       @survey.forEachRow(fn, includeErrors: true, includeGroups: true, flat: true)
 
       null_top_row = @formEditorEl.find(".survey-editor__null-top-row, .survey-editor__message").removeClass("expanded")
-      if isEmpty
+
+      if isEmpty and @features.multipleQuestions
         null_top_row.removeClass("hidden")
-      else
+      else if @features.multipleQuestions
         null_top_row.addClass("hidden")
 
       if @features.multipleQuestions
         @activateSortable()
 
-      # $viewUtils.reorderElemsByData(".xlf-row-view", @$el, "row-index")
-      return
+      ``
 
     clickRemoveRow: (evt)->
       evt.preventDefault()

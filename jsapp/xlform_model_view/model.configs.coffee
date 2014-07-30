@@ -243,12 +243,16 @@ define 'cs!xlform/model.configs', ["underscore", 'cs!xlform/model.utils', "backb
   ###
 
   configs.truthyValues = [
-    "true",
     "yes",
+    "true",
+    "true()",
+    "TRUE",
   ]
   configs.falsyValues = [
-    "false",
     "no",
+    "false",
+    "false()",
+    "FALSE",
   ]
 
   # Alternative: XLF.configs.boolOutputs = {"true": "yes", "false": "no"}
