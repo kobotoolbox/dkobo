@@ -69,14 +69,33 @@ rowDetailsSkipLogic.SkipLogicCriterion = (function(_super) {
     __extends(SkipLogicCriterion, _super);
 
     SkipLogicCriterion.prototype.serialize = function() {
-        var response_model;
+        var response_model, failWithEmptyStringMessages = [];
         response_model = this.get('response_value');
-        if ((response_model != null) && (this.get('operator') != null) && (this.get('question_cid') != null) && response_model.isValid() !== false && this._get_question() !== undefined) {
-            this._get_question().finalize();
-            return this.get('operator').serialize(this._get_question().get('name').get('value'), response_model.get('value'));
-        } else {
+
+        // listing and notifying dev of all the ways this fails and returns an empty string
+        if (response_model == null) {
+            failWithEmptyStringMessages.push("response_model == null");
+        }
+        if (this.get('operator') == null) {
+            failWithEmptyStringMessages.push("this.get('operator') == null");
+        }
+        if (this.get('question_cid') == null) {
+            failWithEmptyStringMessages.push("this.get('question_cid') == null");
+        }
+        if (response_model.isValid() == false) {
+            val = response_model.get('value')
+            failWithEmptyStringMessages.push("response_model.isValid() === false");
+        }
+        if (this._get_question() === undefined) {
+            failWithEmptyStringMessages.push("this._get_question() === undefined");
+        }
+        if (failWithEmptyStringMessages.length > 0) {
+            // console && console.error("Serialization failed: ", failWithEmptyStringMessages.join(', '));
             return '';
         }
+        this._get_question().finalize();
+
+        return this.get('operator').serialize(this._get_question().get('name').get('value'), response_model.get('value'));
     };
 
     SkipLogicCriterion.prototype._get_question = function() {
@@ -139,6 +158,7 @@ rowDetailsSkipLogic.SkipLogicCriterion = (function(_super) {
         var choice_names, choices, current_value, response_model;
         response_model = this.get('response_value');
         current_value = response_model != null ? response_model.get('value') : void 0;
+        // debugger;
         if (!response_model || response_model.get('type') !== this.get_correct_type()) {
             response_model = this.factory.create_response_model(this.get_correct_type());
             this.set('response_value', response_model);
@@ -320,7 +340,7 @@ rowDetailsSkipLogic.IntegerResponseModel = (function(_super) {
 
     IntegerResponseModel.prototype.validation = {
         value: {
-            pattern: 'digits',
+            pattern: /\d+/,
             msg: 'Number must be integer'
         }
     };
