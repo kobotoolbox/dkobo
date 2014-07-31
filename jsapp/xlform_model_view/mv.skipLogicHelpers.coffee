@@ -344,8 +344,8 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       name: 'integer'
     barcode:
       operators: [3, 1, 2, 4]
-      equality_operator_type: 'basic'
-      response_type: 'integer'
+      equality_operator_type: 'text'
+      response_type: 'text'
       name: 'barcode'
     decimal:
       operators: [1, 2, 3, 4]
