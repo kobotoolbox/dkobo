@@ -15,24 +15,6 @@
     .card, .row__questiontypes {
         margin-left: 0px;
     }
-
-    > .card__settings {
-        background-color: transparent;
-        &:after {
-            border-bottom-color: #E9EDF0;
-        }
-        &:before {
-            border-width: 11px;
-            margin-left: -11px;
-        }
-    }
-    // settings wider than card in groups, EXPERIMENTAL
-    // .survey__row .card__settings {
-    //     margin-left: -20px;
-    //     margin-right: -8px;
-    //     border-right-width: 1px;
-    //     border-left-width: 1px;
-    // }
 }
 
 .group__name {
@@ -111,13 +93,46 @@
         display: none;
     }
     &.group--expanded-settings {
+        background: #D2D7DC;
+        padding:4px 0px;
+        padding-bottom: 0px;
         > .card__settings {
             display: block;
+            background-color: transparent;
+            border:none;
+            &:after {
+                content: "";
+                border:none;
+            }
+            &:before {
+                content: "";
+                border:none;
+            }
         }
-        > .group__header > .group__header__buttons > .group__header__buttons__button--settings {
-            @extend %activated-card-button;
+        .group__rows {
+            display: none;
+        }
+        .group__header {
+            border-bottom-color: #AAB3BC;
+            margin:-4px 0px 0px;
+        }
+        .card__settings__content, 
+        .group__header__buttons {
+            border-left-color: #AAB3BC;
+        }
+        .card__settings__tabs .heading {
+            border-bottom: none;
+            margin-bottom: 0px;
+        }
+        .card__settings__tabs li.card__settings__tabs__tab--active {
+            background: #AAB3BC;
+        }
+        .group__header__buttons__button--settings {
+            color: white;
+            background: none;
         }
     }
+
 }
 
 // when inside .group--shrunk, .group__caret is displayed differently
