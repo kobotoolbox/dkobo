@@ -62,6 +62,7 @@ $nested-btn--addrow-height: 24px;
     left: -46px;
     top: -15px - $click-area-btn--addrow-padding-tb;
     padding: $click-area-btn--addrow-padding-tb 0 0 11px;
+    z-index: 100;
 
     .fa {
         background-color: $addButtonColor;
@@ -90,6 +91,7 @@ $nested-btn--addrow-height: 24px;
         height: $nested-btn--addrow-height + (2 * $click-area-nested-btn--addrow-padding-tb);
         top: -45px - $click-area-nested-btn--addrow-padding-tb;
         padding: $click-area-nested-btn--addrow-padding-tb 0 0 3px;
+        z-index:101; // 101 so it is above .btn--addrow when last item in group
         // added border for differentiation when background is the same as button
         .fa {
             border:1px solid white;
