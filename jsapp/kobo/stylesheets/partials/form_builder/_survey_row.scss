@@ -86,10 +86,10 @@ $nested-btn--addrow-height: 24px;
     // note: this compiles to
     // .group__rows .btn--addrow {...}
     .group__rows & {
-        left: -20px;
+        left: -30px;
         width: 28px;
         height: $nested-btn--addrow-height + (2 * $click-area-nested-btn--addrow-padding-tb);
-        top: -45px - $click-area-nested-btn--addrow-padding-tb;
+        top: -40px;
         padding: $click-area-nested-btn--addrow-padding-tb 0 0 3px;
         z-index:101; // 101 so it is above .btn--addrow when last item in group
         // added border for differentiation when background is the same as button
@@ -99,9 +99,9 @@ $nested-btn--addrow-height: 24px;
     }
 
     // separate the last button within subgroup from group's 
-    .group__rows > .survey__row--group:last-child > .survey__row__spacer > & {
-        top: (-25 - $click-area-nested-btn--addrow-padding-tb) - $nested-last-inner-btn--addrow-Offset;
-    }
+    // .group__rows > .survey__row--group:last-child > .survey__row__spacer > & {
+    //     top: (-25 - $click-area-nested-btn--addrow-padding-tb) - $nested-last-inner-btn--addrow-Offset;
+    // }
 
     // not specific enough for all :hover cases
     .survey-editor--singlequestion & {
