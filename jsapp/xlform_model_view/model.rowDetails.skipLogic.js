@@ -139,7 +139,6 @@ rowDetailsSkipLogic.SkipLogicCriterion = (function(_super) {
         var choice_names, choices, current_value, response_model;
         response_model = this.get('response_value');
         current_value = response_model != null ? response_model.get('value') : void 0;
-        // debugger;
         if (!response_model || response_model.get('type') !== this.get_correct_type()) {
             response_model = this.factory.create_response_model(this.get_correct_type());
             this.set('response_value', response_model);
@@ -321,7 +320,7 @@ rowDetailsSkipLogic.IntegerResponseModel = (function(_super) {
 
     IntegerResponseModel.prototype.validation = {
         value: {
-            pattern: /\d+/,
+            pattern: 'digits',
             msg: 'Number must be integer'
         }
     };
