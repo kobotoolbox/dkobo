@@ -301,7 +301,8 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
         when 'empty' then new viewRowDetailSkipLogic.SkipLogicEmptyResponse
         when 'text' then new viewRowDetailSkipLogic.SkipLogicTextResponse
         when 'dropdown' then new viewRowDetailSkipLogic.SkipLogicDropDownResponse responses
-        when 'integer', 'decimal' then new viewRowDetailSkipLogic.SkipLogicValidatingTextResponseView
+        # when 'integer', 'decimal' then new viewRowDetailSkipLogic.SkipLogicValidatingTextResponseView
+        when 'integer', 'decimal' then new viewRowDetailSkipLogic.SkipLogicTextResponse
     create_criterion_view: (question_picker_view, operator_picker_view, response_value_view, presenter) ->
       return new viewRowDetailSkipLogic.SkipLogicCriterion question_picker_view, operator_picker_view, response_value_view, presenter
     constructor: (@survey) ->

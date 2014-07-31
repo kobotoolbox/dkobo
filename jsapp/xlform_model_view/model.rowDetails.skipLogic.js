@@ -247,7 +247,7 @@ rowDetailsSkipLogic.TextOperator = (function(_super) {
     }
 
     TextOperator.prototype.serialize = function(question_name, response_value) {
-        return TextOperator.__super__.serialize.call(this, question_name, "'" + response_value + "'");
+        return TextOperator.__super__.serialize.call(this, question_name, "'" + response_value.replace(/'/g, "\\'") + "'");
     };
 
     return TextOperator;
