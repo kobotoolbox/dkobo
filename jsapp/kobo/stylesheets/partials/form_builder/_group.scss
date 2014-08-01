@@ -4,8 +4,8 @@
 
 
 .group {
-    padding: 4px 8px;
-    margin: 0 0 6px;
+    padding: 4px 10px;
+    margin-bottom: 15px;
     background-color: rgba(233, 237, 240, 0.8);
     background-color: #e9edf0;
     border: 1px solid #c3cfd8;
@@ -22,9 +22,9 @@
 }
 
 .group__header {
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #c3cfd8;
     position: relative;
-    margin: -4px -8px 0;
+    margin: -4px -10px 0;
     padding: 12px;
     min-height: 50px;
     .group__label {
@@ -158,4 +158,11 @@
 
 .group__rows .group {
     background: #CBD3D9;
+    margin-bottom: 12px;
+    .group__header {
+        border-bottom: 1px solid #9EA8B0;
+    }
+    .group__header__buttons {
+        border-left-color: #9EA8B0;
+    }
 }
