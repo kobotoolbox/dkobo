@@ -31,7 +31,7 @@
 }
 
 .skiplogic__criterion {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     position: relative;
 
     &.skiplogic__criterion--unspecified-question {
@@ -43,18 +43,23 @@
 
 .skiplogic__rowselect {
     width: 60%;
-    margin: 11px 2% 11px 0;
+    margin-right: 2%;
     font-weight: normal;
 }
 
 .skiplogic__expressionselect {
     width: 10%;
-    margin: 11px 2% 11px 0;
-    font-weight: normal;
+    margin-right: 2%;
+    font-weight: 600;
+    color: #000;
 }
 
 .skiplogic__expressionselect--no-response-value {
-  width: 30%;
+  width: 37%;
+  margin-right: 0%;
+  & + .skiplogic__responseval {
+    display: none;
+  }
 }
 
 .skiplogic__responseval-wrapper {
@@ -64,12 +69,20 @@
 input[type=text].skiplogic__responseval, select.skiplogic__responseval {
     width: 25%;
     font-weight: normal;
-    margin: 10px 0;
     display: inline-block;
+}
+
+input[type=text].skiplogic__responseval {
+    border-radius: 0;
+    border:none;
+    border-bottom: 1px dotted #666;
+    padding:1px;
+    height: 30px;
 }
 
 div.skiplogic__responseval {
     display:inline-block;
+    width: 25%;
 }
 
 .skiplogic__deletecriterion {
@@ -92,24 +105,24 @@ div.skiplogic__responseval {
 .skiplogic__handcode-edit {
     width: 100%;
     min-height: 120px;
+    padding:6px;
 }
 
 .skiplogic-handcode__cancel {
-    border:none;
-    background: #C5CACF;
-    color: white;
-    position: absolute;
-    right: 10px;
-    top:10px;
-    font-weight: 600;
+    background: none;
+    border: medium none;
+    color: #D08B8C;
     font-size: 16px;
-    line-height: 15px;
-    height: 18px;
-    width: 18px;
+    position: absolute;
+    right: -24px;
     text-align: center;
-    vertical-align: middle;
-    border-radius: 5px;
-    padding-bottom: 4px;
+    top: 20px;
+    width: 18px;
+}
+
+.skiplogic__main {
+    padding-bottom: 40px;
+    position: relative;
 }
 
 .skiplogic__addcriterion {
@@ -123,11 +136,23 @@ div.skiplogic__responseval {
     border:none;
     border-bottom: 2px solid darken(#39BF6E, 20%);
     position: absolute;
-    right:30px;
-    bottom:10px;
+    right:0px;
+    bottom:-20px;
     &:hover {
         background: lighten(#39BF6E, 10%);
     }
+}
+
+select.skiplogic__delimselect {
+    border-radius: 0;
+    border:none;
+    border-bottom: 1px dotted #666;
+    padding:1px;
+    position: absolute;
+    font-size: 13px;
+    left:0px;
+    bottom:-20px;
+    font-weight: 600;
 }
 
 // Select2 overrides for skip logic

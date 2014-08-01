@@ -39,7 +39,6 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       """)
 
       delimSelect = @$(".skiplogic__delimselect").val(@criterion_delimiter)
-
       @
 
     addCriterion: (evt) =>
@@ -55,7 +54,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
 
   class viewRowDetailSkipLogic.SkipLogicHandCodeView extends viewRowDetailSkipLogic.Base
     render: () ->
-      @$el.html('<textarea class="skiplogic__handcode-edit"></textarea><button class="skiplogic-handcode__cancel">x</button>')
+      @$el.html('<textarea class="skiplogic__handcode-edit" placeholder="Enter XLSForm code here"></textarea><button class="skiplogic-handcode__cancel"><i class="fa fa-trash-o"></i></button>')
       @$el.on 'paste', (e) -> e.stopPropagation()
       @
 
