@@ -392,7 +392,6 @@ define 'cs!xlform/view.surveyApp', [
       group_rows.on 'mouseenter', '> .survey__row', @_preventSortableIfGroupTooSmall
       group_rows.on 'mouseleave', '> .survey__row', @_preventSortableIfGroupTooSmall
       group_rows.sortable({
-          axis: "y"
           cancel: 'button, .btn--addrow, .well, ul.list-view, li.editor-message, .editableform, .row-extras, .js-cancel-sort, .js-cancel-group-sort'
           cursor: "move"
           distance: 5
