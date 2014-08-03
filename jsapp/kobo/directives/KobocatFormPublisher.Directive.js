@@ -41,7 +41,8 @@ function KobocatFormPublisherDirective($restApi, $miscUtils, $routeTo) {
                 }
                 if (item.body) {
                     var s = dkobo_xlform.model.Survey.create(item.body)
-                    return s.settings.get('form_id');
+                    item.formid = s.settings.get('form_id');
+                    return item.formid;
                 }
             };
             scope.form_name = scope.get_form_id(scope.item);
