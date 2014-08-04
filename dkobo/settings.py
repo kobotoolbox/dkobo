@@ -21,11 +21,21 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # DEBUG is true unless an environment variable is set to something other than 'True'
 DEBUG = (os.environ.get('DJANGO_DEBUG', 'True') == 'True')
+LIVE_RELOAD = (os.environ.get('DJANGO_LIVE_RELOAD', str(DEBUG)) == 'True')
 
 if not SECRET_KEY and not DEBUG:
     raise ValueError("DJANGO_SECRET_KEY environment variable must be set in production")
 elif not SECRET_KEY:
     SECRET_KEY = 'secretShouldBeSetInAnEnvironmentVariable3^*m3xck13'
+
+CSRF_COOKIE_DOMAIN = os.environ.get('CSRF_COOKIE_DOMAIN', None)
+
+if CSRF_COOKIE_DOMAIN:
+    SESSION_COOKIE_DOMAIN = CSRF_COOKIE_DOMAIN
+    SESSION_COOKIE_NAME = 'kobonaut'
+
+# default in django 1.6+
+SESSION_SERIALIZER='django.contrib.sessions.serializers.JSONSerializer'
 
 TEMPLATE_DEBUG = DEBUG
 
@@ -44,23 +54,38 @@ STATICFILES_FINDERS = (
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-if DEBUG:
-    STATICFILES_DIRS = (
-        os.path.join(BASE_DIR, 'dkobo', 'static'),
-        )
-else:
-    STATICFILES_DIRS = ()
-
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'dkobo', 'static'),
+    os.path.join(BASE_DIR, 'jsapp'),
+    )
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Application definition
 
-COMPRESS_ENABLED = (not DEBUG)
+COMPRESS_ENABLED = str(os.environ.get('COMPRESS_ENABLED', not DEBUG)).lower() == 'true'
+COMPRESS_OFFLINE = str(os.environ.get('COMPRESS_OFFLINE', not DEBUG)).lower() == 'true'
+COMPRESS_ROOT = os.path.join(BASE_DIR, 'dkobo', 'static')
 
 COMPRESS_PRECOMPILERS = (
     ('text/coffeescript', 'coffee --compile --stdio'),
     ('text/less', 'lessc {infile} {outfile}'),
+    ('text/x-sass', 'sass {infile} {outfile}'),
+    ('text/x-scss', 'sass --scss {infile} {outfile}'),
+)
+
+COMPRESS_STORAGE = 'compressor.storage.GzipCompressorFileStorage'
+
+COMPRESS_JS_FILTERS = (
+    'compressor.filters.yuglify.YUglifyJSFilter',
+)
+COMPRESS_YUGLIFY_BINARY = 'yuglify'
+COMPRESS_YUGLIFY_JS_ARGUMENTS = '--terminal'
+
+GZIP_CONTENT_TYPES = (
+    'text/css',
+    'application/javascript',
+    'text/javascript',
 )
 
 INSTALLED_APPS = (
@@ -75,7 +100,28 @@ INSTALLED_APPS = (
     'dkobo.koboform',
     'compressor',
     'gunicorn',
+    'south',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'django_extensions',
 )
+
+KOBOCAT_SERVER = os.environ.get('KOBOCAT_SERVER', False)
+KOBOCAT_SERVER_PROTOCOL = os.environ.get('KOBOCAT_SERVER_PROTOCOL', 'http')
+KOBOCAT_SERVER_PORT = os.environ.get('KOBOCAT_SERVER_PORT', '80')
+
+# The number of surveys to import. -1 is all
+KOBO_SURVEY_IMPORT_COUNT = os.environ.get('KOBO_SURVEY_IMPORT_COUNT', 100)
+
+# The number of hours to keep a kobo survey preview (generated for enketo)
+# around before purging it.
+KOBO_SURVEY_PREVIEW_EXPIRATION = os.environ.get('KOBO_SURVEY_PREVIEW_EXPIRATION', 24)
+
+KOBOFORM_PREVIEW_SERVER = os.environ.get('KOBOFORM_PREVIEW_SERVER', 'http://kf.kobotoolbox.org')
+ENKETO_SERVER = os.environ.get('ENKETO_SERVER', 'https://enketo.org')
+ENKETO_PREVIEW_URI = os.environ.get('ENKETO_PREVIEW_URI', '/webform/preview')
+
+LOGIN_REDIRECT_URL = '/'
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -103,6 +149,11 @@ DATABASES = {
 ALLOWED_HOSTS = ['*']
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
+# For GeoDjango heroku buildpack
+GEOS_LIBRARY_PATH = os.environ.get('GEOS_LIBRARY_PATH')
+GDAL_LIBRARY_PATH = os.environ.get('GDAL_LIBRARY_PATH')
+POSTGIS_VERSION = (2, 0, 3)
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
@@ -123,13 +174,13 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'django.kobo@gmail.com'
-EMAIL_HOST_PASSWORD = 'djkobo2013!'
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'django.kobo@gmail.com')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'djkobo2013!')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 
-SITE_ID = 2
+SITE_ID = os.environ.get('DJANGO_SITE_ID', None)
 
 ACCOUNT_ACTIVATION_DAYS = 3
 LOGIN_REDIRECT_URL = '/'
@@ -150,7 +201,7 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'django.utils.log.NullHandler',
         },
-        'console':{
+        'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'simple'
@@ -174,3 +225,25 @@ LOGGING = {
         },
     }
 }
+
+# Djangular
+
+APPEND_SLASH = False
+
+# -------------------------------------------
+
+REST_FRAMEWORK = {
+    # Use hyperlinked styles by default.
+    # Only used if the `serializer_class` attribute is not set on a view.
+    'DEFAULT_MODEL_SERIALIZER_CLASS':
+        'rest_framework.serializers.HyperlinkedModelSerializer',
+
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly'
+    ]
+}
+
+# needed by guardian
+ANONYMOUS_USER_ID = -1

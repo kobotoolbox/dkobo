@@ -1,0 +1,33 @@
+language: python
+python:
+- '2.7'
+addons:
+  postgresql: 9.3
+cache:
+  directories:
+  - $HOME/.pip-download-cache
+  - node_modules
+before_install:
+- gem install sass
+- npm install --save-dev
+- bower install
+before_deploy:
+- git fetch --unshallow
+script:
+- python manage.py test
+- grunt test
+env:
+- PIP_DOWNLOAD_CACHE=$HOME/.pip-download-cache DJANGO_DEBUG=False DJANGO_SECRET_KEY=ZGtvYm90cmF2aXM
+install:
+- pip install -r requirements.txt
+- python manage.py syncdb --noinput --settings=dkobo.settings
+- python manage.py migrate --noinput --settings=dkobo.settings
+deploy:
+  provider: heroku
+  app: kobo-dev
+  api_key:
+    secure: pXD088HFHTBgl9z6E+u3LwcfQO4D1Cpa3IrocAky5bitlKC0ku55JoTKOQLYmNsI0eCCQw+uJKD8F7OuLwt4zZ7LF30SbtPbs1g73vFz7Iu6sV4uY97MKC01T6CCiaOfUACeY8UP/tQfFgaugRE6D2I3GyQ/k6tKiR2hQX2pqOI=
+  strategy: git
+notifications:
+  irc: irc.freenode.org#kobotest
+  flowdock: ad631fc562736cf87e0c4439f9518f9d

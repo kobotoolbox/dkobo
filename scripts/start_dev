@@ -1,0 +1,12 @@
+#!/bin/bash
+source ~/.virtualenvs/$1/bin/activate
+export COMPRESS_ENABLED=false
+source scripts/set_debug.sh true
+export DJANGO_SETTINGS_MODULE=dkobo.settings
+export PATH=$PATH:node_modules/.bin
+export KOBOCAT_SERVER=cat.kobo
+export KOBOCAT_SERVER_PROTOCOL=http
+export KOBOCAT_SERVER_PORT=8001
+export DJANGO_SITE_ID=1
+export DATABASE_URL=postgis://kobo:kobo@localhost:5432/kobocat
+python manage.py gruntserver 0:8000

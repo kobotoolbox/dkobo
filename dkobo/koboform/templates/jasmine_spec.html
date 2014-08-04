@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Jasmine Spec{% endblock %}
+{% load staticfiles %}
+{% load compress %}
+{% block head %}
+  <link rel="stylesheet" href="{% static 'components/jasmine/lib/jasmine-core/jasmine.css' %}" />
+  <script src="{% static 'components/jasmine/lib/jasmine-core/jasmine.js' %}"></script>
+  <script src="{% static 'components/jasmine/lib/jasmine-core/jasmine-html.js' %}"></script>
+  <script src="{% static 'components/sinonjs/sinon.js' %}"></script>
+  <script src="{% static 'components/jasmine-sinon/lib/jasmine-sinon.js' %}"></script>
+  <script src="{% static 'components/jquery/dist/jquery.js' %}"></script>
+  <script src="{% static 'components/jquery-migrate/jquery-migrate.js' %}"></script>
+  <script src="{% static 'components/underscore/underscore.js' %}"></script>
+  <script src="{% static 'components/backbone/backbone.js' %}"></script>
+  <script src="{% static 'components/select2/select2.min.js' %}"></script>
+  <script src="{% static 'components/jquery.scrollTo/jquery.scrollTo.js' %}"></script>
+  <script src="{% static 'js/jquery.poshytip.js' %}"></script>
+  <script src="{% static 'js/jquery-ui-1.10.4.custom.js' %}"></script>
+  <script src="{% static 'components/x-editable/dist/jquery-editable/js/jquery-editable-poshytip.js' %}"></script>
+  <script src="{% static 'js/Backbone.Validation.js' %}"></script>
+
+  <style type="text/css" media="screen">
+  .test-div {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background-color: #fff;
+    scroll: auto;
+  }
+  </style>
+
+  <script type="text/javascript">
+    $.fn.editable.defaults.mode = 'inline';
+    $.fn.editable.defaults.onblur = 'submit';
+  </script>
+
+  {% compress js %}
+  <script type="text/coffeescript" src="{% static 'js/log.coffee' %}"></script>
+  {% endcompress %}
+
+  <link rel="stylesheet" href="{% static 'kobo.compiled/kobo.css' %}">
+
+  <script src="{% static 'components/requirejs/require.js' %}"></script>
+{% endblock %}
+{% block foot %}
+  <script type="text/javascript">
+    (function() {
+      var jasmineEnv = jasmine.getEnv();
+      jasmineEnv.updateInterval = 1000;
+
+      var trivialReporter = new jasmine.TrivialReporter();
+
+      jasmineEnv.addReporter(trivialReporter);
+
+      jasmineEnv.specFilter = function(spec) {
+        return trivialReporter.specFilter(spec);
+      };
+      
+      require.config({ baseUrl: '{% static '' %}' });
+
+      require(['test/components'], function(components){
+        var k, v, paths = {};
+        var stubs = {
+          'backbone': 'build_stubs/backbone.js',
+          'underscore': 'build_stubs/underscore.js',
+          'jquery': 'build_stubs/jquery.js'
+        };
+        for (k in components.dirPaths) {
+          paths[k] = components.dirPaths[k]
+        }
+        for (k in components.libs) {
+          paths[k] = components.libs[k].replace(/\.js$/, '');
+        }
+        for (k in stubs) {
+          paths[k] = stubs[k].replace(/\.js$/, '');
+        }
+        require.config({
+          paths: paths,
+          urlArgs: "bust=" +  (new Date()).getTime(),
+        });
+        require(['cs!test/amdrunner'], execJasmine);
+      });
+
+      function execJasmine() {
+        jasmineEnv.execute();
+      }
+
+    })();
+  </script>
+
+{% endblock %}

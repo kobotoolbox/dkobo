@@ -1,0 +1,118 @@
+// ==========================================================================
+// Survey Row
+// (formerly .xlf-row-view)
+// ==========================================================================
+
+.survey__row {
+    &.survey__row--selected {
+        > .survey__row__item {
+            > .card__header {
+                border: $cardInSortBorderStyle;
+            }
+            > .group__header {
+                border: $cardInSortBorderStyle;
+            }
+        }
+    }
+
+    .btn--addrow {
+        display: none;
+    }
+    &:hover {
+        > .survey__row__spacer > .btn--addrow {
+            display: block;
+
+            // duplicated inside .btn--addrow, where
+            // specificity is too low.
+            .survey-editor--singlequestion & {
+                display: none;
+            }
+        }
+    }
+}
+
+.insort {
+    .btn--addrow {
+        opacity: 0;
+    }
+}
+
+// ==========================================================================
+// Add new row button
+// ==========================================================================
+
+// these variables are mostly used in btn--addrow to determine
+// the clickable area of the add row buttons.
+$click-area-btn--addrow-padding-tb: 30px;
+$click-area-nested-btn--addrow-padding-tb: 15px;
+$btn--addrow-height: 24px;
+$nested-btn--addrow-height: 24px;
+$nested-last-inner-btn--addrow-Offset: 7px;
+$nested-btn--addrow-height: 24px;
+
+//== usage:
+//   div.btn--addrow
+//     i.fa.fa-plus ''
+.btn--addrow {
+    background-color: transparent;
+    width: 52px;
+    height: $btn--addrow-height + (2 * $click-area-btn--addrow-padding-tb);
+    // TODO: this below should be for desktop only
+    position: absolute;
+    left: -40px;
+    top: -42px;
+    padding: $click-area-btn--addrow-padding-tb 0 0 11px;
+    z-index: 100;
+
+    .fa {
+        background-color: $addButtonColor;
+        display: block;
+        width: 24px;
+        height: $btn--addrow-height;
+        line-height: $btn--addrow-height;
+        border-radius: $buttonBorderRadius;
+    }
+
+    // when debugging, it's helpful to mock :hover
+    // &:hover, &.hover {
+    &:hover {
+        background-color: transparent;
+        .fa {
+            background-color: $addButtonColorHover;
+        }
+    }
+
+    // inside group, the btn--addrow must be placed slightly differently
+    // note: this compiles to
+    // .group__rows .btn--addrow {...}
+    .group__rows & {
+        left: -30px;
+        width: 40px;
+        height: $nested-btn--addrow-height + (2 * $click-area-nested-btn--addrow-padding-tb);
+        top: -30px;
+        padding: $click-area-nested-btn--addrow-padding-tb 0 0 3px;
+        z-index:101; // 101 so it is above .btn--addrow when last item in group
+        .fa {
+            width: 22px;
+            height: 22px;
+            line-height: 22px;
+        }
+    }
+
+    .group__rows .group__rows & {
+        left:-24px;
+        z-index: 102;
+        width: 30px;
+    }
+
+    // not specific enough for all :hover cases
+    .survey-editor--singlequestion & {
+        display: none;
+    }
+}
+
+// helper class
+.btn--hidden {
+    // https://github.com/csswizardry/CSS-Guidelines#important
+    display: none !important;
+}

@@ -1,0 +1,14 @@
+[
+    {
+        "pk": 1,
+        "model": "koboform.surveydraft",
+        "fields": {
+            "user": 1,
+            "body": "\"survey\",,,,,\n,\"name\",\"type\",\"label\",\"hint\",\"required\"\n,\"ut3xl10\",\"text\",\"Do you have children?\",,\"false\"\n,\"ua5rz33\",\"select_one yesnodk\",\"Do you have children?\",,\"false\"\n,\"mu2aq56\",\"integer\",\"How many children do you have?\",,\"false\"\n,\"start\",\"start\",,,\n,\"end\",\"end\",,,\n\"choices\",,,\n,\"list name\",\"name\",\"label\"\n,\"yesnodk\",\"yes\",\"Yes\"\n,\"yesnodk\",\"no\",\"No\"\n,\"yesnodk\",\"dont_know\",\"Don't know\"",
+            "description": "A simple survey to ask if you have children",
+            "name": "Number of children in household",
+            "date_created": "2013-12-09T19:05:10.098Z",
+            "date_modified": "2013-12-09T19:05:10.099Z"
+        }
+    }
+]

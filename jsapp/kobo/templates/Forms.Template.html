@@ -1,0 +1,28 @@
+  <section class="content__inner" info-list items="infoListItems" refresh-item-list="filterList" can-add-new="true" name="{{ activeTab }}" delete-item="deleteSurvey(item)" can-delete="true"  link-to="builder" ng-show="infoListItems.length > 0">
+  </section>
+
+  <div class="content__message" ng-show="!items_loaded">
+    <div class="container">
+      <h4 class="content__message-text">Your forms are loading...</h4>
+    </div>
+  </div>
+  <div class="content__message" ng-show="items_loaded && infoListItems.length === 0">
+    <header class="forms-header">
+      <div class="container">
+        <h1 class="forms-header__title">Form Drafts</h1>
+      </div>
+    </header>
+    <div class="container empty">
+      <h4 class="content__message-text">You currently have no forms.</h4>
+      <button class="forms-empty__button" ng-click="showAddFormDropdown = ! showAddFormDropdown">+ Add Form</button>
+        <div class="forms__addform__drop--bottom-centered" ng-class="{ 'hidden': ! showAddFormDropdown }">
+          <a href="#/builder/new" class="forms__addform__button forms__addform__start">Start from Scratch</a>
+          <form action="/import_survey_draft" class="forms__addform__button forms__addform__xls js-import-fileupload-emptyformlist">
+              <span>Upload XLS Form</span>
+              <input type="file" name="files">
+          </form>
+          <a href="#" class="forms__addform__button forms__addform__template">Start from a Template</a>
+        </div>
+    </div>
+  </div>
+</div>
