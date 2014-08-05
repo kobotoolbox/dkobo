@@ -1,3 +1,16 @@
-Thanks for registering!
+Thanks for signing up with KoBoToolbox!
 
-To activate your account, please visit http://{{ site.domain }}/accounts/activate/{{activation_key}}/
+Confirming your account will give you full access to KoBoToolbox applications. Please visit the following url:
+ 
+http://{{ site.domain }}/accounts/activate/{{activation_key}}
+
+If you run into any problems using our tools we'd be glad to help. Please send an email to:
+ 
+support@kobotoolbox.org
+ 
+Check out KoBoToolbox community with many common questions asked by fellow users, or post your own question there:
+ 
+https://groups.google.com/forum/#!forum/kobo-users
+
+Best,
+KoBoToolbox
