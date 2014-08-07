@@ -15,7 +15,6 @@ define 'cs!xlform/view.rowSelector', [
   class viewRowSelector.RowSelector extends $baseView
     events:
       "click .js-close-row-selector": "shrink"
-      "submit .row__questiontypes__form": "show_picker"
     initialize: (opts)->
       @options = opts
       @ngScope = opts.ngScope
@@ -27,6 +26,11 @@ define 'cs!xlform/view.rowSelector', [
 
     expand: ->
       @show_namer()
+      $namer_form = @$el.find('.row__questiontypes__form')
+      $namer_form.on 'submit', _.bind @show_picker, @
+      $namer_form.find('button').on 'click', (evt) ->
+        evt.preventDefault()
+        $namer_form.submit()
       @$('input').eq(0).focus()
 
     show_namer: () ->

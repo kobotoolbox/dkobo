@@ -198,9 +198,9 @@ define 'cs!xlform/view.surveyApp', [
 
         $target.toggleClass("survey__row--selected")
         if $target.hasClass('survey__row--group')
-          $target.find('li').toggleClass("survey__row--selected", $target.hasClass("survey__row--selected"))
+          $target.find('li.survey__row, li.survey__row--group').toggleClass("survey__row--selected", $target.hasClass("survey__row--selected"))
 
-        $group = $target.parents('.survey__row')
+        $group = $target.parent().closest('.survey__row')
         if $group.length > 0
           @select_group_if_all_items_selected($group)
 
@@ -210,9 +210,12 @@ define 'cs!xlform/view.surveyApp', [
     select_group_if_all_items_selected: ($group) ->
       $rows = $group.find('.survey__row')
       $group.toggleClass('survey__row--selected', $rows.length == $rows.filter('.survey__row--selected').length)
+      $group = $group.parent().closest('.survey__row')
+      if $group.length > 0
+        @select_group_if_all_items_selected($group)
 
     questionSelect: (evt)->
-      @activateGroupButton(@selectedRows().length > 0)
+      @activateGroupButton(@$el.find('.survey__row--selected').length > 0)
       return
 
     activateGroupButton: (active=true)->
@@ -538,6 +541,8 @@ define 'cs!xlform/view.surveyApp', [
       rows = []
       @$el.find('.survey__row--selected').each (i, el)=>
         $el = $(el)
+        if $el.parents('li.survey__row--group.survey__row--selected').length > 0
+          return
         rowId = $el.data("rowId")
         matchingRow = false
         findMatch = (row)->
