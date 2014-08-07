@@ -108,20 +108,22 @@ define 'cs!xlform/view.row', [
       evt.preventDefault()
 
     render: ->
-      @$el.html $viewTemplates.row.groupView(@model)
-      @$('.js-delete-group').click @deleteGroup
-      @$label = @$('.group__label').eq(0)
-      @$rows = @$('.group__rows').eq(0)
+      unless @already_rendered
+        @$el.html $viewTemplates.row.groupView(@model)
+        @$('.js-delete-group').click @deleteGroup
+        @$label = @$('.group__label').eq(0)
+        @$rows = @$('.group__rows').eq(0)
 
-      @cardSettingsWrap = @$('.card__settings').eq(0)
-      @defaultRowDetailParent = @cardSettingsWrap.find('.card__settings__fields--active').eq(0)
-      @model.rows.each (row)=>
-        @getApp().ensureElInView(row, @, @$rows).render()
-      @$el.data("row-index", @model.getSurvey().rows.indexOf @model)
+        @cardSettingsWrap = @$('.card__settings').eq(0)
+        @defaultRowDetailParent = @cardSettingsWrap.find('.card__settings__fields--active').eq(0)
+        @model.rows.each (row)=>
+          @getApp().ensureElInView(row, @, @$rows).render()
+        @$el.data("row-index", @model.getSurvey().rows.indexOf @model)
 
-      for [key, val] in @model.attributesArray()
-        if key in ["name", "label", "_isRepeat", "appearance", "relevant"]
-          new $viewRowDetail.DetailView(model: val, rowView: @).render().insertInDOM(@)
+        for [key, val] in @model.attributesArray()
+          if key in ["name", "label", "_isRepeat", "appearance", "relevant"]
+            new $viewRowDetail.DetailView(model: val, rowView: @).render().insertInDOM(@)
+        @already_rendered = true
       @
 
   class RowView extends BaseRowView

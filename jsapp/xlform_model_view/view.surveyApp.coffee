@@ -74,6 +74,7 @@ define 'cs!xlform/view.surveyApp', [
       "mouseenter .card__buttons__button": "buttonHoverIn"
       "mouseleave .card__buttons__button": "buttonHoverOut"
       "click .card__settings__tabs li": "switchTab"
+
     @create: (params = {}) ->
       if _.isString params.el
         params.el = $(params.el).get 0
@@ -176,7 +177,6 @@ define 'cs!xlform/view.surveyApp', [
         @is_selecting = false
       else
         @deselect_all_rows()
-
     selectRow: (evt)->
       @is_selecting = true
       $et = $(evt.target)
@@ -421,40 +421,44 @@ define 'cs!xlform/view.surveyApp', [
       log scsv
       return
 
-    ensureElInView: (row, parentView, $parentEl)->
+    ensureElInView: (row, parentView, $ancestorEl)->
       view = @getViewForRow(row)
       $el = view.$el
       index = row._parent.indexOf(row)
 
       if index > 0
         prevRow = row._parent.at(index - 1)
+
       if prevRow
-        prevRowEl = $parentEl.find(".survey__row[data-row-id=#{prevRow.cid}]")
+        prevRowEl = $ancestorEl.find(".survey__row[data-row-id=#{prevRow.cid}]")
 
       requiresInsertion = false
-      detachRowEl = (detach)->
-        if detach
-          $el.detach()
+      detachRowEl = (why)->
+        # log "detaching element: #{why}"
+        $el.detach()
         requiresInsertion = true
 
       # trying to avoid unnecessary reordering of DOM (very slow)
-      if $el.parents($parentEl).length is 0
-        detachRowEl()
-      else if $el.parent().get(0) isnt $parentEl.get(0)
-        # element does not have the correct parent
-        detachRowEl()
+      if $el.parents($ancestorEl).length is 0
+        # detachRowEl("element is not a subelement of parentEl (or is not in the DOM)")
+        requiresInsertion = true
+      else if $el.parent().get(0) isnt $ancestorEl.get(0)
+        # element's parent is not the base survey.
+        # if element is in group, ensure it's in the right group
+        unless row.isInGroup() and $el.parent().hasClass('group__rows')
+          detachRowEl() #("element is inside a group")
       else if !prevRow
         if $el.prev('.survey__row').not('.survey__row--deleted').data('rowId')
-          detachRowEl()
+          detachRowEl() #("there is a previous element when there shouldn't be")
       else if $el.prev('.survey__row').not('.survey__row--deleted').data('rowId') isnt prevRow.cid
         # element is in the wrong location
-        detachRowEl()
+        detachRowEl() #("the previous sibling is not the right one")
 
       if requiresInsertion
         if prevRow
           $el.insertAfter(prevRowEl)
         else
-          $el.prependTo($parentEl)
+          $el.prependTo($ancestorEl)
 
       view
 
