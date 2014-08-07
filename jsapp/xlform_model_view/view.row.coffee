@@ -116,7 +116,9 @@ define 'cs!xlform/view.row', [
       evt.preventDefault()
 
     render: ->
-      unless @already_rendered
+      if @already_rendered
+        @_softRender()
+      else
         @$el.html $viewTemplates.row.groupView(@model)
         @$('.js-delete-group').click @deleteGroup
         @$label = @$('.group__label').eq(0)
@@ -133,6 +135,10 @@ define 'cs!xlform/view.row', [
             new $viewRowDetail.DetailView(model: val, rowView: @).render().insertInDOM(@)
         @already_rendered = true
       @
+    _softRender: ()->
+      @model.rows.each (row)=>
+        @getApp().ensureElInView(row, @, @$rows).render()
+      
 
   class RowView extends BaseRowView
 
