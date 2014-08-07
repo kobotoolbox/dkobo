@@ -50,7 +50,7 @@ define 'cs!xlform/view.row', [
     render: ->
       if @already_rendered
         @is_expanded = @$card.hasClass('card--expandedchoices')
-        # this will cause problems, but prevents re-rendering
+        @_softRender()
         return
 
       if @model instanceof $row.RowError
@@ -80,15 +80,23 @@ define 'cs!xlform/view.row', [
 
       @cardSettingsWrap = @$('.card__settings').eq(0)
       @defaultRowDetailParent = @cardSettingsWrap.find('.card__settings__fields--question-options').eq(0)
+      @rowDetailViews = []
       for [key, val] in @model.attributesArray()
         view = new $viewRowDetail.DetailView(model: val, rowView: @)
         if key == 'label' and @model.get('type').get('value') == 'calculate'
           view.model = @model.get('calculation')
           @model.finalize()
           val.set('value', '')
+        @rowDetailViews.push view
         view.render().insertInDOM(@)
 
       @
+
+    _softRender: ->
+      for view in @rowDetailViews
+        view.render()
+      return
+
     add_row_to_question_library: (evt) =>
       evt.stopPropagation()
       @ngScope.add_row_to_question_library @model
