@@ -67,8 +67,14 @@
 }
 
 .ui-dialog .ui-dialog-content {
-    padding: 2em 1em;
+    padding-top: 1em;
     font-size: 0.9em;
+}
+
+.ui-dialog div.ui-dialog-titlebar, 
+.ui-dialog div.ui-dialog-content {
+  padding-left:15px;
+  padding-right:15px; 
 }
 
 .ui-widget-header {
@@ -93,6 +99,9 @@
 .ui-dialog .ui-dialog-titlebar-close {
     height: 18px;
     width: 18px;
+    right: 9px;
+    top:9px;
+    margin: 0px;
 }
 
 .ui-dialog .ui-dialog-buttonpane {
