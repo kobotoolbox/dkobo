@@ -77,7 +77,7 @@ function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo,
 
         var resource = $restApi.create_question_api($scope);
         resource.save({body: survey.toCSV(), asset_type: 'question'}, function () {
-            $miscUtils.alert('Your question has been saved to your question library.\n\nYou can now find this question in the library sidebar on the right. To reuse it, just drag-and-drop it into any of your forms.\n\nTo edit or remove questions from your library, choose Question Library from the menu. ', 'Success!');
+            $miscUtils.alert('<p><strong>Your question has been saved to your question library.</strong></p><p>You can now find this question in the library sidebar on the right. To reuse it, just drag-and-drop it into any of your forms.</p><p>To edit or remove questions from your library, choose Question Library from the menu. </p>', 'Success!');
         });
     };
         // $("button.rowselector_toggle-library").removeClass('active__sidebar');
