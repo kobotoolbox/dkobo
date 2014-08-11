@@ -41,6 +41,8 @@ define 'cs!xlform/model.row', [
       arr = ([k, v] for k, v of @attributes)
       arr.sort (a,b)-> if a[1]._order < b[1]._order then -1 else 1
       arr
+    isInGroup: ->
+      @_parent?._parent?.constructor.kls is "Group"
 
     detach: (opts)->
       if @_parent

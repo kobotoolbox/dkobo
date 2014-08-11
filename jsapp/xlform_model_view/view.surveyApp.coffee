@@ -74,6 +74,7 @@ define 'cs!xlform/view.surveyApp', [
       "mouseenter .card__buttons__button": "buttonHoverIn"
       "mouseleave .card__buttons__button": "buttonHoverOut"
       "click .card__settings__tabs li": "switchTab"
+
     @create: (params = {}) ->
       if _.isString params.el
         params.el = $(params.el).get 0
@@ -176,7 +177,6 @@ define 'cs!xlform/view.surveyApp', [
         @is_selecting = false
       else
         @deselect_all_rows()
-
     selectRow: (evt)->
       @is_selecting = true
       $et = $(evt.target)
@@ -436,8 +436,7 @@ define 'cs!xlform/view.surveyApp', [
 
       requiresInsertion = false
       detachRowEl = (detach)->
-        if detach
-          $el.detach()
+        $el.detach()
         requiresInsertion = true
 
       # trying to avoid unnecessary reordering of DOM (very slow)

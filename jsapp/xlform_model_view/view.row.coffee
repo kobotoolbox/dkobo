@@ -50,7 +50,7 @@ define 'cs!xlform/view.row', [
     render: ->
       if @already_rendered
         @is_expanded = @$card.hasClass('card--expandedchoices')
-        # this will cause problems, but prevents re-rendering
+        @_softRender()
         return
 
       if @model instanceof $row.RowError
@@ -80,15 +80,23 @@ define 'cs!xlform/view.row', [
 
       @cardSettingsWrap = @$('.card__settings').eq(0)
       @defaultRowDetailParent = @cardSettingsWrap.find('.card__settings__fields--question-options').eq(0)
+      @rowDetailViews = []
       for [key, val] in @model.attributesArray()
         view = new $viewRowDetail.DetailView(model: val, rowView: @)
         if key == 'label' and @model.get('type').get('value') == 'calculate'
           view.model = @model.get('calculation')
           @model.finalize()
           val.set('value', '')
+        @rowDetailViews.push view
         view.render().insertInDOM(@)
 
       @
+
+    _softRender: ->
+      for view in @rowDetailViews
+        view.render()
+      return
+
     add_row_to_question_library: (evt) =>
       evt.stopPropagation()
       @ngScope.add_row_to_question_library @model
@@ -108,21 +116,29 @@ define 'cs!xlform/view.row', [
       evt.preventDefault()
 
     render: ->
-      @$el.html $viewTemplates.row.groupView(@model)
-      @$('.js-delete-group').click @deleteGroup
-      @$label = @$('.group__label').eq(0)
-      @$rows = @$('.group__rows').eq(0)
+      if @already_rendered
+        @_softRender()
+      else
+        @$el.html $viewTemplates.row.groupView(@model)
+        @$('.js-delete-group').click @deleteGroup
+        @$label = @$('.group__label').eq(0)
+        @$rows = @$('.group__rows').eq(0)
 
-      @cardSettingsWrap = @$('.card__settings').eq(0)
-      @defaultRowDetailParent = @cardSettingsWrap.find('.card__settings__fields--active').eq(0)
+        @cardSettingsWrap = @$('.card__settings').eq(0)
+        @defaultRowDetailParent = @cardSettingsWrap.find('.card__settings__fields--active').eq(0)
+        @model.rows.each (row)=>
+          @getApp().ensureElInView(row, @, @$rows).render()
+        @$el.data("row-index", @model.getSurvey().rows.indexOf @model)
+
+        for [key, val] in @model.attributesArray()
+          if key in ["name", "label", "_isRepeat", "appearance", "relevant"]
+            new $viewRowDetail.DetailView(model: val, rowView: @).render().insertInDOM(@)
+        @already_rendered = true
+      @
+    _softRender: ()->
       @model.rows.each (row)=>
         @getApp().ensureElInView(row, @, @$rows).render()
-      @$el.data("row-index", @model.getSurvey().rows.indexOf @model)
-
-      for [key, val] in @model.attributesArray()
-        if key in ["name", "label", "_isRepeat", "appearance", "relevant"]
-          new $viewRowDetail.DetailView(model: val, rowView: @).render().insertInDOM(@)
-      @
+      
 
   class RowView extends BaseRowView
 
