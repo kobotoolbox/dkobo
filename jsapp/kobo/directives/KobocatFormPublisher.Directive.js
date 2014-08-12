@@ -49,16 +49,24 @@ function KobocatFormPublisherDirective($restApi, $miscUtils, $routeTo) {
 
             dialog.dialog({
                 modal: true,
-                height: 400,
+                height: 350,
                 width: 600,
                 autoOpen: false,
                 title: 'Deploy as New Survey Project',
                 draggable: false,
                 resizable: false,
-                buttons: {
-                    'Done': scope.publish,
-                    'Cancel': scope.close
-                }
+                buttons: [
+                    {
+                        text: "Done",
+                        "class": 'save-button',
+                        click: scope.publish
+                    },
+                    {
+                        text: "Cancel",
+                        "class": 'cancel-button',
+                        click: scope.close
+                    }
+                ],
             });
         }
     }
