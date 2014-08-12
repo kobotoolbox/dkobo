@@ -177,6 +177,7 @@ define 'cs!xlform/view.surveyApp', [
         @is_selecting = false
       else
         @deselect_all_rows()
+      return
     selectRow: (evt)->
       @is_selecting = true
       $et = $(evt.target)
@@ -206,6 +207,7 @@ define 'cs!xlform/view.surveyApp', [
 
         @questionSelect()
         @$('.js-blur-on-select-row').blur()
+      return
 
     select_group_if_all_items_selected: ($group) ->
       $rows = $group.find('.survey__row')
