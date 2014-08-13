@@ -205,3 +205,13 @@
   padding:3px 7px 6px;
   line-height: 1.1em;
 }
+
+// Loading messages
+
+.content__message-loading {
+  text-align:center;
+  padding:10px 0px;
+  i {
+    color: #1daee3;
+  }
+}
