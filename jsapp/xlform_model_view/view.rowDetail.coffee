@@ -27,10 +27,7 @@ define 'cs!xlform/view.rowDetail', [
       unless @model.key
         throw new Error "RowDetail does not have key"
       @extraClass = "xlf-dv-#{@model.key}"
-      if (viewMixin = viewRowDetail.DetailViewMixins[@model.key])
-        _.extend(@, viewMixin)
-      else
-        console?.error "Couldn't build view for column: ", @model.key
+      _.extend(@, viewRowDetail.DetailViewMixins[@model.key] || viewRowDetail.DetailViewMixins.default)
       @$el.addClass(@extraClass)
 
     render: ()->
