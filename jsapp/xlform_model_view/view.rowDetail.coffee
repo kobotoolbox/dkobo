@@ -173,7 +173,7 @@ define 'cs!xlform/view.rowDetail', [
   viewRowDetail.DetailViewMixins.constraint =
     html: ->
       @$el.addClass("card__settings__fields--active")
-      viewRowDetail.Templates.textbox @cid, @model.key, 'Validation logic'
+      viewRowDetail.Templates.textbox @cid, @model.key, 'Criteria'
     afterRender: ->
       @listenForInputChange()
     insertInDOM: (rowView) ->
