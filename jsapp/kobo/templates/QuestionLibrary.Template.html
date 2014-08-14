@@ -98,6 +98,12 @@
             <option value="label">A - Z</option>
             <option value="-label">Z - A</option>
           </select>
+          <!-- THIS IS HERE TEMPORARILY -->
+          <script type="text/javascript">
+            $('select.question-filter__sorter').select2({
+              minimumResultsForSearch: -1
+            });
+          </script>
 
           <label class="question-filter__select-all"><input class="question-filter__select-all-checkbox" type="checkbox" ng-model="select_all" /> select all</label>
           <a class="question-filter__show-responses" href="" ng-click="show_responses = !show_responses"><i class="question-filter__show-responses-icon fa fa-eye"></i> show responses</a>
