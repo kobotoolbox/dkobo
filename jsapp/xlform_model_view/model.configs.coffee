@@ -117,7 +117,7 @@ define 'cs!xlform/model.configs', ["underscore", 'cs!xlform/model.utils', "backb
       label:
         value: "Enter a number"
     barcode:
-      hint:
+      label:
         value: "Use the camera to scan a barcode"
     decimal:
       label:
