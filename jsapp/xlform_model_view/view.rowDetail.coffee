@@ -173,7 +173,7 @@ define 'cs!xlform/view.rowDetail', [
   viewRowDetail.DetailViewMixins.constraint =
     html: ->
       @$el.addClass("card__settings__fields--active")
-      viewRowDetail.Templates.textbox @cid, @model.key, 'Validation logic'
+      viewRowDetail.Templates.textbox @cid, @model.key, 'Criteria'
     afterRender: ->
       @listenForInputChange()
     insertInDOM: (rowView) ->
@@ -217,7 +217,7 @@ define 'cs!xlform/view.rowDetail', [
   viewRowDetail.DetailViewMixins._isRepeat =
     html: ->
       @$el.addClass("card__settings__fields--active")
-      viewRowDetail.Templates.checkbox @cid, @model.key, 'Repeat'
+      viewRowDetail.Templates.checkbox @cid, @model.key, 'Repeat', 'Repeat this group if necessary'
     afterRender: ->
       @listenForCheckboxChange()
 
@@ -232,7 +232,7 @@ define 'cs!xlform/view.rowDetail', [
     html: ->
       @$el.addClass("card__settings__fields--active")
       if @model._parent.constructor.key == 'group'
-        viewRowDetail.Templates.checkbox @cid, @model.key, 'Appearance', 'Show all questions in this groups on the same screen'
+        viewRowDetail.Templates.checkbox @cid, @model.key, 'Appearance', 'Show all questions in this group on the same screen'
       else
         viewRowDetail.Templates.textbox @cid, @model.key, 'Appearance', 'text'
     afterRender: ->
