@@ -127,7 +127,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
           operators = []
           _.each @operators, (operator) ->
             operators.push id: operator.id, text: operator.label + (if operator.id != 1 then ' (' + operator.symbol[operator.parser_name[0]] + ')' else '')
-            operators.push id: '-' + operator.id, text: operator.negated_label + (if operator.id != 1 then ' (' + operator.symbol[operator.parser_name[0]] + ')' else '')
+            operators.push id: '-' + operator.id, text: operator.negated_label + (if operator.id != 1 then ' (' + operator.symbol[operator.parser_name[1]] + ')' else '')
 
           operators
       })
