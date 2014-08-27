@@ -3,12 +3,19 @@ function QuestionLibraryDirective($restApi) {
         templateUrl: staticFilesUri + 'templates/QuestionLibrary.Directive.Template.html',
         scope: {
             clickHandler: '&',
-            currentItem: '='
+            currentItem: '=',
+            refreshEvent: '='
         },
         link: function (scope, element) {
             var sort_ul = element.find('ul');
 
-            $restApi.create_question_api(scope).list();
+            var questions = $restApi.create_question_api(scope);
+            questions.list();
+
+            scope.$parent.refresh = function () {
+                questions.list();
+            };
+
             scope.handle_click = function (item) {
                 scope.clickHandler({ item: item});
             };
