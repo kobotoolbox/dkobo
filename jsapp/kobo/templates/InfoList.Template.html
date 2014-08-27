@@ -1,14 +1,16 @@
 <header class="forms-header">
   <div class="container">
     <h1 class="forms-header__title">Form Drafts</h1>
-    <button class="forms-header__button" ng-click="toggleAddFormDropdown()">+ Add Form</button>
-    <div class="forms__addform__drop" ng-class="{ 'hidden': ! showAddFormDropdown }" outside-click close-method="hideAddFormDropdown()" is-showing="isShowAddFormDropdownShowing">
-      <a href="#/builder/new" class="forms__addform__button forms__addform__start">Start from Scratch</a>
-      <form action="/import_survey_draft" class="forms__addform__button forms__addform__xls js-import-fileupload">
-          <span>Upload XLS Form</span>
-          <input type="file" name="files">
-      </form>
-      <a href="#" class="forms__addform__button forms__addform__template">Start from a Template</a>
+    <div class="forms__addform-wrapper">
+      <button class="forms-header__button" ng-click="toggleAddFormDropdown()">+ Add Form</button>
+      <div class="forms__addform__drop" ng-class="{ 'hidden': ! showAddFormDropdown }" outside-click close-method="hideAddFormDropdown()" is-showing="isShowAddFormDropdownShowing">
+        <a href="#/builder/new" class="forms__addform__button forms__addform__start">Start from Scratch</a>
+        <form action="/import_survey_draft" class="forms__addform__button forms__addform__xls js-import-fileupload">
+            <span>Upload XLS Form</span>
+            <input type="file" name="files">
+        </form>
+        <a href="#" class="forms__addform__button forms__addform__template">Start from a Template</a>
+      </div>
     </div>
   </div>
 </header>
@@ -32,9 +34,6 @@
 
   <div class="info-list">
       <div class="forms__card" ng-repeat="item in items|orderBy:'-date_modified'">
-        <div kobocat-form-publisher class="forms__card__kobocat" item="item" ng-show="kobocatLinkExists()">
-          <button class="forms__kobocat__btn forms__kobocat__btn--publish forms__poshytip" ng-click="kobocatPublishForm(item)" title="Deploy as New Survey Project"><i class="fa fa-arrow-up"></i></button>
-        </div>
         <div class="forms__card__info">
           <a class="forms__card__title" href="#{{ getHashLink(item) }}">{{ item.name }}</a>
           <p class="forms__card__description">{{ item.description || '' }}</p>
@@ -44,6 +43,9 @@
           <p class="forms__card__question-count">
             {{ item.rowCount }}
           </p>
+        </div>
+        <div kobocat-form-publisher class="forms__card__kobocat" item="item" ng-show="kobocatLinkExists()">
+          <div class="forms__kobocat__btn forms__kobocat__btn--publish" ng-click="open()" >Deploy as New Survey Project <i class="fa fa-external-link-square"></i></div>
         </div>
         <div class="forms__card__buttons">
           <a class="forms__card__buttons__button blue" href="{{ getLink(item, 'xml') }}"><i class="fa fa-copy"></i></a>
