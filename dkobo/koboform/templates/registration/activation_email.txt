@@ -2,7 +2,7 @@ Thanks for signing up with KoBoToolbox!
 
 Confirming your account will give you full access to KoBoToolbox applications. Please visit the following url:
  
-http://{{ site.domain }}/accounts/activate/{{activation_key}}
+http://{{ site.domain }}/accounts/activate/{{activation_key}}/
 
 If you run into any problems using our tools we'd be glad to help. Please send an email to:
  
