@@ -64,7 +64,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
         $add_new_criterion_button.hide()
       else if @model.get('operator').get_type().id == 1
         $add_new_criterion_button.show()
-      else if @model.get('response_value').get('value') == ''
+      else if @model.get('response_value').get('value')  == '' || @model.get('response_value').isValid() == false
         $add_new_criterion_button.hide()
       else
         $add_new_criterion_button.show()

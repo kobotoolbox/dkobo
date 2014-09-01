@@ -166,6 +166,11 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       target.find('.skiplogic__responseval').remove()
       super(target)
 
+    bind_event: () ->
+      return
+
+    val: () -> null
+
   class viewRowDetailSkipLogic.SkipLogicTextResponse extends viewRowDetailSkipLogic.Base
     render: () ->
       @setElement('<input placeholder="response value" class="skiplogic__responseval" type="text" />')
@@ -175,27 +180,39 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       target.find('.skiplogic__responseval').remove()
       super(target)
 
+    bind_event: (handler) ->
+      @$el.on 'blur', handler
+
+    val: () => @$el.val()
+
   class viewRowDetailSkipLogic.SkipLogicValidatingTextResponseView extends viewRowDetailSkipLogic.SkipLogicTextResponse
     render: () ->
       @setElement('<div class="skiplogic__responseval-wrapper"><input placeholder="response value" class="skiplogic__responseval" type="text" /><div></div></div>')
       @$error_message = @$('div')
       @model.bind('validated:invalid', @show_invalid_view)
       @model.bind('validated:valid', @clear_invalid_view)
+      @$input = @$el.find('input')
       @
     show_invalid_view: (model, errors) =>
-      if @$('input').val()
+      if @$input.val()
         @$el.addClass('textbox--invalid')
         @$error_message.html(errors.value)
+        @$input.focus()
     clear_invalid_view: (model, errors) =>
       @$el.removeClass('textbox--invalid')
       @$error_message.html('')
     fill_value: (value) ->
-      @$('input').val(value)
+      @$input.val(value)
 
     attach_to: (target) ->
       target.find('.skiplogic__responseval').remove()
       super(target)
 
+    bind_event: (handler) ->
+      @$input.on 'blur', handler
+
+    val: () =>
+      @$input.val()
 
   class viewRowDetailSkipLogic.SkipLogicDropDownResponse extends viewRowDetailSkipLogic.Base
     tagName: 'select'
@@ -211,11 +228,16 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
 
       @
 
+    val: () => @$el.val()
+
     attach_to: (target) ->
       target.find('.skiplogic__responseval').remove()
       super(target)
 
       @$el.select2({ minimumResultsForSearch: -1, width: '20%' })
+
+    bind_event: (handler) ->
+      @$el.on 'change', handler
 
     constructor: (@responses) ->
       super()
@@ -252,11 +274,11 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
         @presenter.change_operator @operator_picker_view.value
 
     bind_response_value: () ->
-      @$response_value.on (if @$response_value.prop('tagName').toLowerCase() == 'select' then 'change' else 'blur'), () =>
-        @presenter.change_response @$response_value.val()
+      @response_value_view.bind_event () =>
+        @presenter.change_response @response_value_view.val()
 
     response_value_handler: () ->
-      @presenter.change_response @$response_value.val()
+      @presenter.change_response @response_value_view.val()
 
     change_operator: (@operator_picker_view) ->
       @operator_picker_view.render()
@@ -300,8 +322,8 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
         when 'empty' then new viewRowDetailSkipLogic.SkipLogicEmptyResponse
         when 'text' then new viewRowDetailSkipLogic.SkipLogicTextResponse
         when 'dropdown' then new viewRowDetailSkipLogic.SkipLogicDropDownResponse responses
-        # when 'integer', 'decimal' then new viewRowDetailSkipLogic.SkipLogicValidatingTextResponseView
-        when 'integer', 'decimal' then new viewRowDetailSkipLogic.SkipLogicTextResponse
+        when 'integer', 'decimal' then new viewRowDetailSkipLogic.SkipLogicValidatingTextResponseView
+        #when 'integer', 'decimal' then new viewRowDetailSkipLogic.SkipLogicTextResponse
     create_criterion_view: (question_picker_view, operator_picker_view, response_value_view, presenter) ->
       return new viewRowDetailSkipLogic.SkipLogicCriterion question_picker_view, operator_picker_view, response_value_view, presenter
     constructor: (@survey) ->
