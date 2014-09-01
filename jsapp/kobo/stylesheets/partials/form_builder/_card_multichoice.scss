@@ -85,7 +85,8 @@
         height: auto;
         position: relative;
         min-height: 18px;
-        cursor:text;
+        cursor:move;
+        span {cursor:text;} 
         .editable-input input {
             line-height: 1em;
             vertical-align: middle;

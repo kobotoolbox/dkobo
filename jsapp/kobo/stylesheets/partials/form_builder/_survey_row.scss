@@ -9,8 +9,8 @@
             > .card__header {
                 border: $cardInSortBorderStyle;
             }
-            > .group__header {
-                border: $cardInSortBorderStyle;
+            &.group {
+                border: $cardInSortBorderStyle; 
             }
         }
     }
