@@ -200,9 +200,10 @@
     margin-top:5px;
     color: #30C16B;
     cursor: pointer;
+    font-weight: 600;
     i {display: none;margin-left: 5px;}
     &:hover {
-        font-weight: 600;
+        color: #43cc7a;
         i {display: inline-block;}
     }
 }
