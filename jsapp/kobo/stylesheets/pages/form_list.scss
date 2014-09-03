@@ -177,7 +177,7 @@
     margin-bottom: 12px;
     font-size: 11px;
     border: $cardBorderStyle;
-    padding: 20px;
+    padding: 15px 20px;
     display: block;
     background: white;
     position: relative;
@@ -200,9 +200,10 @@
     margin-top:5px;
     color: #30C16B;
     cursor: pointer;
+    font-weight: 600;
     i {display: none;margin-left: 5px;}
     &:hover {
-        font-weight: 600;
+        color: #43cc7a;
         i {display: inline-block;}
     }
 }
