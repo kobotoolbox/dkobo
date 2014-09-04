@@ -15,7 +15,7 @@ $(function () {
             $form.find('input[type=submit]').prop('disabled', true);
             var $div = $('<span>');
             $div.addClass('error-message');
-            $div.text('Error: only a-z, 0-9 and _ (underscores) allowed');
+            $div.text('A username may only contain lowercase letters, numbers, and underscores (_).');
             $div.insertAfter($this);
         } else {
             $form.find('input[type=submit]').prop('disabled', false);
