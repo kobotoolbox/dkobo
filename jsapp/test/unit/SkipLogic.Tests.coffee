@@ -452,23 +452,25 @@ skip_logic_model = (dkobo_xlform)->
 
   describe 'integer response model', () ->
     _response_model = new $mRdsl.IntegerResponseModel()
-    # until we handle validation properly,
-    # the SkipLogicValidatingTextResponseView will prevent the view from
-    # saving
+    it 'sets state to valid when passed value is integer', () ->
+      _response_model.set('value', 123, validate:true)
 
-    # it 'sets state to valid when passed value is integer', () ->
-    #   _response_model.set('value', 123, validate:true)
+      expect(_response_model.isValid()).toBeTruthy()
+    it 'sets state to invalid when passed value is decimal', () ->
+      _response_model.set('value', 123.1234, validate:true)
 
-    #   expect(_response_model.isValid()).toBeTruthy()
-    # it 'sets state to invalid when passed value is decimal', () ->
-    #   _response_model.set('value', 123.1234, validate:true)
-
-    #  expect(_response_model.isValid()).toBeFalsy()
+      expect(_response_model.isValid()).toBeFalsy()
 
     it 'sets state to invalid when passed value is text', () ->
       _response_model.set('value', 'asdf', validate:true)
 
       expect(_response_model.isValid()).toBeFalsy()
+
+    it 'clears model on empty string', () ->
+      _response_model.set_value('')
+
+      expect(_response_model.isValid()).toBeFalsy()
+      expect(_response_model.get('value')).toBeUndefined()
   #*********************************************************************
   #**----------------------------------------------------------------***
   #********************************************************************#
@@ -531,6 +533,11 @@ skip_logic_model = (dkobo_xlform)->
 
       expect(_response_model.isValid()).toBeTruthy()
       expect(_response_model.get('value')).toBe(1004.8)
+    it 'clears model on empty string', () ->
+      _response_model.set_value('')
+
+      expect(_response_model.isValid()).toBeFalsy()
+      expect(_response_model.get('value')).toBeUndefined()
 
 #*********************************************************************
 #**----------------------------------------------------------------***

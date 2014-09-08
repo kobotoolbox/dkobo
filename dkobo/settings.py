@@ -174,8 +174,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'django.kobo@gmail.com')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'djkobo2013!')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
@@ -247,3 +247,10 @@ REST_FRAMEWORK = {
 
 # needed by guardian
 ANONYMOUS_USER_ID = -1
+
+from registration.signals import user_activated
+from django.contrib.auth import login
+def login_on_activation(sender, user, request, **kwargs):
+    user.backend='django.contrib.auth.backends.ModelBackend'
+    login(request,user)
+user_activated.connect(login_on_activation)

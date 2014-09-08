@@ -1,9 +1,10 @@
   <section class="content__inner" info-list items="infoListItems" refresh-item-list="filterList" can-add-new="true" name="{{ activeTab }}" delete-item="deleteSurvey(item)" can-delete="true"  link-to="builder" ng-show="infoListItems.length > 0">
   </section>
 
-  <div class="content__message" ng-show="!items_loaded">
+  <div class="content__message content__message-loading" ng-show="!items_loaded">
     <div class="container">
-      <h4 class="content__message-text">Your forms are loading...</h4>
+      <i class="fa fa-spin fa-spinner"></i>
+      <h4 class="content__message-text">Loading Forms</h4>
     </div>
   </div>
   <div class="content__message" ng-show="items_loaded && infoListItems.length === 0">

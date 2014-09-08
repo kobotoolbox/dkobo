@@ -53,7 +53,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
         </p>
         <div class="skiplogic__criterialist"></div>
         <p class="skiplogic__addnew">
-          <button class="skiplogic__addcriterion">+ Add a condition</button>
+          <button class="skiplogic__addcriterion">+ Add another condition</button>
         </p>
         <select class="skiplogic__delimselect">
           <option value="and">Question should match all of these criteria</option>
@@ -118,7 +118,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
           operators = []
           _.each @operators, (operator) ->
             operators.push id: operator.id, text: operator.label + (if operator.id != 1 then ' (' + operator.symbol[operator.parser_name[0]] + ')' else '')
-            operators.push id: '-' + operator.id, text: operator.negated_label + (if operator.id != 1 then ' (' + operator.symbol[operator.parser_name[0]] + ')' else '')
+            operators.push id: '-' + operator.id, text: operator.negated_label + (if operator.id != 1 then ' (' + operator.symbol[operator.parser_name[1]] + ')' else '')
 
           operators
       })
@@ -157,6 +157,11 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       target.find('.skiplogic__responseval').remove()
       super(target)
 
+    bind_event: () ->
+      return
+
+    val: () -> null
+
   class viewRowDetailSkipLogic.SkipLogicTextResponse extends viewRowDetailSkipLogic.Base
     render: () ->
       @setElement('<input placeholder="response value" class="skiplogic__responseval" type="text" />')
@@ -166,27 +171,39 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       target.find('.skiplogic__responseval').remove()
       super(target)
 
+    bind_event: (handler) ->
+      @$el.on 'blur', handler
+
+    val: () => @$el.val()
+
   class viewRowDetailSkipLogic.SkipLogicValidatingTextResponseView extends viewRowDetailSkipLogic.SkipLogicTextResponse
     render: () ->
       @setElement('<div class="skiplogic__responseval-wrapper"><input placeholder="response value" class="skiplogic__responseval" type="text" /><div></div></div>')
       @$error_message = @$('div')
       @model.bind('validated:invalid', @show_invalid_view)
       @model.bind('validated:valid', @clear_invalid_view)
+      @$input = @$el.find('input')
       @
     show_invalid_view: (model, errors) =>
-      if @$('input').val()
+      if @$input.val()
         @$el.addClass('textbox--invalid')
         @$error_message.html(errors.value)
+        @$input.focus()
     clear_invalid_view: (model, errors) =>
       @$el.removeClass('textbox--invalid')
       @$error_message.html('')
     fill_value: (value) ->
-      @$('input').val(value)
+      @$input.val(value)
 
     attach_to: (target) ->
       target.find('.skiplogic__responseval').remove()
       super(target)
 
+    bind_event: (handler) ->
+      @$input.on 'blur', handler
+
+    val: () =>
+      @$input.val()
 
   class viewRowDetailSkipLogic.SkipLogicDropDownResponse extends viewRowDetailSkipLogic.Base
     tagName: 'select'
@@ -202,11 +219,16 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
 
       @
 
+    val: () => @$el.val()
+
     attach_to: (target) ->
       target.find('.skiplogic__responseval').remove()
       super(target)
 
       @$el.select2({ minimumResultsForSearch: -1, width: '20%' })
+
+    bind_event: (handler) ->
+      @$el.on 'change', handler
 
     constructor: (@responses) ->
       super()
@@ -243,11 +265,11 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
         @presenter.change_operator @operator_picker_view.value
 
     bind_response_value: () ->
-      @$response_value.on (if @$response_value.prop('tagName').toLowerCase() == 'select' then 'change' else 'blur'), () =>
-        @presenter.change_response @$response_value.val()
+      @response_value_view.bind_event () =>
+        @presenter.change_response @response_value_view.val()
 
     response_value_handler: () ->
-      @presenter.change_response @$response_value.val()
+      @presenter.change_response @response_value_view.val()
 
     change_operator: (@operator_picker_view) ->
       @operator_picker_view.render()

@@ -44,3 +44,96 @@
   -ms-transform: translateX(-50%) translateY(-50%);
   transform: translateX(-50%) translateY(-50%);
 }
+
+/* ==========================================================================
+   jquery ui modal overrides
+   ========================================================================== */
+
+.ui-widget {
+    font-family: 'Lato', sans-serif;
+    font-size: 1em;
+}
+
+.ui-widget-overlay {
+    background: #333;
+    background-image:none;
+    opacity: 0.5;
+}
+
+.ui-widget-content {
+    background: #FFF;
+    border: 2px solid #5CB5EB;
+    color: #333333;
+}
+
+.ui-dialog .ui-dialog-content {
+    padding-top: 1em;
+    font-size: 0.9em;
+}
+
+.ui-dialog div.ui-dialog-titlebar, 
+.ui-dialog div.ui-dialog-content {
+  padding-left:15px;
+  padding-right:15px; 
+}
+
+.ui-widget-header {
+    background: transparent;
+    border: none;
+    color: #333;
+    font-weight: 600;
+    font-family: 'Lato', sans-serif;
+    font-size: 1.2em;
+}
+
+.ui-widget-header .ui-state-default {
+    background: #C6CBD0;
+    border: none;
+    color: #fff;
+}
+
+.ui-widget-header .ui-icon {
+    background-image: url("/static/css/images/ui-icons_ffffff_256x240.png"); 
+}
+
+.ui-dialog .ui-dialog-titlebar-close {
+    height: 18px;
+    width: 18px;
+    right: 9px;
+    top:9px;
+    margin: 0px;
+}
+
+.ui-dialog .ui-dialog-buttonpane {
+    border-width: 0;
+}
+
+.ui-widget-content.ui-dialog-buttonpane .ui-state-default {
+    background: #39bf6e;
+    border:none;
+    border-radius: 0px;
+    border-bottom: 2px solid #227040;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 2px;
+    margin-right: 10px;
+    &:hover {
+      background: #5CCF88;
+    }
+    &.cancel-button {
+      color: #d08b8c;
+      background: #FFF;
+      border:none;
+      margin-right: 0px;
+      &:hover {
+        background: white;
+        color: darken(#d08b8c, 10%);
+      }
+    }
+}
+
+.ui-widget-content span.error-message {
+  color: #d08b8c;
+  font-weight: 600;
+} 

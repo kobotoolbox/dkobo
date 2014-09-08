@@ -27,10 +27,7 @@ define 'cs!xlform/view.rowDetail', [
       unless @model.key
         throw new Error "RowDetail does not have key"
       @extraClass = "xlf-dv-#{@model.key}"
-      if (viewMixin = viewRowDetail.DetailViewMixins[@model.key])
-        _.extend(@, viewMixin)
-      else
-        console?.error "Couldn't build view for column: ", @model.key
+      _.extend(@, viewRowDetail.DetailViewMixins[@model.key] || viewRowDetail.DetailViewMixins.default)
       @$el.addClass(@extraClass)
 
     render: ()->
@@ -183,7 +180,7 @@ define 'cs!xlform/view.rowDetail', [
   viewRowDetail.DetailViewMixins.constraint =
     html: ->
       @$el.addClass("card__settings__fields--active")
-      viewRowDetail.Templates.textbox @cid, @model.key, 'Validation logic'
+      viewRowDetail.Templates.textbox @cid, @model.key, 'Criteria'
     afterRender: ->
       @listenForInputChange()
     insertInDOM: (rowView) ->
@@ -227,7 +224,7 @@ define 'cs!xlform/view.rowDetail', [
   viewRowDetail.DetailViewMixins._isRepeat =
     html: ->
       @$el.addClass("card__settings__fields--active")
-      viewRowDetail.Templates.checkbox @cid, @model.key, 'Repeat'
+      viewRowDetail.Templates.checkbox @cid, @model.key, 'Repeat', 'Repeat this group if necessary'
     afterRender: ->
       @listenForCheckboxChange()
 
@@ -242,7 +239,7 @@ define 'cs!xlform/view.rowDetail', [
     html: ->
       @$el.addClass("card__settings__fields--active")
       if @model._parent.constructor.key == 'group'
-        viewRowDetail.Templates.checkbox @cid, @model.key, 'Appearance', 'Show all questions in this groups on the same screen'
+        viewRowDetail.Templates.checkbox @cid, @model.key, 'Appearance', 'Show all questions in this group on the same screen'
       else
         viewRowDetail.Templates.textbox @cid, @model.key, 'Appearance', 'text'
     afterRender: ->

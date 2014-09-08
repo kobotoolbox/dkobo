@@ -12,7 +12,7 @@
     line-height: 40px;
     background-color: #3F3F3F;
     transition: width 150ms, left 150ms;
-    .header-bar__title {
+    .header-bar__title, .header-bar__support {
         margin-top: 0;
         margin-right: 10px;
         margin-bottom: 0;
@@ -21,6 +21,13 @@
         font-weight: 600;
         font-family: 'Lato';
         .header-bar__title-text { color: white; }
+    }
+    .header-bar__support {
+      margin-right: 30px;
+      color: white;
+      &:hover {
+        color: #1e8fde;
+      }
     }
 
     .btn {
@@ -40,6 +47,7 @@
         margin-top: 5px;
         margin-right: 6px;
     }
+
 }
 
 

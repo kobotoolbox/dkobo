@@ -15,8 +15,6 @@ define 'cs!xlform/view.rowSelector', [
   class viewRowSelector.RowSelector extends $baseView
     events:
       "click .js-close-row-selector": "shrink"
-      "submit .row__questiontypes__form": "show_picker"
-      "click .questiontypelist__item": "selectMenuItem"
     initialize: (opts)->
       @options = opts
       @ngScope = opts.ngScope
@@ -28,6 +26,11 @@ define 'cs!xlform/view.rowSelector', [
 
     expand: ->
       @show_namer()
+      $namer_form = @$el.find('.row__questiontypes__form')
+      $namer_form.on 'submit', _.bind @show_picker, @
+      $namer_form.find('button').on 'click', (evt) ->
+        evt.preventDefault()
+        $namer_form.submit()
       @$('input').eq(0).focus()
 
     show_namer: () ->
@@ -48,6 +51,7 @@ define 'cs!xlform/view.rowSelector', [
       @question_name = @line.find('input').val()
       @line.empty()
       $.scrollTo @line, 200, offset: -300
+
       @line.html $viewTemplates.$$render('xlfRowSelector.line', "")
       @line.find('.row__questiontypes__new-question-name').val(@question_name)
       $menu = @line.find(".row__questiontypes__list")
@@ -55,6 +59,7 @@ define 'cs!xlform/view.rowSelector', [
         menurow = $("<div>", class: "questiontypelist__row").appendTo $menu
         for mitem, i in mrow
           menurow.append $viewTemplates.$$render('xlfRowSelector.cell', mitem.attributes)
+      @$('.questiontypelist__item').click _.bind(@selectMenuItem, @)
 
     shrink: ->
       # click .js-close-row-selector

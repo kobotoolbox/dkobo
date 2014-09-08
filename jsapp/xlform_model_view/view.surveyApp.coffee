@@ -74,6 +74,7 @@ define 'cs!xlform/view.surveyApp', [
       "mouseenter .card__buttons__button": "buttonHoverIn"
       "mouseleave .card__buttons__button": "buttonHoverOut"
       "click .card__settings__tabs li": "switchTab"
+
     @create: (params = {}) ->
       if _.isString params.el
         params.el = $(params.el).get 0
@@ -176,7 +177,7 @@ define 'cs!xlform/view.surveyApp', [
         @is_selecting = false
       else
         @deselect_all_rows()
-
+      return
     selectRow: (evt)->
       @is_selecting = true
       $et = $(evt.target)
@@ -198,21 +199,25 @@ define 'cs!xlform/view.surveyApp', [
 
         $target.toggleClass("survey__row--selected")
         if $target.hasClass('survey__row--group')
-          $target.find('li').toggleClass("survey__row--selected", $target.hasClass("survey__row--selected"))
+          $target.find('li.survey__row, li.survey__row--group').toggleClass("survey__row--selected", $target.hasClass("survey__row--selected"))
 
-        $group = $target.parents('.survey__row')
+        $group = $target.parent().closest('.survey__row')
         if $group.length > 0
           @select_group_if_all_items_selected($group)
 
         @questionSelect()
         @$('.js-blur-on-select-row').blur()
+      return
 
     select_group_if_all_items_selected: ($group) ->
       $rows = $group.find('.survey__row')
       $group.toggleClass('survey__row--selected', $rows.length == $rows.filter('.survey__row--selected').length)
+      $group = $group.parent().closest('.survey__row')
+      if $group.length > 0
+        @select_group_if_all_items_selected($group)
 
     questionSelect: (evt)->
-      @activateGroupButton(@selectedRows().length > 0)
+      @activateGroupButton(@$el.find('.survey__row--selected').length > 0)
       return
 
     activateGroupButton: (active=true)->
@@ -315,6 +320,9 @@ define 'cs!xlform/view.surveyApp', [
         if @survey.rows.length is 0
           @null_top_row_view_selector.expand()
 
+      if !@features.copyToLibrary
+        @$el.find('.js-add-to-question-library').hide()
+
     render: ()->
       @$el.addClass("survey-editor--loading")
       @$el.removeClass("content--centered").removeClass("content")
@@ -323,9 +331,9 @@ define 'cs!xlform/view.surveyApp', [
         @_render_html()
         @_render_attachEvents()
         @_render_addSubViews()
-        @_render_hideConditionallyDisplayedContent()
-
         @_reset()
+
+        @_render_hideConditionallyDisplayedContent()
 
       catch error
         @$el.addClass("survey-editor--error")
@@ -433,8 +441,7 @@ define 'cs!xlform/view.surveyApp', [
 
       requiresInsertion = false
       detachRowEl = (detach)->
-        if detach
-          $el.detach()
+        $el.detach()
         requiresInsertion = true
 
       # trying to avoid unnecessary reordering of DOM (very slow)
@@ -538,6 +545,8 @@ define 'cs!xlform/view.surveyApp', [
       rows = []
       @$el.find('.survey__row--selected').each (i, el)=>
         $el = $(el)
+        if $el.parents('li.survey__row--group.survey__row--selected').length > 0
+          return
         rowId = $el.data("rowId")
         matchingRow = false
         findMatch = (row)->

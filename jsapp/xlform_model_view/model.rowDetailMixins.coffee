@@ -45,7 +45,7 @@ define 'cs!xlform/model.rowDetailMixins', [
       deduplicate: (survey) ->
         names = []
         survey.forEachRow (r)=>
-          if @_parent.get('name') != @
+          if r.get('name') != @
             name = r.getValue("name")
             names.push(name)
         , includeGroups: true

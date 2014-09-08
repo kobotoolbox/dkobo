@@ -13,7 +13,6 @@
 
 .forms-header__button,
 .forms-empty__button {
-    width: 120px;
     padding: 5px;
     font-size: 12px;
     color: white;
@@ -27,31 +26,38 @@
 .forms-empty__button {
     display: block;
     margin:0 auto;
+    width: 120px;
     &:hover {
         background: lighten(#39BF6E, 10%);
     }
 }
 
-.forms-header__button {
+.forms__addform-wrapper {
+    display: block;
     position: absolute;
-    right:0px;
-    top:0px;
+    right: 0px;
+    top: 6px;
+    height: 80px;
+    text-align: center;
+}
+
+.forms-header__button {
+    margin-left: 20px;
+    margin-right: 20px;
+    padding:5px 20px;
     &:hover {
         background: lighten(#39BF6E, 10%);
     }
 }
 
 .forms__addform__drop {
-    position: absolute;
-    right: -30px;
-    top:28px;
-    width: 150px;
+    position: relative;
     border:1px solid #CCC;
     z-index: 8;
     &:before {
       content:'';
       position: absolute;
-      left: 55px;
+      left: 45%;
       top: -6px;
       width: 0;
       height: 0;
@@ -87,7 +93,7 @@
     background: white;
     color: #3f3f3f;
     display: block;
-    width: 148px;
+    // width: 148px;
     font-size: 14px;
     text-align: left;
     padding:5px 5px;
@@ -171,7 +177,7 @@
     margin-bottom: 12px;
     font-size: 11px;
     border: $cardBorderStyle;
-    padding: 20px;
+    padding: 15px 20px;
     display: block;
     background: white;
     position: relative;
@@ -190,44 +196,23 @@
     }
 }
 
-.forms__card__kobocat {
-    position: absolute;
-    bottom: 0px;
-    left: -45px;
-    width: 50px;
-    height: 50px;
-    display: none;
-    // border:1px solid green;
-    .forms__card:hover & {
-        display: block;
-    }
-}
-
 .forms__kobocat__btn {
-    border:none;
-    color: #BEC9D0;
-    font-size: 26px;
-    background: transparent;
-    position: absolute;
-    bottom: 10px;
+    margin-top:5px;
+    color: #30C16B;
+    cursor: pointer;
+    font-weight: 600;
+    i {display: none;margin-left: 5px;}
     &:hover {
-        color: #5DB0EC;
+        color: #43cc7a;
+        i {display: inline-block;}
     }
-}
-
-.forms__kobocat__publisher {
-  z-index: 10000;
-  background-color: white;
-  height: 400px;
-  width: 1000px;
 }
 
 .forms__kobocat__publisher__label {
     display: block;
-    font-size: 16px;
     font-family: 'Lato';
     font-weight: 600;
-    margin: 10px 0 30px 0;
+    margin: 10px 0 15px 0;
 }
 
 .forms__kobocat__publisher__label input {

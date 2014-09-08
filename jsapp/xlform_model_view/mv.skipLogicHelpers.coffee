@@ -32,6 +32,9 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       @question = @model._get_question()
       question_type = @question.get_type()
 
+      @question.on 'remove', () =>
+        @dispatcher.trigger 'remove:question', @
+
       @builder.operator_type = operator_type = @model.get('operator').get_type()
 
 
@@ -77,12 +80,12 @@ define 'cs!xlform/mv.skipLogicHelpers', [
         $add_new_criterion_button.hide()
       else if @model.get('operator').get_type().id == 1
         $add_new_criterion_button.show()
-      else if @model.get('response_value').get('value') == ''
+      else if @model.get('response_value').get('value')  == '' || @model.get('response_value').isValid() == false
         $add_new_criterion_button.hide()
       else
         $add_new_criterion_button.show()
 
-    constructor: (@model, @view, @builder) ->
+    constructor: (@model, @view, @builder, @dispatcher) ->
       @view.presenter = @
       @question = @model._get_question()
       if @builder.survey
@@ -164,7 +167,12 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       @determine_criterion_delimiter_visibility()
 
       @destination = @view.$('.skiplogic__criterialist')
+      dispatcher = _.clone Backbone.Events
+      dispatcher.on 'remove:question', (presenter) =>
+        @remove presenter.model.cid
+        
       _.each @presenters, (presenter) =>
+        presenter.dispatcher = dispatcher
         presenter.$add_new_criterion_button = @$add_new_criterion_button
         presenter.serialize_all = _.bind @serialize, @
         presenter.render @destination

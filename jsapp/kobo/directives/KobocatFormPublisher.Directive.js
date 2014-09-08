@@ -41,23 +41,32 @@ function KobocatFormPublisherDirective($restApi, $miscUtils, $routeTo) {
                 }
                 if (item.body) {
                     var s = dkobo_xlform.model.Survey.create(item.body)
-                    return s.settings.get('form_id');
+                    item.formid = s.settings.get('form_id');
+                    return item.formid;
                 }
             };
             scope.form_name = scope.get_form_id(scope.item);
 
             dialog.dialog({
                 modal: true,
-                height: 400,
+                height: 350,
                 width: 600,
                 autoOpen: false,
                 title: 'Deploy as New Survey Project',
                 draggable: false,
                 resizable: false,
-                buttons: {
-                    'Done': scope.publish,
-                    'Cancel': scope.close
-                }
+                buttons: [
+                    {
+                        text: "Done",
+                        "class": 'save-button',
+                        click: scope.publish
+                    },
+                    {
+                        text: "Cancel",
+                        "class": 'cancel-button',
+                        click: scope.close
+                    }
+                ],
             });
         }
     }
