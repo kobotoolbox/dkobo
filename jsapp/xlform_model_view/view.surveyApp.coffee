@@ -320,6 +320,9 @@ define 'cs!xlform/view.surveyApp', [
         if @survey.rows.length is 0
           @null_top_row_view_selector.expand()
 
+      if !@features.copyToLibrary
+        @$el.find('.js-add-to-question-library').hide()
+
     render: ()->
       @$el.addClass("survey-editor--loading")
       @$el.removeClass("content--centered").removeClass("content")
@@ -328,9 +331,9 @@ define 'cs!xlform/view.surveyApp', [
         @_render_html()
         @_render_attachEvents()
         @_render_addSubViews()
-        @_render_hideConditionallyDisplayedContent()
-
         @_reset()
+
+        @_render_hideConditionallyDisplayedContent()
 
       catch error
         @$el.addClass("survey-editor--error")
