@@ -30,7 +30,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
         </p>
         <div class="skiplogic__criterialist"></div>
         <p class="skiplogic__addnew">
-          <button class="skiplogic__addcriterion">+ Add a condition</button>
+          <button class="skiplogic__addcriterion">+ Add another condition</button>
         </p>
         <select class="skiplogic__delimselect">
           <option value="and">Question should match all of these criteria</option>
