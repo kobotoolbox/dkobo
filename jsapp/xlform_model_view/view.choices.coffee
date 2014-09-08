@@ -155,6 +155,10 @@ define 'cs!xlform/view.choices', [
       if lis.length == 1
         lis.find('.js-remove-option').addClass('hidden')
     saveValue: (nval)->
+      # if new value has no non-space characters, it is invalid
+      unless "#{nval}".match /\S/
+        nval = false
+
       if nval
         @model.set("label", nval, silent: true)
         other_names = @options.cl.getNames()
