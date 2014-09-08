@@ -325,6 +325,16 @@ rowDetailsSkipLogic.IntegerResponseModel = (function(_super) {
         }
     };
 
+    IntegerResponseModel.prototype.set_value = function(value) {
+        dump(value);
+        if (value === ''){
+            value = undefined;
+        }
+        return this.set('value', value, {
+            validate: !!value
+        });
+    };
+
     return IntegerResponseModel;
 
 })(rowDetailsSkipLogic.ResponseModel);
@@ -344,27 +354,29 @@ rowDetailsSkipLogic.DecimalResponseModel = (function(_super) {
     };
 
     DecimalResponseModel.prototype.set_value = function(value) {
-        var final_value;
+        function value_is_not_number() {
+            return typeof value !== 'number';
+        }
+
         if (typeof value === 'undefined' || value === '') {
-            return;
-        }
-        if (typeof value === 'number') {
-            final_value = value;
+            value = null;
         } else {
-            value = value.replace(/\s/g, '');
-            final_value = +value;
-        }
-        if (isNaN(final_value)) {
-            final_value = +(value.replace(',', '.'));
-            if (isNaN(final_value)) {
+            if (value_is_not_number()) {
+                value = value.replace(/\s/g, '');
+                value = +value || value;
+            }
+            if (value_is_not_number()) {
+                value = +(value.replace(',', '.')) || value;
+            }
+            if (value_is_not_number()) {
                 if (value.lastIndexOf(',') > value.lastIndexOf('.')) {
-                    final_value = +(value.replace(/\./g, '').replace(',', '.'));
+                    value = +(value.replace(/\./g, '').replace(',', '.'));
                 } else {
-                    final_value = +(value.replace(',', ''));
+                    value = +(value.replace(',', ''));
                 }
             }
         }
-        return this.set('value', final_value, {
+        return this.set('value', value, {
             validate: true
         });
     };
