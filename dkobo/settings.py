@@ -247,3 +247,10 @@ REST_FRAMEWORK = {
 
 # needed by guardian
 ANONYMOUS_USER_ID = -1
+
+from registration.signals import user_activated
+from django.contrib.auth import login
+def login_on_activation(sender, user, request, **kwargs):
+    user.backend='django.contrib.auth.backends.ModelBackend'
+    login(request,user)
+user_activated.connect(login_on_activation)
