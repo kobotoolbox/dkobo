@@ -145,7 +145,7 @@ define 'cs!xlform/view.surveyApp', [
       @onSave = options.save || $.noop
       @onPreview = options.preview || $.noop
 
-      @expand_all_multioptions = null
+      @expand_all_multioptions = () -> @$('.survey__row:not(.survey__row--deleted) .card--expandedchoices:visible').length > 0
 
       $(window).on "keydown", (evt)=>
         @onEscapeKeydown(evt)  if evt.keyCode is 27
@@ -264,6 +264,7 @@ define 'cs!xlform/view.surveyApp', [
       $row = $et.closest('.card')
       $row.removeClass('card--expandedsettings')
       $row.toggleClass('card--expandedchoices')
+      @set_multioptions_label()
 
     expandRowSelector: (evt)->
       $ect = $(evt.currentTarget)
@@ -342,16 +343,20 @@ define 'cs!xlform/view.surveyApp', [
       @$el.removeClass("survey-editor--loading")
       @
 
+    set_multioptions_label: () ->
+      $expand_multioptions = @$(".js-expand-multioptions--all")
+      if @expand_all_multioptions()
+        $expand_multioptions.html($expand_multioptions.html().replace("Show", "Hide"));
+      else
+        $expand_multioptions.html($expand_multioptions.html().replace("Hide", "Show"));
     expandMultioptions: ->
       $expand_multioptions = @$(".js-expand-multioptions--all")
-      if @expand_all_multioptions
-        @expand_all_multioptions = false
+      if @expand_all_multioptions()
         @$(".card.card--selectquestion").removeClass("card--expandedchoices")
-        $expand_multioptions.html($expand_multioptions.html().replace("Collapse", "Show"));
       else
-        @expand_all_multioptions = true
         @$(".card.card--selectquestion").addClass("card--expandedchoices")
-        $expand_multioptions.html($expand_multioptions.html().replace("Show", "Collapse"));
+
+      @set_multioptions_label()
 
     getItemPosition: (item) ->
       i = 0
@@ -488,6 +493,8 @@ define 'cs!xlform/view.surveyApp', [
 
       @survey.forEachRow(fn, includeErrors: true, includeGroups: true, flat: true)
 
+      @set_multioptions_label()
+
       null_top_row = @formEditorEl.find(".survey-editor__null-top-row, .survey-editor__message").removeClass("expanded")
 
       if isEmpty and @features.multipleQuestions
@@ -526,6 +533,7 @@ define 'cs!xlform/view.surveyApp', [
         rowEl.slideUp 175, "swing", ()=>
           rowEl.remove()
           @survey.rows.remove matchingRow
+        @set_multioptions_label()
 
     groupSelectedRows: ->
       rows = @selectedRows()
