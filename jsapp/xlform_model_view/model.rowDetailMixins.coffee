@@ -17,20 +17,17 @@ define 'cs!xlform/model.rowDetailMixins', [
 
     postInitialize: ()->
       # TODO: get skip logic factories connected
-      model_factory = new $modelRowDetailsSkipLogic.SkipLogicFactory @getSurvey()
-      view_factory = new $viewRowDetailSkipLogic.SkipLogicViewFactory @getSurvey()
       survey = @getSurvey()
-      current_question = @_parent
+      model_factory = new $modelRowDetailsSkipLogic.SkipLogicFactory survey
+      view_factory = new $viewRowDetailSkipLogic.SkipLogicViewFactory survey
+      helper_factory = new $skipLogicHelpers.SkipLogicHelperFactory model_factory, view_factory, survey, @_parent
 
-      @builder = new $skipLogicHelpers.SkipLogicBuilder model_factory, view_factory, survey, current_question, new $skipLogicHelpers.SkipLogicHelperFactory view_factory
+      @facade = new $skipLogicHelpers.SkipLogicPresentationFacade model_factory, helper_factory, view_factory
 
     serialize: ()->
       # @hidden = false
       # note: reimplement "hidden" if response is invalid
-      if @facade?
-        @facade.serialize()
-      else
-        @builder.build().serialize()
+      @facade.serialize()
 
     parse: ()->
 

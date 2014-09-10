@@ -17,6 +17,29 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       if !@$el.val()?
         @$el.prop('selectedIndex', 0);
 
+    bind_event: (type, callback) ->
+      @$el.off type, callback
+      @$el.on type, callback
+
+  class viewRowDetailSkipLogic.TextArea extends viewRowDetailSkipLogic.Base
+    tagName: 'textarea'
+    render: () ->
+      @$el.val @text
+      @$el.addClass @className
+      @$el.on 'paste', (e) -> e.stopPropagation()
+
+      @
+    constructor: (@text, @className) -> super()
+
+  class viewRowDetailSkipLogic.Button extends viewRowDetailSkipLogic.Base
+    tagName: 'button'
+    render: () ->
+      @$el.html @text
+      @$el.addClass @className
+
+      @
+    constructor: (@text, @className) -> super()
+
   class viewRowDetailSkipLogic.SkipLogicCriterionBuilderView extends viewRowDetailSkipLogic.Base
     events:
       "click .skiplogic__deletecriterion": "deleteCriterion"
@@ -39,6 +62,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       """)
 
       delimSelect = @$(".skiplogic__delimselect").val(@criterion_delimiter)
+
       @
 
     addCriterion: (evt) =>
@@ -51,39 +75,6 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
 
     markChangedDelimSelector: (evt) ->
       @criterion_delimiter = evt.target.value
-
-  class viewRowDetailSkipLogic.SkipLogicHandCodeView extends viewRowDetailSkipLogic.Base
-    render: () ->
-      @$el.html('<textarea class="skiplogic__handcode-edit" placeholder="Enter XLSForm code here"></textarea><button class="skiplogic-handcode__cancel"><i class="fa fa-trash-o"></i></button>')
-      @$el.on 'paste', (e) -> e.stopPropagation()
-      @
-
-  ###
-  SkipLogicCollectionView
-  ###
-  class viewRowDetailSkipLogic.SkipLogicCollectionView extends Backbone.View
-    render: ()->
-      @$el.html("""
-        <div class="skiplogic__main"></div>
-        <p class="skiplogic__extras">
-        </p>
-      """)
-
-      @target_element = @$('.skiplogic__main')
-
-      @facade = @builder.build()
-      @facade.render @target_element
-      @model.facade = @facade
-
-      @$('.skiplogic__handcode').click(_.bind @switchEditingMode, @)
-      @
-    toggle: ->
-      @$el.toggle()
-    switchEditingMode: () =>
-      @facade = @facade.switch_editing_mode()
-      @target_element.empty()
-      @facade.render @target_element
-      @model.facade = @facade
 
   class viewRowDetailSkipLogic.QuestionPicker extends viewRowDetailSkipLogic.Base
     tagName: 'select'
@@ -322,40 +313,16 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
         when 'empty' then new viewRowDetailSkipLogic.SkipLogicEmptyResponse
         when 'text' then new viewRowDetailSkipLogic.SkipLogicTextResponse
         when 'dropdown' then new viewRowDetailSkipLogic.SkipLogicDropDownResponse responses
-        when 'integer', 'decimal' then new viewRowDetailSkipLogic.SkipLogicValidatingTextResponseView
-        #when 'integer', 'decimal' then new viewRowDetailSkipLogic.SkipLogicTextResponse
+        when 'integer', 'decimal' then new viewRowDetailSkipLogic.SkipLogicTextResponse
     create_criterion_view: (question_picker_view, operator_picker_view, response_value_view, presenter) ->
       return new viewRowDetailSkipLogic.SkipLogicCriterion question_picker_view, operator_picker_view, response_value_view, presenter
-    constructor: (@survey) ->
     create_criterion_builder_view: () ->
       return new viewRowDetailSkipLogic.SkipLogicCriterionBuilderView()
-    create_hand_code_view: () ->
-      return new viewRowDetailSkipLogic.SkipLogicHandCodeView()
-    create_skip_logic_picker_view: (context) ->
-      return new viewRowDetailSkipLogic.SkipLogicPickerView(context)
+    create_textarea: (text, className) ->
+      return new viewRowDetailSkipLogic.TextArea text, className
+    create_button: (text, className) ->
+      return new viewRowDetailSkipLogic.Button text, className
+    constructor: (@survey) ->
 
-  class viewRowDetailSkipLogic.SkipLogicPickerView extends viewRowDetailSkipLogic.Base
-    tagName: 'div'
-    events:
-      'click .skiplogic__select-builder' : 'use_criterion_builder_helper'
-      'click .skiplogic__select-handcode' : 'use_hand_code_helper'
-    render: () ->
-      @$el.html(
-        """
-          <button class="skiplogic__button skiplogic__select-builder"><i class="fa fa-plus"></i> Add a condition</button>
-
-          <button class="skiplogic__button skiplogic__select-handcode"><i>${}</i> Manually enter your skip logic in XLSForm code</button>
-        """
-        )
-      return @
-
-    constructor: (@context) ->
-      super()
-
-    use_hand_code_helper: () ->
-      @context.use_hand_code_helper()
-
-    use_criterion_builder_helper: () ->
-      @context.use_criterion_builder_helper()
 
   viewRowDetailSkipLogic

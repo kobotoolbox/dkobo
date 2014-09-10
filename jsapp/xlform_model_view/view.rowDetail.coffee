@@ -164,9 +164,16 @@ define 'cs!xlform/view.rowDetail', [
       """
 
     afterRender: ->
-      @skipLogicEditor = new $viewRowDetailSkipLogic.SkipLogicCollectionView(el: @$el.find(".relevant__editor"), model: @model)
-      @skipLogicEditor.builder = @model.builder
-      @skipLogicEditor.render()
+      @$el.find(".relevant__editor").html("""
+        <div class="skiplogic__main"></div>
+        <p class="skiplogic__extras">
+        </p>
+      """)
+
+      @target_element = @$('.skiplogic__main')
+
+      @model.facade.render @target_element
+
     insertInDOM: (rowView) ->
       @_insertInDOM rowView.cardSettingsWrap.find('.card__settings__fields--skip-logic').eq(0)
 
@@ -212,7 +219,7 @@ define 'cs!xlform/view.rowDetail', [
 
   viewRowDetail.DetailViewMixins.calculation =
     html: -> false
-    insertInDOM: (rowView)-> ``
+    insertInDOM: (rowView)-> return
 
   viewRowDetail.DetailViewMixins._isRepeat =
     html: ->
