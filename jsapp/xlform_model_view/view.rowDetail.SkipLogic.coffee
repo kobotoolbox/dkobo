@@ -287,9 +287,9 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
 
     attach_response: () ->
       if @$('.skiplogic__responseval-wrapper').length > 0
-        @$('.skiplogic__responseval-wrapper').replaceWith(@response_value_view.el)
-      else
-        @response_value_view.attach_to(@$el)
+        @$('.skiplogic__responseval-wrapper').remove()
+
+      @response_value_view.attach_to(@$el)
       @bind_response_value()
 
     attach_to: (element) ->
