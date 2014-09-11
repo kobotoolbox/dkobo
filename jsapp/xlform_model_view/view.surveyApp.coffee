@@ -190,8 +190,7 @@ define 'cs!xlform/view.surveyApp', [
       _isIntendedTarget = $ect.closest('.survey__row').get(0) is $et.closest('.survey__row').get(0)
       if _isIntendedTarget
         $target = $et.closest('.survey__row')
-        meta_key_pressed = evt.ctrlKey or evt.metaKey
-        if !meta_key_pressed
+        if !(evt.ctrlKey || evt.metaKey)
           selected_rows = $target.siblings('.survey__row--selected')
           if !$target.hasClass('survey__row--selected') || selected_rows.length > 1
             @deselect_all_rows()
