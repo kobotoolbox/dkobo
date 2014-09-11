@@ -111,9 +111,11 @@ define 'cs!xlform/view.row', [
     deleteGroup: (evt)=>
       skipConfirm = $(evt.currentTarget).hasClass('js-force-delete-group')
       if skipConfirm or confirm('Are you sure you want to split apart this group?')
-        @model.splitApart()
-        @$el.remove()
+        @_deleteGroup()
       evt.preventDefault()
+    _deleteGroup: () =>
+      @model.splitApart()
+      @$el.remove()
 
     render: ->
       if @already_rendered

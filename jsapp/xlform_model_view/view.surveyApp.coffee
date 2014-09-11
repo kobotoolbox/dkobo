@@ -527,12 +527,15 @@ define 'cs!xlform/view.surveyApp', [
         if !matchingRow
           throw new Error("Matching row was not found.")
 
+        parent = matchingRow._parent._parent
         matchingRow.detach()
         # this slideUp is for add/remove row animation
         rowEl.addClass('survey__row--deleted')
         rowEl.slideUp 175, "swing", ()=>
           rowEl.remove()
           @survey.rows.remove matchingRow
+          if parent != @ && parentrows.length == 0
+            parent_view = @__rowViews.get(parent.cid)._deleteGroup()
         @set_multioptions_label()
 
     groupSelectedRows: ->
