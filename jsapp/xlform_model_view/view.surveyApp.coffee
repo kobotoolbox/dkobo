@@ -424,6 +424,7 @@ define 'cs!xlform/view.surveyApp', [
         $ect.addClass('js-cancel-group-sort')
       else
         $ect.removeClass('js-cancel-group-sort')
+        evt.stopPropagation()
 
     validateSurvey: ()->
       true
