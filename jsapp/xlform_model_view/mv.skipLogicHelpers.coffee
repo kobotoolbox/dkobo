@@ -102,6 +102,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
 
 
     render: (@destination) ->
+      @view.question_picker_view = @builder.build_question_view()
       @view.render()
       @view.question_picker_view.fill_value(@model.get('question_cid'))
       @view.operator_picker_view.fill_value(@model.get('operator').get_value())
