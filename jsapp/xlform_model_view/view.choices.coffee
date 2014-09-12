@@ -44,6 +44,7 @@ define 'cs!xlform/view.choices', [
           placeholder: "option-placeholder"
           opacity: 0.9
           scroll: false
+          cancel: "js-cancel-option-sort"
           deactivate: =>
             if @hasReordered
               @reordered()

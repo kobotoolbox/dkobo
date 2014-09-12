@@ -20,7 +20,7 @@ function AssetsController($scope, $rootScope, $resource, $restApi, $timeout, $fi
             select_question,
             select_all = true;
 
-        if (!$event.ctrlKey) {
+        if (!($event.ctrlKey || $event.metaKey)) {
             for (i = 0; i < $scope.info_list_items.length; i++) {
                 current = $scope.info_list_items[i];
                 if (current != item) {
