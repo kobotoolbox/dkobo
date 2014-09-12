@@ -6,12 +6,12 @@ define 'cs!xlform/view.icons', [
 
   iconDetails = [
     # row 1
-      label: "Select one"
+      label: "Select One"
       faClass: "dot-circle-o"
       grouping: "r1"
       id: "select_one"
     ,
-      label: "Select many"
+      label: "Select Many"
       faClass: "list-ul"
       grouping: "r1"
       id: "select_multiple"
@@ -21,7 +21,7 @@ define 'cs!xlform/view.icons', [
       grouping: "r1"
       id: "text"
     ,
-      label: "Integer"
+      label: "Number"
       faClass: "lato-integer"
       grouping: "r1"
       id: "integer"
@@ -43,41 +43,41 @@ define 'cs!xlform/view.icons', [
       grouping: "r2"
       id: "time"
     ,
-      label: "Date + time"
+      label: "Date & time"
       faClass: "calendar clock-over"
       grouping: "r2"
       id: "datetime"
     ,
 
     # r3
-      label: "GPS Location"
+      label: "GPS"
       faClass: "map-marker"
       grouping: "r3"
       id: "geopoint"
     ,
-      label: "Upload photo"
+      label: "Photo"
       faClass: "picture-o"
       grouping: "r3"
       id: "image"
     ,
-      label: "Record audio"
+      label: "Audio"
       faClass: "volume-up"
       grouping: "r3"
       id: "audio"
     ,
-      label: "Record video"
+      label: "Video"
       faClass: "video-camera"
       grouping: "r3"
       id: "video"
     ,
 
     # r4
-      label: "Read a note"
+      label: "Note"
       faClass: "bars"
       grouping: "r4"
       id: "note"
     ,
-      label: "Scan barcode"
+      label: "Barcode"
       faClass: "barcode"
       grouping: "r4"
       id: "barcode"
@@ -87,7 +87,7 @@ define 'cs!xlform/view.icons', [
       grouping: "r4"
       id: "acknowledge"
     ,
-      label: "Calculate value"
+      label: "Calculate"
       faClass: "lato-calculate"
       grouping: "r4"
       id: "calculate"
