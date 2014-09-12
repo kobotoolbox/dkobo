@@ -96,6 +96,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       @
 
     attach_to: (target) ->
+      target.find('.skiplogic__rowselect').remove()
       super(target)
       @$el.select2({ minimumResultsForSearch: -1 })
 
@@ -127,6 +128,8 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
         @fill_value @value
       else
         @value = @$el.select2('val')
+
+      @$el.on 'select2-close', () => @set_style()
 
     fill_value: (@value) ->
       @$el.select2 'val', value
