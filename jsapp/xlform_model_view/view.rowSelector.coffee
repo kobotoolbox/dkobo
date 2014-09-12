@@ -45,6 +45,13 @@ define 'cs!xlform/view.rowSelector', [
       @line.css "height", "inherit"
       @line.html $viewTemplates.$$render('xlfRowSelector.namer')
       $.scrollTo @line, 200, offset: -300
+      $(window).on 'keydown.cancel_add_question',  (evt) =>
+        if evt.which == 27
+          @hide()
+
+      $('body').on 'mousedown.cancel_add_question', (evt) =>
+        if $(evt.target).closest('.line.expanded').length == 0
+          @hide()
 
     show_picker: (evt) ->
       evt.preventDefault()
@@ -73,6 +80,9 @@ define 'cs!xlform/view.rowSelector', [
     hide: ->
       @button.removeClass('btn--hidden')
       @line.empty().removeClass("expanded").css "height": 0
+      $(window).off 'keydown.cancel_add_question'
+      $('body').off 'mousedown.cancel_add_question'
+      @line.parents(".survey-editor__null-top-row").removeClass "expanded"
 
     selectMenuItem: (evt)->
       @question_name = @line.find('input').val()
