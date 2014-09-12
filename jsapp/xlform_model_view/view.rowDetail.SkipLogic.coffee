@@ -260,7 +260,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
         @presenter.change_question e.val
 
     bind_operator_picker: () ->
-      @$operator_picker.on 'change', () =>
+      @$operator_picker.on 'blur', () =>
         @operator_picker_view.value = @$operator_picker.select2 'val'
         @presenter.change_operator @operator_picker_view.value
 

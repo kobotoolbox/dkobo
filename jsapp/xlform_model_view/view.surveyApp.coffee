@@ -535,7 +535,7 @@ define 'cs!xlform/view.surveyApp', [
         rowEl.slideUp 175, "swing", ()=>
           rowEl.remove()
           @survey.rows.remove matchingRow
-          if parent != @ && parentrows.length == 0
+          if parent != @ && parent.rows.length == 0
             parent_view = @__rowViews.get(parent.cid)._deleteGroup()
         @set_multioptions_label()
 
