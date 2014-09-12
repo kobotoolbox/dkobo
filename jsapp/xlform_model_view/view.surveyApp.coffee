@@ -422,6 +422,7 @@ define 'cs!xlform/view.surveyApp', [
       $ect = $(evt.currentTarget)
       if evt.type is 'mouseenter' && $ect.siblings('.survey__row').length is 0
         $ect.addClass('js-cancel-group-sort')
+        evt.stopPropagation()
       else
         $ect.removeClass('js-cancel-group-sort')
         evt.stopPropagation()
