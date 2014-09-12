@@ -347,8 +347,14 @@ define 'cs!xlform/view.surveyApp', [
       $expand_multioptions = @$(".js-expand-multioptions--all")
       if @expand_all_multioptions()
         $expand_multioptions.html($expand_multioptions.html().replace("Show", "Hide"));
+        icon = $expand_multioptions.find('i')
+        icon.removeClass('fa-caret-right')
+        icon.addClass('fa-caret-down')
       else
         $expand_multioptions.html($expand_multioptions.html().replace("Hide", "Show"));
+        icon = $expand_multioptions.find('i')
+        icon.removeClass('fa-caret-down')
+        icon.addClass('fa-caret-right')
     expandMultioptions: ->
       $expand_multioptions = @$(".js-expand-multioptions--all")
       if @expand_all_multioptions()
