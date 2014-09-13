@@ -466,7 +466,7 @@ define 'cs!xlform/view.surveyApp', [
         if prevRow
           $el.insertAfter(prevRowEl)
         else
-          $el.prependTo($parentEl)
+          $el.appendTo($parentEl)
 
       view
 

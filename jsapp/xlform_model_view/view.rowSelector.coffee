@@ -103,6 +103,7 @@ define 'cs!xlform/view.rowSelector', [
         options.after = rowBefore
         survey = rowBefore.getSurvey()
       else
+        options.at = 0
         survey = @options.survey
 
       survey.addRow(rowDetails, options)
