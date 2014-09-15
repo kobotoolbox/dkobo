@@ -140,8 +140,10 @@
 
   {% endverbatim %}
 
+  {% if trackjs_token %}
   <script type="text/javascript" src="//d2zah9y47r7bi2.cloudfront.net/releases/current/tracker.js"
-    data-token="71de895dd9ab488b8a83ee0598ec4786"></script>
+    data-token="{{trackjs_token}}"></script>
+  {% endif %}
 
   </body>
 </html>
