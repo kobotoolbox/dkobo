@@ -1,17 +1,20 @@
 {% extends "registration.html" %}
 
 {% block content %}
-  <form action="." method="post" class="registration  registration--register">{% csrf_token%}
-    {{ form.as_p }}
-    <input type="submit" value="Register" class="registration__action  btn" />
-  </form>
-  <script>
-  // dailyWTF
+<div class="registration__bg">
 
-  $(function () {
-    $('form.registration > p').addClass('registration__row');
-    $('form.registration > p > label').addClass('registration__label');
-    $('form.registration > p > input').addClass('registration__input');
-  });
-  </script>
+  <form action="." method="post" class="registration  registration--register">
+    <div class="registration--logo"><img src="/static/kobo/images/kobologo.svg"/></div>    
+    {% csrf_token%}
+    {{ form.as_p }}
+    <input type="submit" value="Create Account" class="registration__action" />
+    <div class="registration__footer">
+      or <a href="{% url 'login' %}">login</a>
+    </div>
+  </form>
+
+
+  <div class="registration__credit">Photo by UNAMID / by-nc-nd</div>
+</div>
+
 {% endblock %}
