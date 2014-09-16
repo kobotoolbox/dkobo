@@ -1,2 +1,4 @@
 # @log function for debugging
-@log = @dump = (args...)-> console?.log?.apply console, args
+@log = (args...)-> console?.log?.apply console, args
+if !@dump?
+  @dump = @log

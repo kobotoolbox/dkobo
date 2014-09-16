@@ -7,5 +7,6 @@ define [
         'cs!test/unit/xlform/group.tests',
         'cs!test/unit/xlform/utils.tests',
         'cs!test/unit/xlform/choices.tests',
+        'cs!test/unit/xlform/Survey/insertSurvey'
         ], ->
   dump 'amdrunner.coffee ran'

@@ -209,13 +209,17 @@ $cardIndicatorIconWidth: 21px;
     }
     &.red {
         color: #D08B8C;
-        top:50%;
+        top:36%;
         margin-top:-11px;
     }
     &.blue {
         color:$linkColor;
     }
     &.gray-green {
+      bottom: -2px;
+    }
+    &.card__buttons__button--copy {
+        bottom: 22%
     }
     &.activated {
         // trying to transition this into %activated-card-button
