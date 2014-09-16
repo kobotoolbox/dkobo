@@ -27,10 +27,30 @@
         text-align: center;
         margin-bottom: 20px;
         img {
-            max-width: 90%;
+            max-width: 250px;
         }
     }
 }
+
+@media screen and (min-width: 780px) {
+    // two-column
+    form.registration--register {
+        min-width: 780px;
+    }
+    .registration__first-half {
+        width: 45%;
+        float: left;
+    }
+    .registration__second-half {
+        width: 55%;
+        float: left;
+        p {
+            padding-left: 50px;            
+            font-size: 13px;
+            text-align: justify;
+        }
+    }
+} 
 
 .registration__row {
     margin-top: 0;
@@ -43,6 +63,8 @@
     padding: 8px;
     border: none;
     border-radius: 0px;
+    font-size: 13px;
+    border-bottom: 2px solid #CBD0D7; 
     &.registration__action {
         font-size: 14px;
         padding:10px;
@@ -56,6 +78,12 @@
         }
     }
 }
+
+.registration .registration__kc-domain, 
+.registration .registration__kc-domain + input {
+    display: inline-block;
+    width: 50%;
+} 
 
 .registration__forgot {
     position: absolute;
