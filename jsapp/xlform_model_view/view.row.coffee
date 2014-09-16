@@ -70,6 +70,7 @@ define 'cs!xlform/view.row', [
     _renderRow: ->
       @$el.html $viewTemplates.$$render('row.xlfRowView')
       @$('.js-add-to-question-library').click @add_row_to_question_library
+      @$('.js-clone-question').click @clone
       @$label = @$('.card__header-title')
       @$card = @$el.find('.card')
       if 'getList' of @model and (cl = @model.getList())
@@ -96,6 +97,9 @@ define 'cs!xlform/view.row', [
       for view in @rowDetailViews
         view.render()
       return
+
+    clone: (event) =>
+      @model.getSurvey().insert_row @model, @model._parent.models.indexOf(@model) + 1
 
     add_row_to_question_library: (evt) =>
       evt.stopPropagation()

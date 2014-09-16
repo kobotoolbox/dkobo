@@ -63,6 +63,8 @@ define 'cs!xlform/model.utils', [
       })
 
   utils.sluggify = (str, opts={})->
+    if str == ''
+      return ''
     # Convert text to a friendly format. Rules are passed as options
     opts = _.defaults(opts, {
         # l/r strip: strip spaces from begin/end of string

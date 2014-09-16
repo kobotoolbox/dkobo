@@ -45,15 +45,19 @@ define 'cs!xlform/model.survey', [
 
     @create: (options={}, addlOpts) ->
       return new Survey(options, addlOpts)
+    insert_row: (row, index) ->
+      if rowlist = row.getList()
+        @choices.add(name: rowlist.get("name"), options: rowlist.options.toJSON())
+      @rows.add(row.toJSON(), at: index)
+      new_row = @rows.at(index)
+      name_detail = new_row.get('name')
+      name_detail.set 'value', name_detail.deduplicate(@)
+
     insertSurvey: (survey, index=-1)->
       index = @rows.length  if index is -1
       for row, row_i in survey.rows.models
-        if rowlist = row.getList()
-          @choices.add(name: rowlist.get("name"), options: rowlist.options.toJSON())
-        name_detail = row.get('name')
-        name_detail.set 'value', name_detail.deduplicate(@)
         index_incr = index + row_i
-        @rows.add(row.toJSON(), at: index_incr)
+        @insert_row row, index_incr
       ``
     toJSON: (stringify=false, spaces=4)->
       obj = {}
