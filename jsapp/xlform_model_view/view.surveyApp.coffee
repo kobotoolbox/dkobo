@@ -599,6 +599,9 @@ define 'cs!xlform/view.surveyApp', [
         evt.target.href = "data:text/csv;charset=utf-8,#{encodeURIComponent(@survey.toCSV())}"
     saveButtonClick: (evt)->
       # Save = store CSV in local storage.
+      icon = $(evt.target).find('i')
+      icon.addClass 'fa-spinner fa-spin blue'
+      icon.removeClass 'fa-check-circle green'
       @onSave.apply(@, arguments)
     publishButtonClick: (evt)->
       # Publish = trigger publish action (ie. post to formhub)
