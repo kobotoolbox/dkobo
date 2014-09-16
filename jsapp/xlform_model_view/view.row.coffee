@@ -27,16 +27,48 @@ define 'cs!xlform/view.row', [
 
     initialize: (opts)->
       @options = opts
-      typeDetail = @model.get("type")
+
       @$el.attr("data-row-id", @model.cid)
       @ngScope = opts.ngScope
-      # @model.on "change", @render, @
-      # typeDetail.on "change:value", _.bind(@render, @)
-      # typeDetail.on "change:listName", _.bind(@render, @)
+
       @surveyView = @options.surveyView
+
+      timed_hide_on_enter = timeout: null
+      timed_hide_on_leave = timeout: null
+
       @model.on "detail-change", (key, value, ctxt)=>
         customEventName = "row-detail-change-#{key}"
         @$(".on-#{customEventName}").trigger(customEventName, key, value, ctxt)
+
+      @$el.on 'mouseenter', () =>
+        $previous = @$el.prev()
+        if $previous.hasClass('survey-editor__null-top-row') && !$previous.hasClass('expanded')
+          $previous.removeClass('hidden')
+          bind_element = ($element, event_type, callback) ->
+            $element.off event_type
+            $element.on event_type, callback
+          bind_element_with_timeout = ($element, event_type, callback, timer) ->
+            bind_element $element, event_type, (event) ->
+              timer.timeout = setTimeout(() ->
+                callback(event)
+              300)
+
+          clear_timeout = () ->
+            clearTimeout(timed_hide_on_enter.timeout)
+            clearTimeout(timed_hide_on_leave.timeout)
+
+          hide_null_row = (event) =>
+            if !$previous.hasClass 'expanded'
+              $previous.addClass('hidden')
+              @$el.off event.type + '.hide_null_row'
+
+          clear_timeout()
+
+          #bind_element_with_timeout @$el.find('i'), 'mouseenter.hide_null_row', hide_null_row, timed_hide_on_enter
+
+          bind_element_with_timeout @$el, 'mouseleave.hide_null_row', hide_null_row, timed_hide_on_leave
+
+          bind_element $previous.find('i'), 'mouseenter.clear_timeout', clear_timeout
 
     drop: (evt, index)->
       @$el.trigger("update-sort", [@model, index])
