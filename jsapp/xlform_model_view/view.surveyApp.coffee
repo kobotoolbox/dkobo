@@ -548,7 +548,7 @@ define 'cs!xlform/view.surveyApp', [
     groupSelectedRows: ->
       rows = @selectedRows()
       $q = @$('.survey__row--selected')
-      $q.remove()
+      $q.detach()
       $q.removeClass('survey__row--selected')
       @activateGroupButton(false)
       if rows.length > 0
