@@ -82,7 +82,7 @@ input[type=text].skiplogic__responseval {
 
 div.skiplogic__responseval {
     display:inline-block;
-    width: 25%;
+    width: 25% !important;
 }
 
 .skiplogic__deletecriterion {
@@ -132,11 +132,11 @@ div.skiplogic__responseval {
     color: white;
     text-align: center;
     font-weight: 600;
-    background: #39BF6E;
+    background: #39BF6E; 
     border:none;
     border-bottom: 2px solid darken(#39BF6E, 20%);
     position: absolute;
-    right:0px;
+    left:0px;
     bottom:-20px;
     &:hover {
         background: lighten(#39BF6E, 10%);
@@ -150,7 +150,7 @@ select.skiplogic__delimselect {
     padding:1px;
     position: absolute;
     font-size: 13px;
-    left:0px;
+    right:0px;
     bottom:-20px;
     font-weight: 600;
 }

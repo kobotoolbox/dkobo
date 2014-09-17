@@ -1,17 +1,47 @@
 {% extends "registration.html" %}
 
 {% block content %}
-  <form action="." method="post" class="registration  registration--register">{% csrf_token%}
-    {{ form.as_p }}
-    <input type="submit" value="Register" class="registration__action  btn" />
-  </form>
-  <script>
-  // dailyWTF
+<div class="registration__bg">
 
+  <form action="." method="post" class="registration registration--register">
+    <div class="registration--logo"><img src="/static/kobo/images/kobologo.svg"/></div>    
+
+    <div class="registration__first-half">
+      {% csrf_token%}
+      {{ form.as_p }}
+      <input type="submit" value="Create Account" class="registration__action" />
+      <div class="registration__footer">
+        or <a href="{% url 'login' %}">login</a>
+      </div>
+    </div>
+
+    <div class="registration__second-half">
+      <p>KoBoToolbox is an integrated set of tools for building forms and collecting interview responses. It is built by the Harvard Humanitarian Initiative for easy and reliable use in difficult field settings, such as humanitarian emergencies or post-conflict environments.</p> 
+
+      <p>This installation of KoBoToolbox may only be used for small survey deployments, which means less than 1,500 submissions per user per month. If you require more, please <a href="http://support.kobotoolbox.org/">contact us</a>.</p>
+
+      <p>If you are a organization providing humanitarian assistance, please <a href="http://kobo.humanitarianresponse.org/">use OCHA's KoBoToolbox installation instead</a>, which provides an unlimited number of submissions. </p>
+
+      <p>You can also download and install KoBoToolbox on <a href="http://support.kobotoolbox.org/customer/portal/articles/1691108-install-kobotoolbox-on-your-own-server">your own server</a> or <a href="http://support.kobotoolbox.org/customer/portal/articles/1691105-using-kobotoolbox-offline">on your own computer</a>.</p>
+
+      <p>Terms of Service</p>
+    </div>
+    <div style="clear:both;"></div>
+  </form>
+
+  <div class="registration__credit"><a href="https://flic.kr/p/9v4mC5" title="Muhkjar refugee camp" target="_blank">Photo</a> by UNAMID / <a href="https://creativecommons.org/licenses/by-nc-nd/2.0/" target="_blank">by-nc-nd</a></div>
+</div>
+
+<script>
   $(function () {
-    $('form.registration > p').addClass('registration__row');
-    $('form.registration > p > label').addClass('registration__label');
-    $('form.registration > p > input').addClass('registration__input');
+    $('form.registration input#id_username').attr('placeholder', 'Username');
+    $('form.registration input#id_email').attr('placeholder', 'Email');
+    $('form.registration input#id_password1').attr('placeholder', 'Password');
+    $('form.registration input#id_password2').attr('placeholder', 'Repeat Password');
+    $('form.registration p label').addClass('hidden');
+
+    $('<div class="registration__kc-domain">kc.kobotoolbox.org/</div>').insertBefore('form.registration input#id_username');
   });
-  </script>
+</script>
+
 {% endblock %}

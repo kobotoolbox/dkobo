@@ -1,25 +1,30 @@
 {% extends "registration.html" %}
 
 {% block content %}
-  <form method="post" action="." class="registration  registration--login">
-      {% csrf_token %}
-      {{ form.as_p }}
+<div class="registration__bg">
+  <form method="post" action="." class="registration registration--login">
+    <div class="registration--logo"><img src="/static/kobo/images/kobologo.svg"/></div>    
+    {% csrf_token %}
+    {{ form.as_p }}
+    <a href="{% url 'auth_password_reset' %}" class="registration__forgot">Forgot?</a>
 
-      <input type="submit" value="Log in" class="registration__action  btn" />
-      <input type="hidden" name="next" value="{{ next }}" />
+    <input type="submit" value="Login" class="registration__action" />
+    <input type="hidden" name="next" value="{{ next }}" />
 
-      <div class="registration__footer">
-        <a href="{% url 'auth_password_reset' %}" class="registration__footer-link">Reset password</a>
-        <a href="{% url 'registration_register' %}" class="registration__footer-link  registration__footer-link--last">Register</a>
-      </div>
+    <div class="registration__footer">
+      or <a href="{% url 'registration_register' %}">create an account</a>
+    </div>
   </form>
-  <script>
-  // dailyWTF
 
+  <div class="registration__credit"><a href="https://flic.kr/p/9v4mC5" title="Muhkjar refugee camp" target="_blank">Photo</a> by UNAMID / <a href="https://creativecommons.org/licenses/by-nc-nd/2.0/" target="_blank">by-nc-nd</a></div>
+</div>
+
+<script>
   $(function () {
-    $('form.registration > p').addClass('registration__row');
-    $('form.registration > p > label').addClass('registration__label');
-    $('form.registration > p > input').addClass('registration__input');
+    $('form.registration input#id_username').attr('placeholder', 'Username');
+    $('form.registration input#id_password').attr('placeholder', 'Password');
+    $('form.registration > p > label').addClass('hidden');
   });
-  </script>
+</script>
+
 {% endblock %}
