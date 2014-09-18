@@ -112,7 +112,7 @@
 @media screen and (min-width: 780px) {
     .registration__bg {
         form.registration {
-            margin-top:150px;
+            margin-top:30px;
             padding: 50px;
             padding-top:40px;
         }
@@ -127,10 +127,12 @@
         .registration__second-half {
             width: 55%;
             float: left;
-            p {
+            > * {
                 padding-left: 50px;            
+            }
+            p {
                 font-size: 13px;
-                text-align: justify;
+                text-align: justify;                
             }
         }
         .registration--logo img {
