@@ -54,6 +54,7 @@ define 'cs!xlform/view.surveyApp', [
     features: {}
     events:
       "click .js-delete-row": "clickRemoveRow"
+      "click .js-delete-group": "clickDeleteGroup"
       "click #xlf-preview": "previewButtonClick"
       "click #csv-preview": "previewCsv"
       "click #xlf-download": "downloadButtonClick"
@@ -64,9 +65,8 @@ define 'cs!xlform/view.surveyApp', [
       "click .js-select-row": "selectRow"
       "click .js-select-row--force": "forceSelectRow"
       "click .js-group-rows": "groupSelectedRows"
-      "click .js-toggle-group-settings": "toggleGroupSettings"
+      "click .js-toggle-card-settings": "toggleCardSettings"
       "click .js-toggle-group-expansion": "toggleGroupExpansion"
-      "click .js-toggle-row-settings": "toggleRowSettings"
       "click .js-toggle-row-multioptions": "toggleRowMultioptions"
       "click .js-expand-row-selector": "expandRowSelector"
       "click .js-expand-multioptions--all": "expandMultioptions"
@@ -149,9 +149,6 @@ define 'cs!xlform/view.surveyApp', [
 
       $(window).on "keydown", (evt)=>
         @onEscapeKeydown(evt)  if evt.keyCode is 27
-
-    registerView: (cid, view)->
-      @__rowViews.set(cid, view)
 
     getView: (cid)->
       @__rowViews.get(cid)
@@ -247,23 +244,23 @@ define 'cs!xlform/view.surveyApp', [
         $('body').on 'click', close_settings
 
 
-    toggleGroupSettings: (evt)->
+    _getViewForTarget: (evt)->
       $et = $(evt.currentTarget)
-      $group = $et.closest('.group').toggleClass('group--expanded-settings')
-    toggleGroupExpansion: (evt)->
-      $et = $(evt.currentTarget)
-      $group = $et.closest('.group').toggleClass('group--shrunk')
+      modelId = $et.closest('.survey__row').data('row-id')
+      view = @__rowViews.get(modelId)
+      throw new Error("view is not found for target element")  unless view
+      view
 
-    toggleRowSettings: (evt)->
-      $et = $(evt.currentTarget)
-      $row = $et.closest('.card')
-      $row.removeClass('card--expandedchoices')
-      $row.toggleClass('card--expandedsettings')
+    toggleCardSettings: (evt)->
+      @_getViewForTarget(evt).toggleSettings()
+    
+    toggleGroupExpansion: (evt)->
+      view = @_getViewForTarget(evt)
+      view.$el.toggleClass('group--shrunk')
+
     toggleRowMultioptions: (evt)->
-      $et = $(evt.currentTarget)
-      $row = $et.closest('.card')
-      $row.removeClass('card--expandedsettings')
-      $row.toggleClass('card--expandedchoices')
+      view = @_getViewForTarget(evt)
+      view.toggleMultioptions()
       @set_multioptions_label()
 
     expandRowSelector: (evt)->
@@ -379,7 +376,7 @@ define 'cs!xlform/view.surveyApp', [
         isActivateEvt = evt.type is 'sortactivate'
         ui.item.toggleClass 'sortable-active', isActivateEvt
         ui.item.find('.survey__row__item').removeClass 'card--expandedchoices'
-        ui.item.find('.survey__row__item').removeClass 'card--expandedsettings'
+        ui.item.find('.survey__row__item').removeClass 'card--expanded-settings'
         ui.item.find('.survey__row__item').removeClass 'group--expanded-settings'
 
         ui.helper.height '73'
@@ -495,16 +492,14 @@ define 'cs!xlform/view.surveyApp', [
 
     _reset: ->
       _notifyIfRowsOutOfOrder(@)
-      fe = @formEditorEl
-      isEmpty = true
-      fn = (row)=>
-        if !@features.skipLogic
-          # TODO: avoid changing model from the view
-          row.unset 'relevant'
-        isEmpty = false
-        @ensureElInView(row, @, @formEditorEl).render()
 
-      @survey.forEachRow(fn, includeErrors: true, includeGroups: true, flat: true)
+      isEmpty = true
+      @survey.forEachRow(((row)=>
+          if !@features.skipLogic
+            row.unset 'relevant'
+          isEmpty = false
+          @ensureElInView(row, @, @formEditorEl).render()
+        ), includeErrors: true, includeGroups: true, flat: true)
 
       @set_multioptions_label()
 
@@ -519,6 +514,9 @@ define 'cs!xlform/view.surveyApp', [
         @activateSortable()
 
       ``
+
+    clickDeleteGroup: (evt)->
+      @_getViewForTarget(evt).deleteGroup(evt)
 
     clickRemoveRow: (evt)->
       evt.preventDefault()
