@@ -432,8 +432,10 @@ define 'cs!xlform/view.surveyApp', [
       $ect = $(evt.currentTarget)
       if evt.type is 'mouseenter' && $ect.siblings('.survey__row').length is 0
         $ect.addClass('js-cancel-group-sort')
+        evt.stopPropagation()
       else
         $ect.removeClass('js-cancel-group-sort')
+        evt.stopPropagation()
 
     validateSurvey: ()->
       true
@@ -537,12 +539,15 @@ define 'cs!xlform/view.surveyApp', [
         if !matchingRow
           throw new Error("Matching row was not found.")
 
+        parent = matchingRow._parent._parent
         matchingRow.detach()
         # this slideUp is for add/remove row animation
         rowEl.addClass('survey__row--deleted')
         rowEl.slideUp 175, "swing", ()=>
           rowEl.remove()
           @survey.rows.remove matchingRow
+          if parent != @ && parent.rows.length == 0
+            parent_view = @__rowViews.get(parent.cid)._deleteGroup()
         @set_multioptions_label()
 
     groupSelectedRows: ->
