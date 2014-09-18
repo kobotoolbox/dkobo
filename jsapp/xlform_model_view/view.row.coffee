@@ -62,14 +62,11 @@ define 'cs!xlform/view.row', [
     _renderRow: ->
       @$el.html $viewTemplates.$$render('row.xlfRowView')
 
-      @$srItem = @$('.survey__row__item').eq(0)
       @$label = @$('.card__header-title')
       @$card = @$('.card')
       @$header = @$('.card__header')
       if 'getList' of @model and (cl = @model.getList())
-        @$card.addClass('card--selectquestion')
-        if @is_expanded
-          @$card.addClass('card--expandedchoices')
+        @$card.addClass('card--selectquestion card--expandedchoices')
         @listView = new $viewChoices.ListView(model: cl, rowView: @).render()
 
       for [key, val] in @model.attributesArray() when key is 'label' or key is 'type'
@@ -87,11 +84,11 @@ define 'cs!xlform/view.row', [
 
       if show and !@_settingsExpanded
         @_expandedRender()
-        @$srItem.addClass('card--expanded-settings')
-        @$el.removeClass('card--expanded-choices')
+        @$card.addClass('card--expanded-settings')
+        @$card.removeClass('card--expandedchoices')
         @_settingsExpanded = true
       else if !show and @_settingsExpanded
-        @$srItem.removeClass('card--expanded-settings')
+        @$card.removeClass('card--expanded-settings')
         @_cleanupExpandedRender()
         @_settingsExpanded = false
       ``
@@ -124,11 +121,11 @@ define 'cs!xlform/view.row', [
     render: ->
       if !@already_rendered
         @$el.html $viewTemplates.row.groupView(@model)
-        @$srItem = @$('.survey__row__item').eq(0)
         @$label = @$('.group__label').eq(0)
         @$rows = @$('.group__rows').eq(0)
+        @$card = @$('.card')
+        @$header = @$('.card__header,.group__header').eq(0)
 
-  
       @model.rows.each (row)=>
         @getApp().ensureElInView(row, @, @$rows).render()
 
@@ -162,6 +159,7 @@ define 'cs!xlform/view.row', [
         @is_expanded = false
       else
         @$card.addClass('card--expandedchoices')
+        @$card.removeClass('card--expanded-settings')
         @is_expanded = true
       ``
 
