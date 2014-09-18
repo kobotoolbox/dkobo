@@ -181,10 +181,10 @@ define 'cs!xlform/view.surveyApp', [
     selectRow: (evt)->
       @is_selecting = true
       $et = $(evt.target)
-      if $et.hasClass('js-blur-on-select-row') || $et.hasClass('editable-wrapper') || $et.hasClass('js-cancel-select-row')
+      if $et.hasClass('js-blur-on-select-row') || $et.hasClass('editable-wrapper')
         return
       $ect = $(evt.currentTarget)
-      if $et.closest('.card__settings, .card__buttons, .group__header__buttons').length > 0
+      if $et.closest('.card__settings, .card__buttons, .group__header__buttons, .js-cancel-select-row').length > 0
         return
       # a way to ensure the event is not run twice when in nested .js-select-row elements
       _isIntendedTarget = $ect.closest('.survey__row').get(0) is $et.closest('.survey__row').get(0)
