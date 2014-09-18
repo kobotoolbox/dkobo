@@ -55,6 +55,7 @@ define 'cs!xlform/view.surveyApp', [
     events:
       "click .js-delete-row": "clickRemoveRow"
       "click .js-delete-group": "clickDeleteGroup"
+      "click .js-add-to-question-library": "clickAddRowToQuestionLibrary"
       "click #xlf-preview": "previewButtonClick"
       "click #csv-preview": "previewCsv"
       "click #xlf-download": "downloadButtonClick"
@@ -517,6 +518,9 @@ define 'cs!xlform/view.surveyApp', [
 
     clickDeleteGroup: (evt)->
       @_getViewForTarget(evt).deleteGroup(evt)
+
+    clickAddRowToQuestionLibrary: (evt)->
+      @_getViewForTarget(evt).add_row_to_question_library(evt)
 
     clickRemoveRow: (evt)->
       evt.preventDefault()

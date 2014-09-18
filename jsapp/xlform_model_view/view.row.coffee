@@ -21,18 +21,13 @@ define 'cs!xlform/view.row', [
     tagName: "li"
     className: "survey__row  xlf-row-view xlf-row-view--depr"
     events:
-     # "click .js-expand-row-selector": "expandRowSelector"
      "drop": "drop"
-     #"click .js-add-to-question-library": "add_row_to_question_library"
 
     initialize: (opts)->
       @options = opts
       typeDetail = @model.get("type")
       @$el.attr("data-row-id", @model.cid)
       @ngScope = opts.ngScope
-      # @model.on "change", @render, @
-      # typeDetail.on "change:value", _.bind(@render, @)
-      # typeDetail.on "change:listName", _.bind(@render, @)
       @surveyView = @options.surveyView
       @model.on "detail-change", (key, value, ctxt)=>
         customEventName = "row-detail-change-#{key}"
@@ -49,18 +44,15 @@ define 'cs!xlform/view.row', [
 
     render: ->
       if @already_rendered
-        @is_expanded = @$card.hasClass('card--expandedchoices')
-        @_softRender()
         return
+
+      @already_rendered = true
 
       if @model instanceof $row.RowError
         @_renderError()
       else
         @_renderRow()
-      @$el.data("row-index", @model._parent.indexOf @model)
-      # @$el.data("row-parent", @model.parentRow().cid)
-      @already_rendered = true
-
+      @is_expanded = @$card.hasClass('card--expandedchoices')
       @
     _renderError: ->
       @$el.addClass("xlf-row-view-error")
@@ -69,37 +61,47 @@ define 'cs!xlform/view.row', [
       @
     _renderRow: ->
       @$el.html $viewTemplates.$$render('row.xlfRowView')
-      @$('.js-add-to-question-library').click @add_row_to_question_library
+
+      @$srItem = @$('.survey__row__item').eq(0)
       @$label = @$('.card__header-title')
-      @$card = @$el.find('.card')
+      @$card = @$('.card')
+      @$header = @$('.card__header')
       if 'getList' of @model and (cl = @model.getList())
         @$card.addClass('card--selectquestion')
-        if !@already_rendered || @is_expanded
+        if @is_expanded
           @$card.addClass('card--expandedchoices')
         @listView = new $viewChoices.ListView(model: cl, rowView: @).render()
 
-      @cardSettingsWrap = @$('.card__settings').eq(0)
-      @defaultRowDetailParent = @cardSettingsWrap.find('.card__settings__fields--question-options').eq(0)
-      @rowDetailViews = []
-      for [key, val] in @model.attributesArray()
+      for [key, val] in @model.attributesArray() when key is 'label' or key is 'type'
         view = new $viewRowDetail.DetailView(model: val, rowView: @)
         if key == 'label' and @model.get('type').get('value') == 'calculate'
           view.model = @model.get('calculation')
           @model.finalize()
           val.set('value', '')
-        @rowDetailViews.push view
         view.render().insertInDOM(@)
-
       @
 
-    _softRender: ->
-      for view in @rowDetailViews
-        view.render()
-      return
+    toggleSettings: (show)->
+      if show is undefined
+        show = !@_settingsExpanded
+
+      if show and !@_settingsExpanded
+        @_expandedRender()
+        @$srItem.addClass('card--expanded-settings')
+        @$el.removeClass('card--expanded-choices')
+        @_settingsExpanded = true
+      else if !show and @_settingsExpanded
+        @$srItem.removeClass('card--expanded-settings')
+        @_cleanupExpandedRender()
+        @_settingsExpanded = false
+      ``
+
+    _cleanupExpandedRender: ->
+      @$('.card__settings').remove()
 
     add_row_to_question_library: (evt) =>
       evt.stopPropagation()
-      @ngScope.add_row_to_question_library @model
+      @ngScope?.add_row_to_question_library @model
 
   class GroupView extends BaseRowView
     className: "survey__row survey__row--group  xlf-row-view xlf-row-view--depr"
@@ -108,41 +110,60 @@ define 'cs!xlform/view.row', [
       @_shrunk = !!opts.shrunk
       @$el.attr("data-row-id", @model.cid)
       @surveyView = @options.surveyView
+
     deleteGroup: (evt)=>
       skipConfirm = $(evt.currentTarget).hasClass('js-force-delete-group')
       if skipConfirm or confirm('Are you sure you want to split apart this group?')
         @_deleteGroup()
       evt.preventDefault()
+
     _deleteGroup: () =>
       @model.splitApart()
       @$el.remove()
 
     render: ->
-      if @already_rendered
-        @_softRender()
-      else
+      if !@already_rendered
         @$el.html $viewTemplates.row.groupView(@model)
-        @$('.js-delete-group').click @deleteGroup
+        @$srItem = @$('.survey__row__item').eq(0)
         @$label = @$('.group__label').eq(0)
         @$rows = @$('.group__rows').eq(0)
 
-        @cardSettingsWrap = @$('.card__settings').eq(0)
-        @defaultRowDetailParent = @cardSettingsWrap.find('.card__settings__fields--active').eq(0)
-        @model.rows.each (row)=>
-          @getApp().ensureElInView(row, @, @$rows).render()
-        @$el.data("row-index", @model.getSurvey().rows.indexOf @model)
-
-        for [key, val] in @model.attributesArray()
-          if key in ["name", "label", "_isRepeat", "appearance", "relevant"]
-            new $viewRowDetail.DetailView(model: val, rowView: @).render().insertInDOM(@)
-        @already_rendered = true
-      @
-    _softRender: ()->
+  
       @model.rows.each (row)=>
         @getApp().ensureElInView(row, @, @$rows).render()
-      
+
+      if !@already_rendered
+        # only render the row details which are necessary for the initial view (ie 'label')
+        new $viewRowDetail.DetailView(model: @model.get('label'), rowView: @).render().insertInDOM(@)
+
+      @already_rendered = true
+      @
+
+    _expandedRender: ->
+      @$header.after($viewTemplates.row.groupSettingsView())
+      @cardSettingsWrap = @$('.card__settings').eq(0)
+      @defaultRowDetailParent = @cardSettingsWrap.find('.card__settings__fields--active').eq(0)
+      for [key, val] in @model.attributesArray() when key in ["name", "_isRepeat", "appearance", "relevant"]
+        new $viewRowDetail.DetailView(model: val, rowView: @).render().insertInDOM(@)
 
   class RowView extends BaseRowView
+    _expandedRender: ->
+      @$header.after($viewTemplates.row.rowSettingsView())
+      @cardSettingsWrap = @$('.card__settings').eq(0)
+      @defaultRowDetailParent = @cardSettingsWrap.find('.card__settings__fields--question-options').eq(0)
+
+      for [key, val] in @model.attributesArray() when key isnt "label" and key isnt "type"
+        new $viewRowDetail.DetailView(model: val, rowView: @).render().insertInDOM(@)
+      @
+
+    toggleMultioptions: ->
+      if @is_expanded
+        @$card.removeClass('card--expandedchoices')
+        @is_expanded = false
+      else
+        @$card.addClass('card--expandedchoices')
+        @is_expanded = true
+      ``
 
   RowView: RowView
   GroupView: GroupView
