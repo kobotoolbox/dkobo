@@ -7,18 +7,13 @@ define 'cs!xlform/view.row.templates', [], ()->
       </div>
   """
 
-  # deleteRowButton = """
-  #     <button type="button" class="close delete-row close-button js-delete-row" aria-hidden="true">&times;</button>
-  # """
-
-  settingsView = (forWhat, blockName)->
-    if forWhat == 'group'
-      return """
+  groupSettingsView = ->
+    """
       <section class="card__settings  row-extras row-extras--depr">
-        <i class="card__settings-close fa fa-times js-toggle-group-settings"></i>
+        <i class="card__settings-close fa fa-times js-toggle-card-settings"></i>
         <ul class="card__settings__tabs">
           <li class="heading"><i class="fa fa-cog"></i> Settings</li>
-          <li data-card-settings-tab-id="all" class="card__settings__tabs__tab--active">All #{forWhat} settings</li>
+          <li data-card-settings-tab-id="all" class="card__settings__tabs__tab--active">All group settings</li>
           <li data-card-settings-tab-id="skip-logic" class="">Skip Logic</li>
         </ul>
         <div class="card__settings__content">
@@ -27,11 +22,11 @@ define 'cs!xlform/view.row.templates', [], ()->
           <div class="card__settings__fields card__settings__fields--skip-logic"></div>
         </div>
       </section>
-      """
-    else
-      return """
+    """
+  rowSettingsView = ->
+    """
       <section class="card__settings  row-extras row-extras--depr">
-        <i class="card__settings-close fa fa-times js-toggle-row-settings"></i>
+        <i class="card__settings-close fa fa-times js-toggle-card-settings"></i>
         <ul class="card__settings__tabs">
           <li class="heading"><i class="fa fa-cog"></i> Settings</li>
           <li data-card-settings-tab-id="question-options" class="card__settings__tabs__tab--active">Question Options</li>
@@ -53,7 +48,7 @@ define 'cs!xlform/view.row.templates', [], ()->
           </ul>
         </div>
       </section>
-      """
+    """
 
   xlfRowView = () ->
       """
@@ -66,29 +61,27 @@ define 'cs!xlform/view.row.templates', [], ()->
             <span class="card__header-title js-cancel-select-row"></span>
           </div>
           <div class="card__buttons">
-            <span class="card__buttons__button card__buttons__button--settings gray js-advanced-toggle js-toggle-row-settings" data-button-color="gray" data-button-text="Settings"><i class="fa fa-cog"></i></span>
+            <span class="card__buttons__button card__buttons__button--settings gray js-toggle-card-settings" data-button-color="gray" data-button-text="Settings"><i class="fa fa-cog"></i></span>
             <span class="card__buttons__button card__buttons__button--delete red js-delete-row" data-button-color="red" data-button-text="Delete Question"><i class="fa fa-trash-o"></i></span>
             <span class="card__buttons__button card__buttons__button--copy blue hidden" data-button-color="blue" data-button-text="Duplicate Question"><i class="fa fa-copy"></i></span>
             <span class="card__buttons__button gray-green js-add-to-question-library" data-button-color="green" data-button-text="Add Question to Library"><i class="fa fa-folder-o"><i class="fa fa-plus"></i></i></span>
           </div>
         </div>
-        #{settingsView('question', 'card__settings')}
       </div>
       #{expandingSpacerHtml}
       """
 
   groupView = (g)->
     """
-    <div class="survey__row__item survey__row__item--group group js-select-row">
+    <div class="survey__row__item survey__row__item--group group card js-select-row">
       <header class="group__header">
         <i class="group__caret js-toggle-group-expansion fa fa-fw"></i>
         <span class="group__label js-cancel-select-row">#{g.getValue('label')}</span>
           <div class="group__header__buttons">
-            <span class="group__header__buttons__button group__header__buttons__button--settings  gray js-toggle-group-settings"><i class="fa fa-cog"></i></span>
+            <span class="group__header__buttons__button group__header__buttons__button--settings  gray js-toggle-card-settings"><i class="fa fa-cog"></i></span>
             <span class="group__header__buttons__button group__header__buttons__button--delete  red js-delete-group"><i class="fa fa-trash-o"></i></span>
           </div>
       </header>
-      #{settingsView('group', 'card__settings')}
       <ul class="group__rows">
       </ul>
     </div>
@@ -106,7 +99,7 @@ define 'cs!xlform/view.row.templates', [], ()->
 
   expandChoiceList = ()->
     """
-    <span class="card__buttons__multioptions js-toggle-row-multioptions"><i class="fa fa-fw caret"></i></span>
+    <span class="card__buttons__multioptions js-toggle-row-multioptions js-cancel-select-row"><i class="fa fa-fw caret"></i></span>
     """
 
   rowErrorView = (atts)->
@@ -123,3 +116,5 @@ define 'cs!xlform/view.row.templates', [], ()->
   selectQuestionExpansion: selectQuestionExpansion
   groupView: groupView
   rowErrorView: rowErrorView
+  groupSettingsView: groupSettingsView
+  rowSettingsView: rowSettingsView

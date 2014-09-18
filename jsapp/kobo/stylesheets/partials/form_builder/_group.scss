@@ -88,11 +88,14 @@
 // --------------------------------------------------------------------------
 
 .group {
+    // .group is conflicting with .card in this one rule
+    line-height: 1.4;
+
     // .group__settings displayed only in .group--expanded-settings
     > .card__settings {
         display: none;
     }
-    &.group--expanded-settings {
+    &.card--expanded-settings {
         padding:4px 0px;
         padding-bottom: 0px;
         > .card__settings {
