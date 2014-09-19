@@ -82,6 +82,7 @@ COMPRESS_JS_FILTERS = (
 COMPRESS_YUGLIFY_BINARY = 'yuglify'
 COMPRESS_YUGLIFY_JS_ARGUMENTS = '--terminal'
 
+
 GZIP_CONTENT_TYPES = (
     'text/css',
     'application/javascript',
@@ -105,6 +106,11 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework.authtoken',
     'django_extensions',
+)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'dkobo.main.context_processors.welcome_message',
 )
 
 KOBOCAT_SERVER = os.environ.get('KOBOCAT_SERVER', False)
