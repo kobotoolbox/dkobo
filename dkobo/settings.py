@@ -22,6 +22,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 # DEBUG is true unless an environment variable is set to something other than 'True'
 DEBUG = (os.environ.get('DJANGO_DEBUG', 'True') == 'True')
 LIVE_RELOAD = (os.environ.get('DJANGO_LIVE_RELOAD', str(DEBUG)) == 'True')
+TRACKJS_TOKEN = os.environ.get('TRACKJS_TOKEN')
 
 if not SECRET_KEY and not DEBUG:
     raise ValueError("DJANGO_SECRET_KEY environment variable must be set in production")
