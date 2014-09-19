@@ -3,6 +3,13 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
   viewUtils.Validator = Validator
 
   viewUtils.makeEditable = (that, model, selector, {property, transformFunction, options, edit_callback}) ->
+    if !(selector instanceof jQuery)
+      selector =that.$el.find(selector)
+
+    if selector.data('madeEditable')
+      console?.error "makeEditable called 2x on the same element: ", selector
+    selector.data('madeEditable', true)
+
     if !transformFunction?
       transformFunction = (value) -> value
     if !property?
@@ -19,8 +26,6 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
           newValue: ent
         , that
 
-    if !(selector instanceof jQuery)
-      selector =that.$el.find(selector)
 
     selector.on 'shown', (e, obj) -> obj.input.$input.on 'paste', (e) -> e.stopPropagation()
 
