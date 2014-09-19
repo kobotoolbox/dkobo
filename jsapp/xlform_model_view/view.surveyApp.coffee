@@ -378,10 +378,6 @@ define 'cs!xlform/view.surveyApp', [
       sortable_activate_deactivate = (evt, ui)->
         isActivateEvt = evt.type is 'sortactivate'
         ui.item.toggleClass 'sortable-active', isActivateEvt
-        ui.item.find('.survey__row__item').removeClass 'card--expandedchoices'
-        ui.item.find('.survey__row__item').removeClass 'card--expandedsettings'
-        ui.item.find('.survey__row__item').removeClass 'group--expanded-settings'
-
         $el.toggleClass 'insort', isActivateEvt
 
       sortable_stop = (evt, ui)=>
