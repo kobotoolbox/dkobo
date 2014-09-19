@@ -83,6 +83,7 @@ COMPRESS_JS_FILTERS = (
 COMPRESS_YUGLIFY_BINARY = 'yuglify'
 COMPRESS_YUGLIFY_JS_ARGUMENTS = '--terminal'
 
+
 GZIP_CONTENT_TYPES = (
     'text/css',
     'application/javascript',
@@ -99,12 +100,18 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'dkobo.koboform',
+    'dkobo.main',
     'compressor',
     'gunicorn',
     'south',
     'rest_framework',
     'rest_framework.authtoken',
     'django_extensions',
+)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'dkobo.main.context_processors.welcome_message',
 )
 
 KOBOCAT_SERVER = os.environ.get('KOBOCAT_SERVER', False)
@@ -121,6 +128,7 @@ KOBO_SURVEY_PREVIEW_EXPIRATION = os.environ.get('KOBO_SURVEY_PREVIEW_EXPIRATION'
 KOBOFORM_PREVIEW_SERVER = os.environ.get('KOBOFORM_PREVIEW_SERVER', 'http://kf.kobotoolbox.org')
 ENKETO_SERVER = os.environ.get('ENKETO_SERVER', 'https://enketo.org')
 ENKETO_PREVIEW_URI = os.environ.get('ENKETO_PREVIEW_URI', '/webform/preview')
+MARKITUP_FILTER = ('markdown.markdown', {'safe_mode': False})
 
 LOGIN_REDIRECT_URL = '/'
 
