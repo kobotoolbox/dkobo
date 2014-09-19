@@ -1,4 +1,4 @@
-from dkobo.main.models import SitewideMessages
+from dkobo.main.models import SitewideMessage
 from django.contrib.sites.models import Site
 from django.conf import settings
 from dkobo.koboform import kobocat_integration
@@ -7,9 +7,9 @@ def welcome_message(request):
     if request.path == '/accounts/register/':
         ctx = {}
         try:
-            w_message = SitewideMessages.objects.get(slug='welcome_message')
+            w_message = SitewideMessage.objects.get(slug='welcome_message')
             ctx['welcome_message'] = w_message.body
-        except SitewideMessages.DoesNotExist, e:
+        except SitewideMessage.DoesNotExist, e:
             pass
 
         if settings.KOBOCAT_SERVER:

@@ -1,4 +1,4 @@
 from django.contrib import admin
-from dkobo.main.models import SitewideMessages
+from dkobo.main.models import SitewideMessage
 
-admin.site.register(SitewideMessages)
+admin.site.register(SitewideMessage)
