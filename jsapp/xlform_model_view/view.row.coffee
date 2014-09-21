@@ -67,6 +67,8 @@ define 'cs!xlform/view.row', [
       @$header = @$('.card__header')
       if 'getList' of @model and (cl = @model.getList())
         @$card.addClass('card--selectquestion card--expandedchoices')
+        @is_expanded = true
+
         @listView = new $viewChoices.ListView(model: cl, rowView: @).render()
 
       for [key, val] in @model.attributesArray() when key is 'label' or key is 'type'
@@ -85,7 +87,7 @@ define 'cs!xlform/view.row', [
       if show and !@_settingsExpanded
         @_expandedRender()
         @$card.addClass('card--expanded-settings')
-        @$card.removeClass('card--expandedchoices')
+        @hideMultioptions?()
         @_settingsExpanded = true
       else if !show and @_settingsExpanded
         @$card.removeClass('card--expanded-settings')
@@ -153,13 +155,19 @@ define 'cs!xlform/view.row', [
         new $viewRowDetail.DetailView(model: val, rowView: @).render().insertInDOM(@)
       @
 
+    hideMultioptions: ->
+      @$card.removeClass('card--expandedchoices')
+      @is_expanded = false
+    showMultioptions: ->
+      @$card.addClass('card--expandedchoices')
+      @$card.removeClass('card--expanded-settings')
+      @toggleSettings(false)
+
     toggleMultioptions: ->
       if @is_expanded
-        @$card.removeClass('card--expandedchoices')
-        @is_expanded = false
+        @hideMultioptions()
       else
-        @$card.addClass('card--expandedchoices')
-        @$card.removeClass('card--expanded-settings')
+        @showMultioptions()
         @is_expanded = true
       ``
 
