@@ -1,7 +1,9 @@
-from django.db import models
-from django.contrib.auth.models import User
 import md5
 import json
+
+from django.db import models
+from django.contrib.auth.models import User
+from jsonfield import JSONField
 
 class SurveyDraft(models.Model):
     '''
@@ -14,7 +16,7 @@ class SurveyDraft(models.Model):
     description = models.CharField(max_length=255, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
-    summary = models.TextField()
+    summary = JSONField()
     asset_type = models.CharField(max_length=32, null=True)
 
     @property
@@ -56,11 +58,11 @@ class SurveyDraft(models.Model):
 
     def summarize_survey(self):
         try:
-            # json_summary = self._pyxform_survey.to_json()
-            json_summary = "{}" # todo: populate this field with an xlform summary
+            json_summary = SurveyDraft._process_xlform(self.body, action='summarize', \
+                                                       type=self.asset_type)
         except Exception, e:
             json_summary = {u'summary_error': str(e)}
-        return json.dumps(json_summary)
+        return json_summary
 
     def to_xml(self):
         return self._pyxform_survey.to_xml()
@@ -72,6 +74,11 @@ class SurveyDraft(models.Model):
     def save(self, *args, **kwargs):
         self.summary = self.summarize_survey()
         super(SurveyDraft, self).save(*args, **kwargs)
+
+    @classmethod
+    def _process_xlform(kls, xlf, **opts):
+        import xlform
+        return xlform.process_xlform(xlf, opts)
 
 class SurveyPreview(models.Model):
     unique_string = models.CharField(max_length=64, null=False, unique=True)

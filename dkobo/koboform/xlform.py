@@ -1,4 +1,5 @@
 import re
+import json
 import subprocess
 
 select_qtypes = ["select_one (\w+)"]
@@ -41,7 +42,15 @@ class Xlform(object):
 
 def shrink_csv(pp):
     stype = 'survey'
-    xlf_proccess = subprocess.Popen(["node", "jsapp/commander/summarize_xlform.js", "--type=%s" % stype], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    xlf_proccess = subprocess.Popen(["node", "jsapp/utils/process_xlform.js", "--type=%s" % stype], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
     xlf_proccess.stdin.write(pp)
     result = xlf_proccess.communicate()[0]
     return result
+
+def process_xlform(pp, opts={}):
+    opts['type'] = opts.get('type', 'survey')
+    jsargs = ["node", "jsapp/utils/process_xlform.js"]
+    for key, val in opts.items(): jsargs.append("--%s=%s" % (key, val))
+    xlf_proccess = subprocess.Popen(jsargs, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    xlf_proccess.stdin.write(pp)
+    return json.loads(xlf_proccess.communicate()[0])

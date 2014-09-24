@@ -9,6 +9,9 @@ define('test/components', [], function(){
         "dirPaths": {
             "xlform": "xlform_model_view",
         },
+        "nodeStubs": {
+            "jquery": "build_stubs/jquery",
+        },
         // patterns to serve (used in karma.conf)
         "serve": [
             "test/fixtures/*.coffee",
