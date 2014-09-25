@@ -17,9 +17,17 @@ function MiscUtilsService($rootScope, $userDetails) {
         event.preventDefault();
     };
 
-    this.bootstrapFileUploader = function (which) {
-        which = which || '';
-        _fileUpload = $('.js-import-fileupload' + which).eq(0).fileupload({
+    this.bootstrapSurveyUploader = function (callback, which) {
+        this.bootstrapFileUploader('.js-import-survey' + (which || ''), callback);
+    };
+
+    this.bootstrapQuestionUploader = function (callback) {
+        this.bootstrapFileUploader('.js-import-questions', callback);
+    };
+
+    this.bootstrapFileUploader = function (selector, callback) {
+        callback = callback || function () {};
+        _fileUpload = $('.js-import-fileupload' + selector).fileupload({
             headers: {
                 "X-CSRFToken": $('meta[name="csrf-token"]').attr('content')
             },
@@ -39,6 +47,7 @@ function MiscUtilsService($rootScope, $userDetails) {
                 });
             }
         });
+        this.changeFileUploaderSuccess(callback);
     };
 
     this.changeFileUploaderSuccess = function (successFn) {

@@ -38,6 +38,8 @@ test_helper =
     @preventDefault = sinon.spy()
     @changeFileUploaderSuccess = sinon.spy()
     @bootstrapFileUploader = sinon.spy()
+    @bootstrapSurveyUploader = sinon.spy()
+    @bootstrapQuestionUploader = sinon.spy()
     return
   buildDirective: ($compile, $rootScope, element) ->
     element = $compile(element)($rootScope)
@@ -61,6 +63,7 @@ test_helper =
         @$get = ->
           bootstrapFileUploader: sinon.stub()
           changeFileUploaderSuccess: sinon.stub()
+          bootstrapSurveyUploader: sinon.spy()
 
         return
 

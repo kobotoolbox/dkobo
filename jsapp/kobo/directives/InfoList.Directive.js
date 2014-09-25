@@ -21,9 +21,7 @@ function InfoListDirective($rootScope, $restApi, $miscUtils, $location) {
             };
 
 
-            $miscUtils.bootstrapFileUploader();
-
-            $miscUtils.changeFileUploaderSuccess(function (response) {
+            $miscUtils.bootstrapSurveyUploader(function (response) {
                 $location.path('/builder/' + response.survey_draft_id);
             });
 

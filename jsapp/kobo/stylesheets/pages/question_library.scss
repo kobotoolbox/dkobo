@@ -66,7 +66,7 @@ $tagsHeight: 230px;
     overflow-y: scroll;
 }
 
-.questions__question-count, 
+.questions__question-count,
 .tags__tag-count {
     font-size: 13px;
     color: #888A8B;
@@ -76,13 +76,15 @@ $tagsHeight: 230px;
 
 .question__create {
     position: absolute;
-    width: 170px;
+    width: 600px;
     right: 0px;
     top:20px;
 }
 
 .question__create-new {
     @extend %library-button;
+    display: inline-block;
+    margin: 0 5px;
 }
 
 // large form on full questions page
@@ -423,6 +425,7 @@ section.form-builder.active__sidebar .container {
 
 .tag__create-new {
     @extend %library-button;
+    display: block;
 }
 
 .tags__tag {
@@ -446,7 +449,7 @@ section.form-builder.active__sidebar .container {
 
 .tag__question-count {
     font-size: 12px;
-    color: gray; 
+    color: gray;
 }
 
 input.tag__editbox {

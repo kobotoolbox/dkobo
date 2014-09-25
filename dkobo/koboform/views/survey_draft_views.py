@@ -12,7 +12,7 @@ from rest_framework.authtoken.models import Token
 
 from dkobo.koboform.models import SurveyDraft
 from dkobo.koboform.serializers import ListSurveyDraftSerializer, DetailSurveyDraftSerializer
-from dkobo.koboform import pyxform_utils, kobocat_integration
+from dkobo.koboform import pyxform_utils, kobocat_integration, xlform
 
 def export_form(request, id):
     survey_draft = SurveyDraft.objects.get(pk=id)
@@ -39,6 +39,14 @@ def export_form(request, id):
                                                                       file_format)
     # response['Content-Length'] = content_length
     return response
+
+# def export_all_questions(request):
+#     queryset = SurveyDraft.objects.filter(user=request.user)
+#     queryset = queryset.exclude(asset_type=None)
+#     from dkobo.koboform import pyxform_utils
+#     response = HttpResponse(pyxform_utils.convert_csv_to_xls(concentrated_csv), mimetype='application/vnd.ms-excel; charset=utf-8')
+#     response['Content-Disposition'] = 'attachment; filename=all_questions.xls'
+#     return response
 
 @login_required
 def create_survey_draft(request):
@@ -101,24 +109,24 @@ def import_survey_draft(request):
     response_code = 200
     if posted_file:
         try:
-            # create and validate the xform but ignore the resultss
+            # create and validate the xform but ignore the results
             pyxform_utils.convert_xls_to_xform(posted_file)
             output[u'xlsform_valid'] = True
 
             posted_file.seek(0)
             if posted_file.content_type in XLS_CONTENT_TYPES:
-                csv = pyxform_utils.convert_xls_to_csv_string(posted_file)
+                _csv = pyxform_utils.convert_xls_to_csv_string(posted_file)
             elif posted_file.content_type == "text/csv":
-                csv = posted_file.read()
+                _csv = posted_file.read()
             else:
                 raise Exception("Content-type not recognized: '%s'" % posted_file.content_type)
 
             new_survey_draft = SurveyDraft.objects.create(**{
-                u'body': csv,
+                u'body': _csv,
                 u'name': posted_file.name,
                 u'user': request.user
             })
-            output[u'survey_draft_id'] = new_survey_draft.id
+            output[u'survey_draft_id'] = -1
         except Exception, err:
             response_code = 500
             output[u'error'] = str(err)
@@ -127,6 +135,41 @@ def import_survey_draft(request):
         output[u'error'] = "No file posted"
     return HttpResponse(json.dumps(output), content_type="application/json", status=response_code)
 
+
+@login_required
+def import_questions(request):
+    """
+    Imports an XLS or CSV file into the user's SurveyDraft list.
+    Returns an error in JSON if the survey was not valid.
+    """
+    output = {}
+    posted_file = request.FILES.get(u'files')
+    response_code = 200
+    if posted_file:
+        posted_file.seek(0)
+
+        if posted_file.content_type in XLS_CONTENT_TYPES:
+            imported_sheets_as_csv = pyxform_utils.convert_xls_to_csv_string(posted_file)
+        elif posted_file.content_type == "text/csv":
+            imported_sheets_as_csv = posted_file.read()
+        else:
+            raise Exception("Content-type not recognized: '%s'" % posted_file.content_type)
+
+        csv_strings = xlform.split_apart_survey(imported_sheets_as_csv)
+
+        for _csv_string in csv_strings:
+            new_survey_draft = SurveyDraft.objects.create(**{
+                u'body': _csv_string,
+                u'name': 'New Form',
+                u'user': request.user,
+                u'asset_type':'question'
+            })
+
+        output[u'survey_draft_id'] = new_survey_draft.id
+    else:
+        response_code = 204  # Error 204: No input
+        output[u'error'] = "No file posted"
+    return HttpResponse(json.dumps(output), content_type="application/json", status=response_code)
 
 @login_required
 @api_view(['GET', 'POST'])
@@ -188,3 +231,4 @@ def published_survey_draft_url(request, pk):
     username = survey_draft.user.name
 
     return HttpResponseRedirect(kobocat_integration._kobocat_url("/%s" % username))
+
