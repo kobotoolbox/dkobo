@@ -9,7 +9,7 @@ import urllib
 import csv
 import sys
 import re
-from dkobo.koboform.xlform import Xlform
+from dkobo.koboform import xlform
 
 def _dict_to_csv(imported_sheets):
     foo = StringIO.StringIO()
@@ -34,28 +34,8 @@ def _dict_to_csv(imported_sheets):
 
 def _convert_xls_file_to_individual_surveys(filename):
     imported_sheets = pyxform.xls2json_backends.xls_to_dict(filename)
-    out_array = []
-    survey = imported_sheets.get("survey", [])
-    choices = imported_sheets.get("choices", [])
-    count = settings.KOBO_SURVEY_IMPORT_COUNT
-    if count is -1:
-        survey_rows = survey
-    else:
-        survey_rows = survey[0:count]
-
-    for row in survey_rows:
-        if len(row.keys()) == 0:
-            continue
-        name = row.get("name")
-        survey_dict = {'survey': [row]}
-
-        if len(choices) > 0:
-            survey_dict['choices'] = choices
-
-        out_array.append(
-            (name, _dict_to_csv(survey_dict),)
-            )
-    return out_array
+    imported_sheets_as_csv = _dict_to_csv(imported_sheets)
+    return xlform.split_apart_survey(imported_sheets_as_csv)
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
@@ -72,6 +52,8 @@ class Command(BaseCommand):
             sys.exit(1)
         print "Count [before import]: %d" % user.survey_drafts.count()
         user.survey_drafts.filter(asset_type="question").delete()
-        for (name, csvstr) in _convert_xls_file_to_individual_surveys(filename):
-            SurveyDraft.objects.create(user=user, name=name, body=Xlform(csvstr)._shrunk, asset_type="question")
+        csv_files = _convert_xls_file_to_individual_surveys(filename)
+        print "xls has been split apart, now entering them into the db"
+        for csvstr in csv_files:
+            SurveyDraft.objects.create(user=user, name="imported_question", body=csvstr, asset_type="question")
         print "Count [after import]:  %d" % user.survey_drafts.count()

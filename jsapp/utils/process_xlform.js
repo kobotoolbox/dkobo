@@ -4,7 +4,8 @@ var require = require('requirejs'),
     program = require('commander'),
     path = require('path'),
     components,
-    xlform;
+    xlform,
+    xlform_utils;
 
 require.config({
   baseUrl: path.resolve(__dirname, '..')
@@ -24,26 +25,35 @@ require.config({
     return _p;
   })()
 });
+
 xlform = require('cs!xlform/_xlform.init');
+xlformUtils = require('cs!xlform/_utils');
 
 program
   .version('0.0.1')
   .option('-a, --action [action]', 'action to be performed (eg. summarize, shrink)')
+  .option('-p, --params [parameters in json]', 'a json string of parameters to be passed with the action')
   .option('-f, --file [path]', 'open file path')
   .option('-o, --output [path]', 'specify output file path (default streams to stdout)')
   .option('-t, --type [type]', 'specify the type of the input [survey]', 'survey')
   .parse(process.argv);
 
 
-function with_stdin(csv_repr, opts) {
-  var stype = opts.type || 'survey';
+function with_stdin(csv_repr) {
+  var params;
+
+  if (program.params) {
+    try {
+      params = JSON.parse(program.params);
+    } catch(e) {
+      params = {parseError: e.message}
+    }
+  }
 
   var _xlf = xlform.model.Survey.load(csv_repr);
 
-  if (program.action === 'shrink') {
-    process.stdout.write(_xlf.toCSV());
-  } else if (program.action === 'summarize') {
-    process.stdout.write(JSON.stringify(_xlf.summarize()));
+  if (program.action in xlformUtils) {
+    process.stdout.write(JSON.stringify(xlformUtils[program.action](_xlf, program.params)))
   } else {
     throw new Error('Action not recognized');
   }
@@ -62,9 +72,7 @@ if (program.file) {
     });
 
     process.stdin.on('end', function() {
-      with_stdin(chunks.join(''), {
-        type: program.type
-      });
+      with_stdin(chunks.join(''));
     });
   })();
 }

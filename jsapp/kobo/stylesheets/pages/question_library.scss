@@ -9,6 +9,8 @@
     border-bottom: 2px solid darken(#39BF6E, 20%);
     display: block;
     margin-bottom: 15px;
+    cursor: pointer;
+
     &:hover {
         background: lighten(#39BF6E, 10%);
     }
@@ -50,6 +52,13 @@ $tagsHeight: 230px;
     top:0px;
     width: 100%;
     // border-bottom: 2px solid #d9dde1;
+}
+.questions__header__upload {
+    @extend %library-button;
+    width: 14em;
+    position: absolute;
+    left: 50%;
+    top:20px;
 }
 
 .questions__container {

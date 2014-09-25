@@ -2,50 +2,39 @@
 # -*- coding: utf-8 -*-
 
 from django.test import TestCase
-from lxml import etree
-from StringIO import StringIO
-from django.contrib.auth.models import User
-# from django.test.client import Client
-# from pyxform import xls2json_backends
-# from dkobo.koboform.models import SurveyDraft, SurveyPreview
-# from dkobo.koboform import pyxform_utils
-# from dkobo.koboform import utils
-import json
+import re
 
 
 example_unshrunk = """"survey",,,,,
                 ,"name","type","label","hint","required"
                 ,"s1","select_one list_a","Select one",,"false"
                 "choices",,,,
-                ,"name","label",,
+                ,"list name","label",,
                 ,"list_a","blah"
                 ,"list_a","blah2"
                 ,"list_b","blah3"
                 ,"list_c","blah4"\
-"""
+                """
 
-example_shrunk = """"survey",,,,,
+example_3q = """"survey",,,,,
                 ,"name","type","label","hint","required"
-                ,"s1","select_one list_a","Select one",,"false"
-                "choices",,,,
-                ,"name","label",,
-                ,"list_a","blah"
-                ,"list_a","blah2"\
-"""
+                ,"q1","text","Question1",,"false"
+                ,"q2","text","Question2",,"false"
+                ,"q3","text","Question3",,"false"\
+                """
 
+def _stripped(scsv):
+    return '\n'.join([line.strip() for line in scsv.split('\n')])
 
-from dkobo.koboform.xlform import Xlform
+from dkobo.koboform import xlform
 
-class CreatesXlform(TestCase):
+class ShrinksXlform(TestCase):
     def test_creates_and_shrinks(self):
-        unshrunk_xlform = Xlform(example_unshrunk) 
-        self.assertEqual(unshrunk_xlform._csv, example_unshrunk)
-        self.assertEqual(len(unshrunk_xlform._rows), 9)
-        self.assertEqual(unshrunk_xlform._first_list_name, "list_a")
-        shrunk_csv = unshrunk_xlform._shrunk
-        self.assertEqual(shrunk_csv, example_shrunk)
-        # def _analyze(csv_str):
-        #     rowCount = len(csv_str.split("\n"))
-        #     obj = {'rows': rowCount}
-        #     return obj
-        # self.assertEqual(_analyze(shrunk_csv), _analyze(example_shrunk))
+        full = example_unshrunk
+        shrunk = xlform.shrink_survey(_stripped(example_unshrunk))
+        self.assertTrue(bool(re.search('list_b', full)))
+        self.assertTrue(not re.search('list_b', shrunk))
+
+    def test_split_into_individual_surveys(self):
+        split_surveys = xlform.split_apart_survey(_stripped(example_3q))
+        self.assertEqual(len(split_surveys), 3)

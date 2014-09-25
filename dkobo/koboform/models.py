@@ -55,30 +55,12 @@ class SurveyDraft(models.Model):
         body.append(','.join(form_settings_list))
         self.body = '\n'.join(body)
 
-
-    def summarize_survey(self):
-        try:
-            json_summary = SurveyDraft._process_xlform(self.body, action='summarize', \
-                                                       type=self.asset_type)
-        except Exception, e:
-            json_summary = {u'summary_error': str(e)}
-        return json_summary
-
     def to_xml(self):
         return self._pyxform_survey.to_xml()
 
     def to_xls(self):
         import pyxform_utils
         return pyxform_utils.convert_csv_to_xls(self.body)
-
-    def save(self, *args, **kwargs):
-        self.summary = self.summarize_survey()
-        super(SurveyDraft, self).save(*args, **kwargs)
-
-    @classmethod
-    def _process_xlform(kls, xlf, **opts):
-        import xlform
-        return xlform.process_xlform(xlf, opts)
 
 class SurveyPreview(models.Model):
     unique_string = models.CharField(max_length=64, null=False, unique=True)
