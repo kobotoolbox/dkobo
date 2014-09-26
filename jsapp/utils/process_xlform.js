@@ -44,7 +44,7 @@ function with_stdin(csv_repr) {
 
   if (program.params) {
     try {
-      params = JSON.parse(program.params);
+      params = JSON.parse(program.params.replace(/^'/, '').replace(/'$/, ''));
     } catch(e) {
       params = {parseError: e.message}
     }
@@ -53,7 +53,7 @@ function with_stdin(csv_repr) {
   var _xlf = xlform.model.Survey.load(csv_repr);
 
   if (program.action in xlformUtils) {
-    process.stdout.write(JSON.stringify(xlformUtils[program.action](_xlf, program.params)))
+    process.stdout.write(JSON.stringify(xlformUtils[program.action](_xlf, params)))
   } else {
     throw new Error('Action not recognized');
   }
