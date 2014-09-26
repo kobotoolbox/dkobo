@@ -201,28 +201,34 @@ define [
         expect(names).toEqual('q1 g1q1 g1q2 q8 q9 err'.split(' '))
 
 
-      # dump(@survey.toJSON(true))
-      ###
-      expect(@survey.toJSON()).toEqual({
-          'survey': [
-            {
-              'type': {'select_one': 'yesno'},
-              'name': 'yn',
-              'label': 'YesNo',
-              'required': 'false'
-            }
-          ],
-          'choices': {
-            'yesno': [
-              {
-                'label': 'Yes',
-                'name': 'yes'
-              },
-              {
-                'label': 'No',
-                'name': 'no'
-              }
-            ]
-          }
-        })
-      ###
+  describe 'survey.tests: form_id auto-naming', () ->
+    describe 'initialization', () ->
+      it 'enables auto-naming when form is new', () ->
+        survey = new $model.Survey()
+        expect(survey.settings.auto_name).toBe true
+    describe 'change:form_id', () ->
+      it 'disables auto naming when changed manually', () ->
+        settings = new $model.Settings()
+        settings.enable_auto_name()
+        settings.set 'form_id', 'test'
+
+        expect(settings.auto_name).toBe false
+      it 'ignores when changed as part of a title change', () ->
+        settings = new $model.Settings()
+        settings.enable_auto_name()
+        settings.set 'form_title', 'test'
+
+        expect(settings.auto_name).toBe true
+    describe 'change:form_title', () ->
+      it 'sets the form id when form in auto naming mode', () ->
+        settings = new $model.Settings()
+        settings.enable_auto_name()
+        settings.set 'form_title', 'test'
+
+        expect(settings.get('form_id')).toBe 'test'
+      it 'sluggifies label before setting id', () ->
+        settings = new $model.Settings()
+        settings.enable_auto_name()
+        settings.set 'form_title', 'test me'
+
+        expect(settings.get('form_id')).toBe 'test_me'

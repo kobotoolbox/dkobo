@@ -24,9 +24,14 @@ define 'cs!xlform/model.survey', [
     constructor: (options={}, addlOpts)->
       super()
       @_initialParams = options
+
       @settings = new Settings(options.settings, _parent: @)
+      if !options.settings
+        @settings.enable_auto_name()
+
       if (sname = @settings.get("name") or options.name)
         @set("name", sname)
+
       @newRowDetails = options.newRowDetails || $configs.newRowDetails
       @defaultsForType = options.defaultsForType || $configs.defaultsForType
       @surveyDetails = new $surveyDetail.SurveyDetails([], _parent: @).loadSchema(options.surveyDetailsSchema || $configs.surveyDetailSchema)
@@ -184,6 +189,21 @@ define 'cs!xlform/model.survey', [
 
       columns: columns
       rowObjects: rowObjects
+    enable_auto_name: () ->
+      @auto_name = true
+
+      @on 'change:form_id', () =>
+        if @changing_form_title
+          @changing_form_title = false
+        else
+          @auto_name = false
+
+      @on 'change:form_title', (model, value) =>
+        if @auto_name
+          @changing_form_title = true
+          @set 'form_id', $modelUtils.sluggifyLabel(value)
+
+
 
   Survey: Survey
   Settings: Settings

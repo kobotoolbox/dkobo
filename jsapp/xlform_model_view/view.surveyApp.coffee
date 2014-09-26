@@ -131,6 +131,8 @@ define 'cs!xlform/view.surveyApp', [
 
       $(document).on 'click', @deselect_rows
 
+      @survey.settings.on 'change:form_id', (model, value) =>
+        $('.form-id').text(value)
       @survey.on 'rows-add', @reset, @
       @survey.on 'rows-remove', @reset, @
       @survey.on "row-detail-change", (row, key, val, ctxt)=>
