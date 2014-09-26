@@ -126,7 +126,7 @@ def import_survey_draft(request):
                 u'name': posted_file.name,
                 u'user': request.user
             })
-            output[u'survey_draft_id'] = new_survey_draft
+            output[u'survey_draft_id'] = new_survey_draft.id
         except Exception, err:
             response_code = 500
             output[u'error'] = str(err)
