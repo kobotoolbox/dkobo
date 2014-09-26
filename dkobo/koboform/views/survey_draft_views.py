@@ -155,15 +155,16 @@ def import_questions(request):
         else:
             raise Exception("Content-type not recognized: '%s'" % posted_file.content_type)
 
-        csv_strings = xlform.split_apart_survey(imported_sheets_as_csv)
+        split_surveys = xlform.split_apart_survey(imported_sheets_as_csv)
 
-        for _csv_string in csv_strings:
-            new_survey_draft = SurveyDraft.objects.create(**{
-                u'body': _csv_string,
-                u'name': 'New Form',
-                u'user': request.user,
-                u'asset_type':'question'
-            })
+        new_survey_drafts = []
+        for _split_survey in split_surveys:
+            sd = SurveyDraft(name='New Form',
+                             body=_split_survey[0],
+                             user=request.user,
+                             asset_type='question')
+            new_survey_drafts.append(sd)
+        SurveyDraft.objects.bulk_create(new_survey_drafts)
 
         output[u'survey_draft_id'] = -1
     else:

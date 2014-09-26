@@ -31,8 +31,12 @@ class Command(BaseCommand):
         with open(filename, 'rb') as ff:
             imported_sheets_as_csv = pyxform_utils.convert_xls_to_csv_string(ff)
         csv_files = xlform.split_apart_survey(imported_sheets_as_csv)
-
         print "xls has been split apart, now entering them into the db"
+        if type(csv_files) == dict and csv_files.get('error'):
+            raise xlform.XlformError(csv_files.get('error'))
+        sdrafts = []
         for csvstr in csv_files:
-            SurveyDraft.objects.create(user=user, name="imported_question", body=csvstr, asset_type="question")
+            sdrafts.append(SurveyDraft(user=user, name="imported_question", body=csvstr[0], asset_type="question"))
+        if len(sdrafts) > 0:
+            SurveyDraft.objects.bulk_create(sdrafts)
         print "Count [after import]:  %d" % user.survey_drafts.count()
