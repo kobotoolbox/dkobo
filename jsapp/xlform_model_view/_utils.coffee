@@ -20,12 +20,22 @@ define ['cs!xlform/_model'], ($model)->
 
   utils.split_into_individual_surveys = (survey, options={})->
     surveys = []
+    limitRows = options.limitRows
+    if !limitRows
+      limitRows = -1
+    else
+      limitRows = +limitRows
+
+    rowCount = 0
     fn = (r)->
+      if limitRows isnt -1 and limitRows < rowCount++
+        throw new Error("This file surpasses the import limit of #{limitRows} rows")
       if r.constructor.kls is "Row"
         try
           newSurvey = new $model.Survey()
           newSurvey.addRow(r)
-          surveys.push newSurvey.toCSV()
+          surveys.push [newSurvey.toCSV()]
+
     survey.forEachRow fn, flat: true
     surveys
 
