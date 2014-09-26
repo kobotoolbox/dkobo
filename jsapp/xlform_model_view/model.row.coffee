@@ -1,3 +1,5 @@
+global = if window? then window else process
+
 define 'cs!xlform/model.row', [
         'underscore',
         'cs!xlform/model.base',
@@ -191,7 +193,7 @@ define 'cs!xlform/model.row', [
   class row.RowError extends row.BaseRow
     constructor: (obj, options)->
       @_error = options.error
-      unless window.xlfHideWarnings
+      unless global.xlfHideWarnings
         console?.error("Error creating row: [#{options.error}]", obj)
       super(obj, options)
     isError: -> true

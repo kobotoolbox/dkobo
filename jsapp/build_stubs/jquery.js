@@ -1,6 +1,8 @@
+var global = this;
+
 define('jquery', [], function(){
-  if(!window.jQuery) {
-    console && console.error("jQuery has not been loaded into the page. Library will not work properly.")
+  if(!global.jQuery) {
+    global.process || global.console && global.console.error("jQuery has not been loaded into the page. Library will not work properly.")
   }
-  return window.jQuery;
+  return global.jQuery;
 });

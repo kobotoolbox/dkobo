@@ -9,6 +9,8 @@
     border-bottom: 2px solid darken(#39BF6E, 20%);
     display: block;
     margin-bottom: 15px;
+    cursor: pointer;
+
     &:hover {
         background: lighten(#39BF6E, 10%);
     }
@@ -51,13 +53,20 @@ $tagsHeight: 230px;
     width: 100%;
     // border-bottom: 2px solid #d9dde1;
 }
+.questions__header__upload {
+    @extend %library-button;
+    width: 14em;
+    position: absolute;
+    left: 50%;
+    top:20px;
+}
 
 .questions__container {
     height: 100%;
     overflow-y: scroll;
 }
 
-.questions__question-count, 
+.questions__question-count,
 .tags__tag-count {
     font-size: 13px;
     color: #888A8B;
@@ -67,13 +76,25 @@ $tagsHeight: 230px;
 
 .question__create {
     position: absolute;
-    width: 170px;
+    width: 600px;
     right: 0px;
     top:20px;
 }
 
+.question__import-library {
+    @extend %library-button;
+    position: absolute;
+    top: 1px;
+    right: 177px;
+    .fileinput-button input {
+        width: 100%;
+    }
+}
 .question__create-new {
     @extend %library-button;
+    position: absolute;
+    top: 0;
+    right: 0;
 }
 
 // large form on full questions page
@@ -414,6 +435,7 @@ section.form-builder.active__sidebar .container {
 
 .tag__create-new {
     @extend %library-button;
+    display: block;
 }
 
 .tags__tag {
@@ -437,7 +459,7 @@ section.form-builder.active__sidebar .container {
 
 .tag__question-count {
     font-size: 12px;
-    color: gray; 
+    color: gray;
 }
 
 input.tag__editbox {

@@ -30,6 +30,7 @@ urlpatterns = patterns(
     url(r'^koboform/', include('dkobo.koboform.urls')),
     # we should re-think a RESTful accessor for the URLs below
     url(r'^import_survey_draft$', 'dkobo.koboform.views.survey_draft_views.import_survey_draft'),
+    url(r'^import_questions$', 'dkobo.koboform.views.survey_draft_views.import_questions'),
     url(r'^forms/(?P<id>\d+)', 'dkobo.koboform.views.export_form'),
     url(r'^assets/(\d+)', 'dkobo.koboform.views.export_form'),
 )

@@ -91,6 +91,18 @@ define 'cs!xlform/model.survey', [
           logFn tabs.join(''), r.get('label').get('value')
       @forEachRow(logr, flat: true, includeGroups: true)
       ``
+    summarize: ->
+      rowCount = 0
+      hasGps = false
+      fn = (r)->
+        if r.get('type').get('value') is 'geopoint'
+          hasGps = true
+        rowCount++
+      @forEachRow(fn, includeGroups: false)
+
+      # summaryObj
+      rowCount: rowCount
+      hasGps: hasGps
     _insertRowInPlace: (row, opts={})->
       if row._parent
         row.detach(silent: true)

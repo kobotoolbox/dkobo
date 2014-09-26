@@ -82,6 +82,12 @@
     <div class="questions__header">
       <h2 class="questions__title">Questions <span class="questions__question-count">{{info_list_items.length}} questions</span></h2>
       <div class="question__create">
+        <form action="/import_questions" class="question__import-library btn--fileupload js-import-fileupload js-import-questions">
+          <span class="fileinput-button">
+            <span>Import Library from XLS</span>
+            <input type="file" name="files">
+          </span>
+        </form>
         <a class="question__create-new" href="#/library/questions/new">+ Add New Question</a>
       </div>
 
