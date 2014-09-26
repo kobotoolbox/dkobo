@@ -81,10 +81,20 @@ $tagsHeight: 230px;
     top:20px;
 }
 
+.question__import-library {
+    @extend %library-button;
+    position: absolute;
+    top: 1px;
+    right: 177px;
+    .fileinput-button input {
+        width: 100%;
+    }
+}
 .question__create-new {
     @extend %library-button;
-    display: inline-block;
-    margin: 0 5px;
+    position: absolute;
+    top: 0;
+    right: 0;
 }
 
 // large form on full questions page
