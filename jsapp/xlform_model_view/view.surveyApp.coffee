@@ -379,6 +379,14 @@ define 'cs!xlform/view.surveyApp', [
       $el = @formEditorEl
       survey = @survey
 
+      sortable_start = (evt, ui)=>
+        ui.item.find('.survey__row__item').removeClass 'card--expandedchoices'
+        view = @__rowViews.get(ui.item.closest('.survey__row').data('row-id'))
+        view.toggleSettings false
+
+        ui.helper?.height '73'
+        return
+
       sortable_activate_deactivate = (evt, ui)->
         isActivateEvt = evt.type is 'sortactivate'
         ui.item.toggleClass 'sortable-active', isActivateEvt
@@ -398,6 +406,7 @@ define 'cs!xlform/view.surveyApp', [
           connectWith: ".group__rows"
           opacity: 0.9
           scroll: true
+          start: sortable_start
           stop: sortable_stop
           activate: sortable_activate_deactivate
           deactivate: sortable_activate_deactivate
@@ -423,6 +432,7 @@ define 'cs!xlform/view.surveyApp', [
           connectWith: ".group__rows, .survey-editor__list"
           opacity: 0.9
           scroll: true
+          start: sortable_start
           stop: sortable_stop
           activate: sortable_activate_deactivate
           deactivate: sortable_activate_deactivate
