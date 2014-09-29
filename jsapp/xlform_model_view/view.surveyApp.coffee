@@ -279,7 +279,13 @@ define 'cs!xlform/view.surveyApp', [
         if !view
           # hopefully, this error is never triggered
           throw new Error('View for row was not found: ' + rowId)
-        new $viewRowSelector.RowSelector(el: $spacer.get(0), ngScope: @ngScope, spawnedFromView: view, surveyView: @, reversible:true).expand()
+
+        buttons = $ect.parent().parent().find('.js-expand-row-selector')
+
+        if buttons.length == 2 && buttons.index($ect) == 0
+          view = null
+
+        new $viewRowSelector.RowSelector(el: $spacer.get(0), ngScope: @ngScope, spawnedFromView: view, surveyView: @, reversible:true, survey: @survey).expand()
 
     _render_html: ->
       @$el.html $viewTemplates.$$render('surveyApp', @)
@@ -386,6 +392,7 @@ define 'cs!xlform/view.surveyApp', [
 
       sortable_stop = (evt, ui)=>
         $(ui.item).trigger('survey__row-sortablestop')
+        @set_top_add_question_button()
 
       @formEditorEl.sortable({
           # PM: commented out axis, because it's better if cards move horizontally and vertically
@@ -492,6 +499,13 @@ define 'cs!xlform/view.surveyApp', [
         xlfrv = @__rowViews.get(row.cid)
       xlfrv
 
+    set_top_add_question_button: () ->
+      if @survey.rows.length == 0
+        @null_top_row.find('.survey__row__spacer').remove()
+        @null_top_row.eq(0).append(@$null_top_add_button)
+      else
+        @getViewForRow(@survey.rows.at(0)).$el.prepend(@$null_top_add_button)
+
     _reset: ->
       _notifyIfRowsOutOfOrder(@)
 
@@ -505,17 +519,19 @@ define 'cs!xlform/view.surveyApp', [
 
       @set_multioptions_label()
 
-      null_top_row = @formEditorEl.find(".survey-editor__null-top-row, .survey-editor__message").removeClass("expanded")
+      @null_top_row = @formEditorEl.find(".survey-editor__null-top-row, .survey-editor__message").removeClass("expanded")
 
-      if isEmpty and @features.multipleQuestions
-        null_top_row.removeClass("hidden")
-      else if @features.multipleQuestions
-        null_top_row.addClass("hidden")
+      @null_top_row.toggleClass("hidden", !isEmpty)
+      @$null_top_add_button?= @null_top_row.find('.survey__row__spacer')
 
+      if @features.multipleQuestions
+        @set_top_add_question_button()
+
+      
       if @features.multipleQuestions
         @activateSortable()
 
-      ``
+      return
 
     clickDeleteGroup: (evt)->
       @_getViewForTarget(evt).deleteGroup(evt)
