@@ -138,6 +138,12 @@ define 'cs!xlform/view.rowDetail', [
       $viewUtils.makeEditable @, @model, cht, options:
         placement: 'right'
         rows: 3
+      ,
+      transformFunction: (value) ->
+        if value == ''
+          return '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+        else
+          return value;
 
   viewRowDetail.DetailViewMixins.hint = viewRowDetail.DetailViewMixins.default =
     html: ->
