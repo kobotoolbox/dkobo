@@ -101,7 +101,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'dkobo.koboform',
-    'dkobo.main',
+    'dkobo.hub',
     'compressor',
     'gunicorn',
     'south',
@@ -112,7 +112,7 @@ INSTALLED_APPS = (
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
-    'dkobo.main.context_processors.welcome_message',
+    'dkobo.hub.context_processors.welcome_message',
 )
 
 KOBOCAT_SERVER = os.environ.get('KOBOCAT_SERVER', False)
