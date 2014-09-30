@@ -1,4 +1,4 @@
-from dkobo.main.models import SitewideMessage
+from dkobo.hub.models import SitewideMessage
 from django.contrib.sites.models import Site
 from django.conf import settings
 from dkobo.koboform import kobocat_integration
