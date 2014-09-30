@@ -317,7 +317,7 @@ define 'cs!xlform/view.surveyApp', [
 
       if !@features.multipleQuestions
         @$el.addClass('survey-editor--singlequestion')
-        @$el.find(".survey-editor__null-top-row").find(".survey-editor__message").addClass("hidden")
+        @$el.find(".survey-editor__null-top-row").addClass("survey-editor__null-top-row--hidden")
         if @survey.rows.length is 0
           @null_top_row_view_selector.expand()
 
@@ -478,7 +478,7 @@ define 'cs!xlform/view.surveyApp', [
         if prevRow
           $el.insertAfter(prevRowEl)
         else
-          $el.prependTo($parentEl)
+          $el.appendTo($parentEl)
 
       view
 
@@ -505,12 +505,8 @@ define 'cs!xlform/view.surveyApp', [
 
       @set_multioptions_label()
 
-      null_top_row = @formEditorEl.find(".survey-editor__null-top-row, .survey-editor__message").removeClass("expanded")
-
-      if isEmpty and @features.multipleQuestions
-        null_top_row.removeClass("hidden")
-      else if @features.multipleQuestions
-        null_top_row.addClass("hidden")
+      null_top_row = @formEditorEl.find(".survey-editor__null-top-row").removeClass("expanded")
+      null_top_row.toggleClass("survey-editor__null-top-row--hidden", !isEmpty)
 
       if @features.multipleQuestions
         @activateSortable()
