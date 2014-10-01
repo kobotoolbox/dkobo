@@ -15,6 +15,8 @@ function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo,
         }
     }
 
+    $scope.survey_loading = true;
+
     if (forceLeaveConfirmation) {
         $rootScope.deregisterLocationChangeStart = $rootScope.$on('$locationChangeStart', handleUnload);
         $(window).bind('beforeunload', function(){

@@ -49,3 +49,14 @@
 .form-builder, .main, .content {
   height: 100%
 }
+
+.survey-loading {
+  position: absolute;
+  top: 190px;
+  left: 300px;
+
+  i {
+    color: green;
+  }
+}
+

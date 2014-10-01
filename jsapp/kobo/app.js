@@ -23,7 +23,6 @@ var kobo = angular.module('dkobo', [
 kobo.directive('topLevelMenu', TopLevelMenuDirective);
 kobo.directive('infoList', InfoListDirective);
 kobo.directive('outsideClick', OutsideClickDirective);
-kobo.directive('koboformBuilder', BuilderDirective);
 kobo.directive('koboformQuestionLibrary', QuestionLibraryDirective);
 kobo.directive('kobocatFormPublisher', KobocatFormPublisherDirective);
 
@@ -49,7 +48,7 @@ kobo.config(function ($routeProvider, $locationProvider, $httpProvider) {
         });
 
         $routeProvider.when('/builder/:id', {
-            template: '<div class="container__fixed"><div class="container__wide"><section koboform-question-library class="koboform__questionlibrary ng-hide" ng-show="displayQlib" click-handler="add_item(item)" current-item="currentItem"></section></div></div><section koboform-builder class="form-builder"></section>',
+            templateUrl: staticFilesUri + 'templates/Builder.Template.html',
             controller: 'BuilderController'
         });
 
@@ -59,7 +58,7 @@ kobo.config(function ($routeProvider, $locationProvider, $httpProvider) {
         });
 
         $routeProvider.when('/library/questions/:id', {
-            template: '<section koboform-builder class="form-builder"></section>',
+            template: '<section class="form-builder"></section>',
             controller: 'AssetEditorController'
         });
 
