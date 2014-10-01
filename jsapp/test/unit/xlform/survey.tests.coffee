@@ -232,3 +232,12 @@ define [
         settings.set 'form_title', 'test me'
 
         expect(settings.get('form_id')).toBe 'test_me'
+
+  describe 'survey.tests: prep_cols', () ->
+    it 'flattens and deduplicates arrays of strings', () ->
+      survey = new $model.Survey()
+      expect(survey.prepCols [['a', 'b'], ['b', 'c'], ['e', 'a', 'd']]).toEqual ['a', 'b', 'c', 'e', 'd']
+
+    it 'excludes passed strings from result', () ->
+      survey = new $model.Survey()
+      expect(survey.prepCols [['a', 'b'], ['b', 'c'], ['e', 'a', 'd']], 'd').toEqual ['a', 'b', 'c', 'e']

@@ -118,7 +118,10 @@ define 'cs!xlform/model.survey', [
       row._parent = parent.rows
       if opts.event
         parent.rows.trigger(opts.event)
-      ``
+      return
+
+    prepCols: (cols, exclude = []) ->
+      _.filter _.uniq( _.flatten cols), (col) -> col not in exclude
 
     toCsvJson: ()->
       # build an object that can be easily passed to the "csv" library
@@ -144,6 +147,7 @@ define 'cs!xlform/model.survey', [
         columns: oCols
         rowObjects: oRows
 
+
       choicesCsvJson = do =>
         lists = new $choices.ChoiceLists()
         @forEachRow (r)->
@@ -151,17 +155,19 @@ define 'cs!xlform/model.survey', [
             lists.add list
 
         rows = []
-        cols = ["list name", "name", "label"]
+        cols = []
         for choiceList in lists.models
           choiceList.set("name", $modelUtils.txtid(), silent: true)  unless choiceList.get("name")
           choiceList.finalize()
           clAtts = choiceList.toJSON()
           clName = clAtts.name
           for option in clAtts.options
+            cols.push _.keys option
             rows.push _.extend {}, option, "list name": clName
 
+
         if rows.length > 0
-          columns: cols
+          columns: @prepCols cols, 'setManually'
           rowObjects: rows
         else
           false
