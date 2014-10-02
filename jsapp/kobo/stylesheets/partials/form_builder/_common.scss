@@ -51,12 +51,10 @@
 }
 
 .survey-loading {
-  position: absolute;
-  top: 190px;
-  left: 300px;
-
+  text-align: center;
+  padding:30px 0px;
   i {
-    color: green;
+    color: rgba(29, 174, 227, 0.8);
   }
 }
 
