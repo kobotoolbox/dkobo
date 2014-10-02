@@ -25,6 +25,7 @@ define 'cs!xlform/view.rowSelector', [
         @expand()
 
     expand: ->
+      @$el.parents('.survey-editor__null-top-row--hidden').removeClass('survey-editor__null-top-row--hidden')
       @show_namer()
       $namer_form = @$el.find('.row__questiontypes__form')
       $namer_form.on 'submit', _.bind @show_picker, @

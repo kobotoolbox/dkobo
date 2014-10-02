@@ -92,8 +92,17 @@ code input[type="text"] {
             display: none;
         }
     }
-    &.hidden {
-        display: none;
+
+    &.survey-editor__null-top-row--hidden {
+        .survey-editor__message {
+            display: none;
+        }
+        .survey__row__spacer {
+            opacity: 0;
+            &:hover {
+                opacity: 1;
+            }
+        }
     }
 }
 
