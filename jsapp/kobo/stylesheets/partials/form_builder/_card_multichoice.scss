@@ -70,7 +70,6 @@
 .multioptions__option {
     margin-bottom: 4px;
     margin-left: 4px;
-    cursor: move;
     position: relative;
     div.editable-wrapper {
         font-family: 'Lato';
@@ -117,6 +116,7 @@
             padding-right: 4px;
             color: #7E858C;
             text-align: right;
+            cursor: text;
         }
         .editable-unsaved {
             color: $linkColor;
@@ -144,9 +144,13 @@
     }
 }
 
-.card__addoptions {
-    opacity: 0.4;
-    .multioptions__option {
-        cursor: pointer;
-    }    
+.card__addoptions:after {
+    cursor: pointer !important;
+    background: rgba(255, 255, 255, 0.5);
+    content: " ";
+    position: absolute;
+    width: 620px;
+    height: 33px;
+    margin-top: -36px;
+    cursor: pointer;
 }
