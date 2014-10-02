@@ -294,13 +294,14 @@ $tagsHeight: 230px;
 // ==========================================================================
 
 .koboform__questionlibrary {
-    position: relative;
+    position: fixed;
+    margin-left: 720px;
+    top: 0px;
+    height: 100%;
     width: 300px;
-    height: 600px;
     z-index: 5;
     border: 1px solid #cbd0d7;
     background-color: #fff;
-    float: right;
 }
 
 // when sidebar active, add padding to container divs for form questions
@@ -310,15 +311,20 @@ section.form-builder.active__sidebar .container {
     max-width: 1004px;
 }
 
+.questions__sidebar--container {
+    height: 100%;
+    padding-top: 140px;
+    margin-bottom: -140px;
+}
+
 .questions__sidebar--scrolling {
-    height: 600px;
-    padding-top: 70px;
+    height: 100%;
     overflow: auto;
 }
 
 .questions__sidebar--short-filters {
     position: absolute;
-    top: 0;
+    top: 72px;
     left: 0;
     width: 100%;
     height: 70px;
