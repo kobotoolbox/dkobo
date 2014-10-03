@@ -41,6 +41,10 @@
     position: relative;
     border:1px solid #CCC;
     z-index: 8;
+    max-width: 185px;
+    &.hidden {
+      display: block !important;
+    }
     &:before {
       content:'';
       position: absolute;
