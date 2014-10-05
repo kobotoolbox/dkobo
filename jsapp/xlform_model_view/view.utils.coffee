@@ -174,4 +174,19 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
 
     launch
 
+  class viewUtils.ViewComposer
+    add: (view, id) ->
+      @views.push view
+    remove: (id) -> throw 'not implemented'
+    get: (id) -> throw 'not implemented'
+    render: () ->
+      for view in @views
+        view.render()
+    attach_to: (destination) ->
+      for view in @views
+        view.attach_to destination
+    bind_event: (event_name, callback) -> throw 'not implemented'
+    constructor: () ->
+      @views = []
+
   viewUtils
