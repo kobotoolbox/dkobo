@@ -360,13 +360,12 @@ define 'cs!xlform/view.surveyApp', [
       if @expand_all_multioptions()
         @$(".card--expandedchoices").each (i, el)=>
           @_getViewForTarget(currentTarget: el).hideMultioptions()
-          ``
       else
         @$(".card--selectquestion").each (i, el)=>               
           @_getViewForTarget(currentTarget: el).showMultioptions()
-          ``
 
       @set_multioptions_label()
+      return
 
     getItemPosition: (item) ->
       i = 0
@@ -386,6 +385,7 @@ define 'cs!xlform/view.surveyApp', [
 
       sortable_stop = (evt, ui)=>
         $(ui.item).trigger('survey__row-sortablestop')
+        @formEditorEl.find('.group__rows .survey__row').each @_preventSortableIfGroupTooSmall
 
       @formEditorEl.sortable({
           # PM: commented out axis, because it's better if cards move horizontally and vertically
@@ -410,12 +410,9 @@ define 'cs!xlform/view.surveyApp', [
             ui.sender.sortable('cancel')
         })
       group_rows = @formEditorEl.find('.group__rows')
-      group_rows.off 'mouseenter', '> .survey__row', @_preventSortableIfGroupTooSmall
-      group_rows.off 'mouseleave', '> .survey__row', @_preventSortableIfGroupTooSmall
-      group_rows.on 'mouseenter', '> .survey__row', @_preventSortableIfGroupTooSmall
-      group_rows.on 'mouseleave', '> .survey__row', @_preventSortableIfGroupTooSmall
-      group_rows.sortable({
-          cancel: 'button, .btn--addrow, .well, ul.list-view, li.editor-message, .editableform, .row-extras, .js-cancel-sort, .js-cancel-group-sort'
+      group_rows.each (index) ->
+        $(@).sortable({
+          cancel: 'button, .btn--addrow, .well, ul.list-view, li.editor-message, .editableform, .row-extras, .js-cancel-sort, .js-cancel-group-sort' + index
           cursor: "move"
           distance: 5
           items: "> li"
@@ -427,15 +424,18 @@ define 'cs!xlform/view.surveyApp', [
           activate: sortable_activate_deactivate
           deactivate: sortable_activate_deactivate
         })
+        $(@).attr('data-sortable-index', index)
+
+      group_rows.find('.survey__row').each @_preventSortableIfGroupTooSmall
+
       return
-    _preventSortableIfGroupTooSmall: (evt)->
-      $ect = $(evt.currentTarget)
-      if evt.type is 'mouseenter' && $ect.siblings('.survey__row').length is 0
-        $ect.addClass('js-cancel-group-sort')
-        evt.stopPropagation()
-      else
-        $ect.removeClass('js-cancel-group-sort')
-        evt.stopPropagation()
+    _preventSortableIfGroupTooSmall: (index, element)->
+      $element = $(element)
+      class_name_matches = element.className.match(/js-cancel-group-sort\d+/g)
+      if class_name_matches?
+        $element.removeClass class_name_matches.join(' ')
+      if $element.siblings('.survey__row').length is 0
+        $element.addClass('js-cancel-group-sort' + ($element.closest('.group__rows').attr('data-sortable-index')))
 
     validateSurvey: ()->
       true
