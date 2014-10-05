@@ -15,7 +15,7 @@
     </header>
     <div class="container empty">
       <h4 class="content__message-text">You currently have no forms.</h4>
-      <button class="forms-empty__button" ng-click="showAddFormDropdown = ! showAddFormDropdown"><i class="fa fa-spin fa-spinner" ng-show="isLoading"></i>{{ add_form }}</button>
+      <button class="forms-empty__button" ng-click="showAddFormDropdown = ! showAddFormDropdown"><i class="fa fa-spin fa-spinner" ng-show="isLoading"></i> {{ add_form }}</button>
         <div class="forms__addform__drop--bottom-centered" ng-class="{ 'hidden': ! showAddFormDropdown }">
           <a href="#/builder/new" class="forms__addform__button forms__addform__start">Start from Scratch</a>
           <form action="/import_survey_draft" class="forms__addform__button forms__addform__xls js-import-fileupload js-import-survey-emptyformlist">
@@ -23,7 +23,7 @@
               <input type="file" name="files">
           </form>
           <a href="#" class="forms__addform__button forms__addform__template">Start from a Template</a>
-        </div>S
+        </div>
     </div>
   </div>
 </div>
