@@ -18,7 +18,7 @@ define('test/components', [], function(){
             "xlform_model_view/*.js",
             "xlform_model_view/*.coffee",
             "test/unit/SkipLogic.Tests.coffee",
-            "test/unit/xlform/*.coffee"
+            "test/unit/xlform/**/*.coffee"
         ],
         // paths to components
         // used in require.configs({paths:...}) and karma.conf

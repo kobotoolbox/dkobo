@@ -58,7 +58,9 @@ define 'cs!xlform/view.surveyApp.templates', [], ()->
 
             <div class="form__settings-meta__questions">
               <h4 class="form__settings-meta__questions-title">Hidden meta questions to include in your form to help with analysis</h4>
-              <div class="stats  row-details" id="additional-options"></div>
+              <div class="stats  row-details settings__first-meta" id="additional-options"></div>
+              <h4 class="form__settings-meta__questions-title">Meta questions for collecting with cell phones</h4>
+              <div class="stats  row-details settings__second-meta" id="additional-options"></div>
             </div>
 
             <div class="form__settings-submission-url bleeding-edge">
