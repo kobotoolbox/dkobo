@@ -2,7 +2,7 @@
 /* global dkobo_xlform */
 'use strict';
 
-function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo, $miscUtils, $location, $userDetails) {
+function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo, $miscUtils, $userDetails) {
     $rootScope.activeTab = 'Forms';
     $scope.routeParams = $routeParams;
     var forceLeaveConfirmation = !$userDetails.debug;
