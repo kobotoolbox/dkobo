@@ -238,6 +238,10 @@ define [
       survey = new $model.Survey()
       expect(survey.prepCols [['a', 'b'], ['b', 'c'], ['e', 'a', 'd']]).toEqual ['a', 'b', 'c', 'e', 'd']
 
-    it 'excludes passed strings from result', () ->
+    it 'excludes passed string from result', () ->
       survey = new $model.Survey()
-      expect(survey.prepCols [['a', 'b'], ['b', 'c'], ['e', 'a', 'd']], 'd').toEqual ['a', 'b', 'c', 'e']
+      expect(survey.prepCols [['a', 'b'], ['b', 'c'], ['e', 'a', 'de']], 'de').toEqual ['a', 'b', 'c', 'e']
+
+    it 'excludes passed string from result', () ->
+      survey = new $model.Survey()
+      expect(survey.prepCols [['a', 'b'], ['b', 'c'], ['e', 'a', 'de']], ['de']).toEqual ['a', 'b', 'c', 'e']

@@ -121,6 +121,8 @@ define 'cs!xlform/model.survey', [
       return
 
     prepCols: (cols, exclude = []) ->
+      if _.isString exclude
+        exclude = [exclude]
       _.filter _.uniq( _.flatten cols), (col) -> col not in exclude
 
     toCsvJson: ()->
