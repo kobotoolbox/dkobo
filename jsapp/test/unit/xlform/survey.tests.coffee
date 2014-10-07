@@ -240,8 +240,12 @@ define [
 
     it 'excludes passed string from result', () ->
       survey = new $model.Survey()
-      expect(survey.prepCols [['a', 'b'], ['b', 'c'], ['e', 'a', 'de']], 'de').toEqual ['a', 'b', 'c', 'e']
+      expect(survey.prepCols [['a', 'b'], ['b', 'c'], ['e', 'a', 'de']], exclude: 'de').toEqual ['a', 'b', 'c', 'e']
 
-    it 'excludes passed string from result', () ->
+    it 'excludes passed array of strings from result', () ->
       survey = new $model.Survey()
-      expect(survey.prepCols [['a', 'b'], ['b', 'c'], ['e', 'a', 'de']], ['de']).toEqual ['a', 'b', 'c', 'e']
+      expect(survey.prepCols [['a', 'b'], ['b', 'c'], ['e', 'a', 'de']], exclude: ['de']).toEqual ['a', 'b', 'c', 'e']
+
+    it 'add passed string to result', () ->
+      survey = new $model.Survey()
+      expect(survey.prepCols [['a', 'b'], ['b', 'c'], ['e', 'a', 'de']], exclude: ['de'], add: 'abc').toEqual ['a', 'b', 'c', 'e', 'abc']

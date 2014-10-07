@@ -120,10 +120,13 @@ define 'cs!xlform/model.survey', [
         parent.rows.trigger(opts.event)
       return
 
-    prepCols: (cols, exclude = []) ->
+    prepCols: (cols, {exclude, add}={}) ->
+      exclude ?= []
       if _.isString exclude
         exclude = [exclude]
-      _.filter _.uniq( _.flatten cols), (col) -> col not in exclude
+      out = _.filter _.uniq( _.flatten cols), (col) -> col not in exclude
+      out.push add if add?
+      out
 
     toCsvJson: ()->
       # build an object that can be easily passed to the "csv" library
@@ -169,7 +172,7 @@ define 'cs!xlform/model.survey', [
 
 
         if rows.length > 0
-          columns: @prepCols cols, 'setManually'
+          columns: @prepCols cols, 'setManually', 'list name'
           rowObjects: rows
         else
           false
