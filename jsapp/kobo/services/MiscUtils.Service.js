@@ -34,15 +34,18 @@ function MiscUtilsService($rootScope, $userDetails) {
             add: function (e, data) {
                 // maybe display some feedback saying the upload is starting...
                 $rootScope.isLoading = true;
+                $rootScope.add_form = 'Uploading Form';
                 $rootScope.$apply();
                 log(data.files[0].name + " is uploading...");
                 data.submit().success(_successFn)
                 .error(function (result) {
                     $rootScope.isLoading = false;
+                    $rootScope.add_form = '+ Add Form';
                     $rootScope.$apply();
                     _this.handleXhrError(result);
                 }).done(function () {
                     $rootScope.isLoading = false;
+                    $rootScope.add_form = '+ Add Form';
                     $rootScope.$apply();
                 });
             }
