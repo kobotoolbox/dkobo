@@ -162,12 +162,15 @@ define 'cs!xlform/view.row', [
         placement: 'right'
         rows: 3
       ,
-      transformFunction: (value) ->
-        value = value.replace(new RegExp(String.fromCharCode(160), 'g'), '&nbsp;')
+      edit_callback: (value) ->
+        value = value.replace(new RegExp(String.fromCharCode(160), 'g'), '')
+        value = value.replace /\t/g, ''
+        view.model.set 'value', value
+
         if value == ''
-          return '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+          return newValue: new Array(10).join('&nbsp;')
         else
-        return value;
+        return newValue: value;
 
   class RowView extends BaseRowView
     _expandedRender: ->
