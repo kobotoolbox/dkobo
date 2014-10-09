@@ -72,7 +72,6 @@ define 'cs!test/unit/xlform/Survey/insertSurvey', [
       new_row.attributes.name.attributes.value = 'new_question'
 
       survey.insert_row(new_row, 0)
-      debugger
       survey.insert_row(new_row, 0)
 
       expect(survey.rows.length).toBe 2
