@@ -38,4 +38,33 @@ function AssetEditorController($scope, $rootScope, $routeParams, $restApi, $rout
                 }, $routeTo.question_library);
         }
     }
+
+    $scope.tags = {
+        available: [
+            {id: -1, name: 'Demographics' },
+            {id: -1, name: 'Priorities services' },
+            {id: -1, name: 'Security' },
+            {id: -1, name: 'Disputes' },
+            {id: -1, name: 'Domestic Violence' },
+            {id: -1, name: 'Mortality' },
+            {id: -1, name: 'Exposure to War Violence' },
+            {id: -1, name: 'Former combatants' },
+            {id: -1, name: 'Victims' },
+            {id: -1, name: 'Measures for Victims' },
+            {id: -1, name: 'Monuments' },
+            {id: -1, name: 'Origins of conflicts' },
+            {id: -1, name: 'Truth' },
+            {id: -1, name: 'Information' },
+            {id: -1, name: 'Accountability' },
+            {id: -1, name: 'Justice' },
+            {id: -1, name: 'International Criminal Court' },
+            {id: -1, name: 'Peace' },
+            {id: -1, name: 'Group membership' }
+        ],
+        selected: []
+    };
+
+    for (var i = 0; i < 3; i++) {
+        $scope.tags.selected[i] = $scope.tags.available[i];
+    }
 }

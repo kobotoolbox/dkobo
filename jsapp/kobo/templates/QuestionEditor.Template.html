@@ -1,0 +1,17 @@
+<section class="question__tags">
+    <ui-select
+        multiple
+        ng-model="tags.selected"
+        theme="select2"
+        style="width: 700px;"
+    >
+        <ui-select-match placeholder="tags">
+            {{$item.name}}
+        </ui-select-match>
+            <ui-select-choices repeat="tag in tags.available | propsFilter: {name: $select.search}">
+            <div ng-bind-html="tag.name"></div>
+        </ui-select-choices>
+    </ui-select>
+</section>
+<section class="form-builder">
+</section>

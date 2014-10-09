@@ -17,7 +17,9 @@ var kobo = angular.module('dkobo', [
     'ngRoute',
     'ngCookies',
     'ngResource',
-    'ui.utils'
+    'ui.utils',
+    'ui.select',
+    'ngSanitize'
 ]);
 
 kobo.directive('topLevelMenu', TopLevelMenuDirective);
@@ -34,7 +36,32 @@ kobo.service('$configuration', ConfigurationService);
 kobo.service('$miscUtils', MiscUtilsService);
 
 kobo.filter('titlecase', TitlecaseFilter);
-
+kobo.filter('propsFilter', function() {
+    return function(items, props) {
+        var out = [];
+        if (angular.isArray(items)) {
+            items.forEach(function(item) {
+                var itemMatches = false;
+                var keys = Object.keys(props);
+                for (var i = 0; i < keys.length; i++) {
+                    var prop = keys[i];
+                    var text = props[prop].toLowerCase();
+                    if (item[prop].toString().toLowerCase().indexOf(text) !== -1) {
+                        itemMatches = true;
+                        break;
+                    }
+                }
+                if (itemMatches) {
+                    out.push(item);
+                }
+            });
+        } else {
+        // Let the output be the input untouched
+            out = items;
+        }
+        return out;
+    };
+});
 
 kobo.config(function ($routeProvider, $locationProvider, $httpProvider) {
 
@@ -58,7 +85,7 @@ kobo.config(function ($routeProvider, $locationProvider, $httpProvider) {
         });
 
         $routeProvider.when('/library/questions/:id', {
-            template: '<section class="form-builder"></section>',
+            templateUrl: staticFilesUri + 'templates/QuestionEditor.Template.html',
             controller: 'AssetEditorController'
         });
 

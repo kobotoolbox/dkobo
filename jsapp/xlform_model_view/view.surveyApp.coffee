@@ -676,6 +676,9 @@ define 'cs!xlform/view.surveyApp', [
       displayTitle: false
       copyToLibrary: false
       surveySettings: false
+    render: () ->
+      super
+      @$('.survey-editor.form-editor-wrap.container').append $('.question__tags')
 
   class surveyApp.SurveyTemplateApp extends $baseView
     events:
