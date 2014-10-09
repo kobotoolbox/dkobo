@@ -95,6 +95,7 @@ define 'cs!xlform/view.rowSelector', [
         type: rowType
 
       if rowType is 'calculate'
+
         rowDetails.calculation = value
       else
         rowDetails.label = value
