@@ -256,27 +256,20 @@ define 'cs!xlform/view.rowDetail', [
         group: ['select', 'field-list', 'table-list', 'other']
 
       @$el.addClass("card__settings__fields--active")
-<<<<<<< HEAD
-      if @model._parent.constructor.key == 'group'
-        viewRowDetail.Templates.checkbox @cid, @model.key, 'Appearance (advanced)', 'Show all questions in this group on the same screen'
-      else
-        viewRowDetail.Templates.textbox @cid, @model.key, 'Appearance (advanced)', 'text'
-=======
       if @model_is_group()
-        return viewRowDetail.Templates.dropdown @cid, @model.key, types.group, 'Appearance'
+        return viewRowDetail.Templates.checkbox @cid, @model.key, 'Appearance (advanced)', 'Show all questions in this group on the same screen'
       else
         appearances = types[@model._parent.getValue('type').split(' ')[0]]
         if appearances?
           appearances.push 'other'
           appearances.unshift 'select'
-          return viewRowDetail.Templates.dropdown @cid, @model.key, appearances, 'Appearance'
+          return viewRowDetail.Templates.dropdown @cid, @model.key, appearances, 'Appearance (advanced)'
         else
-          return viewRowDetail.Templates.textbox @cid, @model.key, 'Appearance', 'text'
+          return viewRowDetail.Templates.textbox @cid, @model.key, 'Appearance (advanced)', 'text'
 
     model_is_group: () ->
       @model._parent.constructor.key == 'group'
 
->>>>>>> question-appearance
     afterRender: ->
       $select = @$('select')
       if $select.length > 0
