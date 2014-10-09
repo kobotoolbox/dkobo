@@ -52,7 +52,7 @@ define 'cs!xlform/view.row', [
         @_renderError()
       else
         @_renderRow()
-      @is_expanded = () -> @$card.hasClass('card--expandedchoices')
+      @is_expanded = @$card.hasClass('card--expandedchoices')
       @
     _renderError: ->
       @$el.addClass("xlf-row-view-error")
@@ -68,6 +68,7 @@ define 'cs!xlform/view.row', [
       @$header = @$('.card__header')
       if 'getList' of @model and (cl = @model.getList())
         @$card.addClass('card--selectquestion card--expandedchoices')
+        @is_expanded = true
 
         @listView = new $viewChoices.ListView(model: cl, rowView: @).render()
 
@@ -165,17 +166,19 @@ define 'cs!xlform/view.row', [
 
     hideMultioptions: ->
       @$card.removeClass('card--expandedchoices')
+      @is_expanded = false
     showMultioptions: ->
       @$card.addClass('card--expandedchoices')
       @$card.removeClass('card--expanded-settings')
       @toggleSettings(false)
 
     toggleMultioptions: ->
-      if @is_expanded()
+      if @is_expanded
         @hideMultioptions()
       else
         @showMultioptions()
-      return
+        @is_expanded = true
+      ``
 
   RowView: RowView
   GroupView: GroupView
