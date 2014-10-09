@@ -14,8 +14,10 @@ define 'cs!xlform/model.choices', [
       @collection.remove(@)
     list: -> @collection
     toJSON: ()->
-      name: @get("name")
-      label: @get("label")
+      attributes = {}
+      for key, attribute of @attributes
+        attributes[key] = @get key
+      attributes
 
   class choices.Options extends base.BaseCollection
     model: choices.Option
