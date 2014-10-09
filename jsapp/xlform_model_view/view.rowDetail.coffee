@@ -139,11 +139,10 @@ define 'cs!xlform/view.rowDetail', [
         placement: 'right'
         rows: 3
 
-  viewRowDetail.DetailViewMixins.hint = viewRowDetail.DetailViewMixins.default =
+  viewRowDetail.DetailViewMixins.hint =
     html: ->
       @$el.addClass("card__settings__fields--active")
-      label = if @model.key == 'hint' then 'Question hint' else 'Default response'
-      viewRowDetail.Templates.textbox @cid, @model.key, label, 'text'
+      viewRowDetail.Templates.textbox @cid, @model.key, 'Question hint', 'text'
     afterRender: ->
       @listenForInputChange()
 
@@ -213,7 +212,8 @@ define 'cs!xlform/view.rowDetail', [
     html: ->
       @fieldTab = "active"
       @$el.addClass("card__settings__fields--#{@fieldTab}")
-      viewRowDetail.Templates.textbox @cid, @model.key, 'Default response', 'text'
+      label = if @model.key == 'default' then 'Default response' else @model.key.replace(/_/g, ' ')
+      viewRowDetail.Templates.textbox @cid, @model.key, label, 'text'
     afterRender: ->
       @$el.find('input').eq(0).val(@model.get("value"))
       @listenForInputChange()
