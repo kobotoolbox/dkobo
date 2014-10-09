@@ -90,7 +90,7 @@ define 'cs!xlform/view.row.templates', [], ()->
 
   selectQuestionExpansion = ->
     """
-    <div class="card--selectquestion__expansion row__multioptions">
+    <div class="card--selectquestion__expansion row__multioptions js-cancel-sort">
       <div class="list-view">
         <ul></ul>
       </div>
