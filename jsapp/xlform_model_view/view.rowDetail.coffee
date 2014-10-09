@@ -212,7 +212,7 @@ define 'cs!xlform/view.rowDetail', [
     html: ->
       @fieldTab = "active"
       @$el.addClass("card__settings__fields--#{@fieldTab}")
-      label = if @model.key == 'default' then 'Default response' else @model.key
+      label = if @model.key == 'default' then 'Default response' else @model.key.replace(/_/g, ' ')
       viewRowDetail.Templates.textbox @cid, @model.key, label, 'text'
     afterRender: ->
       @$el.find('input').eq(0).val(@model.get("value"))
