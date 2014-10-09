@@ -279,7 +279,8 @@ define 'cs!xlform/view.surveyApp', [
         if !view
           # hopefully, this error is never triggered
           throw new Error('View for row was not found: ' + rowId)
-        new $viewRowSelector.RowSelector(el: $spacer.get(0), ngScope: @ngScope, spawnedFromView: view, surveyView: @, reversible:true).expand()
+
+        new $viewRowSelector.RowSelector(el: $spacer.get(0), ngScope: @ngScope, spawnedFromView: view, surveyView: @, reversible:true, survey: @survey).expand()
 
     _render_html: ->
       @$el.html $viewTemplates.$$render('surveyApp', @)
@@ -385,7 +386,6 @@ define 'cs!xlform/view.surveyApp', [
 
       sortable_stop = (evt, ui)=>
         $(ui.item).trigger('survey__row-sortablestop')
-        @formEditorEl.find('.group__rows .survey__row').each @_preventSortableIfGroupTooSmall
 
       @formEditorEl.sortable({
           # PM: commented out axis, because it's better if cards move horizontally and vertically
@@ -508,10 +508,11 @@ define 'cs!xlform/view.surveyApp', [
       null_top_row = @formEditorEl.find(".survey-editor__null-top-row").removeClass("expanded")
       null_top_row.toggleClass("survey-editor__null-top-row--hidden", !isEmpty)
 
+      
       if @features.multipleQuestions
         @activateSortable()
 
-      ``
+      return
 
     clickDeleteGroup: (evt)->
       @_getViewForTarget(evt).deleteGroup(evt)
