@@ -1,5 +1,6 @@
 import json
 import requests
+import pyxform.survey_from
 from guardian.shortcuts import assign_perm
 
 from django.http import HttpResponseBadRequest, HttpResponse, HttpResponseRedirect
@@ -107,10 +108,29 @@ def import_survey_draft(request):
     output = {}
     posted_file = request.FILES.get(u'files')
     response_code = 200
-    if posted_file:
+    if not posted_file:
+        response_code = 204  # Error 204: No input
+        output[u'error'] = "No file posted"
+    elif posted_file.name.endswith('.xml'):
+        warnings = []
+        try:
+            survey_object = pyxform.survey_from.xform(filelike_obj=posted_file, warnings=warnings)
+            _csv = survey_object.to_csv().read()
+            new_survey_draft = SurveyDraft.objects.create(**{
+                u'body': _csv,
+                u'name': posted_file.name,
+                u'user': request.user
+            })
+            output[u'survey_draft_id'] = new_survey_draft.id
+        except Exception, err:
+            response_code = 500
+            output[u'error'] = err.message
+        output[u'warnings'] = warnings
+    else:
         try:
             # create and validate the xform but ignore the results
-            pyxform_utils.convert_xls_to_xform(posted_file)
+            warnings = []
+            pyxform_utils.convert_xls_to_xform(posted_file, warnings=warnings)
             output[u'xlsform_valid'] = True
 
             posted_file.seek(0)
@@ -120,7 +140,6 @@ def import_survey_draft(request):
                 _csv = posted_file.read()
             else:
                 raise Exception("Content-type not recognized: '%s'" % posted_file.content_type)
-
             new_survey_draft = SurveyDraft.objects.create(**{
                 u'body': _csv,
                 u'name': posted_file.name,
@@ -129,10 +148,7 @@ def import_survey_draft(request):
             output[u'survey_draft_id'] = new_survey_draft.id
         except Exception, err:
             response_code = 500
-            output[u'error'] = str(err)
-    else:
-        response_code = 204  # Error 204: No input
-        output[u'error'] = "No file posted"
+            output[u'error'] = err.message
     return HttpResponse(json.dumps(output), content_type="application/json", status=response_code)
 
 

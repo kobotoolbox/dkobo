@@ -178,12 +178,17 @@ define 'cs!xlform/model.survey', [
       sheeted.toString()
 
   Survey.load = (csv_repr)->
+    if not _is_csv(csv_repr)
+      throw Error("Invalid CSV passed to form builder")
     _deserialized = $inputDeserializer.deserialize csv_repr
     _parsed = $inputParser.parse _deserialized
     new Survey(_parsed)
 
-  # Settings (assigned to each $survey.Survey instance)
+  _is_csv = (csv_repr)->
+    '\n' in csv_repr and ',' in csv_repr
 
+
+  # Settings (assigned to each $survey.Survey instance)
   class Settings extends $base.BaseModel
     # validation:
     #   form_title:
