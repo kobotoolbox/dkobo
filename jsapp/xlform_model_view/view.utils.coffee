@@ -153,6 +153,7 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
 
     launch.close = ()->
       $(".iframe-bg-shade").remove()
+      $(".enketo-holder").remove()
 
     launch.fromCsv = (surveyCsv, options={})->
       previewServer = options.previewServer or ""
