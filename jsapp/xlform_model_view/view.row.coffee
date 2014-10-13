@@ -164,7 +164,7 @@ define 'cs!xlform/view.row', [
       ,
       edit_callback: (value) ->
         value = value.replace(new RegExp(String.fromCharCode(160), 'g'), '')
-        value = value.replace /\t/g, ''
+        value = value.replace /\t/g, ' '
         view.model.set 'value', value
 
         if value == ''
