@@ -50,15 +50,19 @@ define 'cs!xlform/model.survey', [
 
     @create: (options={}, addlOpts) ->
       return new Survey(options, addlOpts)
+    insert_row: (row, index) ->
+      @rows.add(row.toJSON(), at: index)
+      new_row = @rows.at(index)
+      if rowlist = new_row.getList()
+        @choices.add(name: rowlist.get("name"), options: rowlist.options.toJSON())
+      name_detail = new_row.get('name')
+      name_detail.set 'value', name_detail.deduplicate(@)
+
     insertSurvey: (survey, index=-1)->
       index = @rows.length  if index is -1
       for row, row_i in survey.rows.models
-        if rowlist = row.getList()
-          @choices.add(name: rowlist.get("name"), options: rowlist.options.toJSON())
-        name_detail = row.get('name')
-        name_detail.set 'value', name_detail.deduplicate(@)
         index_incr = index + row_i
-        @rows.add(row.toJSON(), at: index_incr)
+        @insert_row row, index_incr
       ``
     toJSON: (stringify=false, spaces=4)->
       obj = {}
@@ -118,7 +122,15 @@ define 'cs!xlform/model.survey', [
       row._parent = parent.rows
       if opts.event
         parent.rows.trigger(opts.event)
-      ``
+      return
+
+    prepCols: (cols, opts={}) ->
+      exclude = opts.exclude or []
+      add = opts.add or []
+      if _.isString(exclude) or _.isString(add)
+        throw new Error("prepCols parameters should be arrays")
+      out = _.filter _.uniq( _.flatten cols), (col) -> col not in exclude
+      out.concat.apply(out, add)
 
     toCsvJson: ()->
       # build an object that can be easily passed to the "csv" library
@@ -144,6 +156,7 @@ define 'cs!xlform/model.survey', [
         columns: oCols
         rowObjects: oRows
 
+
       choicesCsvJson = do =>
         lists = new $choices.ChoiceLists()
         @forEachRow (r)->
@@ -151,17 +164,19 @@ define 'cs!xlform/model.survey', [
             lists.add list
 
         rows = []
-        cols = ["list name", "name", "label"]
+        cols = []
         for choiceList in lists.models
           choiceList.set("name", $modelUtils.txtid(), silent: true)  unless choiceList.get("name")
           choiceList.finalize()
           clAtts = choiceList.toJSON()
           clName = clAtts.name
           for option in clAtts.options
+            cols.push _.keys option
             rows.push _.extend {}, option, "list name": clName
 
+
         if rows.length > 0
-          columns: cols
+          columns: @prepCols cols, exclude: ['setManually'], add: ['list name']
           rowObjects: rows
         else
           false

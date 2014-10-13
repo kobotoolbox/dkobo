@@ -13,7 +13,9 @@ function InfoListDirective($rootScope, $restApi, $miscUtils, $location) {
             name: '@',
             linkTo: '@',
             deleteItem: '&',
-            canDelete: '@'
+            canDelete: '@',
+            addNewMessage: '=',
+            isLoading: '='
         },
         link: function (scope) {
             scope.kobocatLinkExists = function (item) {

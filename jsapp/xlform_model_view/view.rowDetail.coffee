@@ -139,10 +139,10 @@ define 'cs!xlform/view.rowDetail', [
         placement: 'right'
         rows: 3
 
-  viewRowDetail.DetailViewMixins.hint = viewRowDetail.DetailViewMixins.default =
+  viewRowDetail.DetailViewMixins.hint =
     html: ->
       @$el.addClass("card__settings__fields--active")
-      viewRowDetail.Templates.textbox @cid, @model.key, @model.key, 'text'
+      viewRowDetail.Templates.textbox @cid, @model.key, 'Question hint', 'text'
     afterRender: ->
       @listenForInputChange()
 
@@ -190,7 +190,7 @@ define 'cs!xlform/view.rowDetail', [
     html: ->
       @fieldTab = "active"
       @$el.addClass("card__settings__fields--#{@fieldTab}")
-      viewRowDetail.Templates.textbox @cid, @model.key, @model.key, 'text'
+      viewRowDetail.Templates.textbox @cid, @model.key, 'Data column name', 'text'
     afterRender: ->
       @listenForInputChange(transformFn: (value)=>
         value_chars = value.split('')
@@ -212,7 +212,8 @@ define 'cs!xlform/view.rowDetail', [
     html: ->
       @fieldTab = "active"
       @$el.addClass("card__settings__fields--#{@fieldTab}")
-      viewRowDetail.Templates.textbox @cid, @model.key, @model.key, 'text'
+      label = if @model.key == 'default' then 'Default response' else @model.key.replace(/_/g, ' ')
+      viewRowDetail.Templates.textbox @cid, @model.key, label, 'text'
     afterRender: ->
       @$el.find('input').eq(0).val(@model.get("value"))
       @listenForInputChange()
@@ -231,7 +232,7 @@ define 'cs!xlform/view.rowDetail', [
   viewRowDetail.DetailViewMixins.required =
     html: ->
       @$el.addClass("card__settings__fields--active")
-      viewRowDetail.Templates.checkbox @cid, @model.key, 'Required'
+      viewRowDetail.Templates.checkbox @cid, @model.key, 'Mandatory response'
     afterRender: ->
       @listenForCheckboxChange()
 
@@ -239,9 +240,9 @@ define 'cs!xlform/view.rowDetail', [
     html: ->
       @$el.addClass("card__settings__fields--active")
       if @model._parent.constructor.key == 'group'
-        viewRowDetail.Templates.checkbox @cid, @model.key, 'Appearance', 'Show all questions in this group on the same screen'
+        viewRowDetail.Templates.checkbox @cid, @model.key, 'Appearance (advanced)', 'Show all questions in this group on the same screen'
       else
-        viewRowDetail.Templates.textbox @cid, @model.key, 'Appearance', 'text'
+        viewRowDetail.Templates.textbox @cid, @model.key, 'Appearance (advanced)', 'text'
     afterRender: ->
       if @model._parent.constructor.key == 'group'
         $checkbox = @$('input[type=checkbox]').eq(0)

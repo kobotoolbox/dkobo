@@ -5,6 +5,7 @@
 function FormsController ($scope, $rootScope, $resource, $miscUtils) {
     var formsApi = $resource('api/survey_drafts/:id', {id: '@id'});
     $scope.items_loaded = false;
+    $rootScope.add_form = '+ Add Form';
 
     var load_forms = function () {
         formsApi.query(function (items) {

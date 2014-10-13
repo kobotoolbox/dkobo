@@ -25,7 +25,7 @@ module.exports = function(config) {
 
     config.set({
         basePath: path.resolve(__dirname, '../..'),
-        frameworks: ['jasmine', 'requirejs'],
+        frameworks: ['jasmine', 'requirejs', 'sinon'],
         files: componentFiles.concat([
             project('test/components.js', 0, 0, 1),
             project('test/amdrunner.coffee', 0, 1, 1),
@@ -38,6 +38,7 @@ module.exports = function(config) {
             'karma-requirejs',
             'karma-junit-reporter',
             'karma-growl-reporter',
+            'karma-sinon',
 
             // browser launchers
             'karma-phantomjs-launcher',

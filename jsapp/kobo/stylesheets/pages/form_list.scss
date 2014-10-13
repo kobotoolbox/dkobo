@@ -26,6 +26,9 @@
     &:hover {
         background: lighten(#39BF6E, 10%);
     }
+    i.fa {
+      margin-right: 5px;
+    }
 }
 
 .forms__addform-wrapper {
@@ -47,6 +50,7 @@
       position: absolute;
       left:50%;
       transform: translate(-50%, 0%);
+      -webkit-transform: translate(-50%, 0%);
       top: -6px;
       width: 0;
       height: 0;
@@ -64,6 +68,7 @@
     position: absolute;
     left:50%;
     transform: translate(-50%, 0%);
+    -webkit-transform: translate(-50%, 0%);
     border:1px solid #CCC;
     z-index: 8;
     &:before {

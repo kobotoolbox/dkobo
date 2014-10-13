@@ -95,6 +95,7 @@ define 'cs!xlform/view.rowSelector', [
         type: rowType
 
       if rowType is 'calculate'
+
         rowDetails.calculation = value
       else
         rowDetails.label = value
@@ -105,6 +106,7 @@ define 'cs!xlform/view.rowSelector', [
         survey = rowBefore.getSurvey()
       else
         survey = @options.survey
+        options.at = 0
 
       survey.addRow(rowDetails, options)
       @hide()
