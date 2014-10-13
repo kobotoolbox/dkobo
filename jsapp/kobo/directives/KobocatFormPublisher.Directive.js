@@ -40,7 +40,7 @@ function KobocatFormPublisherDirective($restApi, $miscUtils, $routeTo) {
                     return item.formid;
                 }
                 if (item.body) {
-                    var s = dkobo_xlform.model.Survey.create(item.body)
+                    var s = dkobo_xlform.model.Survey.load(item.body)
                     item.formid = s.settings.get('form_id');
                     return item.formid;
                 }
