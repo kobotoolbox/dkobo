@@ -2,7 +2,7 @@
 /* global _ */
 'use strict';
 
-function FormsController ($scope, $rootScope, $resource, $miscUtils) {
+function FormsController ($scope, $rootScope, $resource, $miscUtils, $restApi) {
     var formsApi = $resource('api/survey_drafts/:id', {id: '@id'});
     $scope.items_loaded = false;
     $rootScope.add_form = '+ Add Form';
@@ -60,4 +60,18 @@ function FormsController ($scope, $rootScope, $resource, $miscUtils) {
             $rootScope.showCreateButton = $scope.infoListItems.length > 0
         }
     }, true);
+
+    $scope.clone_survey = function (survey) {
+        var surveyDraftApi = $restApi.createSurveyDraftApi()
+
+        surveyDraftApi.save({
+            body: survey.body,
+            description: survey.description,
+            name: survey.name
+        }, function() {
+            load_forms()
+        }, function(response) {
+            $miscUtils.alert('a server error occured: \n' + response.statusText, 'Error');
+        });
+    }
 }
