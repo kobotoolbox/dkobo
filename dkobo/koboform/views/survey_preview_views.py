@@ -22,7 +22,10 @@ def survey_previews(request):
         else:
             output_dict[u'error'] = "'body' field not found"
     except Exception, e:
-        output_dict[u'error'] = repr(e)
+        # error_type is not used, but may help us to provide a helpful
+        # error message (e.g. on PyxformError)
+        output_dict[u'error_type'] = type(e).__name__
+        output_dict[u'error'] = e.message
 
     response = HttpResponse(json.dumps(output_dict))
     response_options = {'Content-Type': 'application/json',

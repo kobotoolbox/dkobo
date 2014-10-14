@@ -57,17 +57,26 @@ function MiscUtilsService($rootScope, $userDetails) {
         _successFn = successFn
     }
 
-    this.alert = function (message, type) {
+    this.alert = function (message, type, jsonOpts) {
         type = type || 'Information';
-        $('.alert-modal').html(message).dialog('option', {
+        if(!jsonOpts) { jsonOpts = {}; }
+        var msgHtml = "<p class='miscutil__alertmessage miscutil__alertmessage--error'>" + message + "</p>";
+        var warnings = jsonOpts.warnings || [];
+        if(warnings.length > 0) {
+            for (var i=0; i<warnings.length; i++) {
+                msgHtml += "<p class='miscutil__alertmessage miscutil__alertmessage--warning'>" + warnings[i] + "</p>";
+            }
+        }
+        $('.alert-modal').html(msgHtml).dialog('option', {
             title: type,
-            width: 500
+            width: 500,
+            dialogClass: 'miscutil__alert'
         }).dialog('open');
     };
 
     this.handleXhrError = function (xhrResult) {
         if(xhrResult.responseJSON && xhrResult.responseJSON.error) {
-            _this.alert('Error: ' + xhrResult.responseJSON.error, 'Error');
+            _this.alert('Error: ' + xhrResult.responseJSON.error, 'Error', xhrResult.responseJSON);
         } else {
             _this.alert('The server encountered an error: ' + xhrResult.status + ": " + xhrResult.statusText, 'Error');
         }
