@@ -92,13 +92,38 @@ def convert_xls_to_csv_string(xls_file_object, strip_empty_rows=True):
         return result
 
     workbook = xlrd.open_workbook(file_contents=xls_file_object.read())
+    ss_structure = []
+    for sheet in workbook.sheets():
+        sheet_name = sheet.name
+        sheet_contents = _sheet_to_lists(sheet)
+        ss_structure.append([sheet_name, sheet_contents])
+    return convert_ss_structure_to_csv(ss_structure)
+
+def convert_ss_structure_to_csv(ss_list):
+    """
+    Expects a data structure like this:
+    [
+        ["sheet_name1",
+            [
+                ["col1", "col2", "col3"],
+                ["cell1", "cell2", "cell3"]
+            ]
+        ],
+        ...
+    ]
+    and exports a csv like this:
+    "sheet_name1",,,
+    ,"col1","col2","col3"
+    ,"cell1","cell2","cell3"
+    ...
+    """
     csv_out = StringIO.StringIO()
     csv_opts = {'quotechar':'"', 'doublequote':False, 'escapechar':'\\',
                 'delimiter':',', 'quoting':csv.QUOTE_ALL}
     writer = csv.writer(csv_out, **csv_opts)
-    for sheet in workbook.sheets():
-        writer.writerow([sheet.name])
-        for row in _sheet_to_lists(sheet):
+    for sheet_name, sheet_contents in ss_list:
+        writer.writerow([sheet_name])
+        for row in sheet_contents:
             writer.writerow([s.encode("utf-8") for s in ([""] + row)])
     return csv_out.getvalue()
 
