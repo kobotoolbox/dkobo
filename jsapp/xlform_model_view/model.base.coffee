@@ -94,7 +94,10 @@ define 'cs!xlform/model.base', [
         return value:
           unique: true
           required: true
-      else if @key == 'label'
+      else if @key == 'calculation'
+        return value:
+          required: true
+      else if @key == 'label' && @_parent.constructor.key != 'group'
         return value:
           required: true
       {}
