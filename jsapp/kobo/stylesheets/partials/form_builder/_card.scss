@@ -26,7 +26,7 @@
     }
     .card__header {
         border: $cardBorderStyle;
-        padding: 23px 40px 23px 75px;
+        padding: 30px 40px 30px 75px;
         display: block;
         background: white;
         cursor: move;
@@ -196,12 +196,12 @@ $cardIndicatorIconWidth: 21px;
     }
 }
 .card__buttons__button {
-    height: 22px;
-    line-height: 22px;
+    height: 20px;
+    line-height: 20px;
     width: 26px;
     position: absolute;
     right: -2px;
-    bottom: 4px;
+    bottom: 0px;
     text-align: center;
     &.gray {
         color: #858F98;
@@ -209,17 +209,17 @@ $cardIndicatorIconWidth: 21px;
     }
     &.red {
         color: #D08B8C;
-        top:36%;
-        margin-top:-11px;
+        top:37%;
+        margin-top:-10px;
     }
     &.blue {
         color:$linkColor;
     }
     &.gray-green {
-      bottom: -2px;
+      bottom: 0px;
     }
     &.card__buttons__button--copy {
-        bottom: 22%
+        bottom: 25%
     }
     &.activated {
         // trying to transition this into %activated-card-button
