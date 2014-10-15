@@ -20,6 +20,14 @@ define 'cs!xlform/view.surveyApp.templates', [], ()->
         type_name = "Form"
       else
         type_name = "Question"
+
+      warnings_html = ""
+      if surveyApp.warnings and surveyApp.warnings.length > 0
+        warnings_html = """<div class="survey-warnings">"""
+        for warning in surveyApp.warnings
+          warnings_html += """<p class="survey-warnings__warning">#{warning}</p>"""
+        warnings_html += """<button class="survey-warnings__close-button js-close-warning">x</button></div>"""
+
       """
         <div class="sub-header-bar">
           <div class="container__wide">
@@ -87,6 +95,7 @@ define 'cs!xlform/view.surveyApp.templates', [], ()->
             </hgroup>
           </p>
         </header>
+        #{warnings_html}
         <div class="survey-editor form-editor-wrap container">
           <ul class="-form-editor survey-editor__list">
             <li class="survey-editor__null-top-row empty">

@@ -25,6 +25,8 @@ function InfoListDirective($rootScope, $restApi, $miscUtils, $location) {
 
 
             $miscUtils.bootstrapSurveyUploader(function (response) {
+                window.importFormWarnings = response.warnings || [];
+
                 $location.path('/builder/' + response.survey_draft_id);
             });
 

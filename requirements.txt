@@ -6,7 +6,7 @@ South==0.8.4
 gunicorn==18.0
 BeautifulSoup==3.2.1
 django-registration==1.0
--e git+https://github.com/kobotoolbox/pyxform.git@2b31636e99f0cd17bef1bb3365b82d8f2a85d44d#egg=pyxform-dev
+-e git+https://github.com/kobotoolbox/pyxform.git@21679fffa4c89c48e28801ba45c8ebe794840765#egg=pyxform-dev
 djangorestframework==2.3.10
 xlwt==0.7.5
 django-extensions==1.3.3

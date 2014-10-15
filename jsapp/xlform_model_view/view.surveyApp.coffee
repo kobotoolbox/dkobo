@@ -69,6 +69,7 @@ define 'cs!xlform/view.surveyApp', [
       "click .js-toggle-card-settings": "toggleCardSettings"
       "click .js-toggle-group-expansion": "toggleGroupExpansion"
       "click .js-toggle-row-multioptions": "toggleRowMultioptions"
+      "click .js-close-warning": "closeWarningBox"
       "click .js-expand-row-selector": "expandRowSelector"
       "click .js-expand-multioptions--all": "expandMultioptions"
       "click .rowselector_toggle-library": "toggleLibrary"
@@ -126,6 +127,7 @@ define 'cs!xlform/view.surveyApp', [
       else
         @survey = new $survey.Survey(options)
 
+      @warnings = options.warnings || []
       @__rowViews = new Backbone.Model()
       @ngScope = options.ngScope
 
@@ -375,6 +377,9 @@ define 'cs!xlform/view.surveyApp', [
 
       @set_multioptions_label()
       return
+
+    closeWarningBox: (evt)->
+      @$('.survey-warnings').hide()
 
     getItemPosition: (item) ->
       i = 0

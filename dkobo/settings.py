@@ -190,7 +190,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 
-SITE_ID = os.environ.get('DJANGO_SITE_ID', None)
+SITE_ID = os.environ.get('DJANGO_SITE_ID', '1')
 
 ACCOUNT_ACTIVATION_DAYS = 3
 LOGIN_REDIRECT_URL = '/'

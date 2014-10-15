@@ -74,6 +74,34 @@ code input[type="text"] {
     }
 }
 
+// ==========================================================================
+// Survey import warnings
+// ==========================================================================
+
+.survey-warnings {
+    @extend .container;
+    background-color: #fcf8e3;
+    color: #8a6d3b;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    border: 1px solid #cfb98b;
+}
+
+.survey-warnings__warning {
+    margin: 12px 0 0;
+}
+
+.survey-warnings__close-button {
+    color: #8a6d3b;
+    position: absolute;
+    top: 24px;
+    margin-top: -12px;
+    height: 24px;
+    right: 12px;
+    background-color: transparent;
+    border: 0 none;
+}
 
 // ==========================================================================
 // Survey editor

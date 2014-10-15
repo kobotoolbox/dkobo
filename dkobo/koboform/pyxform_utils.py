@@ -4,6 +4,7 @@ import xlrd
 import xlwt
 import csv
 import re
+from tempfile import NamedTemporaryFile
 
 def create_survey_from_csv_text(csv_text, default_name='KoBoFormSurvey', default_language=u'default', warnings=None, ):
     workbook_dict = xls2json_backends.csv_to_dict(StringIO.StringIO(csv_text.encode("utf-8")))
@@ -11,12 +12,21 @@ def create_survey_from_csv_text(csv_text, default_name='KoBoFormSurvey', default
     dict_repr[u'name'] = dict_repr[u'id_string']
     return builder.create_survey_element_from_dict(dict_repr)
 
-def convert_xls_to_xform(xls_file):
+def convert_xls_to_xform(xls_file, warnings=False):
     """
     This receives an XLS file object and runs it through
     pyxform to create and validate the survey.
     """
-    return create_survey_from_xls(xls_file).to_xml(validate=True)
+    survey = create_survey_from_xls(xls_file)
+    xml = ""
+    if warnings:
+        with NamedTemporaryFile(suffix='.xml') as named_tmp:
+            survey.print_xform_to_file(path=named_tmp.name, validate=True, warnings=warnings)
+            named_tmp.seek(0)
+            xml = named_tmp.read()
+    else:
+        xml = survey.to_xml()
+    return xml
 
 def convert_xls_to_csv_string(xls_file_object, strip_empty_rows=True):
     """
@@ -82,13 +92,38 @@ def convert_xls_to_csv_string(xls_file_object, strip_empty_rows=True):
         return result
 
     workbook = xlrd.open_workbook(file_contents=xls_file_object.read())
+    ss_structure = []
+    for sheet in workbook.sheets():
+        sheet_name = sheet.name
+        sheet_contents = _sheet_to_lists(sheet)
+        ss_structure.append([sheet_name, sheet_contents])
+    return convert_ss_structure_to_csv(ss_structure)
+
+def convert_ss_structure_to_csv(ss_list):
+    """
+    Expects a data structure like this:
+    [
+        ["sheet_name1",
+            [
+                ["col1", "col2", "col3"],
+                ["cell1", "cell2", "cell3"]
+            ]
+        ],
+        ...
+    ]
+    and exports a csv like this:
+    "sheet_name1",,,
+    ,"col1","col2","col3"
+    ,"cell1","cell2","cell3"
+    ...
+    """
     csv_out = StringIO.StringIO()
     csv_opts = {'quotechar':'"', 'doublequote':False, 'escapechar':'\\',
                 'delimiter':',', 'quoting':csv.QUOTE_ALL}
     writer = csv.writer(csv_out, **csv_opts)
-    for sheet in workbook.sheets():
-        writer.writerow([sheet.name])
-        for row in _sheet_to_lists(sheet):
+    for sheet_name, sheet_contents in ss_list:
+        writer.writerow([sheet_name])
+        for row in sheet_contents:
             writer.writerow([s.encode("utf-8") for s in ([""] + row)])
     return csv_out.getvalue()
 
