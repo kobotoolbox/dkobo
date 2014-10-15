@@ -130,7 +130,8 @@ function restApiFactory($resource, $timeout) {
                 remove: function (id) {
                     var index = _.indexOf(tags, _.filter(tags, function (tag) { return tag.id === id; })[0]);
                     tags.splice(index, 1);
-                }
+                },
+                save: function (item) {}
             }
         }
     };

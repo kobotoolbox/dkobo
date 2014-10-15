@@ -95,6 +95,10 @@ kobo.directive('itemList', function ($restApi) {
                         }
                         api.remove(item.id);
                         scope.items = api.list();
+                    };
+
+                    scope.updateModel = function (item) {
+                        api.save(item);
                     }
                 }
             }

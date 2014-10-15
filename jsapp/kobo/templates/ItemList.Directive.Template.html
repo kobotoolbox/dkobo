@@ -16,8 +16,13 @@
       class="{{ baseClass }}__editbox"
       ng-model="item.label"
       ng-click="$event.stopPropagation()"
+      ng-change="updateModel(item)"
     />
-    <a ng-show="fullEdit" href="#/library/questions/{{item.id}}" class="{{ baseClass }}__edit-link fa fa-edit pull-right fa-2x"></a>
+    <a
+      ng-show="fullEdit"
+      href="#/library/questions/{{item.id}}"
+      class="{{ baseClass }}__edit-link fa fa-edit pull-right fa-2x"
+    ></a>
     <span inner-transclude></span>
     <i
       class="tag__delete-button fa fa-trash-o"
