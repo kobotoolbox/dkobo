@@ -29,5 +29,10 @@ define 'cs!xlform/view.surveyDetails', [
       else
         @$el.removeClass("active")
         @model.set("value", false)
+    constructor: (options) ->
+      super
+      @selector = options.selector
+    attach_to: (destination) ->
+      destination.find(@selector).append @el
 
   SurveyDetailView: SurveyDetailView
