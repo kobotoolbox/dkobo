@@ -163,7 +163,10 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
             launch("#{previewServer}/koboform/survey_preview/#{unique_string}").appendTo("body")
             options.onSuccess()  if options.onSuccess?
           else if status isnt "success"
-            onError "Error launching preview: ", status, jqhr
+            informative_message = jqhr.responseText or jqhr.statusText
+            if informative_message.split("\n").length > 0
+              informative_message = informative_message.split("\n")[0..2].join("<br>")
+            onError informative_message, title: 'Error launching preview'
           else if response and response.error
             onError response.error
           else

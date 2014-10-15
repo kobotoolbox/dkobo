@@ -593,15 +593,16 @@ define 'cs!xlform/view.surveyApp', [
           enketoServer: window.koboConfigs?.enketoServer or false
           enketoPreviewUri: window.koboConfigs?.enketoPreviewUri or false
           onSuccess: => @onEscapeKeydown = $viewUtils.enketoIframe.close
-          onError: (errArgs...)=>
-            @alert errArgs
+          onError: (message, opts)=> @alert message, opts
       return
 
-    alert: (message) ->
-        $('.alert-modal').text(message).dialog('option', {
-            title: 'Error'
-            width: 500
-        }).dialog 'open'
+    alert: (message, opts={}) ->
+      title = opts.title or 'Error'
+      $('.alert-modal').html(message).dialog('option', {
+        title: title,
+        width: 500,
+        dialogClass: 'surveyapp__alert'
+      }).dialog 'open'
     downloadButtonClick: (evt)->
       # Download = save a CSV file to the disk
       surveyCsv = @survey.toCSV()
