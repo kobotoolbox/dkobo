@@ -115,7 +115,7 @@ def import_survey_draft(request):
         warnings = []
         try:
             survey_object = pyxform.survey_from.xform(filelike_obj=posted_file, warnings=warnings)
-            _csv = survey_object.to_csv(warnings=warnings).read()
+            _csv = survey_object.to_csv(warnings=warnings, koboform=True).read()
             new_survey_draft = SurveyDraft.objects.create(**{
                 u'body': _csv,
                 u'name': posted_file.name,
