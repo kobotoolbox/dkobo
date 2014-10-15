@@ -285,7 +285,7 @@ define 'cs!xlform/view.surveyApp', [
     _render_html: ->
       @$el.html $viewTemplates.$$render('surveyApp', @)
       @formEditorEl = @$(".-form-editor")
-      @settingsBox = @$("#additional-options")
+      @settingsBox = @$(".form__settings-meta__questions")
 
     _render_attachEvents: ->
       @survey.settings.on 'validated:invalid', (model, validations) ->
@@ -303,8 +303,16 @@ define 'cs!xlform/view.surveyApp', [
 
 
     _render_addSubViews: ->
+      meta_view = new $viewUtils.ViewComposer()
+
       for detail in @survey.surveyDetails.models
-        @settingsBox.append((new $surveyDetailView.SurveyDetailView(model: detail)).render().el)
+        if detail.get('name') in ["start", "end", "today", "deviceid"]
+          meta_view.add new $surveyDetailView.SurveyDetailView(model: detail, selector: '.settings__first-meta')
+        else
+          meta_view.add new $surveyDetailView.SurveyDetailView(model: detail, selector: '.settings__second-meta')
+
+      meta_view.render()
+      meta_view.attach_to @settingsBox
 
       # in which cases is the null_top_row_view_selector viewed
       @null_top_row_view_selector = new $viewRowSelector.RowSelector(el: @$el.find(".survey__row__spacer").get(0), survey: @survey, ngScope: @ngScope, surveyView: @, reversible:true)
