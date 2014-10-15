@@ -1,0 +1,7 @@
+<a href="" ng-click="toggle_response_list(item)" ng-class="item.meta.question_type_class">
+    <i ng-class="item.meta.question_type_icon_class + ' ' + item.meta.question_type_icon" ng-show="item.type === 'select_one' || item.type === 'select_many' || item.type === 'select_multiple'"></i>
+      {{item.type | titlecase}}
+</a>
+<ul class="question__responses" ng-show="item.meta.show_responses">
+    <li class="question__response-option" ng-repeat="response in item.responses">{{response}}</li>
+</ul>

@@ -81,4 +81,22 @@ function MiscUtilsService($rootScope, $userDetails) {
             _this.alert('The server encountered an error: ' + xhrResult.status + ": " + xhrResult.statusText, 'Error');
         }
     };
+
+    this.toggle_response_list = function (item) {
+        if (item.type !== 'select_one' && item.type !== 'select_all' && item.type !== 'select_multiple') {
+            return;
+        }
+
+        if (item.meta.show_responses) {
+            item.meta.show_responses = false;
+            item.meta.question_type_class = 'question__type';
+            item.meta.question_type_icon = 'fa fa-caret-right';
+            item.meta.question_type_icon_class = 'question__type-icon';
+        } else {
+            item.meta.question_type_class = 'question__type question__type--expanded';
+            item.meta.question_type_icon_class = 'question__type-icon question__type--expanded-icon';
+            item.meta.question_type_icon = 'fa fa-caret-down';
+            item.meta.show_responses = true;
+        }
+    };
 }

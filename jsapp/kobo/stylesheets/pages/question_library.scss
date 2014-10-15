@@ -35,11 +35,7 @@ $tagsHeight: 230px;
 // ==========================================================================
 
 .questions {
-    width: 100%;
-    // while this feature is still being worked on, question need to take full width
-    .bleeding-edge & {
-        width: 68%;
-    }
+    width: 68%;
     position: relative;
     float: left;
     height: 100%;
@@ -61,7 +57,7 @@ $tagsHeight: 230px;
     top:20px;
 }
 
-.questions__container {
+.items__container {
     height: 100%;
     overflow-y: scroll;
 }
@@ -201,7 +197,7 @@ $tagsHeight: 230px;
     }
 }
 
-.question__edit-link {
+.questions__question__edit-link {
     padding: 0.3em;
     position: absolute;
     top: 0;
@@ -214,7 +210,7 @@ $tagsHeight: 230px;
     }
 }
 
-.questions__question:hover .question__edit-link {
+.questions__question:hover .questions__question__edit-link {
     display: block;
 }
 .questions__question--selected,
@@ -255,7 +251,7 @@ $tagsHeight: 230px;
     }
 }
 
-.question__name {
+.questions__question__name {
     font-weight: 600;
     font-size: 13px;
     margin-top: 0;
@@ -264,7 +260,7 @@ $tagsHeight: 230px;
     padding: 10px 33px 10px 12px;
 }
 
-.question__name--selected {
+.questions__question__name--selected {
     margin-left: 10px;
 }
 
@@ -417,7 +413,6 @@ section.form-builder.active__sidebar .container {
    ========================================================================== */
 
 .tags {
-    @extend %incomplete;
     width: 29.5%;
     float: left;
     position: relative;
@@ -427,7 +422,6 @@ section.form-builder.active__sidebar .container {
 }
 
 .tags__header {
-    @extend %incomplete;
     height: $tagsHeight;
     position: absolute;
     top:0px;
@@ -436,7 +430,6 @@ section.form-builder.active__sidebar .container {
 }
 
 .tags__container {
-    @extend %incomplete;
     background-color: #e3e8ec;
     height: 100%;
     overflow-y:scroll;
@@ -490,17 +483,19 @@ section.form-builder.active__sidebar .container {
 }
 
 .tags__tag {
+    min-height: 62px;
     padding:10px;
     border-bottom: 1px solid #CCC;
     position: relative;
 }
 
 .tags__tag--selected {
+    padding: 8px 10px;
     border:2px solid #B8D1EA;
     background: white;
 }
 
-.tag__name {
+.tags__tag__name {
     margin:0px;
     padding:0px;
     font-size: 13px;
@@ -513,7 +508,7 @@ section.form-builder.active__sidebar .container {
     color: gray;
 }
 
-input.tag__editbox {
+input.tags__tag__editbox {
     border:none;
     display: block;
     font-size: 14px;

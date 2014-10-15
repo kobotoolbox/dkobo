@@ -1,0 +1,23 @@
+<ul class="items__container">
+  <li
+    ng-repeat="item in items|filter:filters|orderBy:sortCriteria"
+    ng-class="item.meta.additionalClasses"
+    ng-click="toggleSelected(item, $event)"
+    class="{{ baseClass }}"
+  >
+    <h4
+      class="{{ baseClass }}__name"
+      ng-show="!quickEdit || !item.meta.isSelected"
+    >
+      {{ item.label }}
+    </h4>
+    <input
+      ng-show="quickEdit && item.meta.isSelected"
+      class="{{ baseClass }}__editbox"
+      ng-model="item.label"
+      ng-click="$event.stopPropagation()"
+    />
+    <a ng-show="fullEdit" href="#/library/questions/{{item.id}}" class="{{ baseClass }}__edit-link fa fa-edit pull-right fa-2x"></a>
+    <span inner-transclude></span>
+  </li>
+</ul>

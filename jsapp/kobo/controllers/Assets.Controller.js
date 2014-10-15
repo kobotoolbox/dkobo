@@ -5,6 +5,8 @@
 function AssetsController($scope, $rootScope, $resource, $restApi, $timeout, $filter, $miscUtils) {
     var assets = $restApi.create_question_api($scope);
     $scope.sort_criteria = '-date_modified';
+    $scope.tagsSortCriteria = '-date_modified';
+    $scope.tagFilters = {};
     $rootScope.showImportButton = false;
     $rootScope.showCreateButton = false;
     $scope.filters = {};
@@ -14,75 +16,21 @@ function AssetsController($scope, $rootScope, $resource, $restApi, $timeout, $fi
 
     $miscUtils.bootstrapQuestionUploader(assets.list);
 
-    $scope.toggle_selected = function (item, $event) {
-        var i,
-            currently_selected = item.meta.is_selected,
-            more_than_one_selected = false,
-            current,
-            select_question,
-            select_all = true;
-
-        if (!($event.ctrlKey || $event.metaKey)) {
-            for (i = 0; i < $scope.info_list_items.length; i++) {
-                current = $scope.info_list_items[i];
-                if (current != item) {
-                    more_than_one_selected = more_than_one_selected || (currently_selected && current.meta.is_selected);
-                }
-                current.meta.question_class = 'questions__question';
-                current.meta.is_selected = false;
-            }
-        }
-
-        select_question = more_than_one_selected || !currently_selected;
-        item.meta.is_selected = select_question
-        item.meta.question_class = select_question ? 'questions__question questions__question--selected' : 'questions__question';
-
-        for (i = 0; i < $scope.info_list_items.length; i++) {
-            select_all = select_all && $scope.info_list_items[i].meta.is_selected;
-        }
-
-        $scope.is_updating_select_all = true;
-        if ($scope.select_all === select_all) {
-            $scope.is_updating_select_all = false;
-        } else {
-            $scope.select_all = select_all
-        }
-
-    };
-
-    $scope.toggle_response_list = function (item) {
-        if (item.type !== 'select_one' && item.type !== 'select_all' && item.type !== 'select_multiple') {
-            return;
-        }
-
-        if (item.meta.show_responses) {
-            item.meta.show_responses = false;
-            item.meta.question_type_class = 'question__type';
-            item.meta.question_type_icon = 'fa fa-caret-right';
-            item.meta.question_type_icon_class = 'question__type-icon';
-        } else {
-            item.meta.question_type_class = 'question__type question__type--expanded';
-            item.meta.question_type_icon_class = 'question__type-icon question__type--expanded-icon';
-            item.meta.question_type_icon = 'fa fa-caret-down';
-            item.meta.show_responses = true;
-        }
-    };
-
     $scope.select_all = null;
 
     function select_all() {
-        var new_class = $scope.select_all ? 'questions__question questions__question--selected' : 'questions__question';
+        var new_class = $scope.select_all ? 'questions__question--selected' : '';
         var filter = $filter('filter');
 
         if (!$scope.is_updating_select_all) {
             _.each($scope.info_list_items, function (item) {
                 item.meta.is_selected = false;
-                item.meta.question_class = 'questions__question';
+                item.meta.additionalClasses = '';
             });
 
             _.each(filter($scope.info_list_items, $scope.filters), function (item) {
                 item.meta.is_selected = $scope.select_all;
-                item.meta.question_class = new_class;
+                item.meta.additionalClasses = new_class;
             });
         }
 
@@ -117,11 +65,11 @@ function AssetsController($scope, $rootScope, $resource, $restApi, $timeout, $fi
 
     $scope.$watch('show_responses', function () {
         if (typeof $scope.show_responses === 'undefined') {
-            return;e
+            return;
         }
 
         _.each($scope.info_list_items, function (item) {
-            $scope.toggle_response_list(item);
+            $miscUtils.toggle_response_list(item);
         });
     });
 
@@ -129,7 +77,7 @@ function AssetsController($scope, $rootScope, $resource, $restApi, $timeout, $fi
         return _.filter($scope.info_list_items, function (item) {
             return item.meta ? item.meta.is_selected : false;
         }).length;
-    }
+    };
 
     $scope.get_selected_amount = function () {
         var amount = $scope.get_selected_count();
@@ -143,4 +91,53 @@ function AssetsController($scope, $rootScope, $resource, $restApi, $timeout, $fi
 
     $rootScope.canAddNew = true;
     $rootScope.activeTab = 'Question Library';
+
+    $scope.tags = [
+        {questionCount: 0, id: -1, label: 'Demographics', meta: {isSelected: true, additionalClasses: 'tags__tag--selected'} },
+        {questionCount: 0, id: -1, label: 'Priorities services' },
+        {questionCount: 0, id: -1, label: 'Security', meta: {isSelected: true, additionalClasses: 'tags__tag--selected'} },
+        {questionCount: 0, id: -1, label: 'Disputes' },
+        {questionCount: 0, id: -1, label: 'Domestic Violence' },
+        {questionCount: 0, id: -1, label: 'Mortality' },
+        {questionCount: 0, id: -1, label: 'Exposure to War Violence' },
+        {questionCount: 0, id: -1, label: 'Former combatants' },
+        {questionCount: 0, id: -1, label: 'Victims' },
+        {questionCount: 0, id: -1, label: 'Measures for Victims' },
+        {questionCount: 1, id: -1, label: 'Monuments' },
+        {questionCount: 1, id: -1, label: 'Origins of conflicts' },
+        {questionCount: 1, id: -1, label: 'Truth' },
+        {questionCount: 1, id: -1, label: 'Information' },
+        {questionCount: 1, id: -1, label: 'Accountability' },
+        {questionCount: 1, id: -1, label: 'Justice' },
+        {questionCount: 1, id: -1, label: 'International Criminal Court' },
+        {questionCount: 1, id: -1, label: 'Peace' },
+        {questionCount: 1, id: -1, label: 'Group membership'}
+    ];
+
+    function initialize_tags() {
+        _.each($scope.tags, function (tag) {
+            if (typeof tag.meta === 'undefined') {
+                tag.meta = {};
+            }
+        });
+    }
+
+    initialize_tags();
+
+    $scope.toggleTagInFilters = function (item) {
+        if (!$scope.filters.tags) {
+            $scope.filters.tags = [];
+        }
+        var tags = $scope.filters.tags;
+
+        if (item.meta.isSelected) {
+            tags.push({id: item.id});
+        } else {
+            tags.splice(_.indexOf(tags, _.filter(tags, function (tag) { tag.id === item.id })), 1);
+        }
+
+        if (tags.length === 0) {
+            delete $scope.filters.tags;
+        }
+    };
 }
