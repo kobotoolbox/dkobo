@@ -178,15 +178,16 @@ define 'cs!xlform/model.survey', [
       sheeted.toString()
 
   Survey.load = (csv_repr)->
-    if not _is_csv(csv_repr)
+    if _.isString(csv_repr) and not _is_csv(csv_repr)
       throw Error("Invalid CSV passed to form builder")
     _deserialized = $inputDeserializer.deserialize csv_repr
     _parsed = $inputParser.parse _deserialized
     new Survey(_parsed)
 
   _is_csv = (csv_repr)->
+    # checks that a string has a newline and a comma,
+    # a very simplistic test of a csv
     '\n' in csv_repr and ',' in csv_repr
-
 
   # Settings (assigned to each $survey.Survey instance)
   class Settings extends $base.BaseModel
