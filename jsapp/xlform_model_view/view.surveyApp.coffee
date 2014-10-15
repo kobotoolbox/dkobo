@@ -406,7 +406,7 @@ define 'cs!xlform/view.surveyApp', [
               return
             item = ui.item.prev()
 
-            @ngScope.add_item @getItemPosition(item)
+            @ngScope.add_item @getItemPosition(item) - 1
             ui.sender.sortable('cancel')
         })
       group_rows = @formEditorEl.find('.group__rows')
