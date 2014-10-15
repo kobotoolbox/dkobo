@@ -60,10 +60,11 @@ function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo,
     if ($scope.routeParams.id && $scope.routeParams.id !== 'new'){
         // url points to existing survey_draft
         surveyDraftApi.get({id: $scope.routeParams.id}, function builder_get_callback(response) {
+            var warnings = window.importFormWarnings || [];
             $scope.xlfSurvey = dkobo_xlform.model.Survey.load(response.body);
             // temporarily saving response in __djangoModelDetails
             $scope.xlfSurvey.__djangoModelDetails = response;
-            $scope.xlfSurveyApp = dkobo_xlform.view.SurveyApp.create({el: 'section.form-builder', survey: $scope.xlfSurvey, ngScope: $scope, save: saveCallback});
+            $scope.xlfSurveyApp = dkobo_xlform.view.SurveyApp.create({el: 'section.form-builder', survey: $scope.xlfSurvey, ngScope: $scope, save: saveCallback, warnings: warnings});
             $scope.xlfSurveyApp.render();
         });
     } else {
