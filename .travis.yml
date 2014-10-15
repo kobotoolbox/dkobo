@@ -26,7 +26,7 @@ deploy:
   provider: heroku
   app: kobo-dev
   api_key:
-    secure: pXD088HFHTBgl9z6E+u3LwcfQO4D1Cpa3IrocAky5bitlKC0ku55JoTKOQLYmNsI0eCCQw+uJKD8F7OuLwt4zZ7LF30SbtPbs1g73vFz7Iu6sV4uY97MKC01T6CCiaOfUACeY8UP/tQfFgaugRE6D2I3GyQ/k6tKiR2hQX2pqOI=
+    secure: pkzN8bdqtKHXg4JdrOu/I3oRjycpYR5hDJcVVozuM6UL+cxYNEIXTNzpkySWRAmCx4c0Ay8BMjs4E0GTxooTjNlgDGtIvHTLJoO0H23aQh7QtfGAfPt8kR7Up6LXalgD+DcqH4RrSt4yNITk/7X3KW0wokwVQzT8pMjkNr7Dg7U=
   strategy: git
 notifications:
   irc: irc.freenode.org#kobotest
