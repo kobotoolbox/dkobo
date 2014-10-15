@@ -230,6 +230,31 @@ $tagsHeight: 230px;
     border-bottom: 2px solid #38a1f1;
 }
 
+.questions__question.ui-sortable-placeholder {
+    visibility: visible !important;
+    position: relative; 
+    background: transparent;
+    .survey-editor & {
+        border:2px solid #d9dde1;
+        margin-bottom: 4px;
+    }
+}
+
+.questions__question.ui-sortable-placeholder:after {
+    position: absolute;
+    content: "Drag and drop the library question to add it to your form";
+    top:50%;
+    left:10%;
+    width: 80%;
+    text-align: center;
+    margin-top:-8px;
+    font-size: 0.9em;
+    .questions__sidebar--container & {
+        font-size: 0.8em;
+        margin-top: -20px;
+    }
+}
+
 .question__name {
     font-weight: 600;
     font-size: 13px;
