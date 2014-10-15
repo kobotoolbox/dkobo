@@ -83,6 +83,8 @@ define 'cs!xlform/view.row', [
           val.set('value', '')
         @rowDetailViews.push view
         view.render().insertInDOM(@)
+        if key == 'label'
+          @make_label_editable(view)
 
       @
 
@@ -142,7 +144,9 @@ define 'cs!xlform/view.row', [
 
       if !@already_rendered
         # only render the row details which are necessary for the initial view (ie 'label')
-        new $viewRowDetail.DetailView(model: @model.get('label'), rowView: @).render().insertInDOM(@)
+        @make_label_editable new $viewRowDetail.DetailView(model: @model.get('label'), rowView: @).render().insertInDOM(@)
+
+
 
       @already_rendered = true
       @
@@ -153,6 +157,17 @@ define 'cs!xlform/view.row', [
       @defaultRowDetailParent = @cardSettingsWrap.find('.card__settings__fields--active').eq(0)
       for [key, val] in @model.attributesArray() when key in ["name", "_isRepeat", "appearance", "relevant"]
         new $viewRowDetail.DetailView(model: val, rowView: @).render().insertInDOM(@)
+    make_label_editable: (view) ->
+      $viewUtils.makeEditable view, view.model, @$label, options:
+        placement: 'right'
+        rows: 3
+      ,
+      transformFunction: (value) ->
+        value = value.replace(new RegExp(String.fromCharCode(160), 'g'), '&nbsp;')
+        if value == ''
+          return '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+        else
+        return value;
 
   class RowView extends BaseRowView
     _expandedRender: ->
@@ -178,7 +193,13 @@ define 'cs!xlform/view.row', [
       else
         @showMultioptions()
         @is_expanded = true
-      ``
+      return
+    make_label_editable: (view) ->
+      $viewUtils.makeEditable view, view.model, @$label, options:
+        placement: 'right'
+        rows: 3
+      ,
+      transformFunction: (value) -> value
 
   RowView: RowView
   GroupView: GroupView

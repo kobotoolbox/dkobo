@@ -144,9 +144,7 @@ define 'cs!xlform/view.rowDetail', [
     insertInDOM: (rowView)->
       cht = rowView.$label
       cht.html(@model.get("value"))
-      $viewUtils.makeEditable @, @model, cht, options:
-        placement: 'right'
-        rows: 3
+      @
 
   viewRowDetail.DetailViewMixins.hint =
     html: ->
