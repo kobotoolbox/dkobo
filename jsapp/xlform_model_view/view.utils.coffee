@@ -18,7 +18,7 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
     if !edit_callback?
       edit_callback = _.bind (ent) ->
           ent = transformFunction ent
-          ent = ent.replace(/\t/g, '')
+          ent = ent.replace(/\t/g, ' ')
           model.set(property, ent, validate: true)
           if(model.validationError && model.validationError[property])
             return model.validationError[property]

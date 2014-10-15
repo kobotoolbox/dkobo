@@ -160,6 +160,7 @@ define 'cs!xlform/view.choices', [
         nval = false
 
       if nval
+        nval = nval.replace /\t/g, ' '
         @model.set("label", nval, silent: true)
         other_names = @options.cl.getNames()
         if !@model.get('setManually')
