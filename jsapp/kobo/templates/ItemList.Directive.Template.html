@@ -19,5 +19,10 @@
     />
     <a ng-show="fullEdit" href="#/library/questions/{{item.id}}" class="{{ baseClass }}__edit-link fa fa-edit pull-right fa-2x"></a>
     <span inner-transclude></span>
+    <i
+      class="tag__delete-button fa fa-trash-o"
+      ng-show="canDelete && item.meta.isSelected"
+      ng-click="removeItem(item, $event)"
+    ></i>
   </li>
 </ul>

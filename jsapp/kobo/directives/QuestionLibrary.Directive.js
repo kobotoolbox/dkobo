@@ -9,7 +9,7 @@ function QuestionLibraryDirective($restApi) {
         link: function (scope, element) {
             var sort_ul = element.find('ul');
 
-            var questions = $restApi.create_question_api(scope);
+            var questions = $restApi.createQuestionApi(scope);
             questions.list();
 
             scope.$parent.refresh = function () {

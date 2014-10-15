@@ -4,7 +4,7 @@
 function AssetEditorController($scope, $rootScope, $routeParams, $restApi, $routeTo) {
     $rootScope.showImportButton = false;
     $rootScope.showCreateButton = false;
-    var surveyDraftApi = $restApi.create_question_api($scope, $routeParams.id);
+    var surveyDraftApi = $restApi.createQuestionApi($scope, $routeParams.id);
     $rootScope.activeTab = 'Question Library > Edit question';
     if($routeParams.id === 'new'){
         render_question(null)

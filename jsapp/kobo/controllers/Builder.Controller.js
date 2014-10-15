@@ -85,7 +85,7 @@ function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo,
         var survey = dkobo_xlform.model.Survey.create();
         survey.rows.add(row);
 
-        var resource = $restApi.create_question_api($scope);
+        var resource = $restApi.createQuestionApi($scope);
         resource.save({body: survey.toCSV(), asset_type: 'question'}, function () {
             $miscUtils.alert('<p><strong>Your question has been saved to your question library.</strong></p><p>You can now find this question in the library sidebar on the right. To reuse it, just drag-and-drop it into any of your forms.</p><p>To edit or remove questions from your library, choose Question Library from the menu. </p>', 'Success!');
             $scope.refresh();

@@ -3,6 +3,27 @@
 'use strict';
 
 function restApiFactory($resource, $timeout) {
+    var tags = [
+        {questionCount: 0, id: 1, label: 'Demographics' },
+        {questionCount: 0, id: 2, label: 'Priorities services' },
+        {questionCount: 0, id: 3, label: 'Security' },
+        {questionCount: 0, id: 4, label: 'Disputes' },
+        {questionCount: 0, id: 5, label: 'Domestic Violence' },
+        {questionCount: 0, id: 6, label: 'Mortality' },
+        {questionCount: 0, id: 7, label: 'Exposure to War Violence' },
+        {questionCount: 0, id: 8, label: 'Former combatants' },
+        {questionCount: 0, id: 9, label: 'Victims' },
+        {questionCount: 0, id: 10, label: 'Measures for Victims' },
+        {questionCount: 1, id: 11, label: 'Monuments' },
+        {questionCount: 1, id: 12, label: 'Origins of conflicts' },
+        {questionCount: 1, id: 13, label: 'Truth' },
+        {questionCount: 1, id: 14, label: 'Information' },
+        {questionCount: 1, id: 15, label: 'Accountability' },
+        {questionCount: 1, id: 16, label: 'Justice' },
+        {questionCount: 1, id: 17, label: 'International Criminal Court' },
+        {questionCount: 1, id: 18, label: 'Peace' },
+        {questionCount: 1, id: 19, label: 'Group membership'}
+    ];
     return {
         createSurveyDraftApi: function (id) {
             if (id === undefined) {
@@ -18,7 +39,7 @@ function restApiFactory($resource, $timeout) {
                 });
             }
         },
-        create_question_api: function ($scope, id) {
+        createQuestionApi: function ($scope, id) {
             var custom_methods = {
                 list: {
                     method: 'GET',
@@ -87,7 +108,7 @@ function restApiFactory($resource, $timeout) {
                         if ($scope.info_list_items.length > 0) {
                             timed_execution($scope.info_list_items[i]);
                         }
-
+                        return $scope.items = $scope.info_list_items;
                     }
                 }
             };
@@ -100,6 +121,17 @@ function restApiFactory($resource, $timeout) {
                 id = '';
             }
             return $resource('/api/library_assets/:id', {id: id}, custom_methods);
+        },
+        createTagsApi: function () {
+            return {
+                list: function () {
+                    return tags;
+                },
+                remove: function (id) {
+                    var index = _.indexOf(tags, _.filter(tags, function (tag) { return tag.id === id; })[0]);
+                    tags.splice(index, 1);
+                }
+            }
         }
     };
 }

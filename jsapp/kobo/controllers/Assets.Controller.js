@@ -3,7 +3,7 @@
 /* global _ */
 'use strict';
 function AssetsController($scope, $rootScope, $resource, $restApi, $timeout, $filter, $miscUtils) {
-    var assets = $restApi.create_question_api($scope);
+    var assets = $restApi.createQuestionApi($scope);
     $scope.sort_criteria = '-date_modified';
     $scope.tagsSortCriteria = '-date_modified';
     $scope.tagFilters = {};
@@ -92,38 +92,6 @@ function AssetsController($scope, $rootScope, $resource, $restApi, $timeout, $fi
     $rootScope.canAddNew = true;
     $rootScope.activeTab = 'Question Library';
 
-    $scope.tags = [
-        {questionCount: 0, id: -1, label: 'Demographics', meta: {isSelected: true, additionalClasses: 'tags__tag--selected'} },
-        {questionCount: 0, id: -1, label: 'Priorities services' },
-        {questionCount: 0, id: -1, label: 'Security', meta: {isSelected: true, additionalClasses: 'tags__tag--selected'} },
-        {questionCount: 0, id: -1, label: 'Disputes' },
-        {questionCount: 0, id: -1, label: 'Domestic Violence' },
-        {questionCount: 0, id: -1, label: 'Mortality' },
-        {questionCount: 0, id: -1, label: 'Exposure to War Violence' },
-        {questionCount: 0, id: -1, label: 'Former combatants' },
-        {questionCount: 0, id: -1, label: 'Victims' },
-        {questionCount: 0, id: -1, label: 'Measures for Victims' },
-        {questionCount: 1, id: -1, label: 'Monuments' },
-        {questionCount: 1, id: -1, label: 'Origins of conflicts' },
-        {questionCount: 1, id: -1, label: 'Truth' },
-        {questionCount: 1, id: -1, label: 'Information' },
-        {questionCount: 1, id: -1, label: 'Accountability' },
-        {questionCount: 1, id: -1, label: 'Justice' },
-        {questionCount: 1, id: -1, label: 'International Criminal Court' },
-        {questionCount: 1, id: -1, label: 'Peace' },
-        {questionCount: 1, id: -1, label: 'Group membership'}
-    ];
-
-    function initialize_tags() {
-        _.each($scope.tags, function (tag) {
-            if (typeof tag.meta === 'undefined') {
-                tag.meta = {};
-            }
-        });
-    }
-
-    initialize_tags();
-
     $scope.toggleTagInFilters = function (item) {
         if (!$scope.filters.tags) {
             $scope.filters.tags = [];
@@ -133,7 +101,7 @@ function AssetsController($scope, $rootScope, $resource, $restApi, $timeout, $fi
         if (item.meta.isSelected) {
             tags.push({id: item.id});
         } else {
-            tags.splice(_.indexOf(tags, _.filter(tags, function (tag) { tag.id === item.id })), 1);
+            tags.splice(_.indexOf(tags, _.filter(tags, function (tag) { return tag.id === item.id })[0]), 1);
         }
 
         if (tags.length === 0) {

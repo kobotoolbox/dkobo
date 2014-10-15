@@ -1,28 +1,45 @@
-kobo.directive('itemList', function () {
+kobo.directive('itemList', function ($restApi) {
     return {
         restrict: 'E',
         replace: true,
         templateUrl: staticFilesUri + 'templates/ItemList.Directive.Template.html',
         transclude: true,
         scope: {
-            items: '=',
+            restApi: '@',
             filters: '=',
             sortCriteria: '=',
             baseClass: '@',
             quickEdit: '@',
             fullEdit: '@',
             fullEditClass: '@',
-            additionalSelectOperations: '='
+            additionalSelectOperations: '=',
+            canDelete: '@'
         },
         compile: function (elem, attrs, transcludeFn) {
+            var api;
             return {
                 pre: function (scope) {
                     transcludeFn(scope, function (clone) {
                         elem.find('span[inner-transclude]').append(clone)
                     });
+                    if (scope.restApi) {
+                        // scope is passed for compatibility with old API interface. should be refactored out
+                        api = $restApi['create' + scope.restApi + 'Api'](scope);
+                        scope.items = api.list();
+                    }
+                    function initialize_items() {
+                        _.each(scope.items, function (item) {
+                            if (typeof item.meta === 'undefined') {
+                                item.meta = {};
+                            }
+                        });
+                    }
+
+                    initialize_items();
                 },
                 post: function (scope) {
                     scope.transclude = transcludeFn;
+
                     function deselect_all(item) {
                         var i,
                             more_than_one_selected = false,
@@ -70,6 +87,15 @@ kobo.directive('itemList', function () {
                             scope.additionalSelectOperations(item)
                         }
                     };
+
+                    scope.removeItem = function (item, $event) {
+                        $event.stopPropagation();
+                        if (!api) {
+                            throw 'No API. To use this functionality you must specify the rest-api attribute.'
+                        }
+                        api.remove(item.id);
+                        scope.items = api.list();
+                    }
                 }
             }
         }

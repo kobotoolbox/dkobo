@@ -21,15 +21,15 @@
     </div>
 
       <item-list
-        items="tags"
+        rest-api="Tags"
         filters="tagFilters"
         sort-criteria="tagsSortCriteria"
         base-class="tags__tag"
         quick-edit="true"
         additional-select-operations="toggleTagInFilters"
+        can-delete="true"
       >
         <span class="tag__question-count">{{ item.questionCount }} questions</span>
-        <i class="tag__delete-button fa fa-trash-o" ng-show="item.meta.isSelected"></i>
       </item-list>
 
     <div class="tags__empty hidden">
@@ -87,6 +87,7 @@
 
   <item-list
     items="info_list_items"
+    rest-api="Question"
     filters="filters"
     sort-criteria="sort_criteria"
     base-class="questions__question"
