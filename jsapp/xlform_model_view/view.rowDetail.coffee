@@ -108,6 +108,15 @@ define 'cs!xlform/view.rowDetail', [
     checkbox: (cid, key, key_label = key, input_label = 'Yes') ->
       @field """<input type="checkbox" name="#{key}" id="#{cid}"/> <label for="#{cid}">#{input_label}</label>""", cid, key_label
 
+    dropdown: (cid, key, values, key_label = key) ->
+      select = """<select id="#{cid}">"""
+
+      for value in values
+        select += """<option value="#{value}">#{value}</option>"""
+
+      select += "</select>"
+
+      @field select, cid, key_label
     field: (input, cid, key_label) ->
       """
       <div class="card__settings__fields__field">
@@ -238,17 +247,43 @@ define 'cs!xlform/view.rowDetail', [
 
   viewRowDetail.DetailViewMixins.appearance =
     html: ->
+      types =
+        text: ['multiline']
+        select_one: ['minimal', 'quick', 'horizontal-compact', 'horizontal', 'likert', 'compact', 'quickcompact', 'label', 'list-nolabel']
+        select_multiple: ['minimal', 'horizontal-compact', 'horizontal', 'compact', 'label', 'list-nolabel']
+        image: ['signature', 'draw']
+        date: ['month-year', 'year']
+        group: ['select', 'field-list', 'table-list', 'other']
+
       @$el.addClass("card__settings__fields--active")
-      if @model._parent.constructor.key == 'group'
-        viewRowDetail.Templates.checkbox @cid, @model.key, 'Appearance (advanced)', 'Show all questions in this group on the same screen'
+      if @model_is_group()
+        return viewRowDetail.Templates.checkbox @cid, @model.key, 'Appearance (advanced)', 'Show all questions in this group on the same screen'
       else
-        viewRowDetail.Templates.textbox @cid, @model.key, 'Appearance (advanced)', 'text'
+        appearances = types[@model._parent.getValue('type').split(' ')[0]]
+        if appearances?
+          appearances.push 'other'
+          appearances.unshift 'select'
+          return viewRowDetail.Templates.dropdown @cid, @model.key, appearances, 'Appearance (advanced)'
+        else
+          return viewRowDetail.Templates.textbox @cid, @model.key, 'Appearance (advanced)', 'text'
+
+    model_is_group: () ->
+      @model._parent.constructor.key == 'group'
+
     afterRender: ->
-      if @model._parent.constructor.key == 'group'
-        $checkbox = @$('input[type=checkbox]').eq(0)
-        value_lookup = ['', 'field-list']
-        $checkbox.on 'change', () =>
-          @model.set('value', value_lookup[+$checkbox.prop('checked')])
+      $select = @$('select')
+      if $select.length > 0
+        $input = $('<input/>', {class:'text', type: 'text', width: 'auto'})
+        $select.change () =>
+          if $select.val() == 'other'
+            @model.set 'value', ''
+            @$('.settings__input').append $input
+            @listenForInputChange el: $input
+          else if $select.val() == 'select'
+            @model.set 'value', ''
+          else
+            @model.set 'value', $select.val()
+            $input.remove()
       else
         @listenForInputChange()
 
