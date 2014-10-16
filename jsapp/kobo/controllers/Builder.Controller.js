@@ -60,7 +60,14 @@ function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo,
     if ($scope.routeParams.id && $scope.routeParams.id !== 'new'){
         // url points to existing survey_draft
         surveyDraftApi.get({id: $scope.routeParams.id}, function builder_get_callback(response) {
-            var warnings = window.importFormWarnings || [];
+            var warnings = [];
+
+            if (window.importFormWarnings) {
+                warnings = window.importFormWarnings || [];
+                // empty out the global warnings object
+                window.importFormWarnings = [];
+            }
+
             $scope.xlfSurvey = dkobo_xlform.model.Survey.load(response.body);
             // temporarily saving response in __djangoModelDetails
             $scope.xlfSurvey.__djangoModelDetails = response;
