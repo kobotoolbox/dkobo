@@ -3,8 +3,9 @@ from rest_framework.decorators import action
 from django.core.exceptions import PermissionDenied
 from rest_framework.response import Response
 from models import SurveyDraft, SurveyPreview
-from serializers import ListSurveyDraftSerializer, DetailSurveyDraftSerializer
+from serializers import ListSurveyDraftSerializer, DetailSurveyDraftSerializer, TagSerializer
 from django.shortcuts import render_to_response, HttpResponse, get_object_or_404
+from taggit.models import Tag
 
 
 class SurveyAssetViewset(viewsets.ModelViewSet):
@@ -42,6 +43,9 @@ class SurveyAssetViewset(viewsets.ModelViewSet):
         draft = self.get_object()
         draft.delete()
 
+class TagViewset(viewsets.ModelViewSet):
+    model = Tag
+    serializer_class = TagSerializer
 
 class LibraryAssetViewset(SurveyAssetViewset):
     exclude_asset_type = True

@@ -482,6 +482,18 @@ section.form-builder.active__sidebar .container {
     display: block;
 }
 
+.tag__create-new__editbox {
+    padding: 5px 15px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+    border:none;
+    border-bottom: 2px solid darken(#39BF6E, 20%);
+    display: block;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+
 .tags__tag {
     min-height: 62px;
     padding:10px;

@@ -2,12 +2,13 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from rest_framework import routers
 # from koboform.views import SurveyDraftViewSet
-from koboform.api import SurveyDraftViewSet, LibraryAssetViewset
+from koboform.api import SurveyDraftViewSet, LibraryAssetViewset, TagViewset
 
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'survey_drafts', SurveyDraftViewSet, 'SurveyDraft')
 router.register(r'library_assets', LibraryAssetViewset, 'LibraryAsset')
+router.register(r'tags', TagViewset, 'Tag')
 
 admin.autodiscover()
 

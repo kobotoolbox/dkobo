@@ -16,26 +16,19 @@ kobo.directive('itemList', function ($restApi) {
             canDelete: '@'
         },
         compile: function (elem, attrs, transcludeFn) {
-            var api;
+            var api, initialize_items;
+
             return {
                 pre: function (scope) {
                     transcludeFn(scope, function (clone) {
                         elem.find('span[inner-transclude]').append(clone)
                     });
+
                     if (scope.restApi) {
                         // scope is passed for compatibility with old API interface. should be refactored out
                         api = $restApi['create' + scope.restApi + 'Api'](scope);
                         scope.items = api.list();
                     }
-                    function initialize_items() {
-                        _.each(scope.items, function (item) {
-                            if (typeof item.meta === 'undefined') {
-                                item.meta = {};
-                            }
-                        });
-                    }
-
-                    initialize_items();
                 },
                 post: function (scope) {
                     scope.transclude = transcludeFn;
@@ -84,7 +77,7 @@ kobo.directive('itemList', function ($restApi) {
                         }
 
                         if (typeof scope.additionalSelectOperations !== 'undefined') {
-                            scope.additionalSelectOperations(item)
+                            scope.additionalSelectOperations(scope.items)
                         }
                     };
 
@@ -93,8 +86,9 @@ kobo.directive('itemList', function ($restApi) {
                         if (!api) {
                             throw 'No API. To use this functionality you must specify the rest-api attribute.'
                         }
+                        scope.toggleSelected(item, {});
+                        item.$remove();
                         api.remove(item.id);
-                        scope.items = api.list();
                     };
 
                     scope.updateModel = function (item) {

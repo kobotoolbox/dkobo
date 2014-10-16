@@ -3,27 +3,17 @@
 'use strict';
 
 function restApiFactory($resource, $timeout) {
-    var tags = [
-        {questionCount: 0, id: 1, label: 'Demographics' },
-        {questionCount: 0, id: 2, label: 'Priorities services' },
-        {questionCount: 0, id: 3, label: 'Security' },
-        {questionCount: 0, id: 4, label: 'Disputes' },
-        {questionCount: 0, id: 5, label: 'Domestic Violence' },
-        {questionCount: 0, id: 6, label: 'Mortality' },
-        {questionCount: 0, id: 7, label: 'Exposure to War Violence' },
-        {questionCount: 0, id: 8, label: 'Former combatants' },
-        {questionCount: 0, id: 9, label: 'Victims' },
-        {questionCount: 0, id: 10, label: 'Measures for Victims' },
-        {questionCount: 1, id: 11, label: 'Monuments' },
-        {questionCount: 1, id: 12, label: 'Origins of conflicts' },
-        {questionCount: 1, id: 13, label: 'Truth' },
-        {questionCount: 1, id: 14, label: 'Information' },
-        {questionCount: 1, id: 15, label: 'Accountability' },
-        {questionCount: 1, id: 16, label: 'Justice' },
-        {questionCount: 1, id: 17, label: 'International Criminal Court' },
-        {questionCount: 1, id: 18, label: 'Peace' },
-        {questionCount: 1, id: 19, label: 'Group membership'}
-    ];
+    var lists = {},
+        apis = {};
+
+
+    function initialize_items(items) {
+        _.each(items, function (item) {
+            if (!item.meta) {
+                item.meta = {};
+            }
+        });
+    }
     return {
         createSurveyDraftApi: function (id) {
             if (id === undefined) {
@@ -120,16 +110,65 @@ function restApiFactory($resource, $timeout) {
             } else {
                 id = '';
             }
-            return $resource('/api/library_assets/:id', {id: id}, custom_methods);
-        },
-        createTagsApi: function () {
+            var api = apis.question = $resource('/api/library_assets/:id', {id: id}, custom_methods);
+
             return {
                 list: function () {
-                    return tags;
+                    return lists.questions = api.list(function () {
+                        initialize_items(lists.questions);
+                    });
+                },
+                save: function (item, callback) {
+                    api.save(item, callback);
+                }
+            }
+        },
+        createTagsApi: function () {
+            var customMethods = {
+                list: {
+                    method: 'GET',
+                    isArray: true
+                },
+                update: {
+                    method: 'PATCH'
+                }
+            };
+
+
+            var api = apis.tag = $resource('api/tags/:id', {id: '@id'}, customMethods)
+
+            return {
+                list: function () {
+                    return lists.tags = api.list(function () {
+                        initialize_items(lists.tags);
+                    });
                 },
                 remove: function (id) {
                     var index = _.indexOf(tags, _.filter(tags, function (tag) { return tag.id === id; })[0]);
-                    tags.splice(index, 1);
+                    lists.tags.splice(index, 1);
+                },
+                save: function (item, callback) {
+                    if (item.id) {
+                        api.update(item, function () {
+                            apis.question.list();
+                            if (callback) {
+                                callback.apply(this, arguments);
+                            }
+                        });
+                    } else {
+                        api.save(item, function (tag) {
+                            lists.tags.push(tag);
+                            if (callback) {
+                                callback.apply(this, arguments);
+                            }
+                        });
+                    }
+                }
+            };
+
+            return {
+                list: function () {
+                    return tags;
                 },
                 save: function (item) {}
             }

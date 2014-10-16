@@ -13,14 +13,29 @@
         <select class="tag-filter__sorter" ng-model="tagsSortCriteria">
           <option value="-date_modified">Newest</option>
           <option value="label">A - Z</option>
-          <option value="[questionCount, label]">A - Z, Empty First</option>
-          <option value="[-questionCount, label]">A - Z, Empty Last</option>
+          <option value="[count, label]">A - Z, Empty First</option>
+          <option value="[-count, label]">A - Z, Empty Last</option>
         </select>
       </div>
-      <a class="tag__create-new" href="">+ Add New Tag</a>
+      <a
+        class="tag__create-new"
+        href=""
+        ng-click="isAdding = true"
+        ng-show="!isAdding"
+      >
+        + Add New Tag
+      </a>
+      <input
+        type="text"
+        ng-model="newTagName"
+        ng-show="isAdding"
+        ng-blur="addNewTag()"
+        class="tag__create-new__editbox"
+              />
     </div>
 
       <item-list
+        items="lists.tags"
         rest-api="Tags"
         filters="tagFilters"
         sort-criteria="tagsSortCriteria"
@@ -29,7 +44,7 @@
         additional-select-operations="toggleTagInFilters"
         can-delete="true"
       >
-        <span class="tag__question-count">{{ item.questionCount }} questions</span>
+        <span class="tag__question-count">{{ item.count }} questions</span>
       </item-list>
 
     <div class="tags__empty hidden">
@@ -86,7 +101,7 @@
     </div>
 
   <item-list
-    items="info_list_items"
+    items="lists.questions"
     rest-api="Question"
     filters="filters"
     sort-criteria="sort_criteria"

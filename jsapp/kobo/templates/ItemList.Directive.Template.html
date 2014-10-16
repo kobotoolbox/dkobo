@@ -16,7 +16,7 @@
       class="{{ baseClass }}__editbox"
       ng-model="item.label"
       ng-click="$event.stopPropagation()"
-      ng-change="updateModel(item)"
+      ng-blur="updateModel(item)"
     />
     <a
       ng-show="fullEdit"

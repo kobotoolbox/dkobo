@@ -12,7 +12,10 @@ function AssetsController($scope, $rootScope, $resource, $restApi, $timeout, $fi
     $scope.filters = {};
     $rootScope.icon_link = 'library/questions';
 
-    assets.list();
+    $scope.lists = {
+        tags: {},
+        questions: {}
+    };
 
     $miscUtils.bootstrapQuestionUploader(assets.list);
 
@@ -92,20 +95,20 @@ function AssetsController($scope, $rootScope, $resource, $restApi, $timeout, $fi
     $rootScope.canAddNew = true;
     $rootScope.activeTab = 'Question Library';
 
-    $scope.toggleTagInFilters = function (item) {
-        if (!$scope.filters.tags) {
-            $scope.filters.tags = [];
-        }
-        var tags = $scope.filters.tags;
+    $scope.toggleTagInFilters = function (items) {
+        var tags = _.filter(items, function (item) {
+            return item.meta.isSelected;
+        });
 
-        if (item.meta.isSelected) {
-            tags.push({id: item.id});
-        } else {
-            tags.splice(_.indexOf(tags, _.filter(tags, function (tag) { return tag.id === item.id })[0]), 1);
-        }
-
-        if (tags.length === 0) {
+        $scope.filters.tags = _.pluck(tags, 'label');
+        if ($scope.filters.tags.length === 0) {
             delete $scope.filters.tags;
         }
+    };
+
+    $scope.addNewTag = function () {
+        var api = $restApi.createTagsApi();
+        api.save({label: $scope.newTagName});
+        $scope.isAdding = false;
     };
 }
