@@ -188,8 +188,16 @@ $tagsHeight: 230px;
     background: white;
     border-left:2px solid white;
     border-right:2px solid white;
+    cursor: grab;
+    cursor:-moz-grab;
+    cursor:-webkit-grab;
     &:hover {
         background: #F3F5F6;
+    }
+    &.ui-sortable-helper {
+        cursor:grabbing;
+        cursor:-moz-grabbing;
+        cursor:-webkit-grabbing;
     }
 }
 
@@ -210,11 +218,40 @@ $tagsHeight: 230px;
     display: block;
 }
 .questions__question--selected,
-.questions__question.sortable-active {
+.questions__question.ui-sortable-helper {
     border-color:#38a1f1;
     background-color: #dbeefc;
     + .questions__question {
         border-top-color:#38a1f1;
+    }
+}
+
+.questions__question.ui-sortable-helper {
+    border-bottom: 2px solid #38a1f1;
+}
+
+.questions__question.ui-sortable-placeholder {
+    visibility: visible !important;
+    position: relative; 
+    background: transparent;
+    .survey-editor & {
+        border:2px solid #d9dde1;
+        margin-bottom: 4px;
+    }
+}
+
+.questions__question.ui-sortable-placeholder:after {
+    position: absolute;
+    content: "Drag and drop the library question to add it to your form";
+    top:50%;
+    left:10%;
+    width: 80%;
+    text-align: center;
+    margin-top:-8px;
+    font-size: 0.9em;
+    .questions__sidebar--container & {
+        font-size: 0.8em;
+        margin-top: -20px;
     }
 }
 
