@@ -482,16 +482,26 @@ section.form-builder.active__sidebar .container {
     display: block;
 }
 
-.tag__create-new__editbox {
+input.tag__create-new__editbox {
     padding: 5px 15px;
-    text-align: center;
     font-weight: 600;
     font-size: 14px;
     border:none;
     border-bottom: 2px solid darken(#39BF6E, 20%);
-    display: block;
+    display: inline-block;
     margin-bottom: 15px;
+    margin-left: 10px;
     cursor: pointer;
+    width: 220px;
+}
+
+.tags__tag__create-new--accept {
+    margin-left: 10px;
+    color: green;
+}
+
+.tags__tag__create-new--cancel {
+    color: red;
 }
 
 .tags__tag {

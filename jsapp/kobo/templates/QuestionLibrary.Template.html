@@ -20,18 +20,34 @@
       <a
         class="tag__create-new"
         href=""
-        ng-click="isAdding = true"
+        ng-click="enableAdd()"
         ng-show="!isAdding"
       >
         + Add New Tag
       </a>
+
       <input
         type="text"
         ng-model="newTagName"
         ng-show="isAdding"
-        ng-blur="addNewTag()"
+        ng-keydown="addNewTag__KeyDown($event)"
+        focus-on="showAddBox"
         class="tag__create-new__editbox"
-              />
+        placeholder="tag name"
+      />
+
+      <i
+        ng-show="isAdding"
+        class="fa fa-check-circle fa-4 tags__tag__create-new--accept"
+        ng-click="addNewTag()"
+      ></i>
+
+      <i
+        ng-show="isAdding"
+        class="fa fa-ban fa-4 tags__tag__create-new--cancel"
+        ng-click="cancelAdd()"
+      ></i>
+
     </div>
 
       <item-list
