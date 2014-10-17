@@ -144,7 +144,7 @@ function restApiFactory($resource, $timeout) {
                     });
                 },
                 remove: function (id) {
-                    var index = _.indexOf(lists.tags, _.filter(tags, function (tag) { return tag.id === id; })[0]);
+                    var index = _.indexOf(lists.tags, _.filter(lists.tags, function (tag) { return tag.id === id; })[0]);
                     lists.tags.splice(index, 1);
                 },
                 save: function (item, callback) {
@@ -165,13 +165,6 @@ function restApiFactory($resource, $timeout) {
                     }
                 }
             };
-
-            return {
-                list: function () {
-                    return tags;
-                },
-                save: function (item) {}
-            }
         }
     };
 }
