@@ -63,6 +63,9 @@
     .card__header-title {
         cursor:text;
     }
+    &.card--shaded .card__header-title {
+        opacity:0.3;
+    }
 }
 
 .card--placeholder {
@@ -151,17 +154,17 @@ $cardIndicatorIconWidth: 21px;
     cursor: pointer;
     z-index: 5;
 
-    &.noborder {
+    .card--shaded & {
         border:none;
     }
 }
 
 // ==========================================================================
-// Card Shade (displays over the card)
+// Card Shade (displays on hover above the card header)
 // ==========================================================================
 
 // Displayed when parent .card has .card--shaded
-.card__header .bg {
+.card__header--shade {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -170,23 +173,39 @@ $cardIndicatorIconWidth: 21px;
     z-index: 2;
     text-align: center;
     vertical-align: middle;
+    display: none;
+    .card--shaded & {
+        display: block;
+    }
     span {
         position: relative;
         top: 35%;
         font-weight: 600;
         font-size: 23px;
     }
-    &.gray {
+    .card__header.settings & {
         background: rgba(#858F98, 0.6);
+        span:after {
+            content: "Settings";
+        }
     }
-    &.red {
+    .card__header.delete & {
         background: rgba(#D08B8C, 0.6);
+        span:after {
+            content: "Delete Question";
+        }
     }
-    &.blue {
+    .card__header.duplicate & {
         background:rgba($linkColor, 0.6);
+        span:after {
+            content: "Duplicate Question";
+        }
     }
-    &.green {
+    .card__header.add-to-library & {
         background: rgba(#39BF6E, 0.6);
+        span:after {
+            content: "Add Question to Library";
+        }
     }
 }
 
