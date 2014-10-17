@@ -2,6 +2,7 @@
 /* global dkobo_xlform */
 /* global _ */
 'use strict';
+//noinspection JSUnusedGlobalSymbols
 function AssetsController($scope, $rootScope, $filter, $miscUtils, $api) {
     $scope.sort_criteria = '-date_modified';
     $scope.tagsSortCriteria = '-date_modified';
@@ -10,6 +11,7 @@ function AssetsController($scope, $rootScope, $filter, $miscUtils, $api) {
     $rootScope.showCreateButton = false;
     $scope.filters = {};
     $rootScope.icon_link = 'library/questions';
+    $scope.newTagName = '';
 
     $scope.questions = $api.questions.list();
     $scope.tags = $api.tags.list();
@@ -92,6 +94,10 @@ function AssetsController($scope, $rootScope, $filter, $miscUtils, $api) {
     $rootScope.canAddNew = true;
     $rootScope.activeTab = 'Question Library';
 
+    $scope.$on('questions:reload', function () {
+        $scope.toggleTagInFilters($api.tags.items)
+    });
+
     $scope.toggleTagInFilters = function (items) {
         var tags = _.filter(items, function (item) {
             return item.meta.isSelected;
@@ -116,7 +122,7 @@ function AssetsController($scope, $rootScope, $filter, $miscUtils, $api) {
     };
 
     $scope.addNewTag = function () {
-        var api = $restApi.createTagsApi();
+        var api = $api.tags;
         if(!$scope.newTagName) {
             return;
         }

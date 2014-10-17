@@ -2,7 +2,7 @@
 /* global dkobo_xlform */
 'use strict';
 
-function restApiFactory($resource, $timeout) {
+function restApiFactory($rootScope, $resource, $timeout) {
     var lists = {},
         apis = {};
 
@@ -20,13 +20,31 @@ function restApiFactory($resource, $timeout) {
                 id = 'new';
             }
 
-            if (id === 'new') {
-                return $resource('/api/survey_drafts');
-            } else {
-                return $resource('/api/survey_drafts/:id', { id: id }, {
-                    save: { method: 'PATCH' },
-                    publish: { method: 'POST', url: '/api/survey_drafts/:id/publish' }
-                });
+            var api = $resource('/api/survey_drafts/:id', { id: '@id' }, {
+                update: { method: 'PATCH' },
+                publish: { method: 'POST', url: '/api/survey_drafts/:id/publish' }
+            });
+
+            return apis.surveyDraft = {
+                list: function () {
+                    return lists.surveyDrafts ? lists.surveyDrafts : this.reload();
+                },
+                reload: function () {
+                    return this.items = lists.surveyDrafs = api.list();
+                },
+                save: function (item, callback) {
+                    if (item.id) {
+                        api.update(item, callback);
+                    } else {
+                        api.save(item, callback);
+                    }
+                },
+                get: function (args, callback) {
+                    return api.get(args, callback);
+                },
+                publish: function () {
+
+                }
             }
         },
         createQuestionApi: function ($scope, id) {
@@ -40,7 +58,7 @@ function restApiFactory($resource, $timeout) {
                 }
             };
 
-            var api = apis.question = $resource('/api/library_assets/:id', {id: '@id'}, custom_methods);
+            var api = $resource('/api/library_assets/:id', {id: '@id'}, custom_methods);
 
             function initialize_questions(info_list_items) {
                 function create_survey(item) {
@@ -106,16 +124,17 @@ function restApiFactory($resource, $timeout) {
                 }
                 return info_list_items;
             }
-            var reload = function () {
-                return lists.questions = api.list(function () {
-                    initialize_items(lists.questions);
-                    initialize_questions(lists.questions);
-                });
-            };
 
-            return {
+
+            return apis.question = {
                 list: function () {
-                    return lists.questions ? lists.questions : reload();
+                    return lists.questions ? lists.questions : this.reload();
+                },
+                reload: function () {
+                    return this.items = lists.questions = api.list(function () {
+                        initialize_items(lists.questions);
+                        initialize_questions(lists.questions);
+                    });
                 },
                 save: function (item, callback) {
                     if (item.id) {
@@ -148,7 +167,7 @@ function restApiFactory($resource, $timeout) {
                     return lists.tags ? lists.tags : this.reload();
                 },
                 reload: function () {
-                    return lists.tags = api.list(function () {
+                    return this.items = lists.tags = api.list(function () {
                         initialize_items(lists.tags);
                     });
                 },
@@ -159,13 +178,15 @@ function restApiFactory($resource, $timeout) {
                 save: function (item, callback) {
                     if (item.id) {
                         api.update(item, function () {
-                            apis.question.list();
+                            apis.question.reload();
+                            $rootScope.$broadcast('questions:reload');
                             if (callback) {
                                 callback.apply(this, arguments);
                             }
                         });
                     } else {
                         api.save(item, function (tag) {
+                            tag.meta = {};
                             lists.tags.push(tag);
                             if (callback) {
                                 callback.apply(this, arguments);

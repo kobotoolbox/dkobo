@@ -26,8 +26,8 @@ kobo.directive('itemList', function ($api) {
 
                     if (scope.restApi) {
                         // scope is passed for compatibility with old API interface. should be refactored out
-                        api = $api[scope.restApi];
-                        scope.items = api.list();
+                        scope.api = $api[scope.restApi];
+                        scope.api.list();
                     }
                 },
                 post: function (scope) {
@@ -39,8 +39,8 @@ kobo.directive('itemList', function ($api) {
                             currently_selected = item.meta.isSelected,
                             current;
 
-                        for (i = 0; i < scope.items.length; i++) {
-                            current = scope.items[i];
+                        for (i = 0; i < scope.api.items.length; i++) {
+                            current = scope.api.items[i];
                             if (current != item) {
                                 more_than_one_selected = more_than_one_selected || (currently_selected && current.meta.isSelected);
                             }
@@ -65,8 +65,8 @@ kobo.directive('itemList', function ($api) {
                         item.meta.isSelected = select_question;
                         item.meta.additionalClasses = select_question ? scope.baseClass + '--selected' : '';
 
-                        for (i = 0; i < scope.items.length; i++) {
-                            select_all = select_all && scope.items[i].meta.isSelected;
+                        for (i = 0; i < scope.api.items.length; i++) {
+                            select_all = select_all && scope.api.items[i].meta.isSelected;
                         }
 
                         scope.is_updating_select_all = true;
@@ -77,22 +77,19 @@ kobo.directive('itemList', function ($api) {
                         }
 
                         if (typeof scope.additionalSelectOperations !== 'undefined') {
-                            scope.additionalSelectOperations(scope.items)
+                            scope.additionalSelectOperations(scope.api.items)
                         }
                     };
 
                     scope.removeItem = function (item, $event) {
                         $event.stopPropagation();
-                        if (!api) {
-                            throw 'No API. To use this functionality you must specify the rest-api attribute.'
-                        }
                         scope.toggleSelected(item, {});
                         item.$remove();
-                        api.remove(item.id);
+                        scope.api.remove(item.id);
                     };
 
                     scope.updateModel = function (item) {
-                        api.save(item);
+                        scope.api.save(item);
                     }
                 }
             }

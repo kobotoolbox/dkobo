@@ -2,7 +2,7 @@
 /* global dkobo_xlform */
 'use strict';
 
-function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo, $miscUtils, $userDetails) {
+function BuilderController($scope, $rootScope, $routeParams, $routeTo, $miscUtils, $userDetails, $api) {
     $rootScope.activeTab = 'Forms';
     $scope.routeParams = $routeParams;
     var forceLeaveConfirmation = !$userDetails.debug;
@@ -30,7 +30,7 @@ function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo,
     };
 
     // jshint validthis: true
-    var surveyDraftApi = $restApi.createSurveyDraftApi($scope.routeParams.id);
+    var surveyDraftApi = $api.surveys;
 
     function saveCallback() {
         if (this.validateSurvey()) {
@@ -42,6 +42,7 @@ function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo,
             }
 
             surveyDraftApi.save({
+                id: $scope.routeParams.id,
                 body: survey,
                 description: this.survey.get('description'),
                 name: this.survey.settings.get('form_title')
@@ -85,7 +86,7 @@ function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo,
         var survey = dkobo_xlform.model.Survey.create();
         survey.rows.add(row);
 
-        var resource = $restApi.createQuestionApi();
+        var resource = $api.questions;
         resource.save({body: survey.toCSV(), asset_type: 'question'}, function () {
             $miscUtils.alert('<p><strong>Your question has been saved to your question library.</strong></p><p>You can now find this question in the library sidebar on the right. To reuse it, just drag-and-drop it into any of your forms.</p><p>To edit or remove questions from your library, choose Question Library from the menu. </p>', 'Success!');
             $scope.refresh();

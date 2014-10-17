@@ -2,7 +2,7 @@
 /* global _ */
 'use strict';
 
-function FormsController ($scope, $rootScope, $resource, $miscUtils, $restApi) {
+function FormsController ($scope, $rootScope, $resource, $miscUtils, $api) {
     var formsApi = $resource('api/survey_drafts/:id', {id: '@id'});
     $scope.items_loaded = false;
     $rootScope.add_form = '+ Add Form';
@@ -62,7 +62,7 @@ function FormsController ($scope, $rootScope, $resource, $miscUtils, $restApi) {
     }, true);
 
     $scope.clone_survey = function (survey) {
-        var surveyDraftApi = $restApi.createSurveyDraftApi()
+        var surveyDraftApi = $api.surveys;
 
         surveyDraftApi.save({
             body: survey.body,

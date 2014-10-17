@@ -2,7 +2,7 @@
 /* global staticFilesUri */
 'use strict';
 
-function InfoListDirective($rootScope, $restApi, $miscUtils, $location) {
+function InfoListDirective($rootScope, $miscUtils, $location) {
     return {
         restrict: 'A',
         templateUrl: staticFilesUri + 'templates/InfoList.Template.html',

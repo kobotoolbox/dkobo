@@ -1,4 +1,4 @@
-function QuestionLibraryDirective($restApi) {
+function QuestionLibraryDirective($api) {
     return {
         templateUrl: staticFilesUri + 'templates/QuestionLibrary.Directive.Template.html',
         scope: {
@@ -9,7 +9,7 @@ function QuestionLibraryDirective($restApi) {
         link: function (scope, element) {
             var sort_ul = element.find('ul');
 
-            var questions = $restApi.createQuestionApi(scope);
+            var questions = scope.api = $api.questions;
             questions.list();
 
             scope.$parent.refresh = function () {

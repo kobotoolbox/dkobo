@@ -1,4 +1,4 @@
-function KobocatFormPublisherDirective($restApi, $miscUtils, $routeTo) {
+function KobocatFormPublisherDirective($api, $miscUtils, $routeTo) {
     return {
         scope: {
             item: '='
@@ -18,8 +18,8 @@ function KobocatFormPublisherDirective($restApi, $miscUtils, $routeTo) {
                 }
 
                 var id = scope.form_name ? dkobo_xlform.model.utils.sluggifyLabel(scope.form_name) : '';
-                $restApi.createSurveyDraftApi(scope.item.id)
-                    .publish({title:scope.form_label, id_string: id}, success, fail);
+                $api.surveys
+                    .publish({id: scope.item.id, title:scope.form_label, id_string: id}, success, fail);
             };
 
             scope.form_label = scope.item.name;
