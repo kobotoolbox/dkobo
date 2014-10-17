@@ -11,10 +11,8 @@ function AssetsController($scope, $rootScope, $filter, $miscUtils, $api) {
     $scope.filters = {};
     $rootScope.icon_link = 'library/questions';
 
-    $scope.lists = {
-        tags: {},
-        questions: {}
-    };
+    $scope.questions = $api.questions.list();
+    $scope.tags = $api.tags.list();
 
     $miscUtils.bootstrapQuestionUploader($api.questions.list);
 
@@ -70,14 +68,14 @@ function AssetsController($scope, $rootScope, $filter, $miscUtils, $api) {
             return;
         }
 
-        _.each($scope.info_list_items, function (item) {
+        _.each($scope.questions, function (item) {
             $miscUtils.toggle_response_list(item);
         });
     });
 
     $scope.get_selected_count = function () {
-        return _.filter($scope.info_list_items, function (item) {
-            return item.meta ? item.meta.is_selected : false;
+        return _.filter($scope.questions, function (item) {
+            return item.meta ? item.meta.isSelected : false;
         }).length;
     };
 
