@@ -2,8 +2,7 @@
 /* global dkobo_xlform */
 /* global _ */
 'use strict';
-function AssetsController($scope, $rootScope, $resource, $restApi, $timeout, $filter, $miscUtils) {
-    var assets = $restApi.createQuestionApi($scope);
+function AssetsController($scope, $rootScope, $filter, $miscUtils, $api) {
     $scope.sort_criteria = '-date_modified';
     $scope.tagsSortCriteria = '-date_modified';
     $scope.tagFilters = {};
@@ -17,7 +16,7 @@ function AssetsController($scope, $rootScope, $resource, $restApi, $timeout, $fi
         questions: {}
     };
 
-    $miscUtils.bootstrapQuestionUploader(assets.list);
+    $miscUtils.bootstrapQuestionUploader($api.questions.list);
 
     $scope.select_all = null;
 
@@ -46,7 +45,7 @@ function AssetsController($scope, $rootScope, $resource, $restApi, $timeout, $fi
         }
         _.each($scope.info_list_items, function (item) {
             if (item.meta.is_selected) {
-                assets.remove({id: item.id});
+                $api.questions.remove({id: item.id});
             }
         });
 

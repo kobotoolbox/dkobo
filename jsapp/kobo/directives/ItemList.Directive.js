@@ -1,4 +1,4 @@
-kobo.directive('itemList', function ($restApi) {
+kobo.directive('itemList', function ($api) {
     return {
         restrict: 'E',
         replace: true,
@@ -26,7 +26,7 @@ kobo.directive('itemList', function ($restApi) {
 
                     if (scope.restApi) {
                         // scope is passed for compatibility with old API interface. should be refactored out
-                        api = $restApi['create' + scope.restApi + 'Api'](scope);
+                        api = $api[scope.restApi];
                         scope.items = api.list();
                     }
                 },

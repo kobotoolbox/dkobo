@@ -4,7 +4,7 @@
 function AssetEditorController($scope, $rootScope, $routeParams, $restApi, $routeTo) {
     $rootScope.showImportButton = false;
     $rootScope.showCreateButton = false;
-    var surveyDraftApi = $restApi.createQuestionApi($scope, $routeParams.id);
+    var surveyDraftApi = $restApi.createQuestionApi();
     $rootScope.activeTab = 'Question Library > Edit question';
     if($routeParams.id === 'new'){
         render_question(null)
@@ -31,6 +31,7 @@ function AssetEditorController($scope, $rootScope, $routeParams, $restApi, $rout
     function saveCallback() {
         if (this.validateSurvey()) {
             surveyDraftApi.save({
+                    id: $routeParams.id,
                     body: this.survey.toCSV(),
                     description: this.survey.get('description'),
                     name: this.survey.settings.get('form_title'),
