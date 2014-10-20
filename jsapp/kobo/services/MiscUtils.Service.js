@@ -55,7 +55,7 @@ function MiscUtilsService($rootScope, $userDetails) {
 
     this.changeFileUploaderSuccess = function (successFn) {
         _successFn = successFn
-    }
+    };
 
     this.alert = function (message, type, jsonOpts) {
         type = type || 'Information';

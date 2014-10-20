@@ -25,12 +25,12 @@ function AssetsController($scope, $rootScope, $filter, $miscUtils, $api) {
         var filter = $filter('filter');
 
         if (!$scope.is_updating_select_all) {
-            _.each($scope.info_list_items, function (item) {
+            _.each($scope.questions, function (item) {
                 item.meta.is_selected = false;
                 item.meta.additionalClasses = '';
             });
 
-            _.each(filter($scope.info_list_items, $scope.filters), function (item) {
+            _.each(filter($scope.questions, $scope.filters), function (item) {
                 item.meta.is_selected = $scope.select_all;
                 item.meta.additionalClasses = new_class;
             });
@@ -43,13 +43,13 @@ function AssetsController($scope, $rootScope, $filter, $miscUtils, $api) {
         if (!$miscUtils.confirm('are you sure you want to delete ' + $scope.get_selected_amount() + '?')) {
             return;
         }
-        _.each($scope.info_list_items, function (item) {
+        _.each($scope.questions, function (item) {
             if (item.meta.is_selected) {
                 $api.questions.remove({id: item.id});
             }
         });
 
-        $scope.info_list_items = _.filter($scope.info_list_items, function (item) {
+        $scope.questions = _.filter($scope.questions, function (item) {
             return !item.meta.is_selected
         });
     };

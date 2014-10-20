@@ -3,7 +3,7 @@ kobo.directive('itemList', function ($api) {
         restrict: 'E',
         replace: true,
         templateUrl: staticFilesUri + 'templates/ItemList.Directive.Template.html',
-        transclude: true,
+        //transclude: true,
         scope: {
             restApi: '@',
             filters: '=',
@@ -17,20 +17,17 @@ kobo.directive('itemList', function ($api) {
         },
         compile: function (elem, attrs, transcludeFn) {
             var api, initialize_items;
-
             return {
                 pre: function (scope) {
                     transcludeFn(scope, function (clone) {
                         elem.find('span[inner-transclude]').append(clone)
                     });
-
-                    if (scope.restApi) {
-                        // scope is passed for compatibility with old API interface. should be refactored out
-                        scope.api = $api[scope.restApi];
-                        scope.api.list();
-                    }
                 },
                 post: function (scope) {
+                    dump($api)
+                    dump(scope.restApi)
+                    scope.api = $api[scope.restApi];
+                    scope.api.list();
                     scope.transclude = transcludeFn;
 
                     function deselect_all(item) {

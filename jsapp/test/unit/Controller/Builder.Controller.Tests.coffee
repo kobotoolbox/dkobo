@@ -37,7 +37,7 @@ builder_controller_tests = ->
 
       test_helper.$rs.add_row_to_question_library "test row"
 
-      expect(test_helper.survey_draft_api_stub.save).toHaveBeenCalledWith
+      expect(test_helper.$api.questions.save).toHaveBeenCalledWith
         body: "test survey"
         asset_type: "question"
 

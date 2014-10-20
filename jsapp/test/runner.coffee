@@ -1,8 +1,28 @@
 test_helper =
+  $api:
+    surveys:
+      list: sinon.stub()
+      get: sinon.stub()
+      save: sinon.stub()
+      remove: sinon.stub()
+      reload: sinon.stub()
+    questions:
+      list: () -> return @items = _.clone test_helper.items, true
+      get: sinon.stub()
+      save: sinon.stub()
+      remove: sinon.stub()
+      reload: sinon.stub()
+    tags:
+      list: sinon.stub()
+      get: sinon.stub()
+      save: sinon.stub()
+      remove: sinon.stub()
+      reload: sinon.stub()
   initialize_angular_modules: () ->
     module "dkobo"
     module "templates/TopLevelMenu.Template.html"
     module "templates/InfoList.Template.html"
+    module "templates/ItemList.Directive.Template.html"
     module "templates/KobocatFormPublisher.Template.html"
   initializeController: (@$controller, name, $rootScope, $userDetails = {}) ->
     @$rs = $rootScope
@@ -11,6 +31,8 @@ test_helper =
     @$resource.returns _.clone @resource_stub
     @hello = hello: 'world'
     @miscUtils = new @miscServiceStub()
+
+    that = @
 
     @$controller name + "Controller",
       $userDetails: $userDetails
@@ -32,6 +54,7 @@ test_helper =
           @survey_draft_api_stub = _.clone @resource_stub
           @survey_draft_api_stub.list = () => @$rs.info_list_items = _.clone @items, true
           @survey_draft_api_stub
+      $api: @$api
 
   miscServiceStub: ->
     @confirm = sinon.stub()
@@ -42,14 +65,24 @@ test_helper =
     @bootstrapQuestionUploader = sinon.spy()
     return
   buildDirective: ($compile, $rootScope, element) ->
-    element = $compile(element)($rootScope)
+    compiled = $compile(element)
+    element = compiled(@isolateScope)
     $rootScope.$apply()
-    element.isolateScope()
+    dump @isolateScope
+    return @isolateScope
   buildInfoListDirective: ($compile, $rootScope, canAddNew, linkTo) ->
     @$rs = $rootScope
     test_helper.buildDirective $compile, $rootScope, "<div info-list items=\"items\" can-add-new=\"" + canAddNew + "\" name=\"test\" link-to=\"" + linkTo + "\"></div>"
+  buildItemListDirective: ($compile, $rootScope) ->
+    dump 'buildItemListDirective'
+    @$rs = $rootScope
+    $rootScope.filters = {}
+    $rootScope.sort_criteria = {}
+
+    test_helper.buildDirective $compile, $rootScope, '<div item-list rest-api="questions" filters="filters" sort-criteria="sort_criteria" base-class="questions__question" full-edit="true" full-edit-class="question__edit"></div>'
   buildTopLevelMenuDirective: ($compile, $rootScope) ->
     @$rs = $rootScope
+    @isolateScope = $rootScope.$new();
     test_helper.buildDirective $compile, $rootScope, "<div top-level-menu></div>"
   mockUserDetails: (mockObject) ->
     module ($provide) ->
@@ -67,6 +100,15 @@ test_helper =
 
         return
 
+      return
+
+  mockApiService: () ->
+    module ($provide) ->
+      $provide.provider "$api", ->
+        @$get = ->
+          test_helper.$api
+
+        return
       return
 
   resource_stub:

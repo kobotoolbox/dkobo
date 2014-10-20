@@ -27,6 +27,8 @@ module.exports = function(config) {
 
             // require-js
             'components/requirejs/require.js',
+            'components/angular-ui-select/dist/select.js',
+            'components/angular-sanitize/angular-sanitize.min.js',
             {pattern: 'components/require-cs/cs.js', watched: false, served: true, included: false},
             {pattern: 'components/require-cs/coffee-script.js', watched: false, served: true, included: false},
             {pattern: 'components/backbone-validation/dist/backbone-validation-amd.js', watched: false, served: true, included: false},

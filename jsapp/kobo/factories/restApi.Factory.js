@@ -2,7 +2,7 @@
 /* global dkobo_xlform */
 'use strict';
 
-function restApiFactory($rootScope, $resource, $timeout) {
+function restApiFactory($resource, $timeout, $rootScope) {
     var lists = {},
         apis = {};
 
@@ -15,10 +15,7 @@ function restApiFactory($rootScope, $resource, $timeout) {
         });
     }
     return {
-        createSurveyDraftApi: function (id) {
-            if (id === undefined) {
-                id = 'new';
-            }
+        createSurveyDraftApi: function () {
 
             var api = $resource('/api/survey_drafts/:id', { id: '@id' }, {
                 update: { method: 'PATCH' },
