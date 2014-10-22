@@ -371,9 +371,11 @@ define 'cs!xlform/view.surveyApp', [
       if @expand_all_multioptions()
         @$(".card--expandedchoices").each (i, el)=>
           @_getViewForTarget(currentTarget: el).hideMultioptions()
+          ``
       else
         @$(".card--selectquestion").each (i, el)=>               
           @_getViewForTarget(currentTarget: el).showMultioptions()
+          ``
 
       @set_multioptions_label()
       return
