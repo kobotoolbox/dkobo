@@ -32,34 +32,32 @@
     border-radius: 4px;
 }
 
-.fa.fa-lato-text:before {
-    content: "abc";
-    font-family: 'Lato';
+.fa.fa-lato-text:before, 
+.fa.fa-lato-integer:before, 
+.fa.fa-lato-decimal:before, 
+.fa.fa-lato-calculate:before {
+    font-family: 'Open Sans';
     font-weight: 600;
     letter-spacing: -0.02em;
+
+}
+
+.fa.fa-lato-text:before {
+    content: "abc";
 }
 
 .fa.fa-lato-integer:before {
     content: "123";
-    font-family: 'Lato';
-    font-weight: 600;
-    letter-spacing: -0.02em;
     font-size: 0.9em;
 }
 
 .fa.fa-lato-decimal:before {
     content: "1.0";
-    font-family: 'Lato';
-    font-weight: 600;
-    letter-spacing: -0.02em;
     font-size: 0.9em;
 }
 
 .fa.fa-lato-calculate:before {
     content: "1+1";
-    font-family: 'Lato';
-    font-weight: 600;
-    letter-spacing: -0.02em;
     font-size: 0.9em;
 }
 

@@ -5,12 +5,10 @@
     padding: 20px;
     background: #FFF;
     color: $wellTextColor;
-    font-family: 'Lato';
     font-weight: 600;
     font-style: italic;
     font-size: 13px;
     a {
-        font-family: 'Lato';
         font-style: normal;
         font-weight: normal;
         text-decoration: underline;
@@ -54,7 +52,6 @@ code input[type="text"] {
 .editable-container {
     vertical-align: top;
     .editable-input input {
-        font-family: 'Lato';
         font-weight: 600;
         border-radius: 0px;
         border:none;
