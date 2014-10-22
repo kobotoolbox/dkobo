@@ -8,14 +8,14 @@ DEPLOYMENTS = {
         'heroku_app_name': 'kobotoolbox',
         'cookie_domain':    '.kobotoolbox.org',
         'domain':           'kf.kobotoolbox.org',
-        'kobocat_domain':   'kc.kobotoolbox.org',
+        'kobocat_url':      'http://kc.kobotoolbox.org',
         'django_site_id': 1,
     },
     'staging': {
         'heroku_app_name': 'kobo-dev',
         'cookie_domain':    '.staging.kobotoolbox.org',
         'domain':           'kf.staging.kobotoolbox.org',
-        'kobocat_domain':   'kc.staging.kobotoolbox.org',
+        'kobocat_url':      'http://kc.staging.kobotoolbox.org',
         'django_site_id': 2,
     },
 }
@@ -59,8 +59,8 @@ def _heroku_settings_dict():
         heroku_environment['CSRF_COOKIE_DOMAIN'] = env.get('cookie_domain')
     if 'django_site_id' in env:
         heroku_environment['DJANGO_SITE_ID'] = env.get('django_site_id')
-    if 'kobocat_domain' in env:
-        heroku_environment['KOBOCAT_SERVER'] = env.get('kobocat_domain')
+    if 'kobocat_url' in env:
+        heroku_environment['KOBOCAT_URL'] = env.get('kobocat_domain')
     heroku_environment['DJANGO_DEBUG'] = env.get('debug', False)
     return heroku_environment
 
