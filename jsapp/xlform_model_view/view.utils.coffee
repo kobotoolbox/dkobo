@@ -138,14 +138,22 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
       $("<div>", class: "js-click-remove-iframe")
 
     launch = (previewUrl, options={})->
-      _loadConfigs(options)
+      _loadConfigs(options) 
+      holder = $("<div>", class: "enketo-holder").html("<div class='enketo-iframe-icon'></div>")
       wrap = $("<div>", class: "js-click-remove-iframe iframe-bg-shade")
-      $("<iframe>", src: buildUrl(previewUrl)).appendTo(wrap)
-      wrap.click ()-> wrap.remove()
+      holder.appendTo('body')
+      $(".enketo-holder").append $("<iframe>", src: buildUrl(previewUrl))
+      wrap.click ()-> 
+        wrap.remove()
+        holder.remove()
+      $('.enketo-holder .enketo-iframe-icon').click ()-> 
+        wrap.remove()
+        holder.remove()
       wrap
 
     launch.close = ()->
       $(".iframe-bg-shade").remove()
+      $(".enketo-holder").remove()
 
     launch.fromCsv = (surveyCsv, options={})->
       previewServer = options.previewServer or ""
