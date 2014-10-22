@@ -61,8 +61,6 @@ define 'cs!xlform/view.row', [
       @
     _renderRow: ->
       @$el.html $viewTemplates.$$render('row.xlfRowView')
-      @$('.js-add-to-question-library').click @add_row_to_question_library
-      @$('.js-clone-question').click @clone
       @$label = @$('.card__header-title')
       @$card = @$('.card')
       @$header = @$('.card__header')
