@@ -642,39 +642,17 @@ define 'cs!xlform/view.surveyApp', [
       return
     buttonHoverIn: (evt)->
       evt.stopPropagation()
-      $et = $(evt.target)
-      if $et.is('i')
-        $et = $(evt.target).parent()
-
-      bColor = $et.data('buttonColor')
-      bText = $et.data('buttonText')
-      $et.parents('.card__buttons').addClass('noborder')
-      $et.parents('.card__header').append('<div class="bg">')
-      $et.parents('.card__header').find('.bg').addClass("#{bColor}").html("<span>#{bText}</span>")
+      $et = $(evt.currentTarget)
+      buttonName = $et.data('buttonName')
+      $et.parents('.card').addClass('card--shaded')
+      $et.parents('.card__header').addClass(buttonName)
       return
     buttonHoverOut: (evt)->
       evt.stopPropagation()
-      $et = $(evt.target)
-      $et.parents('.card__buttons').removeClass('noborder')
-      $et.parents('.card__header').find('.bg').remove()
-      return
-    buttonHoverIn: (evt)->
-      evt.stopPropagation()
-      $et = $(evt.target)
-      if $et.is('i')
-        $et = $(evt.target).parent()
-
-      bColor = $et.data('buttonColor')
-      bText = $et.data('buttonText')
-      $et.parents('.card__buttons').addClass('noborder')
-      $et.parents('.card__header').append('<div class="bg">')
-      $et.parents('.card__header').find('.bg').addClass("#{bColor}").html("<span>#{bText}</span>")
-      return
-    buttonHoverOut: (evt)->
-      evt.stopPropagation()
-      $et = $(evt.target)
-      $et.parents('.card__buttons').removeClass('noborder')
-      $et.parents('.card__header').find('.bg').remove()
+      $et = $(evt.currentTarget)
+      buttonName = $et.data('buttonName')
+      $et.parents('.card__header').removeClass(buttonName)
+      $et.parents('.card').removeClass('card--shaded')
       return
 
   class surveyApp.SurveyApp extends SurveyFragmentApp
