@@ -56,6 +56,7 @@ define 'cs!xlform/view.surveyApp', [
       "click .js-delete-row": "clickRemoveRow"
       "click .js-delete-group": "clickDeleteGroup"
       "click .js-add-to-question-library": "clickAddRowToQuestionLibrary"
+      "click .js-clone-question": "clickCloneQuestion"
       "click #xlf-preview": "previewButtonClick"
       "click #csv-preview": "previewCsv"
       "click #xlf-download": "downloadButtonClick"
@@ -371,9 +372,11 @@ define 'cs!xlform/view.surveyApp', [
       if @expand_all_multioptions()
         @$(".card--expandedchoices").each (i, el)=>
           @_getViewForTarget(currentTarget: el).hideMultioptions()
+          ``
       else
         @$(".card--selectquestion").each (i, el)=>               
           @_getViewForTarget(currentTarget: el).showMultioptions()
+          ``
 
       @set_multioptions_label()
       return
@@ -532,6 +535,9 @@ define 'cs!xlform/view.surveyApp', [
 
     clickAddRowToQuestionLibrary: (evt)->
       @_getViewForTarget(evt).add_row_to_question_library(evt)
+
+    clickCloneQuestion: (evt)->
+      @_getViewForTarget(evt).clone()
 
     clickRemoveRow: (evt)->
       evt.preventDefault()

@@ -61,8 +61,6 @@ define 'cs!xlform/view.row', [
       @
     _renderRow: ->
       @$el.html $viewTemplates.$$render('row.xlfRowView')
-      @$('.js-add-to-question-library').click @add_row_to_question_library
-      @$('.js-clone-question').click @clone
       @$label = @$('.card__header-title')
       @$card = @$('.card')
       @$header = @$('.card__header')
@@ -74,14 +72,12 @@ define 'cs!xlform/view.row', [
 
       @cardSettingsWrap = @$('.card__settings').eq(0)
       @defaultRowDetailParent = @cardSettingsWrap.find('.card__settings__fields--question-options').eq(0)
-      @rowDetailViews = []
-      for [key, val] in @model.attributesArray()
+      for [key, val] in @model.attributesArray() when key is 'label' or key is 'type'
         view = new $viewRowDetail.DetailView(model: val, rowView: @)
         if key == 'label' and @model.get('type').get('value') == 'calculate'
           view.model = @model.get('calculation')
           @model.finalize()
           val.set('value', '')
-        @rowDetailViews.push view
         view.render().insertInDOM(@)
         if key == 'label'
           @make_label_editable(view)
