@@ -70,6 +70,8 @@ define 'cs!xlform/view.row', [
 
         @listView = new $viewChoices.ListView(model: cl, rowView: @).render()
 
+      @cardSettingsWrap = @$('.card__settings').eq(0)
+      @defaultRowDetailParent = @cardSettingsWrap.find('.card__settings__fields--question-options').eq(0)
       for [key, val] in @model.attributesArray() when key is 'label' or key is 'type'
         view = new $viewRowDetail.DetailView(model: val, rowView: @)
         if key == 'label' and @model.get('type').get('value') == 'calculate'
