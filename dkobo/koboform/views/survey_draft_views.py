@@ -53,7 +53,7 @@ def export_form(request, id):
 def create_survey_draft(request):
 
     raw_draft = json.loads(request.body)
-
+    import pdb; pdb.set_trace()
     name = raw_draft.get('title', raw_draft.get('name'))
 
     csv_details = {u'user': request.user,
@@ -61,6 +61,11 @@ def create_survey_draft(request):
                    u'description': raw_draft.get("description"),
                    u'name': name}
     survey_draft = SurveyDraft.objects.create(**csv_details)
+    if raw_draft.get('asset_type') == 'question':
+        for tag in raw_draft.get('tags', []):
+            survey_draft.tags.add(tag)
+        survey_draft.save()
+
     return HttpResponse(json.dumps(model_to_dict(survey_draft)))
 
 @login_required

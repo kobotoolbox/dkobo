@@ -13,7 +13,9 @@ function AssetsController($scope, $rootScope, $filter, $miscUtils, $api) {
     $rootScope.icon_link = 'library/questions';
     $scope.newTagName = '';
 
-    $scope.questions = $api.questions.list();
+    $scope.api = $api;
+
+    $api.questions.list();
     $scope.tags = $api.tags.list();
 
     $miscUtils.bootstrapQuestionUploader($api.questions.list);
@@ -25,13 +27,13 @@ function AssetsController($scope, $rootScope, $filter, $miscUtils, $api) {
         var filter = $filter('filter');
 
         if (!$scope.is_updating_select_all) {
-            _.each($scope.questions, function (item) {
-                item.meta.is_selected = false;
+            _.each($api.questions.items, function (item) {
+                item.meta.isSelected = false;
                 item.meta.additionalClasses = '';
             });
 
-            _.each(filter($scope.questions, $scope.filters), function (item) {
-                item.meta.is_selected = $scope.select_all;
+            _.each(filter($api.questions.items, $scope.filters), function (item) {
+                item.meta.isSelected = $scope.select_all;
                 item.meta.additionalClasses = new_class;
             });
         }
@@ -43,14 +45,14 @@ function AssetsController($scope, $rootScope, $filter, $miscUtils, $api) {
         if (!$miscUtils.confirm('are you sure you want to delete ' + $scope.get_selected_amount() + '?')) {
             return;
         }
-        _.each($scope.questions, function (item) {
-            if (item.meta.is_selected) {
-                $api.questions.remove({id: item.id});
+        _.each($api.questions.items, function (item) {
+            if (item.meta.isSelected) {
+                $api.questions.remove(item);
             }
         });
 
-        $scope.questions = _.filter($scope.questions, function (item) {
-            return !item.meta.is_selected
+        $api.questions.items = _.filter($api.questions.items, function (item) {
+            return !item.meta.isSelected
         });
     };
 
@@ -70,13 +72,13 @@ function AssetsController($scope, $rootScope, $filter, $miscUtils, $api) {
             return;
         }
 
-        _.each($scope.questions, function (item) {
+        _.each($api.questions.items, function (item) {
             $miscUtils.toggle_response_list(item);
         });
     });
 
     $scope.get_selected_count = function () {
-        return _.filter($scope.questions, function (item) {
+        return _.filter($api.questions.items, function (item) {
             return item.meta ? item.meta.isSelected : false;
         }).length;
     };

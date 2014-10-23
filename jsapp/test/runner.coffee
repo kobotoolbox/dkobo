@@ -44,7 +44,11 @@ test_helper =
         csrftoken: "test token"
 
       $miscUtils: @miscUtils
-      $routeTo: sinon.stubObject(RouteToService)
+      $routeTo: sinon.stubObject
+        forms: () ->
+        builder: () ->
+        question_library: () ->
+        external: () ->
       $restApi:
         create_question_api: =>
           @question_api_stub = _.clone @resource_stub
@@ -64,26 +68,25 @@ test_helper =
     @bootstrapSurveyUploader = sinon.spy()
     @bootstrapQuestionUploader = sinon.spy()
     return
-  buildDirective: ($compile, $rootScope, element) ->
-    compiled = $compile(element)
-    element = compiled(@isolateScope)
-    $rootScope.$apply()
-    dump @isolateScope
-    return @isolateScope
-  buildInfoListDirective: ($compile, $rootScope, canAddNew, linkTo) ->
-    @$rs = $rootScope
-    test_helper.buildDirective $compile, $rootScope, "<div info-list items=\"items\" can-add-new=\"" + canAddNew + "\" name=\"test\" link-to=\"" + linkTo + "\"></div>"
-  buildItemListDirective: ($compile, $rootScope) ->
-    dump 'buildItemListDirective'
-    @$rs = $rootScope
-    $rootScope.filters = {}
-    $rootScope.sort_criteria = {}
+  buildDirective: (element) ->
+    inject ($compile, $rootScope) =>
+      @$rs = $rootScope
+      $rootScope.items = [{}]
+      @$rs.filters = {}
+      @$rs.sort_criteria = {}
+      compiled = $compile(element)
+      element = compiled($rootScope)
+      $rootScope.$apply()
+      test_helper.isolateScope = element.isolateScope()
 
-    test_helper.buildDirective $compile, $rootScope, '<div item-list rest-api="questions" filters="filters" sort-criteria="sort_criteria" base-class="questions__question" full-edit="true" full-edit-class="question__edit"></div>'
-  buildTopLevelMenuDirective: ($compile, $rootScope) ->
-    @$rs = $rootScope
-    @isolateScope = $rootScope.$new();
-    test_helper.buildDirective $compile, $rootScope, "<div top-level-menu></div>"
+  buildInfoListDirective: (canAddNew, linkTo) ->
+    test_helper.buildDirective "<div info-list items=\"items\" can-add-new=\"" + canAddNew + "\" name=\"test\" link-to=\"" + linkTo + "\"></div>"
+  buildItemListDirective: () ->
+    test_helper.buildDirective "<div item-list rest-api=\"questions\" filters=\"filters\" sort-criteria=\"sort_criteria\" base-class=\"questions__question\" full-edit=\"true\" full-edit-class=\"question__edit\"></div>"
+
+
+  buildTopLevelMenuDirective: () ->
+    test_helper.buildDirective "<div top-level-menu></div>"
   mockUserDetails: (mockObject) ->
     module ($provide) ->
       $provide.provider "$userDetails", ->

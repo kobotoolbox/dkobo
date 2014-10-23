@@ -46,7 +46,7 @@ function BuilderController($scope, $rootScope, $routeParams, $routeTo, $miscUtil
                 body: survey,
                 description: this.survey.get('description'),
                 name: this.survey.settings.get('form_title')
-            }, function() {
+            }).then(function() {
                 $rootScope.deregisterLocationChangeStart && $rootScope.deregisterLocationChangeStart();
                 $(window).unbind('beforeunload');
                 $routeTo.forms();
@@ -60,7 +60,7 @@ function BuilderController($scope, $rootScope, $routeParams, $routeTo, $miscUtil
 
     if ($scope.routeParams.id && $scope.routeParams.id !== 'new'){
         // url points to existing survey_draft
-        surveyDraftApi.get({id: $scope.routeParams.id}, function builder_get_callback(response) {
+        surveyDraftApi.get({id: $scope.routeParams.id}).then(function builder_get_callback(response) {
             var warnings = [];
 
             if (window.importFormWarnings) {

@@ -1,9 +1,9 @@
 kobo.directive('itemList', function ($api) {
     return {
         restrict: 'E',
-        replace: true,
+        //replace: true,
         templateUrl: staticFilesUri + 'templates/ItemList.Directive.Template.html',
-        //transclude: true,
+        transclude: true,
         scope: {
             restApi: '@',
             filters: '=',
@@ -24,8 +24,6 @@ kobo.directive('itemList', function ($api) {
                     });
                 },
                 post: function (scope) {
-                    dump($api)
-                    dump(scope.restApi)
                     scope.api = $api[scope.restApi];
                     scope.api.list();
                     scope.transclude = transcludeFn;
@@ -81,8 +79,7 @@ kobo.directive('itemList', function ($api) {
                     scope.removeItem = function (item, $event) {
                         $event.stopPropagation();
                         scope.toggleSelected(item, {});
-                        item.$remove();
-                        scope.api.remove(item.id);
+                        scope.api.remove(item);
                     };
 
                     scope.updateModel = function (item) {

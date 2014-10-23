@@ -6,10 +6,10 @@
         style="width: 700px;"
     >
         <ui-select-match placeholder="tags">
-            {{$item.name}}
+            {{$item.label}}
         </ui-select-match>
-        <ui-select-choices repeat="tag in tags.available | propsFilter: {name: $select.search}">
-            <div ng-bind-html="tag.name"></div>
+        <ui-select-choices repeat="tag in tags.available | propsFilter: {label: $select.search}">
+            <div ng-bind-html="tag.label"></div>
         </ui-select-choices>
     </ui-select>
 </section>

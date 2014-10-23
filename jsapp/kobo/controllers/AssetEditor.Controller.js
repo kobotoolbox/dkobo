@@ -31,41 +31,22 @@ function AssetEditorController($scope, $rootScope, $routeParams, $routeTo, $api)
     function saveCallback() {
         if (this.validateSurvey()) {
             surveyDraftApi.save({
-                    id: $routeParams.id,
+                    id: $routeParams.id === 'new' ? null : $routeParams.id,
+                    tags: _.pluck($scope.tags.selected, 'label'),
                     body: this.survey.toCSV(),
                     description: this.survey.get('description'),
                     name: this.survey.settings.get('form_title'),
                     asset_type: 'question'
-                }, $routeTo.question_library);
+                }).then($routeTo.question_library);
         }
     }
 
     $scope.tags = {
-        available: [
-            {id: -1, name: 'Demographics' },
-            {id: -1, name: 'Priorities services' },
-            {id: -1, name: 'Security' },
-            {id: -1, name: 'Disputes' },
-            {id: -1, name: 'Domestic Violence' },
-            {id: -1, name: 'Mortality' },
-            {id: -1, name: 'Exposure to War Violence' },
-            {id: -1, name: 'Former combatants' },
-            {id: -1, name: 'Victims' },
-            {id: -1, name: 'Measures for Victims' },
-            {id: -1, name: 'Monuments' },
-            {id: -1, name: 'Origins of conflicts' },
-            {id: -1, name: 'Truth' },
-            {id: -1, name: 'Information' },
-            {id: -1, name: 'Accountability' },
-            {id: -1, name: 'Justice' },
-            {id: -1, name: 'International Criminal Court' },
-            {id: -1, name: 'Peace' },
-            {id: -1, name: 'Group membership' }
-        ],
-        selected: []
-    };
+            available: [],
+            selected: []
+        };
 
-    for (var i = 0; i < 3; i++) {
-        $scope.tags.selected[i] = $scope.tags.available[i];
-    }
+    $api.tags.list().then(function () {
+        $scope.tags.available = $api.tags.items;
+    });
 }

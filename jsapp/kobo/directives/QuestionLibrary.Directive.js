@@ -1,4 +1,4 @@
-function QuestionLibraryDirective($api) {
+kobo.directive ('koboformQuestionLibrary', function ($api) {
     return {
         templateUrl: staticFilesUri + 'templates/QuestionLibrary.Directive.Template.html',
         scope: {
@@ -37,4 +37,4 @@ function QuestionLibraryDirective($api) {
             });
         }
     };
-}
+});

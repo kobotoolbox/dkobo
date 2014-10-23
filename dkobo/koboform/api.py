@@ -29,7 +29,12 @@ class SurveyAssetViewset(viewsets.ModelViewSet):
         if user.is_anonymous():
             raise PermissionDenied
         contents = request.DATA
+        tags = contents.get('tags', [])
+        del contents['tags']
         survey_draft = request.user.survey_drafts.create(**contents)
+        for tag in tags:
+            survey_draft.tags.add(tag)
+
         return Response(ListSurveyDraftSerializer(survey_draft).data)
 
     def retrieve(self, request, pk=None):

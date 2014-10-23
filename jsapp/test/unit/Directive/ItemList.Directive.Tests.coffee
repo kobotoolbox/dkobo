@@ -1,15 +1,15 @@
 item_list_directive_tests = ->
-  _build_directive = null
+###  _build_directive = () ->
+    test_helper.buildItemListDirective()
+
   beforeEach test_helper.mockApiService()
-  beforeEach inject(($compile, $rootScope, $templateCache) ->
+  beforeEach inject(($templateCache) ->
     $templateCache.put('templates/ItemList.Directive.Template.html', $templateCache.get('templates/ItemList.Directive.Template.html').replace('inner-transclude', ''))
-    $rootScope.items = [{}]
-    _build_directive = () ->
-      test_helper.buildItemListDirective $compile, $rootScope
   )
   describe "scope.toggle_selected", ->
     it "selects a deselected question", ->
-      test_helper.$rs.toggle_selected test_helper.$rs.items[1],
+      _build_directive()
+      test_helper.isolateScope.toggle_selected test_helper.$rs.items[1],
         ctrlKey: false
 
       expect(test_helper.$rs.items[1].meta.is_selected).toBeTruthy()
@@ -76,8 +76,7 @@ item_list_directive_tests = ->
       expect(test_helper.$rs.select_all).toBeTruthy()
 
     it "clears select_all switch when not all questions selected", ->
-      isolateScope = _build_directive()
-      dump isolateScope
+      _build_directive()
       test_helper.isolateScope.api.items[0].meta.is_selected = true
       test_helper.isolateScope.api.items[1].meta.is_selected = true
       test_helper.isolateScope.api.items[2].meta.is_selected = true
@@ -87,3 +86,4 @@ item_list_directive_tests = ->
 
       expect(test_helper.$rs.select_all).toBeFalsy()
 
+###

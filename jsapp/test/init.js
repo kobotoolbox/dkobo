@@ -30,12 +30,3 @@ require.config({
         'xlform': 'xlform_model_view'
     }
 });
-
-var kobo = angular.module('dkobo', [
-    'ngRoute',
-    'ngCookies',
-    'ngResource',
-    'ui.utils',
-    'ui.select',
-    'ngSanitize'
-]);

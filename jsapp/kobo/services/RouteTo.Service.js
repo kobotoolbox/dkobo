@@ -2,7 +2,7 @@
 /* global _ */
 'use strict';
 
-function RouteToService($location) {
+kobo.service('$routeTo', function ($location) {
     var $$path = _.bind($location.path, $location);
 
     this.forms = function () {
@@ -20,4 +20,4 @@ function RouteToService($location) {
     this.external = function (url) {
         window.location = url;
     };
-}
+});

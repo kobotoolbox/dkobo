@@ -6,7 +6,10 @@ misc_utils_service_tests = ->
         meta:
           show_responses: false
 
-      new MiscUtilsService().toggle_response_list item
+      $injector = angular.injector([ 'dkobo' ]);
+      service = $injector.get( '$miscUtils' );
+
+      service.toggle_response_list item
       expect(item.meta.question_type_class).toBe "question__type question__type--expanded"
       expect(item.meta.question_type_icon_class).toBe "question__type-icon question__type--expanded-icon"
       expect(item.meta.question_type_icon).toBe "fa fa-caret-down"
@@ -18,7 +21,11 @@ misc_utils_service_tests = ->
         meta:
           show_responses: true
 
-      new MiscUtilsService().toggle_response_list item
+      $injector = angular.injector([ 'dkobo' ]);
+      service = $injector.get( '$miscUtils' );
+
+      service.toggle_response_list item
+
       expect(item.meta.show_responses).toBe false
       expect(item.meta.question_type_class).toBe "question__type"
       expect(item.meta.question_type_icon).toBe "fa fa-caret-right"

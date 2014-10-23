@@ -1,7 +1,7 @@
 /* exported ConfigurationService */
 'use strict';
 
-function ConfigurationService() {
+kobo.service('$configuration', function () {
     this.sections = function () {
         return [
             {
@@ -26,4 +26,4 @@ function ConfigurationService() {
             }
         ];
     };
-}
+});

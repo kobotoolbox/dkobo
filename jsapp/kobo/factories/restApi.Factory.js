@@ -2,60 +2,87 @@
 /* global dkobo_xlform */
 'use strict';
 
-function restApiFactory($resource, $timeout, $rootScope) {
-    var lists = {},
-        apis = {};
 
 
-    function initialize_items(items) {
-        _.each(items, function (item) {
-            if (!item.meta) {
-                item.meta = {};
+kobo.factory('$restApi', function ($resource, $timeout, $cacheFactory, $rootScope) {
+    var cache = $cacheFactory('rest api');
+    function createApi(url, opts) {
+        opts.customMethods = _.extend({
+            update: { method: 'PATCH' }
+        }, opts.customMethods);
+
+        var api = $resource(url, { id: '@id' }, opts.customMethods);
+
+        var actions = {};
+
+        function makeAction(action) {
+            return function (item) {
+                return api[action](item);
             }
-        });
+        }
+
+        for (var action in opts.customMethods) {
+            if (opts.customMethods.hasOwnProperty(action)) {
+                actions[action] = makeAction(action);
+            }
+        }
+
+        opts.saveCallback = opts.saveCallback || function () {};
+        opts.updateCallback = opts.updateCallback || function () {};
+        opts.listCallback = opts.listCallback || function () {};
+
+
+        var publicApi = _.extend({
+            list: function () {
+                var data = cache.get('list:' + url);
+                if(!data) {
+                    data = api.query(opts.listCallback.bind(this));
+                    cache.put('list:' + url, data);
+                }
+                this.items = data;
+                return data.$promise
+            },
+            remove: function (item) {
+                var that = this;
+                return api.remove({id: item.id}, function () {
+                    var data = cache.remove('list:' + url);
+                    var index = _.indexOf(that.items, _.filter(that.items, function (_item) {
+                        return _item.id === item.id;
+                    })[0]);
+                    that.items.splice(index, 1);
+                }).$promise;
+            },
+            save: function (item) {
+                var data = cache.remove('list:' + url);
+                if (item.id) {
+                    return api.update(item, opts.updateCallback.bind(this)).$promise;
+                } else {
+                    return api.save(item, opts.saveCallback.bind(this)).$promise;
+                }
+            },
+            get: function (args) {
+                return api.get(args).$promise;
+            }
+        }, actions);
+        $rootScope.$on('reload:' + url, publicApi.list.bind(publicApi));
+        return publicApi;
     }
+
     return {
-        createSurveyDraftApi: function () {
-
-            var api = $resource('/api/survey_drafts/:id', { id: '@id' }, {
-                update: { method: 'PATCH' },
-                publish: { method: 'POST', url: '/api/survey_drafts/:id/publish' }
-            });
-
-            return apis.surveyDraft = {
-                list: function () {
-                    return lists.surveyDrafts ? lists.surveyDrafts : this.reload();
-                },
-                reload: function () {
-                    return this.items = lists.surveyDrafs = api.list();
-                },
-                save: function (item, callback) {
-                    if (item.id) {
-                        api.update(item, callback);
-                    } else {
-                        api.save(item, callback);
-                    }
-                },
-                get: function (args, callback) {
-                    return api.get(args, callback);
-                },
-                publish: function () {
-
-                }
-            }
+        createSurveyDraftsApi: function () {
+            return createApi('/api/survey_drafts/:id', {
+                customMethods: { publish: { method: 'POST', url: '/api/survey_drafts/:id/publish' } }
+            })
         },
-        createQuestionApi: function ($scope, id) {
-            var custom_methods = {
-                list: {
-                    method: 'GET',
-                    isArray: true
+        createQuestionsApi: function ($scope, id) {
+            return createApi('/api/library_assets/:id', {
+                listCallback: function () {
+                    initialize_questions(this.items);
                 },
-                update: {
-                    method: 'PATCH'
+                saveCallback: function () {
+                    $rootScope.$broadcast('reload:api/tags/:id');
                 }
-            };
-
-            var api = $resource('/api/library_assets/:id', {id: '@id'}, custom_methods);
+            });
 
             function initialize_questions(info_list_items) {
                 function create_survey(item) {
@@ -121,77 +148,30 @@ function restApiFactory($resource, $timeout, $rootScope) {
                 }
                 return info_list_items;
             }
-
-
-            return apis.question = {
-                list: function () {
-                    return lists.questions ? lists.questions : this.reload();
-                },
-                reload: function () {
-                    return this.items = lists.questions = api.list(function () {
-                        initialize_items(lists.questions);
-                        initialize_questions(lists.questions);
-                    });
-                },
-                save: function (item, callback) {
-                    if (item.id) {
-                        api.update(item, callback);
-                    } else {
-                        api.save(item, callback);
-                    }
-                },
-                get: function (args, callback) {
-                    return api.get(args, callback);
-                }
-            }
         },
         createTagsApi: function () {
-            var customMethods = {
-                list: {
-                    method: 'GET',
-                    isArray: true
-                },
-                update: {
-                    method: 'PATCH'
-                }
-            };
-
-
-            var api = apis.tag = $resource('api/tags/:id', {id: '@id'}, customMethods);
-
-            return {
-                list: function () {
-                    return lists.tags ? lists.tags : this.reload();
-                },
-                reload: function () {
-                    return this.items = lists.tags = api.list(function () {
-                        initialize_items(lists.tags);
-                    });
-                },
-                remove: function (id) {
-                    var index = _.indexOf(lists.tags, _.filter(lists.tags, function (tag) { return tag.id === id; })[0]);
-                    lists.tags.splice(index, 1);
-                },
-                save: function (item, callback) {
-                    if (item.id) {
-                        api.update(item, function () {
-                            apis.question.reload();
-                            $rootScope.$broadcast('questions:reload');
-                            if (callback) {
-                                callback.apply(this, arguments);
-                            }
-                        });
-                    } else {
-                        api.save(item, function (tag) {
-                            tag.meta = {};
-                            lists.tags.push(tag);
-                            if (callback) {
-                                callback.apply(this, arguments);
-                            }
-                        });
+            function initialize_items(items) {
+                _.each(items, function (item) {
+                    if (!item.meta) {
+                        item.meta = {};
                     }
+                });
+            }
+
+            return createApi('api/tags/:id', {
+                listCallback: function () {
+                    initialize_items(this.items);
+                },
+                updateCallback: function () {
+                    cache.remove('list:/api/library_assets/:id');
+                    $rootScope.$broadcast('reload:/api/library_assets/:id');
+
+                },
+                saveCallback: function (tag) {
+                    tag.meta = {};
+                    this.items.push(tag);
                 }
-            };
+            });
         }
     };
-}
+});

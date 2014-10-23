@@ -326,7 +326,6 @@ rowDetailsSkipLogic.IntegerResponseModel = (function(_super) {
     };
 
     IntegerResponseModel.prototype.set_value = function(value) {
-        dump(value);
         if (value === ''){
             value = undefined;
         }

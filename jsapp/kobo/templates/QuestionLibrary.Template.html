@@ -4,7 +4,7 @@
 
     <div class="tags__header">
       <h2 class="tags__title">
-        Tags <span class="tags__tag-count">{{ tags.length }} tags</span></h2>
+        Tags <span class="tags__tag-count">{{ api.tags.items.length }} tags</span></h2>
       <div class="tag-filter">
         <div class="tag-filter__search">
           <i class="fa fa-search"></i> <input class="tag-filter__searchbox" placeholder="Search tags" ng-model="tagFilters.label" />
@@ -71,7 +71,7 @@
 
   <div class="questions clearfix">
     <div class="questions__header">
-      <h2 class="questions__title">Questions <span class="questions__question-count">{{questions.length}} questions</span></h2>
+      <h2 class="questions__title">Questions <span class="questions__question-count">{{api.questions.items.length}} questions</span></h2>
       <div class="question__create">
         <form action="/import_questions" class="question__import-library btn--fileupload js-import-fileupload js-import-questions">
           <span class="fileinput-button">

@@ -2,7 +2,7 @@
 /* global staticFilesUri */
 'use strict';
 
-function TopLevelMenuDirective ($userDetails, $configuration) {
+kobo.directive ('topLevelMenu', function ($userDetails, $configuration) {
     return {
         restrict:'A',
         templateUrl: staticFilesUri + 'templates/TopLevelMenu.Template.html',
@@ -37,4 +37,4 @@ function TopLevelMenuDirective ($userDetails, $configuration) {
             };
         }
     };
-}
+});

@@ -68,7 +68,7 @@ function FormsController ($scope, $rootScope, $resource, $miscUtils, $api) {
             body: survey.body,
             description: survey.description,
             name: survey.name
-        }, function() {
+        }).then(function() {
             load_forms()
         }, function(response) {
             $miscUtils.alert('a server error occured: \n' + response.statusText, 'Error');
