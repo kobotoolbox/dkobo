@@ -208,7 +208,7 @@ def publish_survey_draft(request, pk, format=None):
 
     payload = {u'text_xls_form': survey_draft.body}
 
-    url = kobocat_integration._kobocat_url('/api/v1/forms')
+    url = kobocat_integration._kobocat_url('/api/v1/forms', internal=True)
 
     response = requests.post(url, headers=headers, data=payload)
 
