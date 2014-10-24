@@ -22,6 +22,7 @@
       cursor: move;
     }
     &.card--error {
+        padding: 12px 20px;
         background-color: rgb(255, 176, 176);
     }
     .card__header {

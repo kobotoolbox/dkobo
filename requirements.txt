@@ -16,4 +16,5 @@ django-markdown==0.6.1
 django-markitup==2.2.2
 jsonfield==0.9.20
 
-https://github.com/kobotoolbox/pyxform/archive/master.zip
+# kobotoolbox/pyxform from oct 24. xform-to-spreadsheet is working
+-e git+https://github.com/kobotoolbox/pyxform.git@koboform-stable#egg=pyxform-dev
