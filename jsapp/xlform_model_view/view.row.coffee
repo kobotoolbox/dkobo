@@ -52,11 +52,11 @@ define 'cs!xlform/view.row', [
         @_renderError()
       else
         @_renderRow()
-      @is_expanded = @$card.hasClass('card--expandedchoices')
+      @is_expanded = @$card?.hasClass('card--expandedchoices')
       @
     _renderError: ->
       @$el.addClass("xlf-row-view-error")
-      atts = $viewUtils.cleanStringify(@model.attributes)
+      atts = $viewUtils.cleanStringify(@model.toJSON())
       @$el.html $viewTemplates.$$render('row.rowErrorView', atts)
       @
     _renderRow: ->
