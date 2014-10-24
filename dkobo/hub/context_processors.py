@@ -12,10 +12,10 @@ def welcome_message(request):
         except SitewideMessage.DoesNotExist, e:
             pass
 
-        if settings.KOBOCAT_SERVER:
-            ctx['kobocat_server'] = settings.KOBOCAT_SERVER
+        if settings.KOBOCAT_URL:
+            ctx['kobocat_url'] = settings.KOBOCAT_URL
         else:
-            ctx['kobocat_server'] = None
+            ctx['kobocat_url'] = None
         return ctx
     else:
         return {}

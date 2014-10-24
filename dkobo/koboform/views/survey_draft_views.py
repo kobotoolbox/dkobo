@@ -191,7 +191,7 @@ def import_questions(request):
 @login_required
 @api_view(['GET', 'POST'])
 def publish_survey_draft(request, pk, format=None):
-    if not settings.KOBOCAT_SERVER:
+    if not kobocat_integration._is_enabled():
         return Response({'error': 'KoBoCat Server not specified'}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
 
     try:
@@ -202,15 +202,13 @@ def publish_survey_draft(request, pk, format=None):
     form_id_string = request.DATA.get('id_string', False)
     survey_draft._set_form_id_string(form_id_string, title=request.DATA.get('title', False))
 
-    #(status_code, resp) = kobocat_integration.publish_survey_draft(survey_draft, "%s://%s:%s" % (settings.KOBOCAT_SERVER_PROTOCOL, \settings.KOBOCAT_SERVER, \settings.KOBOCAT_SERVER_PORT))
-
     _set_necessary_permissions(request.user)
     (token, is_new) = Token.objects.get_or_create(user=request.user)
     headers = {u'Authorization':'Token ' + token.key}
 
     payload = {u'text_xls_form': survey_draft.body}
 
-    url = kobocat_integration._kobocat_url('/api/v1/forms')
+    url = kobocat_integration._kobocat_url('/api/v1/forms', internal=True)
 
     response = requests.post(url, headers=headers, data=payload)
 

@@ -54,9 +54,8 @@ def spa(request):
     context['page_kobo_configs'] = json.dumps(page_kobo_configs)
     return render_to_response("index.html", context_instance=context)
 
-from dkobo.koboform import kobocat_integration
 def kobocat_redirect(request, path=''):
-    if settings.KOBOCAT_SERVER:
+    if kobocat_integration._is_enabled():
         if path:
             path = "/%s" % path
         url = kobocat_integration._kobocat_url(path)

@@ -115,9 +115,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'dkobo.hub.context_processors.welcome_message',
 )
 
-KOBOCAT_SERVER = os.environ.get('KOBOCAT_SERVER', False)
-KOBOCAT_SERVER_PROTOCOL = os.environ.get('KOBOCAT_SERVER_PROTOCOL', 'http')
-KOBOCAT_SERVER_PORT = os.environ.get('KOBOCAT_SERVER_PORT', '80')
+KOBOCAT_URL = os.environ.get('KOBOCAT_URL', False)
+KOBOCAT_INTERNAL_URL = os.environ.get('KOBOCAT_INTERNAL_URL', KOBOCAT_URL)
 
 # The number of surveys to import. -1 is all
 KOBO_SURVEY_IMPORT_COUNT = os.environ.get('KOBO_SURVEY_IMPORT_COUNT', 100)
