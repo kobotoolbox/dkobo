@@ -84,7 +84,7 @@
       <div class="question__create">
         <form action="/import_questions" class="question__import-library btn--fileupload js-import-fileupload js-import-questions">
           <span class="fileinput-button">
-            <span>Import Library from XLS</span>
+            <span ng-show="isLoading"><i class="fa fa-spin fa-spinner"></i> Importing Questions</span><span ng-show="!isLoading">Import Library from XLS</span>
             <input type="file" name="files">
           </span>
         </form>
