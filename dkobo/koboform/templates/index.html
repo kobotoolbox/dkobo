@@ -134,6 +134,14 @@
   {% endverbatim %}
 
   {% if trackjs_token %}
+  <script type="text/javascript">
+
+  window._trackJs = {};
+  if (window.userDetails && window.userDetails.username) {
+    _trackJs.userId = window.userDetails.username;
+  }
+
+  </script>
   <script type="text/javascript" src="//d2zah9y47r7bi2.cloudfront.net/releases/current/tracker.js"
     data-token="{{trackjs_token}}"></script>
   {% endif %}
