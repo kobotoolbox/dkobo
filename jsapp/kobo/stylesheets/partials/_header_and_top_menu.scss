@@ -66,26 +66,15 @@
     z-index: 6;
     background-color: #FFF;
     transition: width 150ms, left 150ms;
+}
 
-    > .btn {
-        height: 30px;
-        margin-right: 1px;
-        margin-left: 1px;
-        padding-right: 10px;
-        padding-left: 10px;
+// in smaller screen sizes, reduce width of buttons to be able to fit
+@media screen and (max-width: 1003px) {
+    .sub-header-bar .btn {
         font-size: 12px;
-        line-height: 30px;
-        border:none;
-        font-family: 'Open Sans';
-        font-weight: 600;
-        vertical-align: middle;
+        padding-right:0px;
         i {
-            font-size: 15px;
-            line-height: 30px;
-            margin-right: 5px;
-            &.green {
-                color: #2EB662;
-            }
+            margin-right: 3px;
         }
     }
 }

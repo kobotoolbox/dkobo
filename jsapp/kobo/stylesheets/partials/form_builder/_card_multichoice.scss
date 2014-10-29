@@ -143,13 +143,16 @@
     }
 }
 
-.card__addoptions:after {
+.card__addoptions {
+    position: relative;
+}
+
+.card__addoptions__layer {
     cursor: pointer !important;
     background: rgba(255, 255, 255, 0.5);
-    content: " ";
     position: absolute;
-    width: 620px;
-    height: 33px;
-    margin-top: -36px;
-    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    z-index: 1;
 }
