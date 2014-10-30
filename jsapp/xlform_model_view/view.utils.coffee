@@ -139,6 +139,7 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
 
     launch = (previewUrl, options={})->
       _loadConfigs(options) 
+      console.log options
       $(".enketo-holder").append $("<iframe>", src: buildUrl(previewUrl))
       $(".enketo-holder iframe").load ()->
         # alert "iframe loaded yo!"
@@ -178,13 +179,19 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
             launch("#{previewServer}/koboform/survey_preview/#{unique_string}")
             options.onSuccess()  if options.onSuccess?
           else if status isnt "success"
+            wrap.remove()
+            holder.remove()
             informative_message = jqhr.responseText or jqhr.statusText
             if informative_message.split("\n").length > 0
               informative_message = informative_message.split("\n")[0..2].join("<br>")
             onError informative_message, title: 'Error launching preview'
           else if response and response.error
+            wrap.remove()
+            holder.remove()
             onError response.error
           else
+            wrap.remove()
+            holder.remove()
             onError "SurveyPreview response JSON is not recognized"
 
     launch
