@@ -24,13 +24,25 @@
   padding:20px;
   border-radius: 4px;
   z-index: 999;
+  iframe {
+    width: 100%;
+    height:100%;
+    border:1px solid white;
+  }
+  .enketo-loading-message {
+    margin:35%;
+    p {
+      text-align: center;
+      font-weight: 600;
+    }
+
+    i:before {
+      color: #3FA2EE;
+      font-size: 20px;
+    }
+  }
 }
 
-.enketo-holder iframe {
-  width: 100%;
-  // margin:10px;
-  height:100%;
-}
 
 .enketo-iframe-icon {
   color: #fff;
