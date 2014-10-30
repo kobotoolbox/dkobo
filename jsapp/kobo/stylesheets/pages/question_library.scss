@@ -348,6 +348,14 @@ section.form-builder.active__sidebar .container {
     max-width: 1004px;
 }
 
+// in smaller screen sizes, place question library differently
+@media screen and (max-width: 1003px) {
+    .koboform__questionlibrary {
+        margin-left: 0px;
+        right: 0px;
+    }
+}
+
 .questions__sidebar--container {
     height: 100%;
     padding-top: 140px;
