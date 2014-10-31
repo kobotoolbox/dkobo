@@ -7,30 +7,73 @@ define 'cs!test/unit/xlform/Survey/insertSurvey', [
               )->
 
   describe 'Insert Survey', () ->
+
     it 'inserts each row within the passed survey at the end of the target survey', () ->
       survey = $model.Survey.create()
 
-      survey.insert_row = (row) ->
-        @rows.add row
-
       row = new $model.Row()
-      survey.insertSurvey rows: models: [row]
+
+      second_survey = $model.Survey.create()
+      second_survey.addRow(row)
+
+      survey.insertSurvey second_survey
 
       expect(survey.rows.length).toBe 1
-      expect(survey.rows.at(0)).toBe row
+      expect(survey.rows.at(0).toJSON()).toEqual row.toJSON()
 
     it 'inserts each row within the passed survey starting from the provided index', () ->
-      survey = $model.Survey.create()
-      survey.insert_row = (row, at) -> @rows.add row, at: at
+      create_simple_row = (name)-> new $model.Row(type: 'text', name: name)
 
-      new_row = new $model.Row()
-      survey.rows.add new $model.Row()
-      survey.rows.add new $model.Row()
-      survey.rows.add new $model.Row()
+      survey1 = $model.Survey.create()
+      for row_name in ['a', 'b', 'c']
+        survey1.addRow(create_simple_row(row_name))
 
-      survey.insertSurvey rows: models: [new_row], 2
-      expect(survey.rows.length).toBe 4
-      expect(survey.rows.models[2]).toBe new_row
+      append_survey_with_name_to_index = (name, index)->
+        tmp_survey = $model.Survey.create()
+        tmp_survey.addRow(create_simple_row(name))
+        survey1.insertSurvey tmp_survey, index
+
+      append_survey_with_name_to_index('z', 3)
+      append_survey_with_name_to_index('y', 2)
+      append_survey_with_name_to_index('x', 1)
+
+      survey1_names = survey1.rows.map (r)-> r.getValue('name')
+
+      # a b c
+      #  x y z
+      expect(survey1_names).toEqual(['a', 'x', 'b', 'y', 'c', 'z'])
+
+    it 'carries over choice list from one survey to the next', ->
+      # a pre-built survey with a choice list
+      survey1 = $model.Survey.load("""
+        survey,,,
+        ,type,name,label
+        ,select_one x,s1,"select one"
+        choices,,,
+        ,"list name",name,label
+        ,x,letters,"A B C"
+        ,x,numbers,"1 2 3"
+        """)
+
+      # an empty survey
+      survey2 = $model.Survey.create()
+
+      list_json_options = [
+        {
+          name: 'letters'
+          label: 'A B C'
+        }, {
+          name: 'numbers'
+          label: '1 2 3'
+        }
+      ]
+      expect(survey1.rows.at(0).getList().toJSON().options).toEqual(list_json_options)
+      survey2.insertSurvey(survey1)
+
+      expect(survey2.rows.at(0).getList().toJSON().options).toEqual(list_json_options)
+
+      survey3 = $model.Survey.load(survey2.toCSV())
+      expect(survey3.rows.at(0).getList().toJSON().options).toEqual(list_json_options)
 
   describe 'Insert Row', () ->
     it 'adds the passed row to the row collection of the target survey', () ->
