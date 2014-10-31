@@ -8,28 +8,41 @@
     position: fixed;
     width: 100%;
     height: 100%;
-    z-index: 998;
+    z-index: 10;
     background-color: rgba(51, 51, 51, 0.5);
 }
 
 .enketo-holder {
-  width: 820px;
+  width: 760px;
   margin-left: -400px;
   position: fixed;
   top: 5%;
   left: 50%;
-  height: 90%;
+  height: 80%;
   background: white;
   border:2px solid #5CB5EB;
   padding:20px;
   border-radius: 4px;
-  z-index: 999;
-}
+  z-index: 11;
+  -webkit-overflow-scrolling:touch;
+  overflow: auto;
+  iframe {
+    width: 100%;
+    height:100%;
+    border:1px solid white;
+  }
+  .enketo-loading-message {
+    margin:35%;
+    p {
+      text-align: center;
+      font-weight: 600;
+    }
 
-.enketo-holder iframe {
-  width: 100%;
-  // margin:10px;
-  height:100%;
+    i:before {
+      color: #3FA2EE;
+      font-size: 20px;
+    }
+  }
 }
 
 .enketo-iframe-icon {

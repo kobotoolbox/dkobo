@@ -139,27 +139,35 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
 
     launch = (previewUrl, options={})->
       _loadConfigs(options) 
-      holder = $("<div>", class: "enketo-holder").html("<div class='enketo-iframe-icon'></div>")
-      wrap = $("<div>", class: "js-click-remove-iframe iframe-bg-shade")
-      holder.appendTo('body')
+      console.log options
       $(".enketo-holder").append $("<iframe>", src: buildUrl(previewUrl))
-      wrap.click ()-> 
-        wrap.remove()
-        holder.remove()
-      $('.enketo-holder .enketo-iframe-icon').click ()-> 
-        wrap.remove()
-        holder.remove()
-      wrap
+      $(".enketo-holder iframe").load ()->
+        # alert "iframe loaded yo!"
+        $(".enketo-loading-message").remove()
 
     launch.close = ()->
       $(".iframe-bg-shade").remove()
       $(".enketo-holder").remove()
 
     launch.fromCsv = (surveyCsv, options={})->
+      holder = $("<div>", class: "enketo-holder").html("<div class='enketo-iframe-icon'></div><div class=\"enketo-loading-message\"><p><i class=\"fa fa-spin fa-spinner\"></i><br/>Loading Preview</p><p>This will take a few seconds depending on the size of your form.</p></div>")
+      wrap = $("<div>", class: "js-click-remove-iframe iframe-bg-shade")
+      holder.appendTo('body')
+      wrap.appendTo('body')
+
+      wrap.click ()-> 
+        wrap.remove()
+        holder.remove()
+
+      $('.enketo-holder .enketo-iframe-icon').click ()-> 
+        wrap.remove()
+        holder.remove()
+
       previewServer = options.previewServer or ""
       data = JSON.stringify(body: surveyCsv)
       _loadConfigs(options)
       onError = options.onError or (args...)-> console?.error.apply(console, args)
+
       $.ajax
         url: "#{previewServer}/koboform/survey_preview/"
         method: "POST"
@@ -168,16 +176,22 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
           response = jqhr.responseJSON
           if status is "success" and response and response.unique_string
             unique_string = response.unique_string
-            launch("#{previewServer}/koboform/survey_preview/#{unique_string}").appendTo("body")
+            launch("#{previewServer}/koboform/survey_preview/#{unique_string}")
             options.onSuccess()  if options.onSuccess?
           else if status isnt "success"
+            wrap.remove()
+            holder.remove()
             informative_message = jqhr.responseText or jqhr.statusText
             if informative_message.split("\n").length > 0
               informative_message = informative_message.split("\n")[0..2].join("<br>")
             onError informative_message, title: 'Error launching preview'
           else if response and response.error
+            wrap.remove()
+            holder.remove()
             onError response.error
           else
+            wrap.remove()
+            holder.remove()
             onError "SurveyPreview response JSON is not recognized"
 
     launch
