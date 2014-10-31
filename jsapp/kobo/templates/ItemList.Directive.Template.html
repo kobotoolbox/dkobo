@@ -1,6 +1,6 @@
 <ul class="items__container">
   <li
-    ng-repeat="item in api.items|filter:filters|orderBy:sortCriteria"
+    ng-repeat="item in api.items|filter:filters:filterFn|orderBy:sortCriteria"
     ng-class="item.meta.additionalClasses"
     ng-click="toggleSelected(item, $event)"
     class="{{ baseClass }}"

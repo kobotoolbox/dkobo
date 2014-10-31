@@ -32,8 +32,14 @@ kobo.filter('propsFilter', function() {
                 for (var i = 0; i < keys.length; i++) {
                     var prop = keys[i];
                     var text = props[prop].toLowerCase();
-                    if (item[prop].toString().toLowerCase().indexOf(text) !== -1) {
-                        itemMatches = true;
+                    var words = text.split(' ');
+                    for (var j = 0; j < words.length; j++) {
+                        if (item[prop].toString().toLowerCase().indexOf(words[j]) !== -1) {
+                            itemMatches = true;
+                            break;
+                        }
+                    }
+                    if (itemMatches === true) {
                         break;
                     }
                 }

@@ -4,62 +4,30 @@
 
     <div class="tags__header">
       <h2 class="tags__title">
-        Tags <span class="tags__tag-count">{{ api.tags.items.length }} tags</span></h2>
-      <div class="tag-filter">
-        <div class="tag-filter__search">
-          <i class="fa fa-search"></i> <input class="tag-filter__searchbox" placeholder="Search tags" ng-model="tagFilters.label" />
-        </div>
+        Tags <span class="tags__tag-count">{{ api.tags.items.length }} tag{{ api.tags.items.length !== 1 && 's' || '' }}</span></h2>
 
-        <select class="tag-filter__sorter" ng-model="tagsSortCriteria">
-          <option value="-date_modified">Newest</option>
-          <option value="label">A - Z</option>
-          <option value="[count, label]">A - Z, Empty First</option>
-          <option value="[-count, label]">A - Z, Empty Last</option>
-        </select>
-      </div>
-      <a
-        class="tag__create-new"
-        href=""
-        ng-click="enableAdd()"
-        ng-show="!isAdding"
-      >
-        + Add New Tag
-      </a>
+      <item-filters
+        api="tags"
+        sorter="tagSorter"
+        filters="tagFilters"
+        toggle="nowhere"
+      ></item-filters>
 
-      <input
-        type="text"
-        ng-model="newTagName"
-        ng-show="isAdding"
-        ng-keydown="addNewTag__KeyDown($event)"
-        focus-on="showAddBox"
-        class="tag__create-new__editbox"
-        placeholder="tag name"
-      />
 
-      <i
-        ng-show="isAdding"
-        class="fa fa-check-circle fa-4 tags__tag__create-new--accept"
-        ng-click="addNewTag()"
-      ></i>
-
-      <i
-        ng-show="isAdding"
-        class="fa fa-ban fa-4 tags__tag__create-new--cancel"
-        ng-click="cancelAdd()"
-      ></i>
+      <add-new-tag></add-new-tag>
 
     </div>
 
       <item-list
         rest-api="tags"
         filters="tagFilters"
-        sort-criteria="tagsSortCriteria"
+        sort-criteria="tagSorter.selected.value"
         base-class="tags__tag"
         quick-edit="true"
         additional-select-operations="toggleTagInFilters"
         can-delete="true"
       >
-        <span class="tag__question-count">{{ item.count }} questions</span>
+        <span class="tag__question-count">{{ item.count }} question{{ item.count !== 1 && 's' || '' }}</span>
       </item-list>
 
     <div class="tags__empty hidden">
@@ -71,7 +39,7 @@
 
   <div class="questions clearfix">
     <div class="questions__header">
-      <h2 class="questions__title">Questions <span class="questions__question-count">{{api.questions.items.length}} questions</span></h2>
+      <h2 class="questions__title">Questions <span class="questions__question-count">{{api.questions.items.length}} question{{ api.questions.items.length !== 1 && 's' || '' }}</span></h2>
       <div class="question__create">
         <form action="/import_questions" class="question__import-library btn--fileupload js-import-fileupload js-import-questions">
           <span class="fileinput-button">
@@ -82,46 +50,24 @@
         <a class="question__create-new" href="#/library/questions/new">+ Add New Question</a>
       </div>
 
-      <div class="question-filter">
-        <div class="question-filter__filters">
-          <div class="question-filter__search">
-            <i class="fa fa-search"></i>
-            <input id="qlib-search" class="question-filter__searchbox" ng-model="filters.label" placeholder="Search questions" value="" />
-          </div>
+      <item-filters
+        api="questions"
+        sorter="questionSorter"
+        filters="questionFilters"
+        toggle="toggleSelectAll"
+        can-select-all="true"
+      ></item-filters>
 
-          <select class="question-filter__sorter" ng-model="sort_criteria">
-            <option value="-date_modified">Newest First</option>
-            <option value="date_modified">Oldest First</option>
-            <option value="label">A - Z</option>
-            <option value="-label">Z - A</option>
-          </select>
-          <!-- THIS IS HERE TEMPORARILY -->
-          <script type="text/javascript">
-            $('select.question-filter__sorter').select2({
-              minimumResultsForSearch: -1
-            });
-          </script>
-
-          <label class="question-filter__select-all"><input class="question-filter__select-all-checkbox" type="checkbox" ng-model="select_all" /> select all</label>
-          <a class="question-filter__show-responses" href="" ng-click="show_responses = !show_responses"><i class="question-filter__show-responses-icon fa fa-eye"></i> {{ show_responses && 'hide' || 'show' }} responses</a>
-        </div>
-
-        <div class="question-filter__actions">
-          <div class="question-filter__selected-count">{{get_selected_amount()}} selected</div>
-          <a class="question-filter__add-to-new" ng-show="false" href=""><i class="question-filter__add-to-new-icon"></i>Add to new form</a>
-          <a class="question-filter__add-to-block" ng-show="false" href=""><i class="question-filter__add-to-block-icon"></i>Add to block</a>
-          <a class="question-filter__delete" ng-show="get_selected_count() > 0" href="" ng-click="delete_selected()"><i class="question-filter__delete-icon"></i>Delete</a>
-        </div>
-      </div>
     </div>
 
   <item-list
     rest-api="questions"
-    filters="filters"
-    sort-criteria="sort_criteria"
+    filters="questionFilters"
+    sort-criteria="questionSorter.selected.value"
     base-class="questions__question"
     full-edit="true"
     full-edit-class="question__edit"
+    additional-select-operations="toggleSelectAll"
   >
     <question-details></question-details>
   </item-list>

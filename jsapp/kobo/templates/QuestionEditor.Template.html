@@ -8,7 +8,7 @@
         <ui-select-match placeholder="tags">
             {{$item.label}}
         </ui-select-match>
-        <ui-select-choices repeat="tag in tags.available | propsFilter: {label: $select.search}">
+        <ui-select-choices repeat="tag in tags.available | propsFilter: {label: $select.search} | orderBy:'label'">
             <div ng-bind-html="tag.label"></div>
         </ui-select-choices>
     </ui-select>

@@ -82,9 +82,13 @@ kobo.service('$miscUtils', function ($rootScope, $userDetails) {
         }
     };
 
-    this.toggle_response_list = function (item) {
+    this.toggle_response_list = function (item, show) {
         if (item.type !== 'select_one' && item.type !== 'select_all' && item.type !== 'select_multiple') {
             return;
+        }
+
+        if (typeof show !== 'undefined') {
+            item.meta.show_responses = !show;
         }
 
         if (item.meta.show_responses) {

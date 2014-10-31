@@ -3,15 +3,35 @@
 /* global _ */
 'use strict';
 //noinspection JSUnusedGlobalSymbols
-function AssetsController($scope, $rootScope, $filter, $miscUtils, $api) {
-    $scope.sort_criteria = '-date_modified';
-    $scope.tagsSortCriteria = '-date_modified';
+function AssetsController($scope, $rootScope, $miscUtils, $api) {
     $scope.tagFilters = {};
     $rootScope.showImportButton = false;
     $rootScope.showCreateButton = false;
-    $scope.filters = {};
+    $scope.questionFilters = {};
     $rootScope.icon_link = 'library/questions';
     $scope.newTagName = '';
+
+    $scope.tagSorter = {
+        criteria: [
+            {value: "-date_modified", label: 'Newest'},
+            {value: "label", label: 'A - Z'},
+            {value: "[count, label]", label: 'A - Z, Empty First'},
+            {value: "[-count, label]", label: 'A - Z, Empty Last'}
+        ]
+    };
+
+    $scope.tagSorter.selected = $scope.tagSorter.criteria[1];
+
+    $scope.questionSorter = {
+        criteria: [
+            {value: '-date_modified', label: 'Newest First'},
+            {value: 'date_modified', label: 'Oldest First'},
+            {value: 'label', label: 'A - Z'},
+            {value: '-label', label: 'Z - A'}
+        ]
+    };
+
+    $scope.questionSorter.selected = $scope.questionSorter.criteria[0];
 
     $scope.api = $api;
 
@@ -20,81 +40,13 @@ function AssetsController($scope, $rootScope, $filter, $miscUtils, $api) {
 
     $miscUtils.bootstrapQuestionUploader($api.questions.list);
 
-    $scope.select_all = null;
-
-    function select_all() {
-        var new_class = $scope.select_all ? 'questions__question--selected' : '';
-        var filter = $filter('filter');
-
-        if (!$scope.is_updating_select_all) {
-            _.each($api.questions.items, function (item) {
-                item.meta.isSelected = false;
-                item.meta.additionalClasses = '';
-            });
-
-            _.each(filter($api.questions.items, $scope.filters), function (item) {
-                item.meta.isSelected = $scope.select_all;
-                item.meta.additionalClasses = new_class;
-            });
-        }
-
-        $scope.is_updating_select_all = false;
-    }
-
-    $scope.delete_selected = function () {
-        if (!$miscUtils.confirm('are you sure you want to delete ' + $scope.get_selected_amount() + '?')) {
-            return;
-        }
-        _.each($api.questions.items, function (item) {
-            if (item.meta.isSelected) {
-                $api.questions.remove(item);
-            }
-        });
-
-        $api.questions.items = _.filter($api.questions.items, function (item) {
-            return !item.meta.isSelected
-        });
-    };
-
-    $scope.$watch('filters.label', function () {
-        select_all();
-    });
-
-    $scope.$watch('select_all', function () {
-        if ($scope.select_all === null) {
-            return;
-        }
-        select_all();
-    });
-
-    $scope.$watch('show_responses', function () {
-        if (typeof $scope.show_responses === 'undefined') {
-            return;
-        }
-
-        _.each($api.questions.items, function (item) {
-            $miscUtils.toggle_response_list(item);
-        });
-    });
-
-    $scope.get_selected_count = function () {
-        return _.filter($api.questions.items, function (item) {
-            return item.meta ? item.meta.isSelected : false;
-        }).length;
-    };
-
-    $scope.get_selected_amount = function () {
-        var amount = $scope.get_selected_count();
-
-        if (amount > 1 || amount === 0) {
-            return amount + ' questions';
-        } else {
-            return amount + ' question';
-        }
-    };
 
     $rootScope.canAddNew = true;
     $rootScope.activeTab = 'Question Library';
+
+    $rootScope.$on('list:library_assets', function () {
+        $scope.toggleTagInFilters($api.tags.items);
+    });
 
     $scope.$on('questions:reload', function () {
         $scope.toggleTagInFilters($api.tags.items)
@@ -105,36 +57,14 @@ function AssetsController($scope, $rootScope, $filter, $miscUtils, $api) {
             return item.meta.isSelected;
         });
 
-        $scope.filters.tags = _.pluck(tags, 'label');
-        if ($scope.filters.tags.length === 0) {
-            delete $scope.filters.tags;
+        $scope.questionFilters.tags = _.pluck(tags, 'label');
+        if ($scope.questionFilters.tags.length === 0) {
+            delete $scope.questionFilters.tags;
         }
     };
 
-    $scope.cancelAdd = function () {
-        delete $scope.newTagName;
-        $scope.isAdding = false;
-    };
-    $scope.addNewTag__KeyDown = function ($event) {
-        if ($event.which === 13) {
-            $scope.addNewTag();
-        } else if ($event.which === 27) {
-            $scope.cancelAdd()
-        }
-    };
-
-    $scope.addNewTag = function () {
-        var api = $api.tags;
-        if(!$scope.newTagName) {
-            return;
-        }
-        api.save({label: $scope.newTagName});
-        delete $scope.newTagName;
-        $scope.isAdding = false;
-    };
-
-    $scope.enableAdd = function () {
-        $scope.isAdding = true;
-        $scope.$broadcast('showAddBox');
+    $scope.getCount = function (item) {
+        var count = item.count;
+        return count + ' question' + (count == 1 ? '' : 's');
     };
 }

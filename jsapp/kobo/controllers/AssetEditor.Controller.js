@@ -9,16 +9,15 @@ function AssetEditorController($scope, $rootScope, $routeParams, $routeTo, $api)
     if($routeParams.id === 'new'){
         render_question(null)
     } else {
-        surveyDraftApi.get({id: $routeParams.id}, function builder_get_callback(response) {
-            render_question(response);
-        });
+        surveyDraftApi.get({id: $routeParams.id}).then(render_question).then(listTags);
     }
-
+    var selectedTags = null;
     function render_question(response) {
         if (response !== null) {
             $scope.xlfSurvey = dkobo_xlform.model.Survey.load(response.body);
             // temporarily saving response in __djangoModelDetails
             $scope.xlfSurvey.__djangoModelDetails = response;
+            selectedTags = response.tags;
         } else {
             $scope.xlfSurvey = null;
         }
@@ -46,7 +45,14 @@ function AssetEditorController($scope, $rootScope, $routeParams, $routeTo, $api)
             selected: []
         };
 
-    $api.tags.list().then(function () {
-        $scope.tags.available = $api.tags.items;
-    });
+    function listTags() {
+        $api.tags.list().then(function () {
+            $scope.tags.available = $api.tags.items;
+            if (selectedTags !== null) {
+                $scope.tags.selected = _.filter($api.tags.items, function (tag) {
+                    return selectedTags.indexOf(tag.label) > -1;
+                });
+            }
+        });
+    }
 }

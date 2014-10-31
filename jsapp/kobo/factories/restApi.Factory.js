@@ -12,6 +12,7 @@ kobo.factory('$restApi', function ($resource, $timeout, $cacheFactory, $rootScop
         }, opts.customMethods);
 
         var api = $resource(url, { id: '@id' }, opts.customMethods);
+        var assetName = /\/api\/(\w+)\/:id/.exec(url)[1];
 
         var actions = {};
 
@@ -30,41 +31,57 @@ kobo.factory('$restApi', function ($resource, $timeout, $cacheFactory, $rootScop
         opts.saveCallback = opts.saveCallback || function () {};
         opts.updateCallback = opts.updateCallback || function () {};
         opts.listCallback = opts.listCallback || function () {};
+        opts.removeCallback = opts.removeCallback || function () {};
 
 
         var publicApi = _.extend({
             list: function () {
-                var data = cache.get('list:' + url);
+                var data = cache.get('list:' + assetName),
+                    _this = this;
                 if(!data) {
-                    data = api.query(opts.listCallback.bind(this));
-                    cache.put('list:' + url, data);
+                    data = api.query(function () {
+                        _this.items = data;
+                        opts.listCallback.apply(_this, arguments);
+                        $rootScope.$broadcast('list:' + assetName);
+                    });
+                    cache.put('list:' + assetName, data);
                 }
-                this.items = data;
+
                 return data.$promise
             },
             remove: function (item) {
-                var that = this;
+                var _this = this;
                 return api.remove({id: item.id}, function () {
-                    var data = cache.remove('list:' + url);
-                    var index = _.indexOf(that.items, _.filter(that.items, function (_item) {
+                    var data = cache.remove('list:' + assetName);
+                    var index = _.indexOf(_this.items, _.filter(_this.items, function (_item) {
                         return _item.id === item.id;
                     })[0]);
-                    that.items.splice(index, 1);
+                    _this.items.splice(index, 1);
+                    opts.removeCallback.apply(_this, arguments);
+                    $rootScope.$broadcast('remove:' + assetName);
                 }).$promise;
             },
             save: function (item) {
-                var data = cache.remove('list:' + url);
+                var data = cache.remove('list:' + assetName),
+                    _this = this;
                 if (item.id) {
-                    return api.update(item, opts.updateCallback.bind(this)).$promise;
+                    return api.update(item, function () {
+                        opts.updateCallback.apply(_this, arguments);
+                        $rootScope.$broadcast('update:' + assetName);
+                    }).$promise;
                 } else {
                     return api.save(item, opts.saveCallback.bind(this)).$promise;
+                    $rootScope.$broadcast('add:' + assetName);
                 }
+                $rootScope.$broadcast('save:' + assetName);
             },
             get: function (args) {
-                return api.get(args).$promise;
+                return api.get(args, function () {
+                    $rootScope.$broadcast('get:' + assetName);
+                }).$promise;
             }
         }, actions);
-        $rootScope.$on('reload:' + url, publicApi.list.bind(publicApi));
+        $rootScope.$on('reload:' + assetName, publicApi.list.bind(publicApi));
         return publicApi;
     }
 
@@ -80,7 +97,16 @@ kobo.factory('$restApi', function ($resource, $timeout, $cacheFactory, $rootScop
                     initialize_questions(this.items);
                 },
                 saveCallback: function () {
-                    $rootScope.$broadcast('reload:api/tags/:id');
+                    cache.remove('list:tags');
+                    $rootScope.$broadcast('reload:tags');
+                },
+                updateCallback: function () {
+                    cache.remove('list:tags');
+                    $rootScope.$broadcast('reload:tags');
+                },
+                removeCallback: function () {
+                    cache.remove('list:tags');
+                    $rootScope.$broadcast('reload:tags');
                 }
             });
 
@@ -150,21 +176,27 @@ kobo.factory('$restApi', function ($resource, $timeout, $cacheFactory, $rootScop
             }
         },
         createTagsApi: function () {
+            var metas = {};
+
             function initialize_items(items) {
                 _.each(items, function (item) {
                     if (!item.meta) {
-                        item.meta = {};
+                        if (metas[item.id]) {
+                            item.meta = metas[item.id];
+                        } else {
+                            item.meta = metas[item.id] = {};
+                        }
                     }
                 });
             }
 
-            return createApi('api/tags/:id', {
+            return createApi('/api/tags/:id', {
                 listCallback: function () {
                     initialize_items(this.items);
                 },
                 updateCallback: function () {
-                    cache.remove('list:/api/library_assets/:id');
-                    $rootScope.$broadcast('reload:/api/library_assets/:id');
+                    cache.remove('list:library_assets');
+                    $rootScope.$broadcast('reload:library_assets');
 
                 },
                 saveCallback: function (tag) {
