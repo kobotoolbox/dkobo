@@ -61,8 +61,12 @@ define 'cs!xlform/model.survey', [
     insertSurvey: (survey, index=-1)->
       index = @rows.length  if index is -1
       for row, row_i in survey.rows.models
+        if rowlist = row.getList()
+          @choices.add(name: rowlist.get("name"), options: rowlist.options.toJSON())
+        name_detail = row.get('name')
+        name_detail.set 'value', name_detail.deduplicate(@)
         index_incr = index + row_i
-        @insert_row row, index_incr
+        @rows.add(row.toJSON(), at: index_incr)
       ``
     toJSON: (stringify=false, spaces=4)->
       obj = {}
