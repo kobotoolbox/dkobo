@@ -4,17 +4,23 @@
 
 
 
-kobo.factory('$restApi', function ($resource, $timeout, $cacheFactory, $rootScope) {
+kobo.factory('$restApi', function ($resource, $timeout, $cacheFactory, $rootScope, $q) {
     var cache = $cacheFactory('rest api');
+
     function createApi(url, opts) {
         opts.customMethods = _.extend({
             update: { method: 'PATCH' }
         }, opts.customMethods);
 
-        var api = $resource(url, { id: '@id' }, opts.customMethods);
         var assetName = /\/api\/(\w+)\/:id/.exec(url)[1];
+        if (opts.paged === true) {
+            // to get around angular's resource trailing slash idiocy...
+            var pagingApi = $resource('/api/' + assetName + '?page=:nextPage', { id: '@id' }, opts.customMethods);
+        }
 
+        var api = $resource(url, { id: '@id' }, opts.customMethods);
         var actions = {};
+        var nextPage = 1;
 
         function makeAction(action) {
             return function (item) {
@@ -33,9 +39,33 @@ kobo.factory('$restApi', function ($resource, $timeout, $cacheFactory, $rootScop
         opts.listCallback = opts.listCallback || function () {};
         opts.removeCallback = opts.removeCallback || function () {};
 
+        var listFn = opts.paged === true ?
+            function () {
+                var data = cache.get('list:' + assetName),
+                    _this = this;
 
-        var publicApi = _.extend({
-            list: function () {
+                if (!data) {
+                    nextPage = 1;
+                }
+                if(nextPage) {
+                    data = pagingApi.get({ pageNumber: nextPage}, function () {
+                        if (nextPage === 1) {
+                            _this.items = data.results;
+                        } else {
+                            _this.items.concat(data.results);
+                        }
+                        nextPage = data.next && /page=(\d+)/g.exec(data.next)[1];
+                        arguments[0] = _this.items;
+                        opts.listCallback.apply(_this, arguments);
+                        $rootScope.$broadcast('list:' + assetName);
+                    });
+                    cache.put('list:' + assetName, data);
+                    return data.$promise
+                }
+                return $q(function (resolve) { resolve(_this.items)})
+            }
+        :
+            function () {
                 var data = cache.get('list:' + assetName),
                     _this = this;
                 if(!data) {
@@ -48,7 +78,10 @@ kobo.factory('$restApi', function ($resource, $timeout, $cacheFactory, $rootScop
                 }
 
                 return data.$promise
-            },
+            };
+
+        var publicApi = _.extend({
+            list: listFn,
             remove: function (item) {
                 var _this = this;
                 return api.remove({id: item.id}, function () {
@@ -107,7 +140,8 @@ kobo.factory('$restApi', function ($resource, $timeout, $cacheFactory, $rootScop
                 removeCallback: function () {
                     cache.remove('list:tags');
                     $rootScope.$broadcast('reload:tags');
-                }
+                },
+                paged: true
             });
 
             function initialize_questions(info_list_items) {

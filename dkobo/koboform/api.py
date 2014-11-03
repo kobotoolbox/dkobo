@@ -56,6 +56,7 @@ class TagViewset(viewsets.ModelViewSet):
 class LibraryAssetViewset(SurveyAssetViewset):
     exclude_asset_type = True
     serializer_class = DetailSurveyDraftSerializer
+    paginate_by = 100
 
 
 class SurveyDraftViewSet(SurveyAssetViewset):
