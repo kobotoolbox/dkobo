@@ -104,6 +104,10 @@ kobo.directive('itemList',['$api', function ($api) {
                     scope.updateModel = function (item) {
                         scope.api.save(item);
                     };
+
+                    scope.getNextPage = function () {
+                        scope.api.list();
+                    }
                 }
             }
         }

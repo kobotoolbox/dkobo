@@ -39,6 +39,7 @@ kobo.factory('$restApi', function ($resource, $timeout, $cacheFactory, $rootScop
         opts.listCallback = opts.listCallback || function () {};
         opts.removeCallback = opts.removeCallback || function () {};
 
+        var isListing = false;
         var listFn = opts.paged === true ?
             function () {
                 var data = cache.get('list:' + assetName),
@@ -47,22 +48,27 @@ kobo.factory('$restApi', function ($resource, $timeout, $cacheFactory, $rootScop
                 if (!data) {
                     nextPage = 1;
                 }
+                if (isListing) {
+                    return data.$promise;
+                }
                 if(nextPage) {
-                    data = pagingApi.get({ pageNumber: nextPage}, function () {
+                    isListing = true
+                    data = pagingApi.get({ nextPage: nextPage}, function () {
                         if (nextPage === 1) {
                             _this.items = data.results;
                         } else {
-                            _this.items.concat(data.results);
+                            _this.items = _this.items.concat(data.results);
                         }
                         nextPage = data.next && /page=(\d+)/g.exec(data.next)[1];
                         arguments[0] = _this.items;
                         opts.listCallback.apply(_this, arguments);
                         $rootScope.$broadcast('list:' + assetName);
+                        isListing = false;
                     });
                     cache.put('list:' + assetName, data);
                     return data.$promise
                 }
-                return $q(function (resolve) { resolve(_this.items)})
+                return data.$promise;
             }
         :
             function () {
