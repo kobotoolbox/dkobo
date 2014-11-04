@@ -244,7 +244,7 @@ define 'cs!xlform/view.rowDetail', [
       @listenForCheckboxChange()
 
   viewRowDetail.DetailViewMixins.appearance =
-    html: ->
+    getTypes: () ->
       types =
         text: ['multiline']
         select_one: ['minimal', 'quick', 'horizontal-compact', 'horizontal', 'likert', 'compact', 'quickcompact', 'label', 'list-nolabel']
@@ -253,11 +253,14 @@ define 'cs!xlform/view.rowDetail', [
         date: ['month-year', 'year']
         group: ['select', 'field-list', 'table-list', 'other']
 
+      types[@model._parent.getValue('type').split(' ')[0]]
+    html: ->
+
       @$el.addClass("card__settings__fields--active")
       if @model_is_group()
         return viewRowDetail.Templates.checkbox @cid, @model.key, 'Appearance (advanced)', 'Show all questions in this group on the same screen'
       else
-        appearances = types[@model._parent.getValue('type').split(' ')[0]]
+        appearances = @getTypes()
         if appearances?
           appearances.push 'other'
           appearances.unshift 'select'
@@ -270,8 +273,17 @@ define 'cs!xlform/view.rowDetail', [
 
     afterRender: ->
       $select = @$('select')
+      modelValue = @model.get 'value'
       if $select.length > 0
         $input = $('<input/>', {class:'text', type: 'text', width: 'auto'})
+        if modelValue != ''
+          if @getTypes()? && modelValue in @getTypes()
+            $select.val(modelValue)
+          else
+            $select.val('other')
+            @$('.settings__input').append $input
+            @listenForInputChange el: $input
+
         $select.change () =>
           if $select.val() == 'other'
             @model.set 'value', ''
@@ -283,6 +295,15 @@ define 'cs!xlform/view.rowDetail', [
             @model.set 'value', $select.val()
             $input.remove()
       else
-        @listenForInputChange()
+        $input = @$('input')
+        if $input.attr('type') == 'text'
+          @$('input[type=text]').val(modelValue)
+          @listenForInputChange()
+        else if $input.attr('type') == 'checkbox'
+          $input.on 'change', () =>
+            if $input.prop('checked')
+              @model.set 'value', 'field-list'
+            else
+              @model.set 'value', ''
 
   viewRowDetail
