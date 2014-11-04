@@ -89,12 +89,7 @@ define 'cs!xlform/view.row', [
         show = !@_settingsExpanded
 
       if show and !@_settingsExpanded
-        if @already_rendered_expanded
-          @$('.card__settings').show()
-        else
-          @_expandedRender()
-          @already_rendered_expanded = true
-
+        @_expandedRender()
         @$card.addClass('card--expanded-settings')
         @hideMultioptions?()
         @_settingsExpanded = true
@@ -105,7 +100,7 @@ define 'cs!xlform/view.row', [
       ``
 
     _cleanupExpandedRender: ->
-      @$('.card__settings').hide()
+      @$('.card__settings').detach()
 
     clone: (event) =>
       @model.getSurvey().insert_row @model, @model._parent.models.indexOf(@model) + 1
