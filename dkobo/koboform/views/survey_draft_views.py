@@ -207,13 +207,15 @@ def publish_survey_draft(request, pk, format=None):
     headers = {u'Authorization':'Token ' + token.key}
 
     payload = {u'text_xls_form': survey_draft.body}
+    try:
+        url = kobocat_integration._kobocat_url('/api/v1/forms', internal=True)
+        response = requests.post(url, headers=headers, data=payload)
+        status_code = response.status_code
+        resp = response.json()
+    except Exception, e:
+        resp = json.dumps({'status_code': 504, 'detail': 'There was an error while publishing your survey'})
+        status_code = 504
 
-    url = kobocat_integration._kobocat_url('/api/v1/forms', internal=True)
-
-    response = requests.post(url, headers=headers, data=payload)
-
-    status_code = response.status_code
-    resp = response.json()
     if 'formid' in resp:
         survey_draft.kobocat_published_form_id = resp[u'formid']
         survey_draft.save()
