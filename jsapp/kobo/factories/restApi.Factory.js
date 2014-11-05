@@ -172,14 +172,16 @@ kobo.factory('$restApi', function ($resource, $timeout, $cacheFactory, $rootScop
                 }
 
                 function set_defaults(item) {
-                    item.meta = {
-                        show_responses: false,
-                        is_selected: false,
-                        question_class: 'questions__question',
-                        question_type_class: 'question__type',
-                        question_type_icon: 'fa fa-caret-right fa-fw',
-                        question_type_icon_class: 'question__type-icon'
-                    };
+                    if (!item.meta) {
+                        item.meta = {
+                            show_responses: false,
+                            is_selected: false,
+                            question_class: 'questions__question',
+                            question_type_class: 'question__type',
+                            question_type_icon: 'fa fa-caret-right fa-fw',
+                            question_type_icon_class: 'question__type-icon'
+                        };
+                    }
                 }
 
                 function get_props_from_row(item) {
