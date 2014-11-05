@@ -20,7 +20,12 @@
       </ui-select>
 
       <label ng-show="canSelectAll" class="{{ name }}-filter__select-all">
-          <input class="{{ name }}-filter__select-all-checkbox" type="checkbox" ng-model="select_all" />
+          <input
+            class="{{ name }}-filter__select-all-checkbox"
+            type="checkbox"
+            ng-model="select_all"
+            ng-checked="allSelected()"
+            ng-click="toggleSelectAll()"/>
           select all
       </label>
       <a

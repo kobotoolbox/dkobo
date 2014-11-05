@@ -13,8 +13,8 @@ kobo.directive('itemFilters', ['$api', '$filter', '$miscUtils', function ($api, 
         link: function (scope) {
             scope.name = scope.api.substring(0, scope.api.length -1);
 
-            function select_all() {
-                var new_class = scope.select_all ? scope.api + '__' + scope.name + '--selected' : '';
+            function select_all(select_all) {
+                var new_class = select_all ? scope.api + '__' + scope.name + '--selected' : '';
                 var filter = $filter('filter');
 
                 if (!scope.is_updating_select_all) {
@@ -24,7 +24,7 @@ kobo.directive('itemFilters', ['$api', '$filter', '$miscUtils', function ($api, 
                     });
 
                     _.each(filter($api[scope.api].items, scope.filters), function (item) {
-                        item.meta.isSelected = scope.select_all;
+                        item.meta.isSelected = select_all;
                         item.meta.additionalClasses = new_class;
                     });
                 }
@@ -60,23 +60,18 @@ kobo.directive('itemFilters', ['$api', '$filter', '$miscUtils', function ($api, 
                 deselect_not_shown();
             });
 
-            scope.$watch('select_all', function () {
-                if (scope.select_all === null || scope.silent_select) {
-                    scope.silent_select = false;
-                    return;
-                }
-                select_all();
-            });
-
-            scope.toggle = function (items) {
-                var selectAll = _.filter(items, function (item) {
+            scope.allSelected = function () {
+                var items = $api[scope.api].items;
+                return items && items.length && _.filter(items, function (item) {
                     return item.meta.isSelected;
                 }).length === items.length;
-                if (scope.select_all !== selectAll) {
-                    scope.silent_select = true;
-                    scope.select_all = selectAll;
-                }
+            };
 
+            scope.toggleSelectAll = function () {
+                select_all(!scope.allSelected());
+            };
+
+            scope.toggle = function (items) {
                 var selectQuestions = _.filter(items, function (item) {
                     return item.type === 'select_one' || item.type === 'select_multiple'
                 });

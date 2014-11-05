@@ -136,7 +136,11 @@ kobo.factory('$restApi', function ($resource, $timeout, $cacheFactory, $rootScop
                 }).$promise;
             }
         }, actions);
-        $rootScope.$on('reload:' + assetName, publicApi.list.bind(publicApi));
+        $rootScope.$on('reload:' + assetName, function () {
+            cache.remove('list:' + assetName);
+            nextPage = 1;
+            publicApi.list.apply(publicApi);
+        });
         return publicApi;
     }
 

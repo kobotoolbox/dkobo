@@ -38,7 +38,9 @@ function AssetsController($scope, $rootScope, $miscUtils, $api) {
     $api.questions.list();
     $scope.tags = $api.tags.list();
 
-    $miscUtils.bootstrapQuestionUploader($api.questions.list);
+    $miscUtils.bootstrapQuestionUploader(function () {
+        $rootScope.$broadcast('reload:library_assets');
+    });
 
 
     $rootScope.canAddNew = true;
