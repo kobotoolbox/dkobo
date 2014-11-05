@@ -4,7 +4,7 @@
 
 
 
-kobo.factory('$restApi', function ($resource, $timeout, $cacheFactory, $rootScope, $q) {
+kobo.factory('$restApi', function ($resource, $timeout, $cacheFactory, $rootScope, $http) {
     var cache = $cacheFactory('rest api');
 
     function createApi(url, opts) {
@@ -89,16 +89,32 @@ kobo.factory('$restApi', function ($resource, $timeout, $cacheFactory, $rootScop
         var publicApi = _.extend({
             list: listFn,
             remove: function (item) {
-                var _this = this;
-                return api.remove({id: item.id}, function () {
+
+                var callback = function () {
                     var data = cache.remove('list:' + assetName);
-                    var index = _.indexOf(_this.items, _.filter(_this.items, function (_item) {
-                        return _item.id === item.id;
-                    })[0]);
-                    _this.items.splice(index, 1);
+
+                    _this.items = _.filter(_this.items, function (item) {
+                        return !item.meta.isSelected
+                    });
                     opts.removeCallback.apply(_this, arguments);
                     $rootScope.$broadcast('remove:' + assetName);
-                }).$promise;
+                    nextPage = 1;
+                    _this.list();
+                };
+
+                var _this = this,
+                    ids;
+                if (item instanceof Array) {
+                    ids = [];
+                    _.each(item, function (item) {
+                        ids.push(item.id);
+                    });
+                    return $http.post('/api/bulk_delete/' + assetName, ids).success(callback)
+                } else {
+                    ids = {id: item.id};
+                    return api.remove(ids, callback).$promise;
+                }
+
             },
             save: function (item) {
                 var data = cache.remove('list:' + assetName),

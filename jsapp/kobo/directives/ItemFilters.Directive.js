@@ -46,15 +46,14 @@ kobo.directive('itemFilters', ['$api', '$filter', '$miscUtils', function ($api, 
                 if (!$miscUtils.confirm('are you sure you want to delete ' + scope.get_selected_amount() + '?')) {
                     return;
                 }
+                var items =[];
                 _.each($api[scope.api].items, function (item) {
                     if (item.meta.isSelected) {
-                        $api[scope.api].remove(item);
+                        items.push(item);
                     }
                 });
 
-                $api[scope.api].items = _.filter($api[scope.api].items, function (item) {
-                    return !item.meta.isSelected
-                });
+                $api[scope.api].remove(items.length === 1 ? items[0] : items);
             };
 
             scope.$watch('filters.label', function () {

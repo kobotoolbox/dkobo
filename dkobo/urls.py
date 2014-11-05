@@ -14,6 +14,7 @@ admin.autodiscover()
 
 urlpatterns = patterns(
     '',
+    url(r'^api/bulk_delete/library_assets', 'dkobo.koboform.views.survey_draft_views.bulk_delete_questions'),
     url(r'^api/survey_drafts/(?P<pk>\d+)$', 'dkobo.koboform.views.survey_draft_detail'),
     url(r'^api/library_assets/(?P<pk>\d+)$', 'dkobo.koboform.views.survey_draft_detail'),
     url(r'^api/survey_drafts/(?P<pk>\d+)/publish$', 'dkobo.koboform.views.publish_survey_draft'),
