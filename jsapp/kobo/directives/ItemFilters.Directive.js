@@ -56,9 +56,9 @@ kobo.directive('itemFilters', ['$api', '$filter', '$miscUtils', function ($api, 
                 $api[scope.api].remove(items.length === 1 ? items[0] : items);
             };
 
-            scope.$watch('filters.label', function () {
+            scope.$watch('filters', function () {
                 deselect_not_shown();
-            });
+            }, true);
 
             scope.allSelected = function () {
                 var items = $api[scope.api].items;

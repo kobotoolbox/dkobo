@@ -10,7 +10,7 @@ function AssetEditorController($scope, $rootScope, $routeParams, $routeTo, $api,
         render_question(null);
         listTags();
     } else {
-        surveyDraftApi.get({id: $routeParams.id}).then(render_question).then(listTags);
+        surveyDraftApi.get({id: $routeParams.id}).then(render_question);
     }
     var selectedTags = null;
     function render_question(response) {
@@ -26,6 +26,7 @@ function AssetEditorController($scope, $rootScope, $routeParams, $routeTo, $api,
 
         $scope.xlfQuestionApp = dkobo_xlform.view.QuestionApp.create({el: 'section.form-builder', survey: $scope.xlfSurvey, ngScope: $scope, save: saveCallback});
         $scope.xlfQuestionApp.render();
+        listTags();
     }
 
     /*jshint validthis: true */
