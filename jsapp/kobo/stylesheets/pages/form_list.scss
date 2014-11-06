@@ -210,13 +210,20 @@
     display: block;
     font-family: 'Open Sans';
     font-weight: 600;
-    margin: 10px 0 15px 0;
+    margin-bottom: 15px;
 }
 
 .forms__kobocat__publisher__label input {
-    width: 100%;
+    border: medium none;
+    color: #666;
+    font-style: italic;
     margin: 5px 0 0;
-    padding: 4px 13px;
+    padding: 4px 0;
+    width: 100%;
+    &:focus {
+      color: #333;
+      font-style: normal;
+    }
 }
 
 .forms__card__buttons {
