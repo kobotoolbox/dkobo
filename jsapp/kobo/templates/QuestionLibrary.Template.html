@@ -39,7 +39,7 @@
 
   <div class="questions clearfix">
     <div class="questions__header">
-      <h2 class="questions__title">Questions <span class="questions__question-count">{{api.questions.items.length}} question{{ api.questions.items.length !== 1 && 's' || '' }}</span></h2>
+      <h2 class="questions__title">Questions <span class="questions__question-count">{{getQuestionCount()}} question{{ getQuestionCount() !== 1 && 's' || '' }}</span></h2>
       <div class="question__create">
         <form action="/import_questions" class="question__import-library btn--fileupload js-import-fileupload js-import-questions">
           <span class="fileinput-button">

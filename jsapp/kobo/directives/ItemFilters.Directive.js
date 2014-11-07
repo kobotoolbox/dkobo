@@ -15,7 +15,7 @@ kobo.directive('itemFilters', ['$api', '$filter', '$miscUtils', function ($api, 
 
             function select_all(select_all) {
                 var new_class = select_all ? scope.api + '__' + scope.name + '--selected' : '';
-                var filter = $filter('filter');
+                var filter = $filter('itemFilter');
 
                 if (!scope.is_updating_select_all) {
                     _.each($api[scope.api].items, function (item) {
@@ -33,7 +33,7 @@ kobo.directive('itemFilters', ['$api', '$filter', '$miscUtils', function ($api, 
             }
 
             function deselect_not_shown() {
-                var filter = $filter('filter'),
+                var filter = $filter('itemFilter'),
                     not_shown = _.difference($api[scope.api].items, filter($api[scope.api].items, scope.filters));
 
                 _.each(not_shown, function (item) {

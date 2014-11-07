@@ -3,14 +3,14 @@
 /* global _ */
 'use strict';
 //noinspection JSUnusedGlobalSymbols
-function AssetsController($scope, $rootScope, $miscUtils, $api) {
+function AssetsController($scope, $rootScope, $miscUtils, $api, $filter) {
     $scope.tagFilters = {};
     $rootScope.showImportButton = false;
     $rootScope.showCreateButton = false;
     $scope.questionFilters = {};
     $rootScope.icon_link = 'library/questions';
     $scope.newTagName = '';
-
+    var filter = $filter('itemFilter');
     $scope.tagSorter = {
         criteria: [
             {value: "-date_modified", label: 'Newest'},
@@ -63,6 +63,15 @@ function AssetsController($scope, $rootScope, $miscUtils, $api) {
         $scope.questionFilters.tags = _.pluck(tags, 'label');
         if ($scope.questionFilters.tags.length === 0) {
             delete $scope.questionFilters.tags;
+        }
+    };
+
+    $scope.getQuestionCount = function () {
+        var items = $api.questions.items;
+        if (items) {
+            return filter(items, $scope.questionFilters).length === items.length ? $api.questions.count : filter(items, $scope.questionFilters).length;
+        } else {
+            return 0;
         }
     };
 

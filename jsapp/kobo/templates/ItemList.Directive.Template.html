@@ -1,7 +1,7 @@
 <ul class="items__container">
   <div infinite-scroll="getNextPage()">
       <li
-        ng-repeat="item in api.items|filter:filters:filterFn|orderBy:sortCriteria"
+        ng-repeat="item in api.items|itemFilter:filters|orderBy:sortCriteria"
         ng-class="item.meta.additionalClasses"
         ng-click="toggleSelected(item, $event)"
         class="{{ baseClass }}"

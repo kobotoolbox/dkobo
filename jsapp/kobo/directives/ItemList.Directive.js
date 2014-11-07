@@ -29,24 +29,6 @@ kobo.directive('itemList',['$api', function ($api) {
                     scope.transclude = transcludeFn;
 
 
-                    scope.filterFn = function (item, filter) {
-                        if (typeof filter === 'string') {
-                            var filterValues = filter.split(' ');
-                            for (var i = 0; i < filterValues.length; i++) {
-                                if (item.toLowerCase().indexOf(filterValues[i].toLowerCase()) === -1) {
-                                    return false;
-                                }
-                            }
-                        } else if (filter instanceof Array) {
-                            for (i = 0; i < filter.length; i++) {
-                                if (item.indexOf(filter[i]) === -1) {
-                                    return false;
-                                }
-                            }
-                        }
-
-                        return true;
-                    };
                     function deselect_all(item) {
                         var i,
                             more_than_one_selected = false,

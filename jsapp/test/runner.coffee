@@ -43,6 +43,7 @@ test_helper =
       $cookies:
         csrftoken: "test token"
 
+      $filter: () -> () ->
       $miscUtils: @miscUtils
       $routeTo: sinon.stubObject
         forms: () ->

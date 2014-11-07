@@ -59,6 +59,7 @@ kobo.factory('$restApi', function ($resource, $timeout, $cacheFactory, $rootScop
                         } else {
                             _this.items = _this.items.concat(data.results);
                         }
+                        _this.count = data.count;
                         nextPage = data.next && /page=(\d+)/g.exec(data.next)[1];
                         arguments[0] = _this.items;
                         opts.listCallback.apply(_this, arguments);
