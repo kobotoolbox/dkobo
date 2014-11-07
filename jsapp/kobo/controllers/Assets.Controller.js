@@ -16,7 +16,8 @@ function AssetsController($scope, $rootScope, $miscUtils, $api) {
             {value: "-date_modified", label: 'Newest'},
             {value: "label", label: 'A - Z'},
             {value: "[count, label]", label: 'A - Z, Empty First'},
-            {value: "[-count, label]", label: 'A - Z, Empty Last'}
+            {value: "[-count, label]", label: 'A - Z, Empty Last'},
+            {value: '-label', label: 'Z - A'}
         ]
     };
 
