@@ -55,7 +55,7 @@ define 'cs!xlform/model.survey', [
       new_row = @rows.at(index)
       survey = @getSurvey()
       if rowlist = new_row.getList()
-        survey.choices.add(name: rowlist.get("name"), options: rowlist.options.toJSON())
+        survey.choices.add(options: rowlist.options.toJSON())
       name_detail = new_row.get('name')
       name_detail.set 'value', name_detail.deduplicate(survey)
 
