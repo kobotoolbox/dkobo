@@ -30,7 +30,8 @@ class SurveyAssetViewset(viewsets.ModelViewSet):
             raise PermissionDenied
         contents = request.DATA
         tags = contents.get('tags', [])
-        del contents['tags']
+        if 'tags' in contents:
+            del contents['tags']
         survey_draft = request.user.survey_drafts.create(**contents)
         for tag in tags:
             survey_draft.tags.add(tag)
