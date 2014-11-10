@@ -46,14 +46,28 @@ define 'cs!xlform/view.rowSelector', [
       @line.css "height", "inherit"
       @line.html $viewTemplates.$$render('xlfRowSelector.namer')
       $.scrollTo @line, 200, offset: -300
-      $(window).on 'keydown.cancel_add_question',  (evt) =>
-        # user presses the escape key
-        if evt.which == 27
-          @hide()
 
-      $('body').on 'mousedown.cancel_add_question', (evt) =>
-        if $(evt.target).closest('.line.expanded').length == 0
-          @hide()
+      if (@options.surveyView.features.multipleQuestions)
+        $(window).on 'keydown.cancel_add_question',  (evt) =>
+          # user presses the escape key
+          if evt.which == 27
+            @hide()
+
+        $('body').on 'mousedown.cancel_add_question', (evt) =>
+          if $(evt.target).closest('.line.expanded').length == 0
+            @hide()
+
+      else
+        $(window).on 'keydown.cancel_add_question',  (evt) =>
+          # user presses the escape key
+          if evt.which == 27
+            evt.preventDefault()
+            @$('input').eq(0).focus()
+
+        $('body').on 'mousedown.cancel_add_question', (evt) =>
+          if $(evt.target).closest('.line.expanded').length == 0
+            evt.preventDefault()
+            @$('input').eq(0).focus()
 
     show_picker: (evt) ->
       evt.preventDefault()
@@ -116,6 +130,7 @@ define 'cs!xlform/view.rowSelector', [
       @options.surveyView.reset().then () =>
         view = @options.surveyView.getViewForRow(newRow)
         $.scrollTo view.$el, 200, offset: -300
+        view.$('.js-clone-question').hide()
 
 
   viewRowSelector
