@@ -2,7 +2,7 @@
 /* global dkobo_xlform */
 'use strict';
 
-function BuilderController($scope, $rootScope, $routeParams, $routeTo, $miscUtils, $userDetails, $api) {
+function BuilderController($scope, $rootScope, $routeParams, $routeTo, $miscUtils, $userDetails, $api, $q) {
     $rootScope.activeTab = 'Forms';
     $scope.routeParams = $routeParams;
     var forceLeaveConfirmation = !$userDetails.debug;
@@ -40,9 +40,7 @@ function BuilderController($scope, $rootScope, $routeParams, $routeTo, $miscUtil
                 $miscUtils.alert(e.message, "Error");
                 throw e;
             }
-
-            surveyDraftApi.save({
-                id: $scope.routeParams.id,
+            return surveyDraftApi.save({
                 body: survey,
                 description: this.survey.get('description'),
                 name: this.survey.settings.get('form_title')
@@ -53,11 +51,15 @@ function BuilderController($scope, $rootScope, $routeParams, $routeTo, $miscUtil
             }, function(response) {
                 $miscUtils.alert('a server error occured: \n' + response.statusText, 'Error');
             });
+
         }
+        var deferred = $q.defer();
+        deferred.resolve();
+        return deferred.promise;
     }
 
-    $scope.displayQlib = false;
 
+    $scope.displayQlib = false;
     if ($scope.routeParams.id && $scope.routeParams.id !== 'new'){
         // url points to existing survey_draft
         surveyDraftApi.get({id: $scope.routeParams.id}).then(function builder_get_callback(response) {

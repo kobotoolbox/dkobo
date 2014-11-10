@@ -46,13 +46,28 @@ define 'cs!xlform/view.rowSelector', [
       @line.css "height", "inherit"
       @line.html $viewTemplates.$$render('xlfRowSelector.namer')
       $.scrollTo @line, 200, offset: -300
-      $(window).on 'keydown.cancel_add_question',  (evt) =>
-        if evt.which == 27
-          @hide()
 
-      $('body').on 'mousedown.cancel_add_question', (evt) =>
-        if $(evt.target).closest('.line.expanded').length == 0
-          @hide()
+      if (@options.surveyView.features.multipleQuestions)
+        $(window).on 'keydown.cancel_add_question',  (evt) =>
+          # user presses the escape key
+          if evt.which == 27
+            @hide()
+
+        $('body').on 'mousedown.cancel_add_question', (evt) =>
+          if $(evt.target).closest('.line.expanded').length == 0
+            @hide()
+
+      else
+        $(window).on 'keydown.cancel_add_question',  (evt) =>
+          # user presses the escape key
+          if evt.which == 27
+            evt.preventDefault()
+            @$('input').eq(0).focus()
+
+        $('body').on 'mousedown.cancel_add_question', (evt) =>
+          if $(evt.target).closest('.line.expanded').length == 0
+            evt.preventDefault()
+            @$('input').eq(0).focus()
 
     show_picker: (evt) ->
       evt.preventDefault()
@@ -83,7 +98,9 @@ define 'cs!xlform/view.rowSelector', [
       @line.empty().removeClass("expanded").css "height": 0
       $(window).off 'keydown.cancel_add_question'
       $('body').off 'mousedown.cancel_add_question'
-      @line.parents(".survey-editor__null-top-row").removeClass "expanded"
+      @line.parents(".survey-editor__null-top-row")
+          .removeClass("expanded")
+          .addClass("survey-editor__null-top-row--hidden")
 
     selectMenuItem: (evt)->
       @question_name = @line.find('input').val()

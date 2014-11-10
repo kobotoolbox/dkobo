@@ -1,7 +1,7 @@
 /* exported AssetEditorController */
 /* global dkobo_xlform */
 'use strict';
-function AssetEditorController($scope, $rootScope, $routeParams, $routeTo, $api) {
+function AssetEditorController($scope, $rootScope, $routeParams, $routeTo, $api, $q) {
     $rootScope.showImportButton = false;
     $rootScope.showCreateButton = false;
     var surveyDraftApi = $api.questions;
@@ -29,15 +29,16 @@ function AssetEditorController($scope, $rootScope, $routeParams, $routeTo, $api)
     /*jshint validthis: true */
     function saveCallback() {
         if (this.validateSurvey()) {
-            surveyDraftApi.save({
-                    id: $routeParams.id === 'new' ? null : $routeParams.id,
-                    tags: _.pluck($scope.tags.selected, 'label'),
+            return surveyDraftApi.save({
                     body: this.survey.toCSV(),
                     description: this.survey.get('description'),
                     name: this.survey.settings.get('form_title'),
                     asset_type: 'question'
                 }).then($routeTo.question_library);
         }
+        var deferred = $q.defer();
+        deferred.resolve();
+        return deferred.promise;
     }
 
     $scope.tags = {
