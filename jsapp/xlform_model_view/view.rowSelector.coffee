@@ -130,7 +130,8 @@ define 'cs!xlform/view.rowSelector', [
       @options.surveyView.reset().then () =>
         view = @options.surveyView.getViewForRow(newRow)
         $.scrollTo view.$el, 200, offset: -300
-        view.$('.js-clone-question').hide()
+        if !@options.surveyView.features.multipleQuestions
+          view.$('.js-clone-question, .js-add-to-question-library').hide()
 
 
   viewRowSelector
