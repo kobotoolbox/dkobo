@@ -42,9 +42,9 @@ SESSION_SERIALIZER='django.contrib.sessions.serializers.JSONSerializer'
 TEMPLATE_DEBUG = DEBUG
 
 TEMPLATE_LOADERS = (
+    'django.template.loaders.filesystem.Loader',
     'hamlpy.template.loaders.HamlPyFilesystemLoader',
     'hamlpy.template.loaders.HamlPyAppDirectoriesLoader',
-    'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
     )
 
@@ -92,16 +92,16 @@ GZIP_CONTENT_TYPES = (
 )
 
 INSTALLED_APPS = (
+    'dkobo.koboform',
+    'dkobo.hub',
     'django.contrib.admin',
-    'django.contrib.auth',
     'django.contrib.sites',
     'registration',
+    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'dkobo.koboform',
-    'dkobo.hub',
     'compressor',
     'gunicorn',
     'south',
