@@ -4,7 +4,7 @@
 
 
 
-kobo.factory('$restApi', function ($resource, $timeout, $cacheFactory, $rootScope, $http) {
+kobo.factory('$restApi', function ($resource, $timeout, $cacheFactory, $rootScope, $surveySerializer, $http) {
     var cache = $cacheFactory('rest api');
 
     function createApi(url, opts) {
@@ -173,7 +173,7 @@ kobo.factory('$restApi', function ($resource, $timeout, $cacheFactory, $rootScop
 
             function initialize_questions(info_list_items) {
                 function create_survey(item) {
-                    item.backbone_model = dkobo_xlform.model.Survey.load(item.body);
+                    item.backbone_model = $surveySerializer(item.body);
                 }
 
                 function set_defaults(item) {
@@ -190,17 +190,21 @@ kobo.factory('$restApi', function ($resource, $timeout, $cacheFactory, $rootScop
                 }
 
                 function get_props_from_row(item) {
-                    var row = item.backbone_model.rows.at(0);
+                    var row = item.backbone_model.survey[0];
 
                     if(row) {
-                        item.type = row.get("type").get("typeId");
+                        var rowType = row.type.split(' ');
+                        item.type = rowType[0];
 
-                        item.label = item.type === 'calculate' ? row.getValue('calculation') : row.getValue('label');
+                        item.label = item.type === 'calculate' ? row.calculation : row.label;
 
-                        var list = row.getList();
-                        if (list) {
-                            item.responses = list.options.map(function(option) {
-                                return option.get("label");
+                        if (rowType[1]) {
+                            var choices = _.filter(item.backbone_model.choices, function (choice) {
+                                return choice['list name'] == rowType[1];
+                            });
+
+                            item.responses = _.map(choices, function(option) {
+                                return option.label;
                             });
                         }
                         results.push(row);
@@ -222,7 +226,7 @@ kobo.factory('$restApi', function ($resource, $timeout, $cacheFactory, $rootScop
                 function timed_execution(item) {
                     return $timeout(function () {
                         create_survey(item);
-                    }, 10).then(function () {
+                    }, 0).then(function () {
                         get_props_from_row(item);
                     }).then(function () {
                         i++;
