@@ -19,6 +19,7 @@
     </div>
 
       <item-list
+        ng-show="api.tags.items && api.tags.items.length > 0"
         rest-api="tags"
         filters="tagFilters"
         sort-criteria="tagSorter.selected.value"
@@ -30,7 +31,7 @@
         <span class="tag__question-count">{{ item.count }} question{{ item.count !== 1 && 's' || '' }}</span>
       </item-list>
 
-    <div class="tags__empty hidden">
+    <div class="tags__empty" ng-show="api.tags.items && api.tags.items.length === 0">
       You don't have any tags yet.
     </div>
 

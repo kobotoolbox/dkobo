@@ -321,7 +321,18 @@ $tagsHeight: 230px;
 .question-filter__add-to-block-icon {}
 .question-filter__delete-icon {}
 
+.question-filter .select2-choice > .select2-chosen, 
+.tag-filter .select2-choice > .select2-chosen {
+    font-weight: 600;
+    &:before {
+        content: "Sort: ";
+        font-weight: normal;
+    }
+}
 
+.tag-filter .select2-drop-active {
+    margin-top:0px;
+}
 // ==========================================================================
 // Question Library Sidebar
 // ==========================================================================
@@ -470,10 +481,8 @@ section.form-builder.active__sidebar .container {
     .tag-filter__sorter {
         border:none;
         border-radius: 0;
-        border-bottom: 0;
-        padding:0;
+        padding:6px 8px;
         width: 100%;
-        margin-top:6px;
     }
 }
 
@@ -483,46 +492,51 @@ section.form-builder.active__sidebar .container {
 }
 
 input.tag__create-new__editbox {
-    padding: 5px 15px;
-    font-weight: 600;
+    padding: 3px 12px;
     font-size: 14px;
     border:none;
-    border-bottom: 2px solid darken(#39BF6E, 20%);
+    border-radius: 0;
     display: inline-block;
-    margin-bottom: 15px;
+    margin: 5px;
     margin-left: 10px;
-    cursor: pointer;
     width: 220px;
+    border:1px solid #78c4fd;
 }
 
 .tags__tag__create-new--accept {
-    margin-left: 10px;
-    color: green;
+    margin-left: 6px;
+    margin-right: 6px;
+    color: #3DB557;
+    cursor: pointer;
 }
 
 .tags__tag__create-new--cancel {
-    color: red;
+    color: #C41B20;
+    cursor: pointer;
+    opacity: 0.6;
 }
 
 .tags__tag {
     min-height: 62px;
     padding:10px;
+    border:2px solid #e3e8ec;
     border-bottom: 1px solid #CCC;
     position: relative;
+    background: #e3e8ec;
 }
 
 .tags__tag--selected {
-    padding: 8px 10px;
-    border:2px solid #B8D1EA;
+    border-color:#B8D1EA;
+    border-bottom-width: 2px;
     background: white;
 }
 
 .tags__tag__name {
     margin:0px;
     padding:0px;
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1em;
-    font-weight: normal;
+    font-weight: 600;
 }
 
 .tag__question-count {
@@ -542,4 +556,10 @@ input.tags__tag__editbox {
     top:20px;
     color: #C41B20;
     cursor: pointer;
+}
+
+.tags__addnew {
+    background: none repeat scroll 0 0 #fff;
+    border: 2px solid #3fa2ee;
+    margin-top: -2px;
 }
