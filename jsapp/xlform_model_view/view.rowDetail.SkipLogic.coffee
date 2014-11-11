@@ -31,6 +31,18 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       @
     constructor: (@text, @className) -> super()
 
+  class viewRowDetailSkipLogic.TextBox extends viewRowDetailSkipLogic.Base
+    tagName: 'input'
+    render: () ->
+      @$el.attr 'type', 'text'
+      @$el.val @text
+      @$el.addClass @className
+      @$el.attr 'placeholder', @placeholder
+      @$el.on 'paste', (e) -> e.stopPropagation()
+
+      @
+    constructor: (@text, @className, @placeholder) -> super()
+
   class viewRowDetailSkipLogic.Button extends viewRowDetailSkipLogic.Base
     tagName: 'button'
     render: () ->
@@ -39,6 +51,23 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
 
       @
     constructor: (@text, @className) -> super()
+
+  class viewRowDetailSkiplogic.DropDown extends viewRowDetailSkipLogic.Base
+    tagName: 'select'
+    constructor: (@options) ->
+      super
+    render: () ->
+      options = ''
+      _.each @options, (option) ->
+        options += '<option value="' + option.value + '">' + option.text + '</option>'
+
+      @$el.html options
+      @
+
+    attach_to: (target) ->
+      super(target)
+      @$el.select2({ minimumResultsForSearch: -1, width: '20%' })
+
 
   class viewRowDetailSkipLogic.SkipLogicCriterionBuilderView extends viewRowDetailSkipLogic.Base
     events:
@@ -165,23 +194,22 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
 
     val: () -> null
 
-  class viewRowDetailSkipLogic.SkipLogicTextResponse extends viewRowDetailSkipLogic.Base
-    render: () ->
-      @setElement('<input placeholder="response value" class="skiplogic__responseval" type="text" />')
-      @
-
+  class viewRowDetailSkipLogic.SkipLogicTextResponse extends viewRowDetailSkipLogic.TextBox
     attach_to: (target) ->
       target.find('.skiplogic__responseval').remove()
-      super(target)
+      super
 
     bind_event: (handler) ->
       @$el.on 'blur', handler
 
     val: () => @$el.val()
+    constructor: (text) ->
+      super(text, "skiplogic__responseval", "response value")
 
   class viewRowDetailSkipLogic.SkipLogicValidatingTextResponseView extends viewRowDetailSkipLogic.SkipLogicTextResponse
     render: () ->
-      @setElement('<div class="skiplogic__responseval-wrapper"><input placeholder="response value" class="skiplogic__responseval" type="text" /><div></div></div>')
+      super
+      @setElement('<div class="skiplogic__responseval-wrapper">' + @$el + '<div></div></div>')
       @$error_message = @$('div')
       @model.bind('validated:invalid', @show_invalid_view)
       @model.bind('validated:valid', @clear_invalid_view)
@@ -198,10 +226,6 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
     fill_value: (value) ->
       @$input.val(value)
 
-    attach_to: (target) ->
-      target.find('.skiplogic__responseval').remove()
-      super(target)
-
     bind_event: (handler) ->
       @$input.on 'blur', handler
 
@@ -211,16 +235,6 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
   class viewRowDetailSkipLogic.SkipLogicDropDownResponse extends viewRowDetailSkipLogic.Base
     tagName: 'select'
     className: 'skiplogic__responseval'
-    render: () ->
-      render_response_values = () =>
-        options = ''
-        @responses.forEach (response) ->
-          options += '<option value="' + response.get('name') + '">' + response.get('label') + '</option>'
-        options
-
-      @$el.html render_response_values()
-
-      @
 
     val: () => @$el.val()
 
@@ -228,10 +242,9 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       target.find('.skiplogic__responseval').remove()
       super(target)
 
-      @$el.select2({ minimumResultsForSearch: -1, width: '20%' })
-
     bind_event: (handler) ->
-      @$el.on 'change', handler
+      super 'change', handler
+
 
     constructor: (@responses) ->
       super()
@@ -301,7 +314,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       @bind_question_picker()
       @attach_operator()
       @attach_response()
-      super(element)
+      super
 
     constructor: (@question_picker_view, @operator_picker_view, @response_value_view, @presenter) ->
       super()
@@ -313,10 +326,10 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       new viewRowDetailSkipLogic.OperatorPicker operators
     create_response_value_view: (type, responses) ->
       switch type
-        when 'empty' then new viewRowDetailSkipLogic.SkipLogicEmptyResponse
         when 'text' then new viewRowDetailSkipLogic.SkipLogicTextResponse
         when 'dropdown' then new viewRowDetailSkipLogic.SkipLogicDropDownResponse responses
         when 'integer', 'decimal' then new viewRowDetailSkipLogic.SkipLogicTextResponse
+        else null
     create_criterion_view: (question_picker_view, operator_picker_view, response_value_view, presenter) ->
       return new viewRowDetailSkipLogic.SkipLogicCriterion question_picker_view, operator_picker_view, response_value_view, presenter
     create_criterion_builder_view: () ->

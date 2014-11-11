@@ -29,7 +29,6 @@ define 'cs!xlform/mv.skipLogicHelpers', [
     change_question: (question_name) ->
       @model.change_question question_name
 
-      @question = @model._get_question()
       question_type = @question.get_type()
 
       @question.on 'remove', () =>
@@ -37,14 +36,13 @@ define 'cs!xlform/mv.skipLogicHelpers', [
 
       @builder.operator_type = operator_type = @model.get('operator').get_type()
 
-
       @view.change_operator @builder.build_operator_view question_type
       @view.operator_picker_view.fill_value @model.get('operator').get_value()
       @view.attach_operator()
 
       @builder.question_type = question_type
 
-      response_view = @builder.build_response_view @question, question_type, operator_type
+      response_view = @builder.build_response_view @model._get_question(), question_type, operator_type
       response_view.model = @model.get 'response_value'
       @view.change_response response_view
       @view.attach_response()
@@ -87,7 +85,6 @@ define 'cs!xlform/mv.skipLogicHelpers', [
 
     constructor: (@model, @view, @builder, @dispatcher) ->
       @view.presenter = @
-      @question = @model._get_question()
       if @builder.survey
         @builder.survey.on 'choice-list-update', (row, key) =>
           if @destination
