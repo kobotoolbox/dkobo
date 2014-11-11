@@ -56,9 +56,24 @@
         &:hover {
             background: lighten(#39BF6E, 10%);
         }
+        &.passwordreset__action {
+            width: 50%;
+            float: right;
+        }
     }
 }
 
+.registration .passwordreset__cancel {
+    color: white;
+    width: 45%;
+    float: left;
+    display: block;
+    text-align: center;
+    height: 40px;
+    line-height: 40px;
+    font-weight: 600;
+    font-size: 12px;
+}
 .registration .registration__kc-domain + input {
     display: inline-block;
 }
