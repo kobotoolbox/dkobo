@@ -7,13 +7,15 @@ function AssetEditorController($scope, $rootScope, $routeParams, $routeTo, $api,
     var surveyDraftApi = $api.questions;
     $rootScope.activeTab = 'Question Library > Edit question';
     if($routeParams.id === 'new'){
-        render_question(null)
+        render_question(null);
+        listTags();
     } else {
         surveyDraftApi.get({id: $routeParams.id}).then(render_question).then(listTags);
     }
     var selectedTags = null;
     function render_question(response) {
         if (response !== null) {
+            $scope.questionId = response.id;
             $scope.xlfSurvey = dkobo_xlform.model.Survey.load(response.body);
             // temporarily saving response in __djangoModelDetails
             $scope.xlfSurvey.__djangoModelDetails = response;
@@ -30,8 +32,10 @@ function AssetEditorController($scope, $rootScope, $routeParams, $routeTo, $api,
     function saveCallback() {
         if (this.validateSurvey()) {
             return surveyDraftApi.save({
+                    id: $scope.questionId,
                     body: this.survey.toCSV(),
                     description: this.survey.get('description'),
+                    tags: _.pluck($scope.tags.selected, 'label'),
                     name: this.survey.settings.get('form_title'),
                     asset_type: 'question'
                 }).then($routeTo.question_library);
