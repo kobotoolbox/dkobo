@@ -333,6 +333,16 @@ $tagsHeight: 230px;
 .tag-filter .select2-drop-active {
     margin-top:0px;
 }
+
+.question__tags .select2-choices {
+    border:1px solid #cbd0d7;
+    input {
+        font-size: 14px !important;
+    }
+    .select2-search-choice {
+        margin-top:8px !important;
+    }
+}
 // ==========================================================================
 // Question Library Sidebar
 // ==========================================================================
@@ -492,15 +502,15 @@ section.form-builder.active__sidebar .container {
 }
 
 input.tag__create-new__editbox {
-    padding: 3px 12px;
+    padding: 2px 6px;
     font-size: 14px;
     border:none;
+    border-bottom: 2px solid #CBD0D7;
     border-radius: 0;
     display: inline-block;
     margin: 5px;
-    margin-left: 10px;
     width: 220px;
-    border:1px solid #78c4fd;
+    
 }
 
 .tags__tag__create-new--accept {
@@ -522,7 +532,7 @@ input.tag__create-new__editbox {
     border:2px solid #e3e8ec;
     border-bottom: 1px solid #CCC;
     position: relative;
-    background: #e3e8ec;
+    background: #E3E8EC;
 }
 
 .tags__tag--selected {
@@ -560,6 +570,5 @@ input.tags__tag__editbox {
 
 .tags__addnew {
     background: none repeat scroll 0 0 #fff;
-    border: 2px solid #3fa2ee;
     margin-top: -2px;
 }
