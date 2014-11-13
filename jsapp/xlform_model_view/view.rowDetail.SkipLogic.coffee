@@ -20,6 +20,14 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
     bind_event: (type, callback) ->
       @$el.off type, callback
       @$el.on type, callback
+    detach: () ->
+      @$el.remove()
+
+  class viewRowDetailSkipLogic.EmptyView extends viewRowDetailSkipLogic.Base
+    attach_to: () -> return
+    fill_value: () -> return
+    bind_event: () -> return
+    render: () -> @
 
   class viewRowDetailSkipLogic.TextArea extends viewRowDetailSkipLogic.Base
     tagName: 'textarea'
@@ -52,7 +60,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       @
     constructor: (@text, @className) -> super()
 
-  class viewRowDetailSkiplogic.DropDown extends viewRowDetailSkipLogic.Base
+  class viewRowDetailSkipLogic.DropDown extends viewRowDetailSkipLogic.Base
     tagName: 'select'
     constructor: (@options) ->
       super
@@ -232,7 +240,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
     val: () =>
       @$input.val()
 
-  class viewRowDetailSkipLogic.SkipLogicDropDownResponse extends viewRowDetailSkipLogic.Base
+  class viewRowDetailSkipLogic.SkipLogicDropDownResponse extends viewRowDetailSkipLogic.DropDown
     tagName: 'select'
     className: 'skiplogic__responseval'
 
@@ -247,7 +255,10 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
 
 
     constructor: (@responses) ->
-      super()
+      super(_.map @responses.models, (response) ->
+        text: response.get('label')
+        value: response.get('name')
+      )
 
   class viewRowDetailSkipLogic.SkipLogicCriterion extends viewRowDetailSkipLogic.Base
     tagName: 'div'
@@ -292,7 +303,9 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
 
       @$operator_picker = @operator_picker_view.$el
 
-    change_response: (@response_value_view) ->
+    change_response: (response_value_view) ->
+      @response_value_view.detach()
+      @response_value_view = response_value_view
       @response_value_view.render()
 
       @$response_value = @response_value_view.$el
@@ -326,6 +339,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       new viewRowDetailSkipLogic.OperatorPicker operators
     create_response_value_view: (type, responses) ->
       switch type
+        when 'empty' then new viewRowDetailSkipLogic.EmptyView()
         when 'text' then new viewRowDetailSkipLogic.SkipLogicTextResponse
         when 'dropdown' then new viewRowDetailSkipLogic.SkipLogicDropDownResponse responses
         when 'integer', 'decimal' then new viewRowDetailSkipLogic.SkipLogicTextResponse

@@ -187,9 +187,22 @@ define 'cs!xlform/view.rowDetail', [
   viewRowDetail.DetailViewMixins.constraint =
     html: ->
       @$el.addClass("card__settings__fields--active")
-      viewRowDetail.Templates.textbox @cid, @model.key, 'Criteria'
+      """
+      <div class="card__settings__fields__field constraint__editor">
+      </div>
+      """
     afterRender: ->
-      @listenForInputChange()
+      afterRender: ->
+      @$el.find(".constraint__editor").html("""
+        <div class="skiplogic__main"></div>
+        <p class="skiplogic__extras">
+        </p>
+      """)
+
+      @target_element = @$('.skiplogic__main')
+
+      @model.facade.render @target_element
+
     insertInDOM: (rowView) ->
       @_insertInDOM rowView.cardSettingsWrap.find('.card__settings__fields--validation-criteria')
 

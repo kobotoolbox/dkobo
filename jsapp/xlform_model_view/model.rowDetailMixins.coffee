@@ -3,11 +3,15 @@ define 'cs!xlform/model.rowDetailMixins', [
         'xlform/model.rowDetails.skipLogic',
         'cs!xlform/view.rowDetail.SkipLogic',
         'cs!xlform/model.utils',
+        'cs!xlform/mv.validationLogicHelpers',
+        'cs!xlform/model.rowDetail.validationLogic',
         ], (
             $skipLogicHelpers,
             $modelRowDetailsSkipLogic,
             $viewRowDetailSkipLogic,
-            $modelUtils
+            $modelUtils,
+            $validationLogicHelpers,
+            $modelRowDetailValidationLogic
             )->
   # To be extended ontop of a RowDetail when the key matches
   # the attribute in XLF.RowDetailMixin
@@ -33,13 +37,35 @@ define 'cs!xlform/model.rowDetailMixins', [
 
     linkUp: ->
 
+  ValidationLogicMixin =
+    getValue: () ->
+      @serialize()
+    postInitialize: () ->
+      survey = @getSurvey()
+      model_factory = new $modelRowDetailValidationLogic.ValidationLogicModelFactory survey
+      view_factory = new $viewRowDetailSkipLogic.SkipLogicViewFactory survey
+      helper_factory = new $validationLogicHelpers.ValidationLogicHelperFactory model_factory, view_factory, survey, @_parent
+
+      @facade = new $skipLogicHelpers.SkipLogicPresentationFacade model_factory, helper_factory, view_factory
+
+    serialize: ()->
+      # @hidden = false
+      # note: reimplement "hidden" if response is invalid
+      @facade.serialize()
+
+    parse: ()->
+
+    linkUp: ->
+
+
 
   rowDetailMixins =
     relevant: SkipLogicDetailMixin
+    constraint: ValidationLogicMixin
     label:
       postInitialize: ()->
         # When the row's name changes, trigger the row's [finalize] function.
-        ``
+        return
 
     name:
       deduplicate: (survey) ->

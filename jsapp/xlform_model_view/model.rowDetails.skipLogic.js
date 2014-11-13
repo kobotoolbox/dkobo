@@ -133,7 +133,7 @@ rowDetailsSkipLogic.SkipLogicCriterion = (function(_super) {
                     return model.set('name', $utils.sluggify(model.get('label')));
                 }
             });
-    }
+    };
 
     SkipLogicCriterion.prototype.change_response = function(value) {
         var choice_names, choices, current_value, response_model;

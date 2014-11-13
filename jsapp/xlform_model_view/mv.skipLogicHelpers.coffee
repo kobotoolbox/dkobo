@@ -29,8 +29,8 @@ define 'cs!xlform/mv.skipLogicHelpers', [
     change_question: (question_name) ->
       @model.change_question question_name
 
+      @question = @model._get_question()
       question_type = @question.get_type()
-
       @question.on 'remove', () =>
         @dispatcher.trigger 'remove:question', @
 
