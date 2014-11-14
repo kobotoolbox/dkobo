@@ -107,7 +107,7 @@ XLS_CONTENT_TYPES = [
 @login_required
 def bulk_delete_questions(request):
     question_ids = json.loads(request.body)
-    SurveyDraft.objects.filter(id__in=question_ids).delete()
+    SurveyDraft.objects.filter(user=request.user).filter(id__in=question_ids).delete()
     return HttpResponse('')
 
 @login_required
