@@ -10,6 +10,8 @@ define 'cs!xlform/mv.validationLogicHelpers', [
       return new validationLogicHelpers.ValidationLogicPresenter criterion_model, criterion_view, builder
     create_builder: () ->
       return new validationLogicHelpers.ValidationLogicBuilder @model_factory, @view_factory, @survey, @current_question, @
+    create_context: () ->
+      return new validationLogicHelpers.ValidationLogicHelperContext @model_factory, @view_factory, @, @serialized_criteria
 
   class validationLogicHelpers.ValidationLogicPresenter extends $skipLogicHelpers.SkipLogicPresenter
     change_question: () -> return
@@ -69,5 +71,14 @@ define 'cs!xlform/mv.validationLogicHelpers', [
     questions: () ->
       [@current_question]
 
+  class validationLogicHelpers.ValidationLogicHelperContext extends $skipLogicHelpers.SkipLogicHelperContext
+    use_mode_selector_helper: () ->
+      @state = new validationLogicHelpers.ValidationLogicModeSelectorHelper @view_factory, @
+      @render @destination
+
+  class validationLogicHelpers.ValidationLogicModeSelectorHelper extends $skipLogicHelpers.SkipLogicModeSelectorHelper
+    constructor: (view_factory, @context) ->
+      super
+      @handcode_button = view_factory.create_button '<i>${}</i> Manually enter your validation logic in XLSForm code', 'skiplogic__button skiplogic__select-handcode'
 
   validationLogicHelpers
