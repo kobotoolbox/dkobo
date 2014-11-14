@@ -1,7 +1,7 @@
 define 'cs!xlform/mv.validationLogicHelpers', [
-  'xlform/model.skipLogicParser',
+  'xlform/model.validationLogicParser',
   'cs!xlform/mv.skipLogicHelpers'
-], ($skipLogicParser, $skipLogicHelpers) ->
+], ($validationLogicParser, $skipLogicHelpers) ->
 
   validationLogicHelpers = {}
 
@@ -15,7 +15,37 @@ define 'cs!xlform/mv.validationLogicHelpers', [
     change_question: () -> return
 
   class validationLogicHelpers.ValidationLogicBuilder extends $skipLogicHelpers.SkipLogicBuilder
-    build_criterion_logic: () ->
+    parse_skip_logic_criteria: (criteria) ->
+      return $validationLogicParser criteria
+    build_criterion_logic: (criterion) =>
+      @operator_type = _.find $skipLogicHelpers.operator_types, (op_type) ->
+          criterion.operator in op_type.parser_name
+
+      question = @current_question
+      if !question
+        return false
+
+      @question_type = question.get_type()
+
+      [operator_model, operator_picker_view] = @build_operator_logic @question_type, @operator_type, criterion
+
+      criterion_model = @model_factory.create_criterion_model()
+      criterion_model.set('operator', operator_model)
+      criterion_model.change_question question.cid
+
+      question_picker_view = @build_question_view()
+
+      response_value_model = @build_response_model @question_type
+      criterion_model.set('response_value', response_value_model)
+      response_value_model.set('value', criterion.response_value)
+
+      response_value_view = @build_response_view question, @question_type, @operator_type
+      response_value_view.model = response_value_model
+
+      criterion_view = @view_factory.create_criterion_view question_picker_view, operator_picker_view, response_value_view
+      criterion_view.model = criterion_model
+
+      new $skipLogicHelpers.SkipLogicPresenter(criterion_model, criterion_view, @)
     build_empty_criterion_logic: () ->
       criterion_model = @model_factory.create_criterion_model()
       criterion_model.set('operator', @model_factory.create_operator('empty'))

@@ -12,9 +12,8 @@ define 'cs!xlform/mv.skipLogicHelpers', [
     create_builder: () ->
       return new skipLogicHelpers.SkipLogicBuilder @model_factory, @view_factory, @survey, @current_question, @
     create_context: () ->
-      serialized_criteria = @current_question.get('relevant').get('value')
-      return new skipLogicHelpers.SkipLogicHelperContext @model_factory, @view_factory, @, serialized_criteria
-    constructor: (@model_factory, @view_factory, @survey, @current_question) ->
+      return new skipLogicHelpers.SkipLogicHelperContext @model_factory, @view_factory, @, @serialized_criteria
+    constructor: (@model_factory, @view_factory, @survey, @current_question, @serialized_criteria) ->
 
   class skipLogicHelpers.SkipLogicPresentationFacade
     constructor: (@model_factory, @helper_factory, @view_factory) ->

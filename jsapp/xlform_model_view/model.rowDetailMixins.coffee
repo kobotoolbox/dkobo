@@ -24,7 +24,7 @@ define 'cs!xlform/model.rowDetailMixins', [
       survey = @getSurvey()
       model_factory = new $modelRowDetailsSkipLogic.SkipLogicFactory survey
       view_factory = new $viewRowDetailSkipLogic.SkipLogicViewFactory survey
-      helper_factory = new $skipLogicHelpers.SkipLogicHelperFactory model_factory, view_factory, survey, @_parent
+      helper_factory = new $skipLogicHelpers.SkipLogicHelperFactory model_factory, view_factory, survey, @_parent, @.get('value')
 
       @facade = new $skipLogicHelpers.SkipLogicPresentationFacade model_factory, helper_factory, view_factory
 
@@ -44,7 +44,7 @@ define 'cs!xlform/model.rowDetailMixins', [
       survey = @getSurvey()
       model_factory = new $modelRowDetailValidationLogic.ValidationLogicModelFactory survey
       view_factory = new $viewRowDetailSkipLogic.SkipLogicViewFactory survey
-      helper_factory = new $validationLogicHelpers.ValidationLogicHelperFactory model_factory, view_factory, survey, @_parent
+      helper_factory = new $validationLogicHelpers.ValidationLogicHelperFactory model_factory, view_factory, survey, @_parent, @.get('value')
 
       @facade = new $skipLogicHelpers.SkipLogicPresentationFacade model_factory, helper_factory, view_factory
 
