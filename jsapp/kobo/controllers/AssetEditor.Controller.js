@@ -36,7 +36,7 @@ function AssetEditorController($scope, $rootScope, $routeParams, $routeTo, $api,
                     id: $scope.questionId,
                     body: this.survey.toCSV(),
                     description: this.survey.get('description'),
-                    tags: $scope.tags.length ? $scope.tags.selected.split(',') : '',
+                    tags: $scope.tags.selected.length ? $scope.tags.selected.split(',') : '',
                     name: this.survey.settings.get('form_title'),
                     asset_type: 'question'
                 }).then($routeTo.question_library);
