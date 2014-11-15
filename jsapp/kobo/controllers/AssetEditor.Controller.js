@@ -36,7 +36,7 @@ function AssetEditorController($scope, $rootScope, $routeParams, $routeTo, $api,
                     id: $scope.questionId,
                     body: this.survey.toCSV(),
                     description: this.survey.get('description'),
-                    tags: _.pluck($scope.tags.selected, 'label'),
+                    tags: $scope.tags.selected.split(','),
                     name: this.survey.settings.get('form_title'),
                     asset_type: 'question'
                 }).then($routeTo.question_library);
@@ -48,16 +48,16 @@ function AssetEditorController($scope, $rootScope, $routeParams, $routeTo, $api,
 
     $scope.tags = {
             available: [],
-            selected: []
+            selected: ''
         };
 
     function listTags() {
         $api.tags.list().then(function () {
-            $scope.tags.available = $api.tags.items;
+            $scope.tags.available = _.pluck($api.tags.items, 'label');
             if (selectedTags !== null) {
-                $scope.tags.selected = _.filter($api.tags.items, function (tag) {
+                $scope.tags.selected = _.pluck(_.filter($api.tags.items, function (tag) {
                     return selectedTags.indexOf(tag.label) > -1;
-                });
+                }), 'label').join(',');
             }
         });
     }

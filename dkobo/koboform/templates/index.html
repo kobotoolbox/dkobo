@@ -27,6 +27,7 @@
     <link rel="stylesheet" href="{% static 'components/fontawesome/css/font-awesome.css' %}" media="all">
     <link rel="stylesheet" href="{% static 'kobo.compiled/kobo.css' %}" media="all">
     <link rel="stylesheet" href="{% static 'components/angular-ui-select/dist/select.css' %}" media="all">
+    <link rel="stylesheet" href="{% static 'components/jquery.tagsinput/jquery.tagsinput.css' %}" media="all">
 
     {% endcompress %}
 
@@ -85,6 +86,7 @@
     {% compress js %}
       <script src="{% static 'js/modal.js' %}"></script>
       <script src="{% static 'js/jquery-ui-1.10.4.custom.js' %}"></script>
+      <script src="{% static 'components/jquery.tagsinput/jquery.tagsinput.js' %}"></script>
       <script src="{% static 'components/jquery-ui-touch-punch-improved/jquery.ui.touch-punch-improved.js' %}"></script>
 
       {# ---------------------- File Upload --------------------------- #}
@@ -109,6 +111,7 @@
     <script src="{% static 'kobo/directives/FocusOn.Directive.js' %}"></script>
     <script src="{% static 'kobo/directives/ItemFilters.Directive.js' %}"></script>
     <script src="{% static 'kobo/directives/AddNewTag.Directive.js' %}"></script>
+    <script src="{% static 'kobo/directives/Tags.Directive.js' %}"></script>
     <script src="{% static 'kobo/directives/InfiniteScroll.Directive.js' %}"></script>
     <script src="{% static 'kobo/factories/UserDetails.Factory.js' %}"></script>
     <script src="{% static 'kobo/factories/restApi.Factory.js' %}"></script>

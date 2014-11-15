@@ -1,5 +1,5 @@
 <section class="question__tags">
-    <ui-select
+    <!--<ui-select
         multiple
         ng-model="tags.selected"
         theme="select2"
@@ -11,7 +11,14 @@
         <ui-select-choices repeat="tag in tags.available | propsFilter: {label: $select.search} | orderBy:'label'">
             <div ng-bind-html="tag.label"></div>
         </ui-select-choices>
-    </ui-select>
+    </ui-select>-->
+
+    <input
+      tags
+      type="text"
+      id="question-tags"
+      model="tags"
+    />
 </section>
 <section class="form-builder">
 </section>
