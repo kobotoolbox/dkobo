@@ -7,6 +7,10 @@ kobo.directive ('koboformQuestionLibrary', function ($api) {
             refreshEvent: '='
         },
         link: function (scope, element) {
+            scope.filters = {
+                label: '',
+                tags: []
+            };
             var sort_ul = element.find('ul');
 
             var questions = scope.api = $api.questions;
@@ -34,6 +38,21 @@ kobo.directive ('koboformQuestionLibrary', function ($api) {
                 start: function () {
                     sort_ul.find('li:hidden').show();
                 }
+            });
+
+            scope.tags = {
+                selected: [],
+                available: []
+            };
+
+            $api.tags.list().then(function () {
+                scope.tags = {
+                    available: $api.tags.items
+                }
+            });
+
+            scope.$watch('tags.selected', function () {
+                scope.filters.tags = _.pluck(scope.tags.selected, 'label');
             });
         }
     };

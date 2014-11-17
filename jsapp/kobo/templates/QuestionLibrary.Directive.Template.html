@@ -4,14 +4,29 @@
     <i class="fa fa-search"></i>
     <input id="qlib-search" class="question-filter__searchbox" ng-model="filters.label" placeholder="Search questions" value="" />
   </div>
+  <ui-select
+    multiple
+    ng-model="tags.selected"
+    theme="select2"
+    style="width: 272px"
+  >
+    <ui-select-match placeholder="tags">
+        {{$item.label}}
+    </ui-select-match>
+    <ui-select-choices repeat="tag in tags.available | propsFilter: {label: $select.search} | orderBy:'label'">
+        <div ng-bind-html="tag.label"></div>
+    </ui-select-choices>
+  </ui-select>
 </div>
 <div class="questions__sidebar--container">
   <ul class="questions__sidebar--scrolling">
-    <li ng-class="item.meta.question_class" ng-repeat="item in api.items|filter:filters" ng-mousedown="set_item(item)">
-      <h4 class="questions__question__name">{{ item.label }}</h4>
-      <a href="" ng-click="toggle_response_list(item)" ng-class="item.meta.question_type_class">
-        {{item.type | titlecase}}
-      </a>
-    </li>
+    <div infinite-scroll="api.list()">
+        <li ng-class="item.meta.question_class" ng-repeat="item in api.items|itemFilter:filters" ng-mousedown="set_item(item)">
+          <h4 class="questions__question__name">{{ item.label }}</h4>
+          <a href="" ng-click="toggle_response_list(item)" ng-class="item.meta.question_type_class">
+            {{item.type | titlecase}}
+          </a>
+        </li>
+    </div>
   </ul>
 </div>
