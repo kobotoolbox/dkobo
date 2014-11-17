@@ -131,6 +131,7 @@ define 'cs!xlform/model.surveyFragment', [
       for row in opts.__rows
         row.detach(silent: true)
 
+      opts.label = $configs.newGroupDetails.label.value
       grp = new surveyFragment.Group(opts)
       @getSurvey()._insertRowInPlace grp, addOpts
       par = addOpts.parent or @getSurvey().rows
@@ -152,6 +153,8 @@ define 'cs!xlform/model.surveyFragment', [
     @key = "group"
     constructor: (a={}, b)->
       __rows = a.__rows or []
+      if a.label == undefined
+        a.label = ''
       @_parent = a._parent
       delete a.__rows
       @rows = new Rows([], _parent: @)
