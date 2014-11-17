@@ -121,7 +121,6 @@ div.skiplogic__responseval {
 }
 
 .skiplogic__main {
-    // padding-bottom: 40px;
     position: relative;
 }
 
@@ -158,6 +157,11 @@ select.skiplogic__delimselect {
     right:0px;
     bottom:-20px;
     font-weight: 600;
+}
+
+.constraint__editor {
+    padding-top:14px;
+    position: relative;
 }
 
 // Select2 overrides for skip logic
