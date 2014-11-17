@@ -108,7 +108,7 @@ define 'cs!xlform/view.row', [
       @$('.card__settings').hide()
 
     clone: (event) =>
-      @model.getSurvey().insert_row @model, @model._parent.models.indexOf(@model) + 1
+      @model.getSurvey().insert_row.call @model._parent._parent, @model, @model._parent.models.indexOf(@model) + 1
 
     add_row_to_question_library: (evt) =>
       evt.stopPropagation()
