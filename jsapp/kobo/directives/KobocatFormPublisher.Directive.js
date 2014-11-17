@@ -7,12 +7,19 @@ kobo.directive ('kobocatFormPublisher', function ($api, $miscUtils, $routeTo) {
         link: function (scope, element, attributes) {
             var dialog = element.find('.forms__kobocat__publisher');
             scope.publish = function () {
+                spinner = '<i class="fa fa-spin fa-spinner"></i> Deploying Project';
+                $('button.save-button .ui-button-text').html(spinner);
+                $('button.save-button').addClass('deploying');
                 function success (results, headers) {
+                    $('button.save-button .ui-button-text').html('Deploy and View New Project');
+                    $('button.save-button').removeClass('deploying');
                     scope.close();
                     $miscUtils.alert('Survey Publishing succeeded');
                     $routeTo.external(results.published_form_url);
                 }
                 function fail (response) {
+                    $('button.save-button .ui-button-text').html('Deploy and View New Project');
+                    $('button.save-button').removeClass('deploying');
                     scope.show_form_name_exists_message = true;
                     scope.error_message = 'Survey Publishing failed: ' + (response.data.text || response.data.error);
                 }
@@ -49,15 +56,16 @@ kobo.directive ('kobocatFormPublisher', function ($api, $miscUtils, $routeTo) {
 
             dialog.dialog({
                 modal: true,
-                height: 350,
-                width: 600,
+                height: 325,
+                width: 580,
                 autoOpen: false,
-                title: 'Deploy as New Survey Project',
+                title: 'Deploy form as new survey project',
                 draggable: false,
                 resizable: false,
+                position: { my: "center", at: "center", of: ".main" },
                 buttons: [
                     {
-                        text: "Done",
+                        text: "Deploy and View New Project",
                         "class": 'save-button',
                         click: scope.publish
                     },
@@ -67,6 +75,12 @@ kobo.directive ('kobocatFormPublisher', function ($api, $miscUtils, $routeTo) {
                         click: scope.close
                     }
                 ],
+                open: function(){
+                    $('.ui-widget-overlay').bind('click',function(){
+                        dialog.dialog('close');
+                    });
+                }
+
             });
         }
     }
