@@ -16,10 +16,9 @@ define 'cs!xlform/view.rowDetail.ValidationLogic', [
 
       @
 
-  class viewRowDetailValidationLogic.ValidationLogicQuestionPicker extends $skipLogicView.Base
-    tagName: 'span'
-    render: () ->
-      @$el.text("This question's response has to be")
+  class viewRowDetailValidationLogic.ValidationLogicQuestionPicker extends $skipLogicView.Label
+    constructor: () ->
+      super("This question's response has to be")
     fill_value: () ->
     bind_event: () ->
     attach_to: (target) ->

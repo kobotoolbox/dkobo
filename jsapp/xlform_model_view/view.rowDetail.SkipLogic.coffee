@@ -10,6 +10,8 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
 
   class viewRowDetailSkipLogic.Base extends Backbone.View
     attach_to: ($el) ->
+      if $el instanceof viewRowDetailSkipLogic.Base
+        $el = $el.$el
       $el.append(@el)
 
     fill_value: (value) ->
@@ -22,6 +24,21 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       @$el.on type, callback
     detach: () ->
       @$el.remove()
+
+  class viewRowDetailSkipLogic.Label extends viewRowDetailSkipLogic.Base
+    tagName: 'label'
+    constructor: (@text, @className, @input) ->
+      super()
+    fill_value: () ->
+    bind_event: () ->
+    render: () ->
+      if @text
+        @$el.text(@text)
+      if @className
+        @$el.addClass @className
+      if @input
+        @$el.attr 'for', @input.cid
+      @
 
   class viewRowDetailSkipLogic.EmptyView extends viewRowDetailSkipLogic.Base
     attach_to: () -> return
@@ -333,6 +350,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       super()
 
   class viewRowDetailSkipLogic.SkipLogicViewFactory
+    constructor: (@survey) ->
     create_question_picker: (questions) ->
       new viewRowDetailSkipLogic.QuestionPicker questions, @survey
     create_operator_picker: (operators) ->
@@ -352,7 +370,10 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       return new viewRowDetailSkipLogic.TextArea text, className
     create_button: (text, className) ->
       return new viewRowDetailSkipLogic.Button text, className
-    constructor: (@survey) ->
+    create_textbox: (text, className='', placeholder='') ->
+      return new viewRowDetailSkipLogic.TextBox(text, className, placeholder)
+    create_label: (text, className) ->
+      return new viewRowDetailSkipLogic.Label(text, className)
 
 
   viewRowDetailSkipLogic

@@ -200,14 +200,14 @@ define 'cs!xlform/mv.skipLogicHelpers', [
 
   class skipLogicHelpers.SkipLogicHandCodeHelper
     render: ($destination) ->
-      $parent = $('<div>')
-      $destination.append $parent
-      @textarea.render().attach_to $parent
-      @button.render().attach_to $parent
+      $destination.append @$parent
+      @textarea.render().attach_to @$parent
+      @button.render().attach_to @$parent
       @button.bind_event 'click', () => @context.use_mode_selector_helper()
     serialize: () ->
       @textarea.$el.val() || @criteria
     constructor: (@criteria, @builder, @view_factory, @context) ->
+      @$parent = $('<div>')
       @textarea = @view_factory.create_textarea @criteria, 'skiplogic__handcode-edit'
       @button = @view_factory.create_button 'x', 'skiplogic-handcode__cancel'
 

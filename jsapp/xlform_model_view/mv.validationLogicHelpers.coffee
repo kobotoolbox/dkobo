@@ -78,10 +78,33 @@ define 'cs!xlform/mv.validationLogicHelpers', [
     use_mode_selector_helper: () ->
       @state = new validationLogicHelpers.ValidationLogicModeSelectorHelper @view_factory, @
       @render @destination
+    use_hand_code_helper: () ->
+      @state = new validationLogicHelpers.ValidationLogicHandCodeHelper(@state.serialize(), @builder, @view_factory, @)
+      @render @destination
+      return
 
   class validationLogicHelpers.ValidationLogicModeSelectorHelper extends $skipLogicHelpers.SkipLogicModeSelectorHelper
     constructor: (view_factory, @context) ->
       super
       @handcode_button = view_factory.create_button '<i>${}</i> Manually enter your validation logic in XLSForm code', 'skiplogic__button skiplogic__select-handcode'
+
+  class validationLogicHelpers.ValidationLogicHandCodeHelper extends $skipLogicHelpers.SkipLogicHandCodeHelper
+    render: ($destination) ->
+      $handCode = $("""
+        <div class="card__settings__fields__field">
+          <label for="#{@context.helper_factory.current_question.cid}-handcode">Validation Code:</label>
+          <span class="settings__input">
+            <input type="text" name="constraint" id="#{@context.helper_factory.current_question.cid}-handcode" class="text" value="#{@criteria}">
+          </span>
+        </div>
+      """)
+      @textarea = $handCode.find('#' + @context.helper_factory.current_question.cid + '-handcode')
+      $destination.replaceWith($handCode)
+      @button.render().attach_to $handCode
+      @button.bind_event 'click', () =>
+        $handCode.replaceWith($destination)
+        @context.use_mode_selector_helper()
+    serialize: () ->
+      @textarea.val()
 
   validationLogicHelpers
