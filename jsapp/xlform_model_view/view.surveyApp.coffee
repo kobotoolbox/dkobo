@@ -121,7 +121,13 @@ define 'cs!xlform/view.surveyApp', [
     initialize: (options)->
       @reset = ()=>
         clearTimeout(@_timedReset)  if @_timedReset
-        @_timedReset = setTimeout _.bind(@_reset, @), 0
+        promise = $.Deferred();
+        @_timedReset = setTimeout =>
+          @_reset.call(@)
+          promise.resolve()
+        , 0
+
+        promise
 
       if options.survey and (options.survey instanceof $survey.Survey)
         @survey = options.survey
