@@ -1,5 +1,5 @@
 /// http://vadimpopa.com/onblur-like-for-a-div-in-angularjs-to-close-a-popup/
-function OutsideClickDirective ( $document ){
+kobo.directive ('outsideClick', function ( $document ){
     return {
         scope: {
             isShowing: '=',
@@ -26,4 +26,4 @@ function OutsideClickDirective ( $document ){
             });
         }
     }
-}
+});

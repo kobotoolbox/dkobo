@@ -1,8 +1,21 @@
 route_to_service_tests = ->
   describe "forms method", ->
     it "should redirect to \"/forms\" page", ->
+
+      module('dkobo')
       location = path: sinon.spy()
-      router = new RouteToService(location)
-      router.forms()
-      expect(location.path).toHaveBeenCalledOn location
-      expect(location.path).toHaveBeenCalledWith "/forms"
+
+      module ($provide) ->
+        $provide.provider "$location", ->
+          @$get = ->
+            location
+
+          return
+        return
+
+      inject ($routeTo) ->
+
+
+        $routeTo.forms()
+        expect(location.path).toHaveBeenCalledOn location
+        expect(location.path).toHaveBeenCalledWith "/forms"

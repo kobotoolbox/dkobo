@@ -27,6 +27,6 @@ require.config({
         'backbone-validation': 'components/backbone-validation/dist/backbone-validation-amd',
         'underscore': 'components/underscore/underscore',
 
-        'xlform': 'xlform_model_view',
+        'xlform': 'xlform_model_view'
     }
 });

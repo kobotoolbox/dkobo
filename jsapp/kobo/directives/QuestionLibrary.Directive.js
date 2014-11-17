@@ -1,4 +1,4 @@
-function QuestionLibraryDirective($restApi) {
+kobo.directive ('koboformQuestionLibrary', function ($api) {
     return {
         templateUrl: staticFilesUri + 'templates/QuestionLibrary.Directive.Template.html',
         scope: {
@@ -7,9 +7,13 @@ function QuestionLibraryDirective($restApi) {
             refreshEvent: '='
         },
         link: function (scope, element) {
+            scope.filters = {
+                label: '',
+                tags: []
+            };
             var sort_ul = element.find('ul');
 
-            var questions = $restApi.create_question_api(scope);
+            var questions = scope.api = $api.questions;
             questions.list();
 
             scope.$parent.refresh = function () {
@@ -35,6 +39,21 @@ function QuestionLibraryDirective($restApi) {
                     sort_ul.find('li:hidden').show();
                 }
             });
+
+            scope.tags = {
+                selected: [],
+                available: []
+            };
+
+            $api.tags.list().then(function () {
+                scope.tags = {
+                    available: $api.tags.items
+                }
+            });
+
+            scope.$watch('tags.selected', function () {
+                scope.filters.tags = _.pluck(scope.tags.selected, 'label');
+            });
         }
     };
-}
+});

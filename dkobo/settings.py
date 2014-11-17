@@ -108,7 +108,12 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework.authtoken',
     'django_extensions',
+    'taggit',
 )
+
+SOUTH_MIGRATION_MODULES = {
+    'taggit': 'taggit.south_migrations',
+}
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',

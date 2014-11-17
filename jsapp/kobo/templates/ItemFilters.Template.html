@@ -1,0 +1,48 @@
+  <div class="{{ name }}-filter">
+    <div class="{{ name }}-filter__filters">
+      <div class="{{ name }}-filter__search">
+        <i class="fa fa-search"></i>
+        <input id="qlib-search" class="{{ name }}-filter__searchbox" ng-model="filters.label" placeholder="Search {{ api }}" value="" />
+      </div>
+
+      <ui-select
+        search-enabled="false"
+        ng-model="sorter.selected"
+        theme="select2"
+        class="{{ name }}-filter__sorter"
+      >
+        <ui-select-match placeholder="sort">
+            {{$select.selected.label}}
+        </ui-select-match>
+        <ui-select-choices repeat="item in sorter.criteria | propsFilter: {label: $select.search}">
+            <div ng-bind-html="item.label"></div>
+        </ui-select-choices>
+      </ui-select>
+
+      <label ng-show="canSelectAll" class="{{ name }}-filter__select-all">
+          <input
+            class="{{ name }}-filter__select-all-checkbox"
+            type="checkbox"
+            ng-model="select_all"
+            ng-checked="allSelected()"
+            ng-click="toggleSelectAll()"/>
+          select all
+      </label>
+      <a
+        class="{{ name }}-filter__show-responses"
+        href=""
+        ng-show="canSelectAll && showToggleResponses()"
+        ng-click="show_responses = !show_responses"
+      >
+        <i class="{{ name }}-filter__show-responses-icon fa fa-eye"></i>
+        {{ show_responses && 'hide' || 'show' }} responses
+      </a>
+    </div>
+
+    <div class="{{ name }}-filter__actions" ng-show="canSelectAll">
+      <div class="{{ name }}-filter__selected-count">{{get_selected_amount()}} selected</div>
+      <a class="{{ name }}-filter__add-to-new" ng-show="false" href=""><i class="{{ name }}-filter__add-to-new-icon"></i>Add to new form</a>
+      <a class="{{ name }}-filter__add-to-block" ng-show="false" href=""><i class="{{ name }}-filter__add-to-block-icon"></i>Add to block</a>
+      <a class="{{ name }}-filter__delete" ng-show="get_selected_count() > 0" href="" ng-click="delete_selected()"><i class="{{ name }}-filter__delete-icon"></i>Delete</a>
+    </div>
+  </div>

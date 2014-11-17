@@ -13,7 +13,7 @@ function BuilderCallbacksService() {
                         body: this.survey.toCSV(),
                         description: this.survey.get('description'),
                         title: this.survey.settings.get('form_title')
-                    }, $routeTo.forms);
+                    }).then($routeTo.forms);
             }
         };
     };

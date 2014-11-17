@@ -2,17 +2,19 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from rest_framework import routers
 # from koboform.views import SurveyDraftViewSet
-from koboform.api import SurveyDraftViewSet, LibraryAssetViewset
+from koboform.api import SurveyDraftViewSet, LibraryAssetViewset, TagViewset
 
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'survey_drafts', SurveyDraftViewSet, 'SurveyDraft')
 router.register(r'library_assets', LibraryAssetViewset, 'LibraryAsset')
+router.register(r'tags', TagViewset, 'Tag')
 
 admin.autodiscover()
 
 urlpatterns = patterns(
     '',
+    url(r'^api/bulk_delete/library_assets', 'dkobo.koboform.views.survey_draft_views.bulk_delete_questions'),
     url(r'^api/survey_drafts/(?P<pk>\d+)$', 'dkobo.koboform.views.survey_draft_detail'),
     url(r'^api/library_assets/(?P<pk>\d+)$', 'dkobo.koboform.views.survey_draft_detail'),
     url(r'^api/survey_drafts/(?P<pk>\d+)/publish$', 'dkobo.koboform.views.publish_survey_draft'),

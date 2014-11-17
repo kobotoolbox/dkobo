@@ -26,6 +26,9 @@
     <link rel="stylesheet" href="{% static 'css/jquery-ui-1.10.4.custom.css' %}">
     <link rel="stylesheet" href="{% static 'components/fontawesome/css/font-awesome.css' %}" media="all">
     <link rel="stylesheet" href="{% static 'kobo.compiled/kobo.css' %}" media="all">
+    <link rel="stylesheet" href="{% static 'components/angular-ui-select/dist/select.css' %}" media="all">
+    <link rel="stylesheet" href="{% static 'components/jquery.tagsinput/jquery.tagsinput.css' %}" media="all">
+
     {% endcompress %}
 
     <script src="{% static 'kobo.compiled/modernizr.js' %}"></script>
@@ -62,6 +65,7 @@
     {% compress js %}
       <script src="{% static 'js/log.coffee' %}" type="text/coffeescript"></script>
       <script src="{% static 'components/angular/angular.js' %}"></script>
+      <script src="{% static 'components/angular-sanitize/angular-sanitize.min.js' %}"></script>
       <script src="{% static 'components/angular-cookies/angular-cookies.js' %}"></script>
       <script src="{% static 'components/angular-mocks/angular-mocks.js' %}"></script>
       <script src="{% static 'components/angular-resource/angular-resource.js' %}"></script>
@@ -72,26 +76,17 @@
       <script src="{% static 'components/jquery.scrollTo/jquery.scrollTo.js' %}"></script>
       <script src="{% static 'js/Backbone.Validation.js' %}"></script>
     {% endcompress %}
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-select/0.8.3/select.js"></script>
       <script src="{% static 'kobo/controllers/Builder.Controller.js' %}"></script>
       <script src="{% static 'kobo/controllers/Header.Controller.js' %}"></script>
       <script src="{% static 'kobo/controllers/Forms.Controller.js' %}"></script>
       <script src="{% static 'kobo/controllers/Assets.Controller.js' %}"></script>
       <script src="{% static 'kobo/controllers/AssetEditor.Controller.js' %}"></script>
       <script src="{% static 'kobo/controllers/Import.Controller.js' %}"></script>
-      <script src="{% static 'kobo/directives/OutsideClick.Directive.js' %}"></script>
-      <script src="{% static 'kobo/directives/QuestionLibrary.Directive.js' %}"></script>
-      <script src="{% static 'kobo/directives/TopLevelMenu.Directive.js' %}"></script>
-      <script src="{% static 'kobo/directives/KobocatFormPublisher.Directive.js' %}"></script>
-      <script src="{% static 'kobo/directives/InfoList.Directive.js' %}"></script>
-      <script src="{% static 'kobo/factories/UserDetails.Factory.js' %}"></script>
-      <script src="{% static 'kobo/factories/restApi.Factory.js' %}"></script>
-      <script src="{% static 'kobo/filters/Titlecase.Filter.js' %}"></script>
-      <script src="{% static 'kobo/services/RouteTo.Service.js' %}"></script>
-      <script src="{% static 'kobo/services/MiscUtils.Service.js' %}"></script>
-      <script src="{% static 'kobo/services/Configuration.Service.js' %}"></script>
     {% compress js %}
       <script src="{% static 'js/modal.js' %}"></script>
       <script src="{% static 'js/jquery-ui-1.10.4.custom.js' %}"></script>
+      <script src="{% static 'components/jquery.tagsinput/jquery.tagsinput.js' %}"></script>
       <script src="{% static 'components/jquery-ui-touch-punch-improved/jquery.ui.touch-punch-improved.js' %}"></script>
 
       {# ---------------------- File Upload --------------------------- #}
@@ -105,6 +100,28 @@
 
     <script src="{% static 'kobo.compiled/dkobo_xlform.js' %}"></script>
     <script src="{% static 'kobo/app.js' %}"></script>
+    <script src="{% static 'kobo/directives/OutsideClick.Directive.js' %}"></script>
+    <script src="{% static 'kobo/directives/QuestionLibrary.Directive.js' %}"></script>
+    <script src="{% static 'kobo/directives/TopLevelMenu.Directive.js' %}"></script>
+    <script src="{% static 'kobo/directives/KobocatFormPublisher.Directive.js' %}"></script>
+    <script src="{% static 'kobo/directives/InfoList.Directive.js' %}"></script>
+    <script src="{% static 'kobo/directives/ItemList.Directive.js' %}"></script>
+    <script src="{% static 'kobo/directives/InnerTransclude.Directive.js' %}"></script>
+    <script src="{% static 'kobo/directives/QuestionDetails.Directive.js' %}"></script>
+    <script src="{% static 'kobo/directives/FocusOn.Directive.js' %}"></script>
+    <script src="{% static 'kobo/directives/ItemFilters.Directive.js' %}"></script>
+    <script src="{% static 'kobo/directives/AddNewTag.Directive.js' %}"></script>
+    <script src="{% static 'kobo/directives/Tags.Directive.js' %}"></script>
+    <script src="{% static 'kobo/directives/InfiniteScroll.Directive.js' %}"></script>
+    <script src="{% static 'kobo/factories/UserDetails.Factory.js' %}"></script>
+    <script src="{% static 'kobo/factories/restApi.Factory.js' %}"></script>
+    <script src="{% static 'kobo/filters/Titlecase.Filter.js' %}"></script>
+    <script src="{% static 'kobo/filters/Item.Filter.js' %}"></script>
+    <script src="{% static 'kobo/services/RouteTo.Service.js' %}"></script>
+    <script src="{% static 'kobo/services/MiscUtils.Service.js' %}"></script>
+    <script src="{% static 'kobo/services/Configuration.Service.js' %}"></script>
+    <script src="{% static 'kobo/services/Api.Service.js' %}"></script>
+    <script src="{% static 'kobo/app_run.js' %}"></script>
 
   </head>
 

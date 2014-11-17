@@ -77,13 +77,13 @@ class CreateReadUpdateDeleteSurveyDraftsTests(TestCase):
         # post a library_asset (question)
         resp = self.client.get('/api/library_assets')
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(len(resp.data), 0)
+        self.assertEqual(len(resp.data.get('results')), 0)
 
         # ensure library_assets was incremented
         self.post_survey(self.client, {u'asset_type': 'question'})
         resp = self.client.get('/api/library_assets')
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(len(resp.data), 1)
+        self.assertEqual(len(resp.data.get('results')), 1)
 
         # ensure that survey_drafts was not incremented
         resp = self.client.get('/api/survey_drafts')
@@ -97,7 +97,7 @@ class CreateReadUpdateDeleteSurveyDraftsTests(TestCase):
             u'body': make_body("Question1")
         })
         resp = self.client.get('/api/library_assets')
-        self.assertEqual(resp.data[0]['id'], 1)
+        self.assertEqual(resp.data.get('results')[0]['id'], 1)
         resp2 = self.client.patch('/api/library_assets/1', json.dumps({
             u'body': make_body("Question2"),
             u'asset_type':'question'
@@ -125,9 +125,9 @@ class CreateReadUpdateDeleteSurveyDraftsTests(TestCase):
 
         resp = self.client.get('/api/library_assets')
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(len(resp.data), 3)
+        self.assertEqual(len(resp.data.get('results')), 3)
 
-        self.assertEqual(resp.data[0].get('body'), make_body("Question3"))
-        self.assertEqual(resp.data[1].get('body'), make_body("Question2"))
-        self.assertEqual(resp.data[2].get('body'), make_body("Question1"))
+        self.assertEqual(resp.data.get('results')[0].get('body'), make_body("Question3"))
+        self.assertEqual(resp.data.get('results')[1].get('body'), make_body("Question2"))
+        self.assertEqual(resp.data.get('results')[2].get('body'), make_body("Question1"))
 

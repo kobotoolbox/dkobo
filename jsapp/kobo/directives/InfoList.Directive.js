@@ -2,7 +2,7 @@
 /* global staticFilesUri */
 'use strict';
 
-function InfoListDirective($rootScope, $restApi, $miscUtils, $location) {
+kobo.directive ('infoList', function ($rootScope, $miscUtils, $location) {
     return {
         restrict: 'A',
         templateUrl: staticFilesUri + 'templates/InfoList.Template.html',
@@ -66,4 +66,4 @@ function InfoListDirective($rootScope, $restApi, $miscUtils, $location) {
             $rootScope.activeTab = scope.name;
         }
     };
-}
+});

@@ -4,6 +4,7 @@ import json
 from django.db import models
 from django.contrib.auth.models import User
 from jsonfield import JSONField
+from taggit.managers import TaggableManager
 
 class SurveyDraft(models.Model):
     '''
@@ -18,6 +19,7 @@ class SurveyDraft(models.Model):
     date_modified = models.DateTimeField(auto_now=True)
     summary = JSONField()
     asset_type = models.CharField(max_length=32, null=True)
+    tags = TaggableManager()
 
     @property
     def _pyxform_survey(self):

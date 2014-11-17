@@ -4,83 +4,43 @@
 
     <div class="tags__header">
       <h2 class="tags__title">
-        Tags <span class="tags__tag-count">122 tags</span></h2>
-      <div class="tag-filter">
-        <div class="tag-filter__search">
-          <i class="fa fa-search"></i> <input class="tag-filter__searchbox" placeholder="Search tags" />
-        </div>
+        Tags <span class="tags__tag-count">{{ api.tags.items.length }} tag{{ api.tags.items.length !== 1 && 's' || '' }}</span></h2>
 
-        <select class="tag-filter__sorter">
-          <option value="newest">Newest</option>
-          <option value="alpha">A - Z</option>
-          <option value="alpha-empty">A - Z, Empty First</option>
-          <option value="alpha-non-empty">A - Z, Empty Last</option>
-        </select>
-      </div>
-      <a class="tag__create-new" href="">+ Add New Tag</a>
+      <item-filters
+        api="tags"
+        sorter="tagSorter"
+        filters="tagFilters"
+        toggle="nowhere"
+      ></item-filters>
+
+
+      <add-new-tag></add-new-tag>
+
     </div>
 
-    <div class="tags__empty hidden">
+      <item-list
+        ng-show="api.tags.items && api.tags.items.length > 0"
+        rest-api="tags"
+        filters="tagFilters"
+        sort-criteria="tagSorter.selected.value"
+        base-class="tags__tag"
+        quick-edit="true"
+        additional-select-operations="toggleTagInFilters"
+        can-delete="true"
+      >
+        <span class="tag__question-count">{{ item.count }} question{{ item.count !== 1 && 's' || '' }}</span>
+      </item-list>
+
+    <div class="tags__empty" ng-show="api.tags.items && api.tags.items.length === 0">
       You don't have any tags yet.
     </div>
 
-    <ul class="tags__container">
-      <li class="tags__tag tags__tag--selected">
-        <input class="tag__editbox" value="Editing the tag" />
-        <span class="tag__question-count">4 questions</span>
-        <i class="tag__delete-button fa fa-trash-o"></i>
-      </li>
-      <li class="tags__tag">
-        <h4 class="tag__name">Violence</h4>
-        <span class="tag__question-count">4 questions</span>
-      </li>
-      <li class="tags__tag">
-        <h4 class="tag__name">Mental Health</h4>
-        <span class="tag__question-count">4 questions</span>
-      </li>
-      <li class="tags__tag tags__tag--selected">
-        <h4 class="tag__name">Finance</h4>
-        <span class="tag__question-count">4 questions</span>
-        <i class="tag__delete-button fa fa-trash-o"></i>
-      </li>
-      <li class="tags__tag">
-        <h4 class="tag__name">Conflicts &amp; disputes</h4>
-        <span class="tag__question-count">4 questions</span>
-      </li>
-      <li class="tags__tag">
-        <h4 class="tag__name">Land</h4>
-        <span class="tag__question-count">4 questions</span>
-      </li>
-      <li class="tags__tag">
-        <h4 class="tag__name">Domestic Violence</h4>
-        <span class="tag__question-count">4 questions</span>
-      </li>
-      <li class="tags__tag">
-        <h4 class="tag__name">Justice</h4>
-        <span class="tag__question-count">4 questions</span>
-      </li>
-      <li class="tags__tag">
-        <h4 class="tag__name">Peace</h4>
-        <span class="tag__question-count">4 questions</span>
-      </li>
-      <li class="tags__tag">
-        <h4 class="tag__name">Truth</h4>
-        <span class="tag__question-count">4 questions</span>
-      </li>
-      <li class="tags__tag">
-        <h4 class="tag__name">Exposure to War Violence</h4>
-        <span class="tag__question-count">4 questions</span>
-      </li>
-      <li class="tags__tag">
-        <h4 class="tag__name">Combatant Status</h4>
-        <span class="tag__question-count">4 questions</span>
-      </li>
-    </ul>
+
   </div>
 
   <div class="questions clearfix">
     <div class="questions__header">
-      <h2 class="questions__title">Questions <span class="questions__question-count">{{info_list_items.length}} questions</span></h2>
+      <h2 class="questions__title">Questions <span class="questions__question-count">{{getQuestionCount()}} question{{ getQuestionCount() !== 1 && 's' || '' }}</span></h2>
       <div class="question__create">
         <form action="/import_questions" class="question__import-library btn--fileupload js-import-fileupload js-import-questions">
           <span class="fileinput-button">
@@ -91,51 +51,28 @@
         <a class="question__create-new" href="#/library/questions/new">+ Add New Question</a>
       </div>
 
-      <div class="question-filter">
-        <div class="question-filter__filters">
-          <div class="question-filter__search">
-            <i class="fa fa-search"></i>
-            <input id="qlib-search" class="question-filter__searchbox" ng-model="filters.label" placeholder="Search questions" value="" />
-          </div>
+      <item-filters
+        api="questions"
+        sorter="questionSorter"
+        filters="questionFilters"
+        toggle="toggleSelectAll"
+        can-select-all="true"
+      ></item-filters>
 
-          <select class="question-filter__sorter" ng-model="sort_criteria">
-            <option value="-date_modified">Newest First</option>
-            <option value="date_modified">Oldest First</option>
-            <option value="label">A - Z</option>
-            <option value="-label">Z - A</option>
-          </select>
-          <!-- THIS IS HERE TEMPORARILY -->
-          <script type="text/javascript">
-            $('select.question-filter__sorter').select2({
-              minimumResultsForSearch: -1
-            });
-          </script>
-
-          <label class="question-filter__select-all"><input class="question-filter__select-all-checkbox" type="checkbox" ng-model="select_all" /> select all</label>
-          <a class="question-filter__show-responses" href="" ng-click="show_responses = !show_responses"><i class="question-filter__show-responses-icon fa fa-eye"></i> show responses</a>
-        </div>
-
-        <div class="question-filter__actions">
-          <div class="question-filter__selected-count">{{get_selected_amount()}} selected</div>
-          <a class="question-filter__add-to-new" ng-show="false" href=""><i class="question-filter__add-to-new-icon"></i>Add to new form</a>
-          <a class="question-filter__add-to-block" ng-show="false" href=""><i class="question-filter__add-to-block-icon"></i>Add to block</a>
-          <a class="question-filter__delete" ng-show="get_selected_count() > 0" href="" ng-click="delete_selected()"><i class="question-filter__delete-icon"></i>Delete</a>
-        </div>
-      </div>
     </div>
 
-    <ul class="questions__container">
-      <li ng-class="item.meta.question_class" ng-repeat="item in info_list_items|filter:filters|orderBy:sort_criteria" ng-click="toggle_selected(item, $event)">
-        <h4 class="question__name">{{ item.label }}</h4><a href="#/library/questions/{{item.id}}" class="question__edit-link fa fa-edit pull-right fa-2x"></a>
-        <a href="" ng-click="toggle_response_list(item)" ng-class="item.meta.question_type_class">
-          <i ng-class="item.meta.question_type_icon_class + ' ' + item.meta.question_type_icon" ng-show="item.type === 'select_one' || item.type === 'select_many' || item.type === 'select_multiple'"></i>
-          {{item.type | titlecase}}
-        </a>
-        <ul class="question__responses" ng-show="item.meta.show_responses">
-          <li class="question__response-option" ng-repeat="response in item.responses">{{response}}</li>
-        </ul>
-      </li>
-    </ul>
+  <item-list
+    rest-api="questions"
+    filters="questionFilters"
+    sort-criteria="questionSorter.selected.value"
+    base-class="questions__question"
+    full-edit="true"
+    full-edit-class="question__edit"
+    additional-select-operations="toggleSelectAll"
+  >
+    <question-details></question-details>
+  </item-list>
+
   </div>
 </div>
 </div>

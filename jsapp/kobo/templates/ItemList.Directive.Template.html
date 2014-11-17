@@ -1,0 +1,35 @@
+<ul class="items__container">
+  <div infinite-scroll="getNextPage()">
+      <li
+        ng-repeat="item in api.items|itemFilter:filters|orderBy:sortCriteria"
+        ng-class="item.meta.additionalClasses"
+        ng-click="toggleSelected(item, $event)"
+        class="{{ baseClass }}"
+      >
+        <h4
+          class="{{ baseClass }}__name"
+          ng-show="!quickEdit || !item.meta.isSelected"
+        >
+          {{ item.label }}
+        </h4>
+        <input
+          ng-show="quickEdit && item.meta.isSelected"
+          class="{{ baseClass }}__editbox"
+          ng-model="item.label"
+          ng-click="$event.stopPropagation()"
+          ng-blur="updateModel(item)"
+        />
+        <a
+          ng-show="fullEdit"
+          href="#/library/questions/{{item.id}}"
+          class="{{ baseClass }}__edit-link fa fa-edit pull-right fa-2x"
+        ></a>
+        <span inner-transclude></span>
+        <i
+          class="tag__delete-button fa fa-trash-o"
+          ng-show="canDelete && item.meta.isSelected"
+          ng-click="removeItem(item, $event)"
+        ></i>
+      </li>
+  </div>
+</ul>

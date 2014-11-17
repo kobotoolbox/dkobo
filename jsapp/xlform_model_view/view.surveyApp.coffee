@@ -454,6 +454,8 @@ define 'cs!xlform/view.surveyApp', [
         $element.addClass('js-cancel-group-sort' + ($element.closest('.group__rows').attr('data-sortable-index')))
 
     validateSurvey: ()->
+      if !@features.multipleQuestions
+        return @survey.rows.length == 1
       true
 
     previewCsv: ->
@@ -632,7 +634,10 @@ define 'cs!xlform/view.surveyApp', [
       icon = $(evt.currentTarget).find('i')
       icon.addClass 'fa-spinner fa-spin blue'
       icon.removeClass 'fa-check-circle green'
-      @onSave.apply(@, arguments)
+      @onSave.apply(@, arguments).then () ->
+        icon.removeClass 'fa-spinner fa-spin blue'
+        icon.addClass 'fa-check-circle green'
+
     publishButtonClick: (evt)->
       # Publish = trigger publish action (ie. post to formhub)
       @onPublish.apply(@, arguments)
@@ -676,6 +681,9 @@ define 'cs!xlform/view.surveyApp', [
       displayTitle: false
       copyToLibrary: false
       surveySettings: false
+    render: () ->
+      super
+      @$('.survey-editor.form-editor-wrap.container').append $('.question__tags')
 
   class surveyApp.SurveyTemplateApp extends $baseView
     events:

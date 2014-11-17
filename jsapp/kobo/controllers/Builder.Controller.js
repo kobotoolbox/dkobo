@@ -2,7 +2,7 @@
 /* global dkobo_xlform */
 'use strict';
 
-function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo, $miscUtils, $userDetails) {
+function BuilderController($scope, $rootScope, $routeParams, $routeTo, $miscUtils, $userDetails, $api, $q) {
     $rootScope.activeTab = 'Forms';
     $scope.routeParams = $routeParams;
     var forceLeaveConfirmation = !$userDetails.debug;
@@ -29,8 +29,8 @@ function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo,
         $scope.xlfSurvey.insertSurvey($scope.currentItem.backbone_model, position);
     };
 
-    /*jshint validthis: true */
-    var surveyDraftApi = $restApi.createSurveyDraftApi($scope.routeParams.id);
+    // jshint validthis: true
+    var surveyDraftApi = $api.surveys;
 
     function saveCallback() {
         if (this.validateSurvey()) {
@@ -40,26 +40,29 @@ function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo,
                 $miscUtils.alert(e.message, "Error");
                 throw e;
             }
-
-            surveyDraftApi.save({
+            return surveyDraftApi.save({
                 body: survey,
                 description: this.survey.get('description'),
                 name: this.survey.settings.get('form_title')
-            }, function() {
+            }).then(function() {
                 $rootScope.deregisterLocationChangeStart && $rootScope.deregisterLocationChangeStart();
                 $(window).unbind('beforeunload');
                 $routeTo.forms();
             }, function(response) {
                 $miscUtils.alert('a server error occured: \n' + response.statusText, 'Error');
             });
+
         }
+        var deferred = $q.defer();
+        deferred.resolve();
+        return deferred.promise;
     }
 
-    $scope.displayQlib = false;
 
+    $scope.displayQlib = false;
     if ($scope.routeParams.id && $scope.routeParams.id !== 'new'){
         // url points to existing survey_draft
-        surveyDraftApi.get({id: $scope.routeParams.id}, function builder_get_callback(response) {
+        surveyDraftApi.get({id: $scope.routeParams.id}).then(function builder_get_callback(response) {
             var warnings = [];
 
             if (window.importFormWarnings) {
@@ -85,7 +88,7 @@ function BuilderController($scope, $rootScope, $routeParams, $restApi, $routeTo,
         var survey = dkobo_xlform.model.Survey.create();
         survey.rows.add(row);
 
-        var resource = $restApi.create_question_api($scope);
+        var resource = $api.questions;
         resource.save({body: survey.toCSV(), asset_type: 'question'}, function () {
             $miscUtils.alert('<p><strong>Your question has been saved to your question library.</strong></p><p>You can now find this question in the library sidebar on the right. To reuse it, just drag-and-drop it into any of your forms.</p><p>To edit or remove questions from your library, choose Question Library from the menu. </p>', 'Success!');
             $scope.refresh();

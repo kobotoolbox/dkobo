@@ -1,4 +1,4 @@
-function TitlecaseFilter() {
+kobo.filter('titlecase', function () {
     return function (text) {
         if (text === undefined) { return ''; }
 
@@ -12,4 +12,4 @@ function TitlecaseFilter() {
 
         return text.join(' ');
     }
-}
+});

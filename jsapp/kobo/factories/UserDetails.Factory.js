@@ -2,6 +2,6 @@
 /* global window */
 'use strict';
 
-function userDetailsFactory() {
+kobo.factory('$userDetails', function () {
     return window.userDetails;
-}
+});

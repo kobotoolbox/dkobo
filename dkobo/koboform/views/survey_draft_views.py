@@ -61,6 +61,7 @@ def create_survey_draft(request):
                    u'description': raw_draft.get("description"),
                    u'name': name}
     survey_draft = SurveyDraft.objects.create(**csv_details)
+
     return HttpResponse(json.dumps(model_to_dict(survey_draft)))
 
 @login_required
@@ -84,7 +85,11 @@ def survey_draft_detail(request, pk, format=None):
 
     elif request.method == 'PATCH':
         for key, value in request.DATA.items():
-            survey_draft.__setattr__(key, value)
+            if key == 'tags':
+                survey_draft.tags.clear()
+                for val in value: survey_draft.tags.add(val)
+            else:
+                survey_draft.__setattr__(key, value)
         survey_draft.save()
         return Response(DetailSurveyDraftSerializer(survey_draft).data)
 
@@ -98,6 +103,12 @@ XLS_CONTENT_TYPES = [
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     "application/octet-stream",
 ]
+
+@login_required
+def bulk_delete_questions(request):
+    question_ids = json.loads(request.body)
+    SurveyDraft.objects.filter(user=request.user).filter(id__in=question_ids).delete()
+    return HttpResponse('')
 
 @login_required
 def import_survey_draft(request):

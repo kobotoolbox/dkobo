@@ -17,24 +17,43 @@ var kobo = angular.module('dkobo', [
     'ngRoute',
     'ngCookies',
     'ngResource',
-    'ui.utils'
+    'ui.utils',
+    'ui.select',
+    'ngSanitize'
 ]);
 
-kobo.directive('topLevelMenu', TopLevelMenuDirective);
-kobo.directive('infoList', InfoListDirective);
-kobo.directive('outsideClick', OutsideClickDirective);
-kobo.directive('koboformQuestionLibrary', QuestionLibraryDirective);
-kobo.directive('kobocatFormPublisher', KobocatFormPublisherDirective);
-
-kobo.factory('$userDetails', userDetailsFactory);
-kobo.factory('$restApi', restApiFactory);
-
-kobo.service('$routeTo', RouteToService);
-kobo.service('$configuration', ConfigurationService);
-kobo.service('$miscUtils', MiscUtilsService);
-
-kobo.filter('titlecase', TitlecaseFilter);
-
+kobo.filter('propsFilter', function() {
+    return function(items, props) {
+        var out = [];
+        if (angular.isArray(items)) {
+            items.forEach(function(item) {
+                var itemMatches = false;
+                var keys = Object.keys(props);
+                for (var i = 0; i < keys.length; i++) {
+                    var prop = keys[i];
+                    var text = props[prop].toLowerCase();
+                    var words = text.split(' ');
+                    for (var j = 0; j < words.length; j++) {
+                        if (item[prop].toString().toLowerCase().indexOf(words[j]) !== -1) {
+                            itemMatches = true;
+                            break;
+                        }
+                    }
+                    if (itemMatches === true) {
+                        break;
+                    }
+                }
+                if (itemMatches) {
+                    out.push(item);
+                }
+            });
+        } else {
+        // Let the output be the input untouched
+            out = items;
+        }
+        return out;
+    };
+});
 
 kobo.config(function ($routeProvider, $locationProvider, $httpProvider) {
 
@@ -58,7 +77,7 @@ kobo.config(function ($routeProvider, $locationProvider, $httpProvider) {
         });
 
         $routeProvider.when('/library/questions/:id', {
-            template: '<section class="form-builder"></section>',
+            templateUrl: staticFilesUri + 'templates/QuestionEditor.Template.html',
             controller: 'AssetEditorController'
         });
 
@@ -76,34 +95,3 @@ kobo.config(function ($routeProvider, $locationProvider, $httpProvider) {
             redirectTo: '/forms'
         });
     });
-
-kobo.run(function ($http, $cookies, $miscUtils) {
-    $http.defaults.headers.common['X-CSRFToken'] = $cookies.csrftoken;
-    $(function () {
-        $('.alert-modal').dialog({
-            autoOpen: false,
-            modal: true
-        });
-
-        // forms__list poshytip effect on publish button
-        $('.forms__poshytip').poshytip({
-            className: 'tip__rightarrow',
-            showTimeout: 1,
-            alignTo: 'target',
-            offsetX: 10,
-            offsetY: -16,
-            liveEvents: true
-        });
-
-        // question mark poshytip effect (in form__settings)
-        $('span.poshytip').poshytip({
-            className: 'tip__bottomarrow',
-            showTimeout: 1,
-            alignTo: 'target',
-            alignX: 'right',
-            alignY: 'inner-bottom',
-            liveEvents: true
-        });
-    });
-    // jQuery.fileupload for importing forms to the user's form list.
-});
