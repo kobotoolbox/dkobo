@@ -224,10 +224,7 @@ def publish_survey_draft(request, pk, format=None):
         status_code = response.status_code
         resp = response.json()
     except Exception, e:
-        message = e.message
-        while type(message) != str:
-            message = message.message
-        resp = json.dumps({'status_code': 504, 'detail': message})
+        resp = {'status_code': 504, 'detail': str(e)}
         status_code = 504
 
     if 'formid' in resp:
