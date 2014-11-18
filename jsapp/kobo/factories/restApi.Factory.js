@@ -24,7 +24,7 @@ kobo.factory('$restApi', function ($resource, $timeout, $cacheFactory, $rootScop
 
         function makeAction(action) {
             return function (item) {
-                return api[action](item);
+                return api[action](item).$promise;
             }
         }
 

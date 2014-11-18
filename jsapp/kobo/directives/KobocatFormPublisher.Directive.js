@@ -21,12 +21,12 @@ kobo.directive ('kobocatFormPublisher', function ($api, $miscUtils, $routeTo) {
                     $('button.save-button .ui-button-text').html('Deploy and View New Project');
                     $('button.save-button').removeClass('deploying');
                     scope.show_form_name_exists_message = true;
-                    scope.error_message = 'Survey Publishing failed: ' + (response.data.text || response.data.error);
+                    scope.error_message = 'Survey Publishing failed: ' + (response.data.text || response.data.error || JSON.parse(JSON.parse(response.data)).detail);
                 }
 
                 var id = scope.form_name ? dkobo_xlform.model.utils.sluggifyLabel(scope.form_name) : '';
                 $api.surveys
-                    .publish({id: scope.item.id, title:scope.form_label, id_string: id}, success, fail);
+                    .publish({id: scope.item.id, title:scope.form_label, id_string: id}).then(success, fail);
             };
 
             scope.form_label = scope.item.name;
