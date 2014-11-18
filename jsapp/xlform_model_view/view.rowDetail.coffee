@@ -143,7 +143,7 @@ define 'cs!xlform/view.rowDetail', [
     html: -> false
     insertInDOM: (rowView)->
       cht = rowView.$label
-      cht.html(@model.get("value") || new Array(10).join('&nbsp;'))
+      cht.html(@model.get("value")|| new Array(10).join('&nbsp;'))
       @
 
   viewRowDetail.DetailViewMixins.hint =
