@@ -59,7 +59,7 @@ define 'cs!xlform/view.row.templates', [], ()->
             <div class="noop card__indicator__icon"><i class="fa fa-fw card__header-icon"></i></div>
           </div>
           <div class="card__text">
-            <pre class="card__header-title js-cancel-select-row"></pre>
+            <span class="card__header-title js-cancel-select-row"></span>
           </div>
           <div class="card__buttons">
             <span class="card__buttons__button card__buttons__button--settings gray js-toggle-card-settings" data-button-name="settings"><i class="fa fa-cog"></i></span>

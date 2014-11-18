@@ -61,9 +61,9 @@
         }
     }
 
-    pre.card__header-title {
+    .card__header-title {
         cursor:text;
-        font-familiy: 'Open Sans'
+        white-space: pre;
     }
     &.card--shaded .card__header-title {
         opacity:0.3;
