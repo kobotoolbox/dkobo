@@ -41,7 +41,7 @@ function BuilderController($scope, $rootScope, $routeParams, $routeTo, $miscUtil
                 throw e;
             }
             return surveyDraftApi.save({
-                id: $scope.routeParams.id,
+                id: $scope.routeParams.id !== 'new' && $scope.routeParams.id,
                 body: survey,
                 description: this.survey.get('description'),
                 name: this.survey.settings.get('form_title')
