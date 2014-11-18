@@ -37,6 +37,9 @@ kobo.directive ('koboformQuestionLibrary', function ($api) {
                 helper: 'clone',
                 start: function () {
                     sort_ul.find('li:hidden').show();
+                },
+                deactivate: function () {
+                    sort_ul.sortable('cancel');
                 }
             });
 
