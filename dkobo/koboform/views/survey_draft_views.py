@@ -224,7 +224,7 @@ def publish_survey_draft(request, pk, format=None):
         status_code = response.status_code
         resp = response.json()
     except Exception, e:
-        resp = json.dumps({'status_code': 504, 'detail': 'There was an error while publishing your survey: %s' % e.message})
+        resp = {'status_code': 504, 'detail': str(e)}
         status_code = 504
 
     if 'formid' in resp:
