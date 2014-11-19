@@ -81,7 +81,8 @@ define 'cs!xlform/view.rowSelector', [
       for mrow in $icons.grouped()
         menurow = $("<div>", class: "questiontypelist__row").appendTo $menu
         for mitem, i in mrow
-          menurow.append $viewTemplates.$$render('xlfRowSelector.cell', mitem.attributes)
+          if mitem?
+            menurow.append $viewTemplates.$$render('xlfRowSelector.cell', mitem.attributes)
       @$('.questiontypelist__item').click _.bind(@selectMenuItem, @)
 
     shrink: ->

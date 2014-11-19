@@ -101,6 +101,9 @@ define 'cs!xlform/model.configs', ["underscore", 'cs!xlform/model.utils', "backb
     image:
       label:
         value: "Point and shoot! Use the camera to take a photo"
+    username:
+      label:
+        value: "Enter your Username"
     video:
       label:
         value: "Use the camera to record a video"
@@ -156,6 +159,7 @@ define 'cs!xlform/model.configs', ["underscore", 'cs!xlform/model.utils', "backb
       ["image", "Image", isMedia: true], # Can use phone camera, for example
       ["barcode", "Barcode"], # Can scan a barcode using the phone camera
       ["date", "Date"], #e.g. (4 July, 1776)
+      ["username", "Username"], #e.g. (4 July, 1776)
       ["time", "Time"], #e.g. (4 July, 1776)
       ["datetime", "Date and Time"], #e.g. (2012-Jan-4 3:04PM)
       ["audio", "Audio", isMedia: true], # Can use phone microphone to record audio
