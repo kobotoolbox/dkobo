@@ -170,7 +170,9 @@ module.exports = function(grunt) {
                 },
                 "uglify" : true,
                 // Define any tests you want to implicitly include.
-                "tests" : [],
+                "tests" : [
+                   "touch"
+               ],
                 "files" : {
                     "src": ["jsapp", "!jsapp/components"]
                 },
