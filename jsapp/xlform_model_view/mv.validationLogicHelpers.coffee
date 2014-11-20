@@ -82,6 +82,17 @@ define 'cs!xlform/mv.validationLogicHelpers', [
       @state = new validationLogicHelpers.ValidationLogicHandCodeHelper(@state.serialize(), @builder, @view_factory, @)
       @render @destination
       return
+    constructor: (@model_factory, @view_factory, @helper_factory, serialized_criteria) ->
+      @state = serialize: () -> return serialized_criteria
+      if @questionTypeHasNoValidationOperators()
+        @use_hand_code_helper()
+      else
+        super
+    questionTypeHasNoValidationOperators: () ->
+      operators = $skipLogicHelpers.question_types[@helper_factory.current_question.getValue('type').split(' ')[0]]?.operators
+      if !operators
+        operators = $skipLogicHelpers.question_types['default'].operators
+      operators.length == operators[0]
 
   class validationLogicHelpers.ValidationLogicModeSelectorHelper extends $skipLogicHelpers.SkipLogicModeSelectorHelper
     constructor: (view_factory, @context) ->
@@ -90,7 +101,16 @@ define 'cs!xlform/mv.validationLogicHelpers', [
 
   class validationLogicHelpers.ValidationLogicHandCodeHelper extends $skipLogicHelpers.SkipLogicHandCodeHelper
     render: ($destination) ->
-      $handCode = $("""
+      $destination.replaceWith(@$handCode)
+      @button.render().attach_to @$handCode
+      @button.bind_event 'click', () =>
+        @$handCode.replaceWith($destination)
+        @context.use_mode_selector_helper()
+    serialize: () ->
+      @textarea.val()
+    constructor: () ->
+      super
+      @$handCode = $("""
         <div class="card__settings__fields__field">
           <label for="#{@context.helper_factory.current_question.cid}-handcode">Validation Code:</label>
           <span class="settings__input">
@@ -98,13 +118,7 @@ define 'cs!xlform/mv.validationLogicHelpers', [
           </span>
         </div>
       """)
-      @textarea = $handCode.find('#' + @context.helper_factory.current_question.cid + '-handcode')
-      $destination.replaceWith($handCode)
-      @button.render().attach_to $handCode
-      @button.bind_event 'click', () =>
-        $handCode.replaceWith($destination)
-        @context.use_mode_selector_helper()
-    serialize: () ->
-      @textarea.val()
+      @textarea = @$handCode.find('#' + @context.helper_factory.current_question.cid + '-handcode')
+
 
   validationLogicHelpers
