@@ -97,6 +97,11 @@
             margin-top: 5px;
         }
     }
+    // possibly temporary
+    &.xlf-dv-constraint_message {
+        border-top:1px solid #d9dde1;
+        padding-top:15px;
+    }
 }
 
 .card__settings__fields .settings__input {

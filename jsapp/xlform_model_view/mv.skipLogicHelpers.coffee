@@ -12,9 +12,8 @@ define 'cs!xlform/mv.skipLogicHelpers', [
     create_builder: () ->
       return new skipLogicHelpers.SkipLogicBuilder @model_factory, @view_factory, @survey, @current_question, @
     create_context: () ->
-      serialized_criteria = @current_question.get('relevant').get('value')
-      return new skipLogicHelpers.SkipLogicHelperContext @model_factory, @view_factory, @, serialized_criteria
-    constructor: (@model_factory, @view_factory, @survey, @current_question) ->
+      return new skipLogicHelpers.SkipLogicHelperContext @model_factory, @view_factory, @, @serialized_criteria
+    constructor: (@model_factory, @view_factory, @survey, @current_question, @serialized_criteria) ->
 
   class skipLogicHelpers.SkipLogicPresentationFacade
     constructor: (@model_factory, @helper_factory, @view_factory) ->
@@ -31,12 +30,10 @@ define 'cs!xlform/mv.skipLogicHelpers', [
 
       @question = @model._get_question()
       question_type = @question.get_type()
-
       @question.on 'remove', () =>
         @dispatcher.trigger 'remove:question', @
 
       @builder.operator_type = operator_type = @model.get('operator').get_type()
-
 
       @view.change_operator @builder.build_operator_view question_type
       @view.operator_picker_view.fill_value @model.get('operator').get_value()
@@ -44,7 +41,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
 
       @builder.question_type = question_type
 
-      response_view = @builder.build_response_view @question, question_type, operator_type
+      response_view = @builder.build_response_view @model._get_question(), question_type, operator_type
       response_view.model = @model.get 'response_value'
       @view.change_response response_view
       @view.attach_response()
@@ -87,7 +84,6 @@ define 'cs!xlform/mv.skipLogicHelpers', [
 
     constructor: (@model, @view, @builder, @dispatcher) ->
       @view.presenter = @
-      @question = @model._get_question()
       if @builder.survey
         @builder.survey.on 'choice-list-update', (row, key) =>
           if @destination
@@ -204,14 +200,14 @@ define 'cs!xlform/mv.skipLogicHelpers', [
 
   class skipLogicHelpers.SkipLogicHandCodeHelper
     render: ($destination) ->
-      $parent = $('<div>')
-      $destination.append $parent
-      @textarea.render().attach_to $parent
-      @button.render().attach_to $parent
+      $destination.append @$parent
+      @textarea.render().attach_to @$parent
+      @button.render().attach_to @$parent
       @button.bind_event 'click', () => @context.use_mode_selector_helper()
     serialize: () ->
       @textarea.$el.val() || @criteria
     constructor: (@criteria, @builder, @view_factory, @context) ->
+      @$parent = $('<div>')
       @textarea = @view_factory.create_textarea @criteria, 'skiplogic__handcode-edit'
       @button = @view_factory.create_button 'x', 'skiplogic-handcode__cancel'
 
