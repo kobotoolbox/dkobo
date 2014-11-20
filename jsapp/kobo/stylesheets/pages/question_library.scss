@@ -35,7 +35,7 @@ $tagsHeight: 230px;
 // ==========================================================================
 
 .questions {
-    width: 68%;
+    width: 72%;
     position: relative;
     float: left;
     height: 100%;
@@ -434,10 +434,10 @@ section.form-builder.active__sidebar .container {
    ========================================================================== */
 
 .tags {
-    width: 29.5%;
+    width: 22.5%;
     float: left;
     position: relative;
-    margin-right: 2.5%;
+    margin-right: 4.5%;
     height: 100%;
     padding-top:$tagsHeight;
 }
@@ -491,7 +491,7 @@ section.form-builder.active__sidebar .container {
     .tag-filter__sorter {
         border:none;
         border-radius: 0;
-        padding:6px 8px;
+        padding:6px 0px;
         width: 100%;
     }
 }
@@ -509,13 +509,13 @@ input.tag__create-new__editbox {
     border-radius: 0;
     display: inline-block;
     margin: 5px;
-    width: 220px;
+    width: 70%;
     
 }
 
 .tags__tag__create-new--accept {
-    margin-left: 6px;
-    margin-right: 6px;
+    margin-left: 1%;
+    margin-right: 1%;
     color: #3DB557;
     cursor: pointer;
 }
