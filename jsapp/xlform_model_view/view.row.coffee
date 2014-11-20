@@ -130,6 +130,7 @@ define 'cs!xlform/view.row', [
 
     _deleteGroup: () =>
       @model.splitApart()
+      @model._parent._parent.trigger('remove', @model)
       @$el.remove()
 
     render: ->
@@ -152,12 +153,32 @@ define 'cs!xlform/view.row', [
       @already_rendered = true
       @
 
+    hasNestedGroups: ->
+      _.filter(@model.rows.models, (row) -> row.constructor.key == 'group').length > 0
     _expandedRender: ->
       @$header.after($viewTemplates.row.groupSettingsView())
       @cardSettingsWrap = @$('.card__settings').eq(0)
       @defaultRowDetailParent = @cardSettingsWrap.find('.card__settings__fields--active').eq(0)
       for [key, val] in @model.attributesArray() when key in ["name", "_isRepeat", "appearance", "relevant"]
         new $viewRowDetail.DetailView(model: val, rowView: @).render().insertInDOM(@)
+
+      if @hasNestedGroups()
+        @$('.xlf-dv-appearance').hide()
+
+      @model.on 'add', (row) =>
+        if row.constructor.key == 'group'
+          $appearanceField = @$('.xlf-dv-appearance').eq(0)
+          $appearanceField.hide()
+          $appearanceField.find('input:checkbox').prop('checked', false)
+          appearanceModel = @model.get('appearance')
+          if appearanceModel.getValue()
+            @surveyView.ngScope.miscUtils.alert("You can't display nested groups on the same screen - the setting has been removed from the parent group")
+          appearanceModel.set('value', '')
+
+      @model.on 'remove', (row) =>
+        if row.constructor.key == 'group' && !@hasNestedGroups()
+          @$('.xlf-dv-appearance').eq(0).show()
+      @
     make_label_editable: (view) ->
       $viewUtils.makeEditable view, view.model, @$label, options:
         placement: 'right'

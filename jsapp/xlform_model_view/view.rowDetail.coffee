@@ -257,7 +257,7 @@ define 'cs!xlform/view.rowDetail', [
     html: ->
 
       @$el.addClass("card__settings__fields--active")
-      if @model_is_group()
+      if @model_is_group(@model)
         return viewRowDetail.Templates.checkbox @cid, @model.key, 'Appearance (advanced)', 'Show all questions in this group on the same screen'
       else
         appearances = @getTypes()
@@ -268,8 +268,8 @@ define 'cs!xlform/view.rowDetail', [
         else
           return viewRowDetail.Templates.textbox @cid, @model.key, 'Appearance (advanced)', 'text'
 
-    model_is_group: () ->
-      @model._parent.constructor.key == 'group'
+    model_is_group: (model) ->
+      model._parent.constructor.key == 'group'
 
     afterRender: ->
       $select = @$('select')

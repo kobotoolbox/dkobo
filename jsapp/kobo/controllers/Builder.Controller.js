@@ -59,7 +59,7 @@ function BuilderController($scope, $rootScope, $routeParams, $routeTo, $miscUtil
         return deferred.promise;
     }
 
-
+    $scope.miscUtils = $miscUtils;
     $scope.displayQlib = false;
     if ($scope.routeParams.id && $scope.routeParams.id !== 'new'){
         // url points to existing survey_draft
