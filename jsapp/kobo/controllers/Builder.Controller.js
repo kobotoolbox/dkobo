@@ -2,6 +2,8 @@
 /* global dkobo_xlform */
 'use strict';
 
+kobo.controller('BuilderController', ['$scope', '$rootScope', '$routeParams', '$routeTo', '$miscUtils', '$userDetails', '$api', '$q', BuilderController]);
+
 function BuilderController($scope, $rootScope, $routeParams, $routeTo, $miscUtils, $userDetails, $api, $q) {
     $rootScope.activeTab = 'Forms';
     $scope.routeParams = $routeParams;

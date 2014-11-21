@@ -1,6 +1,8 @@
 /* exported AssetEditorController */
 /* global dkobo_xlform */
 'use strict';
+kobo.controller('AssetEditorController', ['$scope', '$rootScope', '$routeParams', '$routeTo', '$api', '$q', AssetEditorController]);
+
 function AssetEditorController($scope, $rootScope, $routeParams, $routeTo, $api, $q) {
     $rootScope.showImportButton = false;
     $rootScope.showCreateButton = false;
