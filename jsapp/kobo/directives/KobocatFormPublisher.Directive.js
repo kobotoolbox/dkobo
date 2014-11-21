@@ -1,4 +1,4 @@
-kobo.directive ('kobocatFormPublisher', function ($api, $miscUtils, $routeTo) {
+kobo.directive ('kobocatFormPublisher', ['$api', '$miscUtils', '$routeTo', function ($api, $miscUtils, $routeTo) {
     return {
         scope: {
             item: '='
@@ -84,4 +84,4 @@ kobo.directive ('kobocatFormPublisher', function ($api, $miscUtils, $routeTo) {
             });
         }
     }
-});
+}]);

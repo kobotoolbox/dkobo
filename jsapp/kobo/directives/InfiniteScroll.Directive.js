@@ -2,8 +2,7 @@
  * taken from https://binarymuse.github.io/ngInfiniteScroll/
  * modified for nested scrolling
  */
-kobo.directive('infiniteScroll', [
-  '$rootScope', '$window', '$timeout', function($rootScope, $window, $timeout) {
+kobo.directive('infiniteScroll', ['$rootScope', '$window', '$timeout', function($rootScope, $window, $timeout) {
     return {
       link: function(scope, elem, attrs) {
         var checkWhenEnabled, handler, scrollDistance, scrollEnabled;

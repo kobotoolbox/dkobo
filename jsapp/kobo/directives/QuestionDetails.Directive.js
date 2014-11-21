@@ -1,4 +1,4 @@
-kobo.directive('questionDetails', function ($miscUtils) {
+kobo.directive('questionDetails', ['$miscUtils', function ($miscUtils) {
     return {
         restrict: 'E',
         templateUrl: staticFilesUri + 'templates/QuestionDetails.Template.html',
@@ -6,4 +6,4 @@ kobo.directive('questionDetails', function ($miscUtils) {
             scope.toggle_response_list = $miscUtils.toggle_response_list
         }
     }
-});
+}]);
