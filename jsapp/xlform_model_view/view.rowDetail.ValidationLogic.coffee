@@ -1,6 +1,7 @@
 define 'cs!xlform/view.rowDetail.ValidationLogic', [
-  'cs!xlform/view.rowDetail.SkipLogic'
-], ($skipLogicView) ->
+  'cs!xlform/view.rowDetail.SkipLogic',
+  'cs!xlform/view.widgets'
+], ($skipLogicView, $viewWidgets) ->
 
   viewRowDetailValidationLogic = {}
   class viewRowDetailValidationLogic.ValidationLogicViewFactory extends $skipLogicView.SkipLogicViewFactory
@@ -16,11 +17,9 @@ define 'cs!xlform/view.rowDetail.ValidationLogic', [
 
       @
 
-  class viewRowDetailValidationLogic.ValidationLogicQuestionPicker extends $skipLogicView.Label
+  class viewRowDetailValidationLogic.ValidationLogicQuestionPicker extends $viewWidgets.Label
     constructor: () ->
       super("This question's response has to be")
-    fill_value: () ->
-    bind_event: () ->
     attach_to: (target) ->
       target.find('.skiplogic__rowselect').remove()
       super(target)

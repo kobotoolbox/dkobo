@@ -71,7 +71,7 @@ rowDetailsSkipLogic.SkipLogicCriterion = (function(_super) {
     SkipLogicCriterion.prototype.serialize = function() {
         var response_model;
         response_model = this.get('response_value');
-        if ((response_model != null) && (this.get('operator') != null) && (this.get('question_cid') != null) && response_model.isValid() !== false && this._get_question() !== undefined) {
+        if ((response_model != null) && (response_model.get('value') != null) && (this.get('operator') != null) && (this.get('question_cid') != null) && response_model.isValid() !== false && this._get_question() !== undefined) {
             this._get_question().finalize();
             return this.get('operator').serialize(this._get_question().get('name').get('value'), response_model.get('value'));
         } else {

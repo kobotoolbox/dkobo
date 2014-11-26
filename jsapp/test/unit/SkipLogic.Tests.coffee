@@ -614,12 +614,12 @@ skip_logic_helpers = (dkobo_xlform) ->
         _model.get('operator').get_value.returns -1
         _presenter.change_question 'test'
 
-        expect(_view.operator_picker_view.fill_value).toHaveBeenCalledWith -1
+        expect(_view.operator_picker_view.val).toHaveBeenCalledWith -1
       it "fills updated response view's value", () ->
         _model.get('response_value').get.withArgs('value').returns -1
         _presenter.change_question 'test'
 
-        expect(_view.response_value_view.fill_value).toHaveBeenCalledWith -1
+        expect(_view.response_value_view.val).toHaveBeenCalledWith -1
 
     #*********************************************************************
     #**----------------------------------------------------------------***
@@ -645,7 +645,7 @@ skip_logic_helpers = (dkobo_xlform) ->
         _model.get('response_value').get.withArgs('value').returns -1
         _presenter.change_question 'test'
 
-        expect(_view.response_value_view.fill_value).toHaveBeenCalledWith -1
+        expect(_view.response_value_view.val).toHaveBeenCalledWith -1
 
     #*********************************************************************
     #**----------------------------------------------------------------***
