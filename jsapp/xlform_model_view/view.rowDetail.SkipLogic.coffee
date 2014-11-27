@@ -49,13 +49,6 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
   class viewRowDetailSkipLogic.QuestionPicker extends $viewWidgets.DropDown
     tagName: 'select'
     className: 'skiplogic__rowselect'
-    constructor: (@questions, @survey) ->
-      options = _.map @questions, (row) ->
-        value: row.cid
-        text: row.getValue("label")
-
-      options.unshift value: -1, text: 'Select question from list'
-      super(options)
 
     render: () ->
       super

@@ -1,7 +1,9 @@
 define 'cs!xlform/mv.skipLogicHelpers', [
-        'xlform/model.skipLogicParser'
+        'xlform/model.skipLogicParser',
+        'cs!xlform/view.widgets'
         ], (
             $skipLogicParser,
+            $viewWidgets
             )->
 
   skipLogicHelpers = {}
@@ -192,6 +194,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       @view = @view_factory.create_criterion_builder_view()
       @view.criterion_delimiter = (separator || 'and').toLowerCase()
       @view.facade = @
+
     switch_editing_mode: () ->
       @builder.build_hand_code_criteria @serialize()
 
@@ -264,7 +267,19 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       @view_factory.create_operator_picker operators
 
     build_question_view: () ->
-      @view_factory.create_question_picker @questions()
+      model = new $viewWidgets.DropDownModel()
+      set_options = () =>
+        options = _.map @questions(), (row) ->
+          value: row.cid
+          text: row.getValue("label")
+
+        options.unshift value: -1, text: 'Select question from list'
+        model.set 'options', options
+
+      set_options()
+      @survey.on 'sortablestop', set_options
+
+      @view_factory.create_question_picker model
 
     build_response_view: (question, question_type, operator_type) ->
       responses = null

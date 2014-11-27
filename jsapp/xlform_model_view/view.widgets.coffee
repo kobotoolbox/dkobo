@@ -77,13 +77,17 @@ define 'cs!xlform/view.widgets', [
       @
     constructor: (@text, @className) -> super()
 
+  class viewWidgets.DropDownModel extends Backbone.Model
+
   class viewWidgets.DropDown extends viewWidgets.Base
     tagName: 'select'
-    constructor: (@options) ->
+    model: viewWidgets.DropDownModel
+    constructor: (@model) ->
       super
+      @model.on 'change:options', @render.bind(@)
     render: () ->
       options = ''
-      _.each @options, (option) ->
+      _.each @model.get('options'), (option) ->
         options += '<option value="' + option.value + '">' + option.text + '</option>'
 
       @$el.html options
