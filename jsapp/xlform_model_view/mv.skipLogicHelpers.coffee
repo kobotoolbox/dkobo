@@ -172,6 +172,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
         presenter.$add_new_criterion_button = @$add_new_criterion_button
         presenter.serialize_all = _.bind @serialize, @
         presenter.render @destination
+
     serialize: () ->
       serialized = _.map @presenters, (presenter) ->
         presenter.serialize()
@@ -186,7 +187,8 @@ define 'cs!xlform/mv.skipLogicHelpers', [
     remove: (id) ->
       _.each @presenters, (presenter, index) =>
         if presenter? && presenter.model.cid == id
-          @presenters.splice(index, 1)
+          presenter = @presenters.splice(index, 1)
+          presenter[0].view.$el.remove()
 
       if @presenters.length == 0
         @context.use_mode_selector_helper()
@@ -194,6 +196,12 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       @view = @view_factory.create_criterion_builder_view()
       @view.criterion_delimiter = (separator || 'and').toLowerCase()
       @view.facade = @
+
+      @builder.survey.on 'sortablestop', () =>
+        questions = builder.questions()
+        _.each @presenters, (presenter) =>
+          if !(presenter.model._get_question() in questions)
+            @remove presenter.model.cid
 
     switch_editing_mode: () ->
       @builder.build_hand_code_criteria @serialize()
