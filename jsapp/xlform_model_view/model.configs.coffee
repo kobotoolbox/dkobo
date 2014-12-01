@@ -38,6 +38,14 @@ define 'cs!xlform/model.configs', ["underscore", 'cs!xlform/model.utils', "backb
       asJson:
         type: "today"
         name: "today"
+    username:
+      name: "username"
+      label: "username"
+      description: "includes interviewer's username"
+      default: false
+      asJson:
+        type: "username"
+        name: "username"
     simserial:
       name: "simserial"
       label: "sim serial"
