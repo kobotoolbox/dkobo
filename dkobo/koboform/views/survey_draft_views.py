@@ -151,6 +151,7 @@ def import_survey_draft(request):
                 _csv = posted_file.read()
             else:
                 raise Exception("Content-type not recognized: '%s'" % posted_file.content_type)
+            pyxform_utils.summarize_survey(_csv)
             new_survey_draft = SurveyDraft.objects.create(**{
                 u'body': _csv,
                 u'name': posted_file.name,

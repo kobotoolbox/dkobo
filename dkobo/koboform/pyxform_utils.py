@@ -28,6 +28,10 @@ def convert_xls_to_xform(xls_file, warnings=False):
         xml = survey.to_xml()
     return xml
 
+def summarize_survey(csv_survey):
+    survey = create_survey_from_csv_text(csv_survey)
+    import pdb; pdb.set_trace()
+
 def convert_xls_to_csv_string(xls_file_object, strip_empty_rows=True):
     """
     The goal: Convert an XLS file object to a CSV string.
