@@ -1,11 +1,14 @@
 define 'cs!xlform/model.utils', [
         'xlform/model.skipLogicParser',
+        'xlform/model.validationLogicParser'
         ], (
             $skipLogicParser,
+            $validationLogicParser
             )->
 
   utils =
     skipLogicParser: $skipLogicParser
+    validationLogicParser: $validationLogicParser
 
   utils.txtid = ()->
     # a is text

@@ -161,3 +161,35 @@ skip_logic_parser_tests = ->
       operator: "resp_equals"
       response_value: " hello"
     ]
+
+validation_logic_parser_tests = ->
+  XLF = validationLogicParser: dkobo_xlform.model.utils.validationLogicParser
+  it "parses multiple AND separated clauses", ->
+    expect(XLF.validationLogicParser(". != 'value' AND . != ''")).toEqual
+      criteria: [
+        {
+          name: "."
+          operator: "resp_notequals"
+          response_value: "value"
+        }
+        {
+          name: "."
+          operator: "ans_notnull"
+        }
+      ]
+      operator: "AND"
+
+  it "parses multiple OR separated clauses", ->
+    expect(XLF.validationLogicParser(". != 'value' OR . != ''")).toEqual
+      criteria: [
+        {
+          name: "."
+          operator: "resp_notequals"
+          response_value: "value"
+        }
+        {
+          name: "."
+          operator: "ans_notnull"
+        }
+      ]
+      operator: "OR"
