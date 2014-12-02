@@ -8,6 +8,7 @@ define 'cs!xlform/_model', [
         'cs!xlform/model.row',
         'xlform/model.rowDetails.skipLogic',
         'cs!xlform/model.configs',
+        'cs!xlform/model.inputDeserializer'
         ], (
             _,
             $survey,
@@ -15,6 +16,7 @@ define 'cs!xlform/_model', [
             $row,
             $rowDetailsSkipLogic,
             $configs,
+            $inputDeserializer
             )->
 
   model = {}
@@ -28,5 +30,6 @@ define 'cs!xlform/_model', [
   model.rowDetailsSkipLogic = $rowDetailsSkipLogic
   model.utils = $utils
   model.configs = $configs
+  model.inputDeserializer = $inputDeserializer
 
   model

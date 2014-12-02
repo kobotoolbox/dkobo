@@ -1,4 +1,4 @@
-kobo.directive ('kobocatFormPublisher', function ($api, $miscUtils, $routeTo) {
+kobo.directive ('kobocatFormPublisher', function ($api, $miscUtils, $routeTo, $surveySerializer) {
     return {
         scope: {
             item: '='
@@ -47,9 +47,9 @@ kobo.directive ('kobocatFormPublisher', function ($api, $miscUtils, $routeTo) {
                     return item.formid;
                 }
                 if (item.body) {
-                    var s = dkobo_xlform.model.Survey.load(item.body)
-                    item.formid = s.settings.get('form_id');
-                    return item.formid;
+                    var s = $surveySerializer.deserialize(item.body);
+
+                    return item.formid = s.settings.form_id;
                 }
             };
             scope.form_name = scope.get_form_id(scope.item);
