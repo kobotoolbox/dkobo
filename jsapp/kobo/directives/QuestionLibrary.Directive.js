@@ -13,11 +13,25 @@ kobo.directive ('koboformQuestionLibrary', function ($api) {
             };
             var sort_ul = element.find('ul');
 
+            function activateSortable() {
+                sort_ul.sortable({
+                    items: "> div > li",
+                    connectWith: ".survey-editor__list",
+                    helper: 'clone',
+                    start: function () {
+                        sort_ul.find('li:hidden').show();
+                    },
+                    deactivate: function () {
+                        sort_ul.sortable('cancel');
+                    }
+                });
+            }
+
             var questions = scope.api = $api.questions;
-            questions.list();
+            questions.list().then(activateSortable);
 
             scope.$parent.refresh = function () {
-                questions.list();
+                questions.list().then(activateSortable);
             };
 
             scope.handle_click = function (item) {
@@ -30,18 +44,6 @@ kobo.directive ('koboformQuestionLibrary', function ($api) {
             scope.set_item = function (item) {
                 scope.currentItem = item;
             };
-
-            sort_ul.sortable({
-                items: "> li",
-                connectWith: ".survey-editor__list",
-                helper: 'clone',
-                start: function () {
-                    sort_ul.find('li:hidden').show();
-                },
-                deactivate: function () {
-                    sort_ul.sortable('cancel');
-                }
-            });
 
             scope.tags = {
                 selected: [],
