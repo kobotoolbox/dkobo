@@ -3,7 +3,7 @@
 /*global log*/
 'use strict';
 
-kobo.service('$miscUtils', function ($rootScope, $userDetails) {
+kobo.service('$miscUtils', ['$rootScope', '$userDetails', function ($rootScope, $userDetails) {
     var _this = this,
         _fileUpload,
         _successFn;
@@ -103,4 +103,4 @@ kobo.service('$miscUtils', function ($rootScope, $userDetails) {
             item.meta.show_responses = true;
         }
     };
-});
+}]);

@@ -4,7 +4,7 @@
 
 
 
-kobo.factory('$restApi', function ($resource, $timeout, $cacheFactory, $rootScope, $http) {
+kobo.factory('$restApi', ['$resource', '$timeout', '$cacheFactory', '$rootScope', '$http', function ($resource, $timeout, $cacheFactory, $rootScope, $http) {
     var cache = $cacheFactory('rest api');
 
     function createApi(url, opts) {
@@ -269,4 +269,4 @@ kobo.factory('$restApi', function ($resource, $timeout, $cacheFactory, $rootScop
             });
         }
     };
-});
+}]);

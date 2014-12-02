@@ -3,6 +3,7 @@
 /* global _ */
 'use strict';
 //noinspection JSUnusedGlobalSymbols
+kobo.controller('AssetsController', ['$scope', '$rootScope', '$miscUtils', '$api', '$filter', AssetsController]);
 function AssetsController($scope, $rootScope, $miscUtils, $api, $filter) {
     $scope.tagFilters = {};
     $rootScope.showImportButton = false;

@@ -2,6 +2,7 @@
 /* global _ */
 'use strict';
 
+kobo.controller('FormsController', ['$scope', '$rootScope', '$resource', '$miscUtils', '$api', FormsController]);
 function FormsController ($scope, $rootScope, $resource, $miscUtils, $api) {
     var formsApi = $resource('api/survey_drafts/:id', {id: '@id'});
     $scope.items_loaded = false;

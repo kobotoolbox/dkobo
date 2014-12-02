@@ -1,7 +1,8 @@
 /*exported HeaderController*/
 'use strict';
 
-function HeaderController($scope, $rootScope, $miscUtils, $location) {
+kobo.controller('HeaderController', ['$scope', '$rootScope', '$location', HeaderController]);
+function HeaderController($scope, $rootScope, $location) {
 
     $scope.pageIconColor = 'teal';
     $scope.pageTitle = 'Forms';
