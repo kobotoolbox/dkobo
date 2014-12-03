@@ -161,5 +161,6 @@ describe '', () ->
   describe 'Factories', factory_tests
   describe 'Services', service_tests
   describe 'Skip Logic Parser', skip_logic_parser_tests
+  describe 'Validation Logic Parser', validation_logic_parser_tests
   describe 'Validator', validator_tests
 

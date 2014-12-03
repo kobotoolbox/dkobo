@@ -121,7 +121,6 @@ div.skiplogic__responseval {
 }
 
 .skiplogic__main {
-    padding-bottom: 40px;
     position: relative;
 }
 
@@ -137,10 +136,15 @@ div.skiplogic__responseval {
     border-bottom: 2px solid darken(#39BF6E, 20%);
     position: absolute;
     left:0px;
-    bottom:-20px;
+    bottom:0px;
     &:hover {
         background: lighten(#39BF6E, 10%);
     }
+}
+
+.skiplogic__addnew {
+    margin: 0;
+    height: 40px;
 }
 
 select.skiplogic__delimselect {
@@ -153,6 +157,11 @@ select.skiplogic__delimselect {
     right:0px;
     bottom:-20px;
     font-weight: 600;
+}
+
+.constraint__editor {
+    padding-top:14px;
+    position: relative;
 }
 
 // Select2 overrides for skip logic
