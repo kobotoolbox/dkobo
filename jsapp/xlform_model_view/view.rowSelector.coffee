@@ -51,11 +51,11 @@ define 'cs!xlform/view.rowSelector', [
         $(window).on 'keydown.cancel_add_question',  (evt) =>
           # user presses the escape key
           if evt.which == 27
-            @hide()
+            @shrink()
 
         $('body').on 'mousedown.cancel_add_question', (evt) =>
           if $(evt.target).closest('.line.expanded').length == 0
-            @hide()
+            @shrink()
 
       else
         $(window).on 'keydown.cancel_add_question',  (evt) =>
@@ -86,6 +86,8 @@ define 'cs!xlform/view.rowSelector', [
 
     shrink: ->
       # click .js-close-row-selector
+      $(window).off 'keydown.cancel_add_question'
+      $('body').off 'mousedown.cancel_add_question'
       @line.find("div").eq(0).fadeOut 250, =>
         @line.empty()
       @line.parents(".survey-editor__null-top-row").removeClass "expanded"
@@ -96,8 +98,6 @@ define 'cs!xlform/view.rowSelector', [
     hide: ->
       @button.removeClass('btn--hidden')
       @line.empty().removeClass("expanded").css "height": 0
-      $(window).off 'keydown.cancel_add_question'
-      $('body').off 'mousedown.cancel_add_question'
       @line.parents(".survey-editor__null-top-row")
           .removeClass("expanded")
           .addClass("survey-editor__null-top-row--hidden")
