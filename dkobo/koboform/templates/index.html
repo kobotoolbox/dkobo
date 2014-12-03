@@ -77,10 +77,10 @@
       <script src="{% static 'js/Backbone.Validation.js' %}"></script>
     {% endcompress %}
       <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-select/0.8.3/select.js"></script>
+      <script src="{% static 'components/jquery.tagsinput/jquery.tagsinput.min.js' %}"></script>
     {% compress js %}
       <script src="{% static 'js/modal.js' %}"></script>
       <script src="{% static 'js/jquery-ui-1.10.4.custom.js' %}"></script>
-      <script src="{% static 'components/jquery.tagsinput/jquery.tagsinput.js' %}"></script>
       <script src="{% static 'components/jquery-ui-touch-punch-improved/jquery.ui.touch-punch-improved.js' %}"></script>
 
       {# ---------------------- File Upload --------------------------- #}
@@ -94,7 +94,8 @@
 
     <script src="{% static 'kobo.compiled/dkobo_xlform.js' %}"></script>
 
-  {% compress js %}
+
+    {% compress js %}
 
     <script src="{% static 'kobo/app.js' %}"></script>
     <script src="{% static 'kobo/directives/OutsideClick.Directive.js' %}"></script>

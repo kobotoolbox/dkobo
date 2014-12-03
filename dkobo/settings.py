@@ -79,8 +79,10 @@ COMPRESS_PRECOMPILERS = (
 COMPRESS_STORAGE = 'compressor.storage.GzipCompressorFileStorage'
 
 COMPRESS_JS_FILTERS = (
-    'compressor.filters.yuglify.YUglifyJSFilter',
+    'compressor.filters.jsmin.JSMinFilter',
+    # 'compressor.filters.yuglify.YUglifyJSFilter',
 )
+
 COMPRESS_YUGLIFY_BINARY = 'yuglify'
 COMPRESS_YUGLIFY_JS_ARGUMENTS = '--terminal'
 
