@@ -111,6 +111,7 @@ INSTALLED_APPS = (
     'rest_framework.authtoken',
     'django_extensions',
     'taggit',
+    'django_digest',
 )
 
 SOUTH_MIGRATION_MODULES = {
