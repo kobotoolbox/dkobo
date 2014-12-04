@@ -28,9 +28,17 @@ def convert_xls_to_xform(xls_file, warnings=False):
         xml = survey.to_xml()
     return xml
 
-def summarize_survey(csv_survey):
+def summarize_survey(csv_survey, type):
     survey = create_survey_from_csv_text(csv_survey)
-    import pdb; pdb.set_trace()
+    if type == 'question':
+        question_type = survey.children[0].type
+        return {
+            'type': 'select_multiple' if question_type == 'select all that apply' else question_type,
+            'label': survey.children[0].calculation if question_type == 'calculate' else survey.children[0].label,
+            'options': [option.label for option in survey.children[0].children]
+        }
+    else:
+        return {'form_id': survey.id_string}
 
 def convert_xls_to_csv_string(xls_file_object, strip_empty_rows=True):
     """

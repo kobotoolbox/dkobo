@@ -90,6 +90,7 @@ def survey_draft_detail(request, pk, format=None):
                 for val in value: survey_draft.tags.add(val)
             else:
                 survey_draft.__setattr__(key, value)
+
         survey_draft.save()
         return Response(DetailSurveyDraftSerializer(survey_draft).data)
 
@@ -151,7 +152,6 @@ def import_survey_draft(request):
                 _csv = posted_file.read()
             else:
                 raise Exception("Content-type not recognized: '%s'" % posted_file.content_type)
-            pyxform_utils.summarize_survey(_csv)
             new_survey_draft = SurveyDraft.objects.create(**{
                 u'body': _csv,
                 u'name': posted_file.name,

@@ -1,6 +1,7 @@
 import md5
 import json
 
+import pyxform_utils
 from django.db import models
 from django.contrib.auth.models import User
 from jsonfield import JSONField
@@ -20,6 +21,7 @@ class SurveyDraft(models.Model):
     summary = JSONField()
     asset_type = models.CharField(max_length=32, null=True)
     tags = TaggableManager()
+
 
     @property
     def _pyxform_survey(self):
@@ -64,6 +66,14 @@ class SurveyDraft(models.Model):
         import pyxform_utils
         return pyxform_utils.convert_csv_to_xls(self.body)
 
+    def save(self, *args, **kwargs):
+        try:
+            self.summary = pyxform_utils.summarize_survey(self.body, self.asset_type)
+        except Exception, err:
+            self.summary = {'error': str(err)}
+        finally:
+            super(SurveyDraft, self).save(*args, **kwargs)
+
 class SurveyPreview(models.Model):
     unique_string = models.CharField(max_length=64, null=False, unique=True)
     csv = models.TextField()
@@ -88,7 +98,10 @@ class SurveyPreview(models.Model):
     def save(self, *args, **kwargs):
         if self.unique_string in [u'', None]:
             self.unique_string = SurveyPreview._generate_unique_string(self.csv)
+
+        pyxform_survey = pyxform_utils.create_survey_from_csv_text(self.csv, default_name="SurveyPreview__save")
+
         if self.xml in [u'', None]:
-            import pyxform_utils
-            self.xml = pyxform_utils.create_survey_from_csv_text(self.csv, default_name="SurveyPreview__save").to_xml()
+            self.xml = pyxform_survey.to_xml()
+
         super(SurveyPreview, self).save(*args, **kwargs)
