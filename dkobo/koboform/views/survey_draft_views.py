@@ -90,6 +90,7 @@ def survey_draft_detail(request, pk, format=None):
                 for val in value: survey_draft.tags.add(val)
             else:
                 survey_draft.__setattr__(key, value)
+
         survey_draft.save()
         return Response(DetailSurveyDraftSerializer(survey_draft).data)
 

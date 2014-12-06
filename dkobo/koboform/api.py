@@ -6,6 +6,7 @@ from models import SurveyDraft, SurveyPreview
 from serializers import ListSurveyDraftSerializer, DetailSurveyDraftSerializer, TagSerializer
 from django.shortcuts import render_to_response, HttpResponse, get_object_or_404
 from taggit.models import Tag
+from dkobo.koboform import pyxform_utils
 
 
 class SurveyAssetViewset(viewsets.ModelViewSet):
@@ -32,7 +33,9 @@ class SurveyAssetViewset(viewsets.ModelViewSet):
         tags = contents.get('tags', [])
         if 'tags' in contents:
             del contents['tags']
+
         survey_draft = request.user.survey_drafts.create(**contents)
+
         for tag in tags:
             survey_draft.tags.add(tag)
 
