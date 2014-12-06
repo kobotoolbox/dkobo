@@ -2,10 +2,12 @@ define [
         'cs!xlform/model.aliases',
         'cs!xlform/model.survey',
         'cs!test/fixtures/surveys',
+        'cs!xlform/model.configs'
         ], (
             $aliases,
             $survey,
             $surveys,
+            $configs
             )->
 
   describe 'group.tests', ->
@@ -31,6 +33,18 @@ define [
         @survey.addRow type: 'group', name: 'grp2'
         expect(@survey.rows.length).toBe(2)
         expect(_lastGroup(@survey).rows.length).toBe(0)
+      it 'leaves empty group labels intact', ->
+        survey = $survey.Survey.load("""
+        survey,,,
+        ,type,name,label
+        ,begin group,grp1,
+        ,text,g1q1,Group1Question1
+        ,end group,,,
+        """)
+
+        first_group = _firstGroup survey
+
+        expect(first_group.getValue 'label').toBe ''
       describe 'groups can be exported >', ->
         it 'works with a simple group', ->
           expect(@survey.toCSV().split('\n').length).toBe(8)
@@ -97,6 +111,30 @@ define [
         ,text,q4,Q4
         ,text,q5,Q5
         """)
+
+      describe 'group naming', ->
+        beforeEach ->
+          @getNames = (s)->
+            _n = 'noname'
+            names = []
+            s.forEachRow (
+                    (r)->
+                      name = r.get('name')?.get('value') or _n
+                      names.push name
+                  ), includeGroups: true
+            names
+
+          expect(@survey._allRows().length).toBe(5)
+          @rows = for n in [0,2,4]
+            @survey.rows.at(n)
+
+        it 'uses opts.label when not undefined', ->
+          @survey._addGroup(label: 'My Group', __rows: @rows)
+          expect(_firstGroup(@survey).getValue('label')).toBe 'My Group'
+        it 'uses default label when no label is passed', ->
+          @survey._addGroup(__rows: @rows)
+          expect(_firstGroup(@survey).getValue('label')).toBe $configs.newGroupDetails.label.value
+
       describe 'can create group with existing rows', ->
         beforeEach ->
           @getNames = (s)->
@@ -114,7 +152,6 @@ define [
             @survey.rows.at(n)
 
           @survey._addGroup(label: 'My Group', __rows: rows)
-
         it 'and has the right number of rows', ->
           expect(@survey._allRows().length).toBe(5)
         it 'has the right order of names', ->
