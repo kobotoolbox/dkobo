@@ -16,7 +16,9 @@ django-markdown==0.6.1
 django-markitup==2.2.2
 jsonfield==0.9.20
 django-taggit
--e git+https://github.com/kobotoolbox/pyxform.git@koboform-stable#egg=pyxform-dev
+
+-e git+https://github.com/kobotoolbox/pyxform.git@9fe1c13d3e94c40354aa657846c4b5ae9a4529ff#egg=pyxform-dev
+# -e git+https://github.com/kobotoolbox/pyxform.git@koboform-stable#egg=pyxform-dev
 
 # match kobocat's version of django-digest
 django-digest==1.13
