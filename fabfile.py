@@ -1,25 +1,13 @@
 import os
+import sys
 import json
 
-from fabric.api import local, hosts, run, env
+from fabric.api import local, hosts, cd, env, prefix, run, sudo
 
-DEPLOYMENTS = {
-    'prod': {
-        'heroku_app_name': 'kobotoolbox',
-        'cookie_domain':    '.kobotoolbox.org',
-        'domain':           'kf.kobotoolbox.org',
-        'kobocat_url':      'http://kc.kobotoolbox.org',
-        'django_site_id': 1,
-    },
-    'staging': {
-        'heroku_app_name': 'kobo-dev',
-        'cookie_domain':    '.staging.kobotoolbox.org',
-        'domain':           'kf.staging.kobotoolbox.org',
-        'kobocat_url':      'http://kc.staging.kobotoolbox.org',
-        'django_site_id': 2,
-    },
-}
+def kobo_workon(venv_name):
+    return prefix('kobo_workon %s' % venv_name)
 
+DEPLOYMENTS = {}
 IMPORTED_DEPLOYMENTS = {}
 if os.path.exists('deployments.json'):
     with open('deployments.json', 'r') as f:
@@ -29,52 +17,53 @@ def exit_with_error(message):
     print message
     sys.exit(1)
 
+def check_key_filename(deployment_configs):
+    if 'key_filename' in deployment_configs and \
+       not os.path.exists(deployment_configs['key_filename']):
+        exit_with_error("Cannot find required permissions file: %s" %
+                        deployment_configs['key_filename'])
+
 def setup_env(deployment_name):
-    deployment = DEPLOYMENTS.get(deployment_name)
-    if 'shared' == deployment_name:
-        exit_with_error('SHARED is not a deployment')
-    if deployment is None:
-        exit_with_error('Deployment "%s" not found.' % deployment_name)
+    deployment = DEPLOYMENTS.get(deployment_name, {})
+
     if 'shared' in IMPORTED_DEPLOYMENTS:
-        env.update(IMPORTED_DEPLOYMENTS['shared'])
-    env.update(deployment)
+        deployment.update(IMPORTED_DEPLOYMENTS['shared'])
+
     if deployment_name in IMPORTED_DEPLOYMENTS:
-        env.update(IMPORTED_DEPLOYMENTS.get(deployment_name))
+        deployment.update(IMPORTED_DEPLOYMENTS[deployment_name])
 
+    env.update(deployment)
+    check_key_filename(deployment)
 
-def _database_url(user, password, name, host, protocol='postgis', port='5432'):
-    return "%s://%s:%s@%s:%s/%s" % ( \
-                                protocol, user, password, host, port, name, )
+    env.virtualenv = os.path.join('/home', 'ubuntu', '.virtualenvs',
+                                  env.virtualenv_name, 'bin', 'activate')
+    env.uwsgi_pidfile = os.path.join('/home', 'ubuntu', 'pids',
+                                  'kobo-uwsgi-master.pid')
+    env.code_src = os.path.join(env.home, env.project)
+    env.pip_requirements_file = os.path.join(env.code_src,
+                                             'requirements.txt')
 
-def _heroku_settings_dict():
-    heroku_environment = {
-        'GDAL_LIBRARY_PATH': '/app/.geodjango/gdal/lib/libgdal.so',
-        'GEOS_LIBRARY_PATH': '/app/.geodjango/geos/lib/libgeos_c.so',
-    }
-    if 'secret_key' in env:
-        heroku_environment['DJANGO_SECRET_KEY'] = env.get('secret_key')
-    if 'database' in env:
-        heroku_environment['DATABASE_URL'] = _database_url(**env.get('database'))
-    if 'cookie_domain' in env:
-        heroku_environment['CSRF_COOKIE_DOMAIN'] = env.get('cookie_domain')
-    if 'django_site_id' in env:
-        heroku_environment['DJANGO_SITE_ID'] = env.get('django_site_id')
-    if 'kobocat_url' in env:
-        heroku_environment['KOBOCAT_URL'] = env.get('kobocat_domain')
-    heroku_environment['DJANGO_DEBUG'] = env.get('debug', False)
-    return heroku_environment
+def deploy(deployment_name, branch='master'):
+    setup_env(deployment_name)
+    with cd(env.code_src):
+        run("git fetch origin")
+        run("git checkout origin/%s" % branch)
+        run('find . -name "*.pyc" -exec rm -rf {} \;')
+        run('find . -type d -empty -delete')
 
-def _set_heroku_configs(configs):
-    app_name = env['heroku_app_name']
-    settings_strings = []
-    for kv in configs.items():
-        settings_strings.append("%s=\"%s\"" % kv)
-    local("heroku config:set %s --app=%s" % (' '.join(settings_strings), app_name,))
+    with kobo_workon(env.virtualenv_name):
+        run("pip install -r %s" % env.pip_requirements_file)
 
-@hosts('staging')
-def deploy():
-    setup_env(env.host)
-    print "Checking that Heroku Exists"
-    heroku = local('which heroku')
-    _set_heroku_configs(_heroku_settings_dict())
+    with cd(env.code_src):
+        run("npm install")
+        run("bower install")
+        run("grunt build_all")
 
+        with kobo_workon(env.virtualenv_name):
+            # run("echo 'from django.contrib.auth.models import User; print User.objects.count()' | python manage.py shell")
+            run("python manage.py syncdb --all")
+            run("python manage.py migrate")
+            run("python manage.py compress")
+            run("python manage.py collectstatic --noinput")
+
+    run("uwsgi --reload %s" % env.uwsgi_pidfile)
