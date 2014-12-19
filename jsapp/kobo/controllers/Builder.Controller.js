@@ -28,7 +28,9 @@ function BuilderController($scope, $rootScope, $routeParams, $routeTo, $miscUtil
 
     $scope.add_item = function (position) {
         //add item.backbone_model contains the survey representing the question
-        $scope.xlfSurvey.insertSurvey($scope.currentItem.backbone_model, position);
+        $api.surveys.get({id: $scope.currentItem.id}).then(function (response) {
+            $scope.xlfSurvey.insertSurvey(dkobo_xlform.model.Survey.load(response.body), position);
+        });
     };
 
     // jshint validthis: true
