@@ -28,7 +28,14 @@ function BuilderController($scope, $rootScope, $routeParams, $routeTo, $miscUtil
 
     $scope.add_item = function (position) {
         //add item.backbone_model contains the survey representing the question
-        $scope.xlfSurvey.insertSurvey($scope.currentItem.backbone_model, position);
+        if ($scope.currentItem.backbone_model) {
+            $scope.xlfSurvey.insertSurvey($scope.currentItem.backbone_model, position);
+        } else {
+            $api.surveys.get({id: $scope.currentItem.id}).then(function (response) {
+                $scope.currentItem.backbone_model = dkobo_xlform.model.Survey.load(response.body);
+                $scope.xlfSurvey.insertSurvey($scope.currentItem.backbone_model, position);
+            });
+        }
     };
 
     // jshint validthis: true
