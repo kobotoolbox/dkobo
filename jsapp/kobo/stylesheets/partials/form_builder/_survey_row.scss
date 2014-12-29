@@ -18,7 +18,7 @@
     .btn--addrow {
         display: none;
     }
-    &:hover {
+    &:hover { 
         > .survey__row__spacer > .btn--addrow {
             display: block;
 
@@ -121,6 +121,11 @@ $nested-btn--addrow-height: 24px;
 // touch device hacky fix to first row spacing
 .touch .survey-editor__null-top-row--hidden {
     display: none;
+}
+
+// always display last row's button
+.survey__row:last-child .btn--addrow {
+    display:block !important;
 }
 
 // helper class
