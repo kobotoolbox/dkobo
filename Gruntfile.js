@@ -69,12 +69,12 @@ module.exports = function(grunt) {
                 browsers: ['PhantomJS'],
             },
             amd: {
+                /** It would be better to prevent the second karma server from
+                 *  starting altogether, instead of just changing the port,
+                 *  but that seems unattainable with multiple configuration files.
+                 */
+                port: 9877,
                 configFile: 'jsapp/test/configs/karma-amd.conf.js',
-                singleRun: true,
-                browsers: ['PhantomJS'],
-            },
-            travis: {
-                configFile: 'jsapp/test/configs/karma.conf.js',
                 singleRun: true,
                 browsers: ['PhantomJS'],
             },
