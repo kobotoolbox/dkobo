@@ -259,7 +259,7 @@ define 'cs!xlform/view.rowDetail', [
   viewRowDetail.DetailViewMixins.appearance =
     getTypes: () ->
       types =
-        text: ['multiline']
+        text: ['multiline', 'numbers']
         select_one: ['minimal', 'quick', 'horizontal-compact', 'horizontal', 'likert', 'compact', 'quickcompact', 'label', 'list-nolabel']
         select_multiple: ['minimal', 'horizontal-compact', 'horizontal', 'compact', 'label', 'list-nolabel']
         image: ['signature', 'draw']
