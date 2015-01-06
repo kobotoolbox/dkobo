@@ -59,7 +59,7 @@ function BuilderController($scope, $rootScope, $routeParams, $routeTo, $miscUtil
                 $(window).unbind('beforeunload');
                 $routeTo.forms();
             }, function(response) {
-                $miscUtils.alert('a server error occured: \n' + response.statusText, 'Error');
+                $miscUtils.alert('a server error occurred: \n' + response.statusText, 'Error');
             });
 
         }
