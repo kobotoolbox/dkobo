@@ -72,7 +72,7 @@ function FormsController ($scope, $rootScope, $resource, $miscUtils, $api) {
         }).then(function() {
             load_forms()
         }, function(response) {
-            $miscUtils.alert('a server error occured: \n' + response.statusText, 'Error');
+            $miscUtils.alert('a server error occurred: \n' + response.statusText, 'Error');
         });
     }
 }
