@@ -7,19 +7,19 @@ kobo.directive ('kobocatFormPublisher', ['$api', '$miscUtils', '$routeTo', funct
         link: function (scope, element, attributes) {
             var dialog = element.find('.forms__kobocat__publisher');
             scope.publish = function () {
-                spinner = '<i class="fa fa-spin fa-spinner"></i> Deploying Project';
+                var spinner = '<i class="fa fa-spin fa-spinner"></i> Deploying Project';
                 $('button.save-button .ui-button-text').html(spinner);
-                $('button.save-button').addClass('deploying');
+                $('button.save-button').addClass('save-button--deploying');
                 function success (results, headers) {
                     $('button.save-button .ui-button-text').html('Deploy and View New Project');
-                    $('button.save-button').removeClass('deploying');
+                    $('button.save-button').removeClass('save-button--deploying');
                     scope.close();
                     $miscUtils.alert('Survey Publishing succeeded');
                     $routeTo.external(results.published_form_url);
                 }
                 function fail (response) {
                     $('button.save-button .ui-button-text').html('Deploy and View New Project');
-                    $('button.save-button').removeClass('deploying');
+                    $('button.save-button').removeClass('save-button--deploying');
                     scope.show_form_name_exists_message = true;
                     scope.error_message = 'Survey Publishing failed: ' + (response.data.text || response.data.error || response.data.detail);
                 }
