@@ -241,14 +241,14 @@ define 'cs!xlform/mv.skipLogicHelpers', [
 
       try
         parsed = @parse_skip_logic_criteria serialized_criteria
+        criteria = _.filter(_.map(parsed.criteria, @build_criterion_logic), (item) -> !!item)
+        if criteria.length == 0
+          criteria.push @build_empty_criterion_logic()
+
+        return [criteria, parsed.operator]
+
       catch e
         return false
-
-      criteria = _.filter(_.map(parsed.criteria, @build_criterion_logic), (item) -> !!item)
-      if criteria.length == 0
-        criteria.push @build_empty_criterion_logic()
-
-      return [criteria, parsed.operator]
 
     build_operator_logic: (question_type, operator_type, criterion) =>
       return [
