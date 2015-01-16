@@ -72,7 +72,13 @@ define 'cs!xlform/view.row', [
 
       @cardSettingsWrap = @$('.card__settings').eq(0)
       @defaultRowDetailParent = @cardSettingsWrap.find('.card__settings__fields--question-options').eq(0)
-      for [key, val] in @model.attributesArray() when key is 'label' or key is 'type'
+      attributes = @model.attributesArray()
+      attributeKeys = _.map attributes, (attribute) -> attribute[0]
+      if 'label' not in attributeKeys
+        for key in attributeKeys
+          if key.indexOf('label') > -1
+            attributes.label = attributes[key]
+      for [key, val] in attributes when key is 'label' or key is 'type'
         view = new $viewRowDetail.DetailView(model: val, rowView: @)
         if key == 'label' and @model.get('type').get('value') == 'calculate'
           view.model = @model.get('calculation')

@@ -7,6 +7,8 @@ define [
         'cs!test/unit/xlform/group.tests',
         'cs!test/unit/xlform/utils.tests',
         'cs!test/unit/xlform/choices.tests',
+        'cs!test/unit/xlform/Row/construction',
+        'cs!test/unit/xlform/Row/getters',
         'cs!test/unit/xlform/Survey/insertSurvey',
         'cs!test/unit/xlform/View/ViewComposer'
         ], ->
