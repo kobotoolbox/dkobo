@@ -93,18 +93,20 @@ define [
 
   describe 'Survey load', ->
     beforeEach ->
-      @load_csv = (scsv)=>
+      @_load_csv = (scsv)=>
         @survey = $model.Survey.load(scsv)
-      @expectKeysOf = (obj, keys)->
+      @_load_md = (md)=>
+        @survey = $model.Survey.load.md(md)
+      @expectKeys = (obj, keys)->
         expect (obj[key]  for key in keys)
 
     it 'loads a single question survey', ->
-      @load_csv(surveys.singleQ)
-      @expectKeysOf(@survey.toCsvJson().survey.rowObjects[0],
+      @_load_csv(surveys.singleQ)
+      @expectKeys(@survey.toCsvJson().survey.rowObjects[0],
           ['type', 'name', 'label']).toEqual(['text', 'q1', 'Question1'])
 
     it 'loads a multiple choice survey', ->
-      @load_csv(surveys.withChoices)
+      @_load_csv(surveys.withChoices)
       expect(@survey.toJSON()).toEqual({
           'survey': [
             {
@@ -135,7 +137,7 @@ define [
           @survey.forEachRow(getName, includeGroups: true)
           names
       it 'can switch ABC -> ACB', ->
-        @load_csv """
+        @_load_csv """
         survey,,,
         ,type,name,label
         ,text,qa,QuestionA
@@ -153,7 +155,7 @@ define [
       beforeEach ->
         window.xlfHideWarnings = true
 
-        @load_csv surveys.iterateOver
+        @_load_csv surveys.iterateOver
         @getProp = (propName, arr)->
           (r)->
             arr.push r.get(propName)?.get('value')
