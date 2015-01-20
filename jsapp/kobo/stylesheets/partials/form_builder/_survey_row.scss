@@ -129,7 +129,7 @@ $nested-btn--addrow-height: 24px;
 }
 
 // helper class
-.btn--hidden {
+.btn--hidden, .survey__row:last-child .btn--addrow.btn--hidden {
     // https://github.com/csswizardry/CSS-Guidelines#important
     display: none !important;
 }
