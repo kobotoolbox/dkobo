@@ -29,14 +29,17 @@ deploy:
     secure: pkzN8bdqtKHXg4JdrOu/I3oRjycpYR5hDJcVVozuM6UL+cxYNEIXTNzpkySWRAmCx4c0Ay8BMjs4E0GTxooTjNlgDGtIvHTLJoO0H23aQh7QtfGAfPt8kR7Up6LXalgD+DcqH4RrSt4yNITk/7X3KW0wokwVQzT8pMjkNr7Dg7U=
   strategy: git
 
-# Deploy to kf-staging.kobotoolbox.org
+# Deploy to kf-staging.kobotoolbox.org, based on
+# http://docs.travis-ci.com/user/deployment/custom/
 after_success:
+- echo '*** Deploying to staging server'
 # Decrypt private key
 - openssl aes-256-cbc -K $encrypted_8f9663515218_key -iv $encrypted_8f9663515218_iv
   -in .travis/staging_deploy_key.pem.enc -out .travis/staging_deploy_key.pem
   -d
 # Install private key
 - chmod 600 .travis/staging_deploy_key.pem
+- eval "$(ssh-agent)" # Travis documentation omits this, but without it ssh-add fails
 - ssh-add .travis/staging_deploy_key.pem
 # Execute deployment script via SSH
 - test "$TRAVIS_PULL_REQUEST" == 'false' -a "$TRAVIS_BRANCH" == 'master' && ssh -o UserKnownHostsFile=.travis/staging_known_host ubuntu@kf-staging.kobotoolbox.org /home/ubuntu/scripts/kf_deploy.sh "$TRAVIS_COMMIT"
