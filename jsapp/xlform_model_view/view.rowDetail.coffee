@@ -5,6 +5,7 @@ define 'cs!xlform/view.rowDetail', [
         'cs!xlform/view.icons',
         'cs!xlform/view.rowDetail.SkipLogic',
         'cs!xlform/view.templates',
+        'backbone',
         ], (
             $modelUtils,
             $configs,
@@ -12,6 +13,7 @@ define 'cs!xlform/view.rowDetail', [
             $icons,
             $viewRowDetailSkipLogic,
             $viewTemplates,
+            Backbone,
             )->
 
   viewRowDetail = {}

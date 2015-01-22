@@ -1,7 +1,11 @@
 define 'cs!xlform/mv.skipLogicHelpers', [
-        'xlform/model.skipLogicParser'
+        'xlform/model.skipLogicParser',
+        'backbone',
+        'jquery',
         ], (
             $skipLogicParser,
+            Backbone,
+            $,
             )->
 
   skipLogicHelpers = {}

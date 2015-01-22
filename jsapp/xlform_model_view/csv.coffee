@@ -168,45 +168,9 @@ define 'cs!xlform/csv', ->
     # * Delimiters
     # * quoted fields
     # * and standard fields
-    csv._objPattern = ///
-      (
-        \ #{strDelimiter}
-        |
-        \r?\n
-        |
-        \r
-        |
-        ^
-      )
-      (?:
-        "(
-          (?:
-            (?:
-              [^\\]
-              |
-              \\\\
-              |
-              [\\(?=")]"
-              |
-              [\\(?!")]
-            )*?
-          )
-        )"
-        # > a simpler version that fails
-        # > when cell ends with a backslash:
-        # "(
-        #   (?:
-        #     \\"
-        #     |
-        #     [^"]
-        #   )*
-        # )"
-        |
-        (
-          [^"\ #{strDelimiter}\r\n]*
-        )
-      )
-    ///gi
+
+    #note: coffeescript upgrade fails to compile to the same regular expression as it used to
+    csv._objPattern = RegExp("(\\" + strDelimiter + "|\\r?\\n|\\r|^)(?:\"((?:(?:[^\\\\]|\\\\\\\\|[\\\\(?=\")]\"|[\\\\(?!\")])*?))\"|([^\"\\" + strDelimiter + "\\r\\n]*))", "gi");
 
     while arrMatches = csv._objPattern.exec(strData)
       strMatchedDelimiter = arrMatches[1]

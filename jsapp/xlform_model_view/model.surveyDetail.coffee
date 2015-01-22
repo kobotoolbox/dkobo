@@ -1,7 +1,9 @@
-define 'cs!xlform/model.surveyDetail', [
+define [
         'cs!xlform/model.base',
+        'backbone',
         ], (
             base,
+            Backbone,
             )->
 
   # SurveyDetails (attached to a XLF.Survey instance) containing details such as

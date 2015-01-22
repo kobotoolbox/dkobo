@@ -1,7 +1,12 @@
-define 'cs!xlform/mv.validationLogicHelpers', [
-  'xlform/model.validationLogicParser',
-  'cs!xlform/mv.skipLogicHelpers'
-], ($validationLogicParser, $skipLogicHelpers) ->
+define [
+        'xlform/model.validationLogicParser',
+        'cs!xlform/mv.skipLogicHelpers',
+        'jquery',
+        ], (
+            $validationLogicParser,
+            $skipLogicHelpers,
+            $,
+            ) ->
 
   validationLogicHelpers = {}
 
