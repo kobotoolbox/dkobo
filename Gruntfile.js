@@ -161,7 +161,6 @@ module.exports = function(grunt) {
                 },
                 coverageReporter: { 
                     type : 'html',
-                    // type : 'text-summary',
                     dir : '../coverage/'
                 },
             },

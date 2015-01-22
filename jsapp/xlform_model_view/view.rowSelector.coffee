@@ -1,4 +1,4 @@
-define 'cs!xlform/view.rowSelector', [
+define [
         'backbone',
         'cs!xlform/view.pluggedIn.backboneView',
         'cs!xlform/view.templates',

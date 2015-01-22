@@ -1,4 +1,4 @@
-define 'cs!xlform/mv.skipLogicHelpers', [
+define [
         'xlform/model.skipLogicParser',
         'backbone',
         'jquery',
