@@ -7,6 +7,7 @@ define 'cs!xlform/model.survey', [
         'cs!xlform/model.surveyDetail',
         'cs!xlform/model.inputDeserializer',
         'cs!xlform/model.inputParser',
+        'cs!xlform/model.utils.markdownTable',
         'cs!xlform/csv',
         ], (
             $base,
@@ -17,6 +18,7 @@ define 'cs!xlform/model.survey', [
             $surveyDetail,
             $inputDeserializer,
             $inputParser,
+            $markdownTable,
             csv,
             )->
 
@@ -191,18 +193,29 @@ define 'cs!xlform/model.survey', [
 
       out
 
+    toMarkdown: ()->
+      $markdownTable.csvJsonToMarkdown(@toCsvJson())
+
     toCSV: ->
       sheeted = csv.sheeted()
       for shtName, content of @toCsvJson()
         sheeted.sheet shtName, csv(content)
       sheeted.toString()
 
-  Survey.load = (csv_repr)->
+  Survey.load = (csv_repr, _usingSurveyLoadCsv=false)->
+    # log('switch to Survey.load.csv')  if !_usingSurveyLoadCsv
     if _.isString(csv_repr) and not _is_csv(csv_repr)
       throw Error("Invalid CSV passed to form builder")
     _deserialized = $inputDeserializer.deserialize csv_repr
     _parsed = $inputParser.parse _deserialized
     new Survey(_parsed)
+
+  Survey.load.csv = (csv_repr)->
+    Survey.load(csv_repr, true)
+
+  Survey.load.md = (md)->
+    sObj = $markdownTable.mdSurveyStructureToObject(md)
+    new Survey(sObj)
 
   _is_csv = (csv_repr)->
     # checks that a string has a newline and a comma,
