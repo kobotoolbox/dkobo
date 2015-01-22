@@ -15,6 +15,7 @@ module.exports = function(config) {
     var _c,
         componentFiles = [
             project('test/components.js', 0, 0, 1),
+            project('test/unit/xlform/**/*.js', 0, 0, 1),
             project('test/**/*.js.map', 0, 0, 1),
             project('utils/*-private.js', 0, 0, 1),
             project('test/**/*.coffee', 0, 0, 1),

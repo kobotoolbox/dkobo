@@ -80,6 +80,7 @@
         require.config({
           paths: paths,
           urlArgs: "bust=" + (new Date()).getTime(),
+          map: components.map
         });
 
         require(['cs!test/amdrunner'], execJasmine);

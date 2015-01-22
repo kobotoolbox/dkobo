@@ -24,6 +24,15 @@ define('test/components', [], function(){
             "cs": "test/cs-skip.js",
             "backbone": "components/backbone/backbone.js",
             "backbone-validation": "components/backbone-validation/dist/backbone-validation-amd.js",
+        },
+        "map": {
+          "*": {
+            "jquery" : "utils/jquery-private",
+            "backbone": "utils/backbone-private"
+            },
+          "utils/jquery-private": { "jquery": "jquery" },
+          "utils/backbone-private": {"backbone": "backbone"},
+          "backbone-validation": {"backbone": "backbone"}
         }
     }
 });
