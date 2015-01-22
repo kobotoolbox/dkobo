@@ -3,7 +3,7 @@ This is the view for the survey-wide details that appear at the bottom
 of the survey. Examples: "imei", "start", "end"
 ###
 
-define 'cs!xlform/view.surveyDetails', [
+define [
         'backbone',
         'cs!xlform/view.templates'
         ], (

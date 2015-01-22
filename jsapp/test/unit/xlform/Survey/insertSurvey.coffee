@@ -1,10 +1,10 @@
-define 'cs!test/unit/xlform/Survey/insertSurvey', [
-          'cs!xlform/_model',
-          'cs!xlform/model.choices'
-          ], (
-              $model,
-              $choices
-              )->
+define [
+        'cs!xlform/_model',
+        'cs!xlform/model.choices'
+        ], (
+            $model,
+            $choices
+            )->
 
   describe 'Insert Survey', () ->
 

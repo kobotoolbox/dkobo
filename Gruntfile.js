@@ -108,7 +108,7 @@ module.exports = function(grunt) {
         },
         coffee: {
             options: {
-                sourceMap: true,
+                sourceMap: false,
                 sourceRoot: ''
             },
             // to get around an annoying quirk in grunt-contrib-coffee,
@@ -241,7 +241,11 @@ module.exports = function(grunt) {
             jsCov: {}
         },
         clean: {
-            coverage: ['coverage']
+            coverage: ['coverage'],
+            compiled_coffee: [
+                'jsapp/test/unit/**/*.js',
+                'jsapp/test/unit/**/*.js.map',
+            ]
         },
         modernizr: {
             dist: {
@@ -312,6 +316,7 @@ module.exports = function(grunt) {
         'coffee:test',
         // 'copy:jsCov',
         'karma:amd',
+        'clean:compiled_coffee',
     ]);
 
     grunt.registerTask('develop', [
