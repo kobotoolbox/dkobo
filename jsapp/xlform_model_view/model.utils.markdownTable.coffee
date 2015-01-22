@@ -10,8 +10,9 @@ define [
   It's simply here because it provides a clean way to display xlsforms in the source code.
   ###
 
+  _trim = (s)-> String(s).replace(/^\s+|\s+$/g, '')
+
   markdownTable.mdSurveyStructureToObject = (md)->
-    _trim = (s)-> String(s).replace(/^\s+|\s+$/g, '')
     shtName = false
     curSheet = false
     sObj = {}
@@ -81,6 +82,6 @@ define [
       _append_line_arr(sheet.columns, 1)
       _append_line_arr(row, 1)  for row in sheet.rowArray
 
-    outstr
+    _trim(outstr)
 
   markdownTable

@@ -1,9 +1,9 @@
-define 'cs!xlform/model.utils', [
+define [
         'xlform/model.skipLogicParser',
-        'xlform/model.validationLogicParser'
+        'xlform/model.validationLogicParser',
         ], (
             $skipLogicParser,
-            $validationLogicParser
+            $validationLogicParser,
             )->
 
   utils =
