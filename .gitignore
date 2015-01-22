@@ -24,6 +24,7 @@ dkobo/koboform/templates/sandbox-stub.html
 jsapp/components
 jsapp/coverage
 jsapp/kobo.compiled
+coverage
 
 .sass-cache/
 

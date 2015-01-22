@@ -122,9 +122,9 @@ module.exports = function(grunt) {
                 watch: true,
                 flatten: false,
                 cwd: 'jsapp/test',
-                src: '**/*.test.coffee',
+                src: '**/*.tests.coffee',
                 dest: 'jsapp/test',
-                ext: '.test.js'
+                ext: '.tests.js'
             },
             test: {
                 files: {
