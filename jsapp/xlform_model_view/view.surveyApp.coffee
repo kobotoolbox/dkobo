@@ -1,4 +1,4 @@
-define 'cs!xlform/view.surveyApp', [
+define [
         'underscore',
         'backbone',
         'cs!xlform/model.survey',
@@ -9,6 +9,7 @@ define 'cs!xlform/view.surveyApp', [
         'cs!xlform/view.row',
         'cs!xlform/view.pluggedIn.backboneView',
         'cs!xlform/view.utils',
+        'jquery',
         ], (
             _,
             Backbone,
@@ -20,6 +21,7 @@ define 'cs!xlform/view.surveyApp', [
             $rowView,
             $baseView,
             $viewUtils,
+            $,
             )->
 
   surveyApp = {}

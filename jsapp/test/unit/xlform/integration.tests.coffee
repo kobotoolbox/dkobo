@@ -3,10 +3,12 @@ define [
         'cs!xlform/_view',
         'cs!xlform/_model',
         'cs!test/fixtures/surveys',
+        'jquery',
         ], (
             $view,
             $model,
             $surveys,
+            $,
             )->
 
   describe 'integration.tests; necessary plugins are installed', ->
