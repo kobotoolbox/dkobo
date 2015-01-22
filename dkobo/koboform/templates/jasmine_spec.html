@@ -62,25 +62,26 @@
       require.config({ baseUrl: '{% static '' %}' });
 
       require(['test/components'], function(components){
-        var k, v, paths = {};
-        var stubs = {
-          'backbone': 'build_stubs/backbone.js',
-          'underscore': 'build_stubs/underscore.js',
-          'jquery': 'build_stubs/jquery.js'
-        };
-        for (k in components.dirPaths) {
-          paths[k] = components.dirPaths[k]
+        function strippedJs(item) {
+          var o={};
+          Object.keys(item).forEach(function(k){
+            o[k] = item[k].replace(/\.js$/, '');
+          });
+          return o;
         }
-        for (k in components.libs) {
-          paths[k] = components.libs[k].replace(/\.js$/, '');
-        }
-        for (k in stubs) {
-          paths[k] = stubs[k].replace(/\.js$/, '');
-        }
+        var paths = $.extend({},
+                  components.dirPaths,
+                  strippedJs(components.libs),
+                  {
+                    'cs': 'components/require-cs/cs',
+                    'coffee-script': 'components/require-cs/coffee-script'
+                  });
+
         require.config({
           paths: paths,
-          urlArgs: "bust=" +  (new Date()).getTime(),
+          urlArgs: "bust=" + (new Date()).getTime(),
         });
+
         require(['cs!test/amdrunner'], execJasmine);
       });
 

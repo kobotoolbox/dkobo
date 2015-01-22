@@ -9,28 +9,21 @@ define('test/components', [], function(){
         "dirPaths": {
             "xlform": "xlform_model_view",
         },
-        "nodeStubs": {
-            "jquery": "build_stubs/jquery",
-        },
         // patterns to serve (used in karma.conf)
         "serve": [
-            "test/fixtures/*.coffee",
             "xlform_model_view/*.js",
-            "xlform_model_view/*.coffee",
-            "test/unit/SkipLogic.Tests.coffee",
-            "test/unit/xlform/**/*.coffee"
+            "xlform_model_view/**/*.js",
+            "xlform_model_view/**/*.js",
+            "test/**/*.js"
         ],
         // paths to components
         // used in require.configs({paths:...}) and karma.conf
         "libs": {
             "underscore": "components/underscore/underscore.js",
             "jquery": "components/jquery/dist/jquery.js",
-            "cs": "components/require-cs/cs.js",
-            "sinon": "components/sinon/index.js",
-            "jasmine-sinon": "components/jasmine-sinon/lib/jasmine-sinon.js",
-            "coffee-script": "components/require-cs/coffee-script.js",
+            "cs": "test/cs-skip.js",
             "backbone": "components/backbone/backbone.js",
             "backbone-validation": "components/backbone-validation/dist/backbone-validation-amd.js",
         }
-    };
+    }
 });

@@ -1,4 +1,62 @@
 module.exports = function(grunt) {
+    var xlfCoffeeFiles = {},
+        singleRun;
+
+    if (grunt.option('single-run') === undefined) {
+        singleRun = true;
+    } else {
+        singleRun = !!(grunt.option('single-run'));
+    }
+
+    [
+        "csv",
+        "model.aliases",
+        "model.base",
+        "model.choices",
+        "_model",
+        "model.configs",
+        "model.inputDeserializer",
+        "model.inputParser",
+        "model.row",
+        "model.rowDetail",
+        "model.rowDetailMixins",
+        "model.rowDetail.validationLogic",
+        "model.survey",
+        "model.surveyDetail",
+        "model.surveyFragment",
+        "model.utils",
+        "model.utils.markdownTable",
+        "model.validation",
+        "mv.skipLogicHelpers",
+        "mv.validationLogicHelpers",
+        "spreadsheet_utils",
+        "_utils",
+        "view.choices",
+        "view.choices.templates",
+        "_view",
+        "view",
+        "view.icons",
+        "view.pluggedIn.backboneView",
+        "view.row",
+        "view.rowDetail",
+        "view.rowDetail.SkipLogic",
+        "view.rowDetail.templates",
+        "view.rowDetail.ValidationLogic",
+        "view.rowSelector",
+        "view.rowSelector.templates",
+        "view.row.templates",
+        "view.surveyApp",
+        "view.surveyApp.templates",
+        "view.surveyDetails",
+        "view.surveyDetails.templates",
+        "view.templates",
+        "view.utils",
+        "_xlform.init",
+    ].reduce(function(files, name){
+        files[ 'jsapp/xlform_model_view/' + name + '.js' ] =
+               'jsapp/xlform_model_view/' + name + '.coffee';
+        return files;
+    }, xlfCoffeeFiles);
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -18,14 +76,6 @@ module.exports = function(grunt) {
 
             /** changes to the tests trigger a karma retest
              */
-            // testsChanged: {
-            //     files: [
-            //         // do we want to jump to all coffee tests?
-            //         'jsapp/test/**/*.js',
-            //         'jsapp/test/**/*.coffee'
-            //     ],
-            //     tasks: ['karma:unit'],
-            // },
 
             /** dkobo_xlform.js is build with and AMD packaging module
              *    and is referenced by python and browser.
@@ -37,7 +87,6 @@ module.exports = function(grunt) {
                 files: ['jsapp/test/xlform/*.coffee'],
                 options: { livereload: true },
             },
-
             rebuildDkoboXlform: {
                 files: ['jsapp/xlform_model_view/**/*.js', 'jsapp/xlform_model_view/**/*.coffee'],
                 tasks: ['requirejs:compile_xlform'],
@@ -52,20 +101,49 @@ module.exports = function(grunt) {
                 options: { livereload: false },
             },
 
-            // cssChanged: {
-                // files: ['jsapp/kobo.compiled/*.css', '!jsapp/**/*.verbose.css'],
-                // tasks: [],
-                // options: { livereload: true },
-            // },
             livereload: {
               options: { livereload: true },
               files: ['jsapp/kobo.compiled/*.css', '!jsapp/**/*.verbose.css'],
             },
         },
+        coffee: {
+            options: {
+                sourceMap: true,
+                sourceRoot: ''
+            },
+            // to get around an annoying quirk in grunt-contrib-coffee,
+            // this will expand .test.coffee files separately
+            buildMain: {
+                files: xlfCoffeeFiles,
+                watch: true,
+            },
+            testsWithExtension: {
+                expand: true,
+                watch: true,
+                flatten: false,
+                cwd: 'jsapp/test',
+                src: '**/*.test.coffee',
+                dest: 'jsapp/test',
+                ext: '.test.js'
+            },
+            test: {
+                files: {
+                    'jsapp/test/runner.js': 'jsapp/test/runner.coffee',
+                    'jsapp/test/modules_loaded.js': 'jsapp/test/modules_loaded.coffee',
+                    'jsapp/test/amdrunner.js': 'jsapp/test/amdrunner.coffee',
+                    'jsapp/test/unit/xlform/timing.runs.js': 'jsapp/test/unit/xlform/timing.runs.coffee',
+                    'jsapp/test/unit/xlform/View/ViewComposer.js': 'jsapp/test/unit/xlform/View/ViewComposer.coffee',
+                    'jsapp/test/unit/xlform/Survey/insertSurvey.js': 'jsapp/test/unit/xlform/Survey/insertSurvey.coffee',
+                    // 'jsapp/test/unit/Xlform.test.src.js': 'jsapp/test/unit/Xlform.test.src.coffee',
+                    'jsapp/test/fixtures/surveys.js': 'jsapp/test/fixtures/surveys.coffee',
+                }
+            }
+        },
+
         karma: {
             unit: {
                 configFile: 'jsapp/test/configs/karma.conf.js',
-                singleRun: true,
+                singleRun: singleRun,
                 browsers: ['PhantomJS'],
             },
             amd: {
@@ -75,8 +153,17 @@ module.exports = function(grunt) {
                  */
                 port: 9877,
                 configFile: 'jsapp/test/configs/karma-amd.conf.js',
-                singleRun: true,
-                browsers: ['PhantomJS'],
+                singleRun: singleRun,
+                browsers: [ grunt.option('browser') || 'PhantomJS' ],
+                reporters: ['progress', 'coverage'],
+                preprocessors: {
+                    'jsapp/xlform_model_view/**/*.js': 'coverage'
+                },
+                coverageReporter: { 
+                    type : 'html',
+                    // type : 'text-summary',
+                    dir : '../coverage/'
+                },
             },
         },
 
@@ -95,18 +182,26 @@ module.exports = function(grunt) {
                     paths: {
                         'almond': 'components/almond/almond',
                         'jquery': 'components/jquery/dist/jquery.min',
+                        // "coffee-script": "components/require-cs/coffee-script.js",
                         'cs' :'components/require-cs/cs',
                         // stubbed paths for almond build
-                        'backbone': 'build_stubs/backbone',
-                        'underscore': 'build_stubs/underscore',
-                        'jquery': 'build_stubs/jquery',
+                        // 'backbone': 'build_stubs/backbone',
+                        // 'underscore': 'build_stubs/underscore',
+                        // 'jquery': 'build_stubs/jquery',
                         'backbone-validation': 'components/backbone-validation/dist/backbone-validation-amd',
-                        // 'backbone': 'components/backbone/backbone',
-                        // 'underscore': 'components/underscore/underscore',
+                        'backbone': 'components/backbone/backbone',
+                        'underscore': 'components/underscore/underscore',
                         'coffee-script': 'components/require-cs/coffee-script',
                         // project paths
                         'xlform': 'xlform_model_view',
                     },
+                    map: {
+                        "*": { "jquery" : "utils/jquery-private",
+                                "backbone": "utils/backbone-private",},
+                        "utils/jquery-private": { "jquery": "jquery" },
+                        "utils/backbone-private": { "backbone": "backbone" },
+                        "backbone-validation": {"backbone": "backbone"},
+                    }
                 },
             },
         },
@@ -143,8 +238,13 @@ module.exports = function(grunt) {
                 },
             },
         },
+        copy: {
+            jsCov: {}
+        },
+        clean: {
+            coverage: ['coverage']
+        },
         modernizr: {
-
             dist: {
                 // [REQUIRED] Path to the build you're using for development.
                 "devFile" : "jsapp/components/modernizr/modernizr.js",
@@ -182,9 +282,11 @@ module.exports = function(grunt) {
     });
 
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-coffee');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-sass');
+    grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks("grunt-modernizr");
 
@@ -203,8 +305,13 @@ module.exports = function(grunt) {
     ]);
 
     grunt.registerTask('test', [
-        'build',
-        'karma:unit',
+        // 'build',
+        // 'karma:unit',
+        'clean:coverage',
+        'coffee:buildMain',
+        'coffee:testsWithExtension',
+        'coffee:test',
+        // 'copy:jsCov',
         'karma:amd',
     ]);
 
