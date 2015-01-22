@@ -1,13 +1,15 @@
-define 'cs!xlform/view.rowSelector', [
+define [
         'backbone',
         'cs!xlform/view.pluggedIn.backboneView',
         'cs!xlform/view.templates',
         'cs!xlform/view.icons',
+        'jquery',
         ], (
             Backbone,
             $baseView,
             $viewTemplates,
             $icons,
+            $,
             )->
 
   viewRowSelector = {}

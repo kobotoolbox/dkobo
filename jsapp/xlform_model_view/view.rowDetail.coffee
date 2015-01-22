@@ -1,10 +1,12 @@
-define 'cs!xlform/view.rowDetail', [
+define [
         'cs!xlform/model.utils',
         'cs!xlform/model.configs',
         'cs!xlform/view.utils',
         'cs!xlform/view.icons',
         'cs!xlform/view.rowDetail.SkipLogic',
         'cs!xlform/view.templates',
+        'backbone',
+        'jquery',
         ], (
             $modelUtils,
             $configs,
@@ -12,6 +14,8 @@ define 'cs!xlform/view.rowDetail', [
             $icons,
             $viewRowDetailSkipLogic,
             $viewTemplates,
+            Backbone,
+            $,
             )->
 
   viewRowDetail = {}
