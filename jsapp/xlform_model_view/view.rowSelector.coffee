@@ -3,11 +3,13 @@ define 'cs!xlform/view.rowSelector', [
         'cs!xlform/view.pluggedIn.backboneView',
         'cs!xlform/view.templates',
         'cs!xlform/view.icons',
+        'jquery',
         ], (
             Backbone,
             $baseView,
             $viewTemplates,
             $icons,
+            $,
             )->
 
   viewRowSelector = {}
