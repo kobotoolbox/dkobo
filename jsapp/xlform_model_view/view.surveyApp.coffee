@@ -336,6 +336,7 @@ define 'cs!xlform/view.surveyApp', [
       if !@features.multipleQuestions
         @$el.addClass('survey-editor--singlequestion')
         @$el.find(".survey-editor__null-top-row").addClass("survey-editor__null-top-row--hidden")
+        @$el.find(".js-expand-row-selector").addClass("btn--hidden")
         if @survey.rows.length is 0
           @null_top_row_view_selector.expand()
 

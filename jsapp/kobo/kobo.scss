@@ -31,10 +31,9 @@ $buttonBorderRadius: 5px;
 
 @import "stylesheets/partials/fonts";
 @import '../components/fontawesome/css/font-awesome.css';
-// import third party libs
 @import '../components/select2/select2.css';
-// disabled jquery-editable because new styles don't seem to conform to it
-// @import '../components/x-editable/dist/jquery-editable/css/jquery-editable.css';
+@import "stylesheets/partials/select2_override";
+@import "stylesheets/partials/tagsinput_override";
 
 @import "stylesheets/partials/normalize";
 @import "stylesheets/partials/base";
