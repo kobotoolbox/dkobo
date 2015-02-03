@@ -36,7 +36,7 @@ def setup_env(deployment_name):
     check_key_filename(deployment)
 
     env.virtualenv = os.path.join('/home', 'ubuntu', '.virtualenvs',
-                                  env.virtualenv_name, 'bin', 'activate')
+                                  env.kf_virtualenv_name, 'bin', 'activate')
     env.uwsgi_pidfile = os.path.join('/home', 'ubuntu', 'pids',
                                   'kobo-uwsgi-master.pid')
     env.code_src = os.path.join(env.home, env.project)
@@ -51,7 +51,7 @@ def deploy(deployment_name, branch='master'):
         run('find . -name "*.pyc" -exec rm -rf {} \;')
         run('find . -type d -empty -delete')
 
-    with kobo_workon(env.virtualenv_name):
+    with kobo_workon(env.kf_virtualenv_name):
         run("pip install -r %s" % env.pip_requirements_file)
 
     with cd(env.code_src):
@@ -59,7 +59,7 @@ def deploy(deployment_name, branch='master'):
         run("bower install")
         run("grunt build_all")
 
-        with kobo_workon(env.virtualenv_name):
+        with kobo_workon(env.kf_virtualenv_name):
             # run("echo 'from django.contrib.auth.models import User; print User.objects.count()' | python manage.py shell")
             run("python manage.py syncdb --all")
             run("python manage.py migrate")
