@@ -68,3 +68,4 @@ def deploy(deployment_name, branch='master'):
             run("python manage.py collectstatic --noinput")
 
     run("sudo service uwsgi reload")
+    sudo("service celeryd restart")
