@@ -50,7 +50,10 @@ define 'cs!xlform/model.choices', [
       return
 
     clone: () ->
-      @
+      json = @toJSON()
+      delete json.name
+      return new choices.ChoiceList(json)
+
     toJSON: ()->
       @finalize()
 
