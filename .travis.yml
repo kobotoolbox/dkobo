@@ -11,8 +11,6 @@ before_install:
 - gem install sass
 - npm install --save-dev
 - bower install
-before_deploy:
-- git fetch --unshallow
 script:
 - python manage.py test
 - grunt test
@@ -22,12 +20,6 @@ install:
 - pip install -r requirements.txt
 - python manage.py syncdb --noinput --settings=dkobo.settings
 - python manage.py migrate --noinput --settings=dkobo.settings
-deploy:
-  provider: heroku
-  app: kobo-dev
-  api_key:
-    secure: pkzN8bdqtKHXg4JdrOu/I3oRjycpYR5hDJcVVozuM6UL+cxYNEIXTNzpkySWRAmCx4c0Ay8BMjs4E0GTxooTjNlgDGtIvHTLJoO0H23aQh7QtfGAfPt8kR7Up6LXalgD+DcqH4RrSt4yNITk/7X3KW0wokwVQzT8pMjkNr7Dg7U=
-  strategy: git
 
 # Deploy to kf-staging.kobotoolbox.org, based on
 # http://docs.travis-ci.com/user/deployment/custom/
