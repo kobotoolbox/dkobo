@@ -41,7 +41,10 @@ define 'cs!xlform/model.rowDetailMixins', [
 
   ValidationLogicMixin =
     getValue: () ->
-      @serialize()
+      v = @serialize()
+      if v is "undefined"
+        v = ""
+      v
     postInitialize: () ->
       survey = @getSurvey()
       model_factory = new $modelRowDetailValidationLogic.ValidationLogicModelFactory survey
