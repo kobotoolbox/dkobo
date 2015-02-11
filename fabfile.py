@@ -9,8 +9,9 @@ def kobo_workon(venv_name):
 
 DEPLOYMENTS = {}
 IMPORTED_DEPLOYMENTS = {}
-if os.path.exists('deployments.json'):
-    with open('deployments.json', 'r') as f:
+deployments_file = os.environ.get('DEPLOYMENTS_JSON', 'deployments.json')
+if os.path.exists(deployments_file):
+    with open(deployments_file, 'r') as f:
         IMPORTED_DEPLOYMENTS = json.load(f)
 
 def exit_with_error(message):
