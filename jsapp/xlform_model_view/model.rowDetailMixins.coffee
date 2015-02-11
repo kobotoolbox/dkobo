@@ -19,7 +19,11 @@ define 'cs!xlform/model.rowDetailMixins', [
   # the attribute in XLF.RowDetailMixin
   SkipLogicDetailMixin =
     getValue: ()->
-      @serialize()
+      v = @serialize()
+      if v is "undefined"
+        console?.error("Serialized value is returning a string, undefined")
+        v = ""
+      v
 
     postInitialize: ()->
       # TODO: get skip logic factories connected
