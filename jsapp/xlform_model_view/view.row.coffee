@@ -126,7 +126,7 @@ define 'cs!xlform/view.row', [
     _deleteGroup: () =>
       @model.splitApart()
       @model._parent._parent.trigger('remove', @model)
-      @$el.remove()
+      @$el.detach()
 
     render: ->
       if !@already_rendered
