@@ -5,7 +5,7 @@
 #### A django project for developing components of the KoBoToolbox, including the new version of KoBoForm
 ------------------------------
 
-### Installation
+### Installation of Python / Django Components
 
 1. Clone the project:
 
@@ -71,28 +71,11 @@
     `python manage.py runserver` OR (when actively developing the application) <br>
     `python manage.py gruntserver` _This is an alias for running 'grunt' in the background._
 
-------------
+### Building the Client Side Libraries
 
-### Production environment variables
+The form builder coffeescript code is compiled into a single "dkobo_xlform.js" file which depends on underscore.js, backbone.js, jquery, and a handful of bower-installable plugins.
 
-    DJANGO_DEBUG=False
-    DJANGO_SECRET_KEY=<use a unique django secret key here>
-    
-    The server should run in development / debug mode by default, but if you want to change it you can run the command
-
-    `source scripts/set_debug.sh true` #sets development mode<br>
-    or<br>
-    
-    LOCAL:  source scripts/set_debug.sh true
-    LOCAL:  source scripts/set_debug.sh false
-    HEROKU: sh scripts/set_debug.sh --heroku true
-    HEROKU: sh scripts/set_debug.sh --heroku false
-    `source scripts/set_debug.sh false` #sets production mode
-
-### Grunt commands
-
-###### grunt (no arguments)
-  _default task: triggers `requirejs:compile_xlform`, `build_css`, and `watch` for changes_
+_Note: You must run the step "Install javascript dependencies" from above_
 
 ###### grunt build
   _triggers `requirejs:compile_xlform`, `build_css`_
