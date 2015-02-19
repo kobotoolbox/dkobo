@@ -1,19 +1,21 @@
 define 'cs!xlform/mv.skipLogicHelpers', [
-        'xlform/model.skipLogicParser'
+        'xlform/model.skipLogicParser',
+        'cs!xlform/view.widgets'
         ], (
             $skipLogicParser,
+            $viewWidgets
             )->
 
   skipLogicHelpers = {}
 
   class skipLogicHelpers.SkipLogicHelperFactory
+    constructor: (@model_factory, @view_factory, @survey, @current_question, @serialized_criteria) ->
     create_presenter: (criterion_model, criterion_view, builder) ->
       return new skipLogicHelpers.SkipLogicPresenter criterion_model, criterion_view, builder
     create_builder: () ->
       return new skipLogicHelpers.SkipLogicBuilder @model_factory, @view_factory, @survey, @current_question, @
     create_context: () ->
       return new skipLogicHelpers.SkipLogicHelperContext @model_factory, @view_factory, @, @serialized_criteria
-    constructor: (@model_factory, @view_factory, @survey, @current_question, @serialized_criteria) ->
 
   class skipLogicHelpers.SkipLogicPresentationFacade
     constructor: (@model_factory, @helper_factory, @view_factory) ->
@@ -36,38 +38,35 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       @builder.operator_type = operator_type = @model.get('operator').get_type()
 
       @view.change_operator @builder.build_operator_view question_type
-      @view.operator_picker_view.fill_value @model.get('operator').get_value()
+      @view.operator_picker_view.val @model.get('operator').get_value()
       @view.attach_operator()
 
       @builder.question_type = question_type
 
-      response_view = @builder.build_response_view @model._get_question(), question_type, operator_type
-      response_view.model = @model.get 'response_value'
-      @view.change_response response_view
-      @view.attach_response()
-      @view.response_value_view.fill_value @model.get('response_value').get('value')
-      @determine_add_new_criterion_visibility()
-      @builder.current_question.get('relevant').set 'value', @serialize_all()
+      @change_response_view question_type, @model.get('operator').get_type()
+
+      @finish_changing()
 
     change_operator: (operator_id) ->
       @model.change_operator operator_id
-      question_type = @model._get_question().get_type()
 
-      @builder.operator_type = operator_type = @model.get('operator').get_type()
+      @change_response_view @model._get_question().get_type(), @model.get('operator').get_type()
 
-      response_view = @builder.build_response_view @model._get_question(), question_type, operator_type
-      response_view.model = @model.get('response_value')
-
-      @view.change_response response_view
-      @view.attach_response()
-      @view.response_value_view.fill_value @model.get('response_value').get('value')
-
-      @view.operator_picker_view.set_style()
-      @determine_add_new_criterion_visibility()
-      @builder.current_question.get('relevant').set 'value', @serialize_all()
+      @finish_changing()
 
     change_response: (response_text) ->
       @model.change_response response_text
+      @finish_changing()
+
+    change_response_view: (question_type, operator_type) ->
+      response_view = @builder.build_response_view @model._get_question(), question_type, operator_type
+      response_view.model = @model.get 'response_value'
+
+      @view.change_response response_view
+      @view.attach_response()
+      @view.response_value_view.val @model.get('response_value').get('value')
+
+    finish_changing: () ->
       @determine_add_new_criterion_visibility()
       @builder.current_question.get('relevant').set 'value', @serialize_all()
 
@@ -77,7 +76,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
         $add_new_criterion_button.hide()
       else if @model.get('operator').get_type().id == 1
         $add_new_criterion_button.show()
-      else if @model.get('response_value').get('value')  == '' || @model.get('response_value').isValid() == false
+      else if @model.get('response_value').get('value')  in ['', undefined] || @model.get('response_value').isValid() == false
         $add_new_criterion_button.hide()
       else
         $add_new_criterion_button.show()
@@ -100,9 +99,9 @@ define 'cs!xlform/mv.skipLogicHelpers', [
     render: (@destination) ->
       @view.question_picker_view = @builder.build_question_view()
       @view.render()
-      @view.question_picker_view.fill_value(@model.get('question_cid'))
-      @view.operator_picker_view.fill_value(@model.get('operator').get_value())
-      @view.response_value_view.fill_value(@model.get('response_value')?.get('value'))
+      @view.question_picker_view.val @model.get('question_cid')
+      @view.operator_picker_view.val @model.get('operator').get_value()
+      @view.response_value_view.val @model.get('response_value')?.get('value')
       @view.attach_to(destination)
 
 
@@ -173,6 +172,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
         presenter.$add_new_criterion_button = @$add_new_criterion_button
         presenter.serialize_all = _.bind @serialize, @
         presenter.render @destination
+
     serialize: () ->
       serialized = _.map @presenters, (presenter) ->
         presenter.serialize()
@@ -187,7 +187,8 @@ define 'cs!xlform/mv.skipLogicHelpers', [
     remove: (id) ->
       _.each @presenters, (presenter, index) =>
         if presenter? && presenter.model.cid == id
-          @presenters.splice(index, 1)
+          presenter = @presenters.splice(index, 1)
+          presenter[0].view.$el.remove()
 
       if @presenters.length == 0
         @context.use_mode_selector_helper()
@@ -195,6 +196,13 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       @view = @view_factory.create_criterion_builder_view()
       @view.criterion_delimiter = (separator || 'and').toLowerCase()
       @view.facade = @
+
+      @builder.survey.on 'sortablestop', () =>
+        questions = builder.questions()
+        _.each @presenters, (presenter) =>
+          if !(presenter.model._get_question() in questions)
+            @remove presenter.model.cid
+
     switch_editing_mode: () ->
       @builder.build_hand_code_criteria @serialize()
 
@@ -267,7 +275,19 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       @view_factory.create_operator_picker operators
 
     build_question_view: () ->
-      @view_factory.create_question_picker @questions()
+      model = new $viewWidgets.DropDownModel()
+      set_options = () =>
+        options = _.map @questions(), (row) ->
+          value: row.cid
+          text: row.getValue("label")
+
+        options.unshift value: -1, text: 'Select question from list'
+        model.set 'options', options
+
+      set_options()
+      @survey.on 'sortablestop', set_options
+
+      @view_factory.create_question_picker model
 
     build_response_view: (question, question_type, operator_type) ->
       responses = null
@@ -278,38 +298,39 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       response_type = if operator_type.response_type? then operator_type.response_type else question_type.response_type
 
       @view_factory.create_response_value_view(response_type, responses)
-    build_response_model: (question_type) ->
-      @model_factory.create_response_model question_type.response_type
 
     build_criterion_logic: (criterion) =>
       @operator_type = _.find skipLogicHelpers.operator_types, (op_type) ->
           criterion.operator in op_type.parser_name
 
-      question = @survey.findRowByName criterion.name
+      question = @_get_question criterion
       if !question
         return false
 
-      @question_type = question.get_type()
+      question_type = question.get_type()
 
-      [operator_model, operator_picker_view] = @build_operator_logic @question_type, @operator_type, criterion
+      [operator_model, operator_picker_view] = @build_operator_logic question_type, @operator_type, criterion
 
       criterion_model = @model_factory.create_criterion_model()
       criterion_model.set('operator', operator_model)
-      criterion_model.change_question @survey.findRowByName(criterion.name).cid
+      criterion_model.change_question question.cid
 
       question_picker_view = @build_question_view()
 
-      response_value_model = @build_response_model @question_type
+      response_value_model = @model_factory.create_response_model question_type.response_type
       criterion_model.set('response_value', response_value_model)
       response_value_model.set('value', criterion.response_value)
 
-      response_value_view = @build_response_view question, @question_type, @operator_type
+      response_value_view = @build_response_view question, question_type, @operator_type
       response_value_view.model = response_value_model
 
       criterion_view = @view_factory.create_criterion_view question_picker_view, operator_picker_view, response_value_view
       criterion_view.model = criterion_model
 
       new skipLogicHelpers.SkipLogicPresenter(criterion_model, criterion_view, @)
+
+    _get_question: (criterion) ->
+      @survey.findRowByName criterion.name
 
     build_empty_criterion_logic: () =>
       criterion_model = @model_factory.create_criterion_model()
@@ -414,8 +435,8 @@ define 'cs!xlform/mv.skipLogicHelpers', [
     {
       id: 2
       type: 'equality'
-      label: 'Was'
-      negated_label: 'Was not'
+      label: ''
+      negated_label: 'not'
       abbreviated_label: '='
       abbreviated_negated_label: '!='
       parser_name: ['resp_equals', 'resp_notequals', 'multiplechoice_selected', 'multiplechoice_notselected']
@@ -429,8 +450,8 @@ define 'cs!xlform/mv.skipLogicHelpers', [
     {
       id: 3
       type: 'equality'
-      label: 'Was Greater Than'
-      negated_label: 'Was Less Than'
+      label: 'Greater Than'
+      negated_label: 'Less Than'
       abbreviated_label: '>'
       abbreviated_negated_label: '<'
       parser_name: ['resp_greater', 'resp_less']
@@ -442,8 +463,8 @@ define 'cs!xlform/mv.skipLogicHelpers', [
     {
       id: 4
       type: 'equality'
-      label: 'Was Greater Than or Equal to'
-      negated_label: 'Was Less Than or Equal to'
+      label: 'Greater Than or Equal to'
+      negated_label: 'Less Than or Equal to'
       abbreviated_label: '>='
       abbreviated_negated_label: '<='
       parser_name: ['resp_greaterequals', 'resp_lessequals']

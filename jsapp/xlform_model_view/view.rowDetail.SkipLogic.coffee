@@ -1,100 +1,16 @@
 define 'cs!xlform/view.rowDetail.SkipLogic', [
         'backbone',
-        'xlform/model.rowDetails.skipLogic'
+        'xlform/model.rowDetails.skipLogic',
+        'cs!xlform/view.widgets'
         ], (
             Backbone,
-            $modelRowDetailsSkipLogic
+            $modelRowDetailsSkipLogic,
+            $viewWidgets
             )->
 
   viewRowDetailSkipLogic = {}
 
-  class viewRowDetailSkipLogic.Base extends Backbone.View
-    attach_to: ($el) ->
-      if $el instanceof viewRowDetailSkipLogic.Base
-        $el = $el.$el
-      $el.append(@el)
-
-    fill_value: (value) ->
-      @$el.val value
-      if !@$el.val()?
-        @$el.prop('selectedIndex', 0);
-
-    bind_event: (type, callback) ->
-      @$el.off type, callback
-      @$el.on type, callback
-    detach: () ->
-      @$el.remove()
-
-  class viewRowDetailSkipLogic.Label extends viewRowDetailSkipLogic.Base
-    tagName: 'label'
-    constructor: (@text, @className, @input) ->
-      super()
-    fill_value: () ->
-    bind_event: () ->
-    render: () ->
-      if @text
-        @$el.text(@text)
-      if @className
-        @$el.addClass @className
-      if @input
-        @$el.attr 'for', @input.cid
-      @
-
-  class viewRowDetailSkipLogic.EmptyView extends viewRowDetailSkipLogic.Base
-    attach_to: () -> return
-    fill_value: () -> return
-    bind_event: () -> return
-    render: () -> @
-
-  class viewRowDetailSkipLogic.TextArea extends viewRowDetailSkipLogic.Base
-    tagName: 'textarea'
-    render: () ->
-      @$el.val @text
-      @$el.addClass @className
-      @$el.on 'paste', (e) -> e.stopPropagation()
-
-      @
-    constructor: (@text, @className) -> super()
-
-  class viewRowDetailSkipLogic.TextBox extends viewRowDetailSkipLogic.Base
-    tagName: 'input'
-    render: () ->
-      @$el.attr 'type', 'text'
-      @$el.val @text
-      @$el.addClass @className
-      @$el.attr 'placeholder', @placeholder
-      @$el.on 'paste', (e) -> e.stopPropagation()
-
-      @
-    constructor: (@text, @className, @placeholder) -> super()
-
-  class viewRowDetailSkipLogic.Button extends viewRowDetailSkipLogic.Base
-    tagName: 'button'
-    render: () ->
-      @$el.html @text
-      @$el.addClass @className
-
-      @
-    constructor: (@text, @className) -> super()
-
-  class viewRowDetailSkipLogic.DropDown extends viewRowDetailSkipLogic.Base
-    tagName: 'select'
-    constructor: (@options) ->
-      super
-    render: () ->
-      options = ''
-      _.each @options, (option) ->
-        options += '<option value="' + option.value + '">' + option.text + '</option>'
-
-      @$el.html options
-      @
-
-    attach_to: (target) ->
-      super(target)
-      @$el.select2({ minimumResultsForSearch: -1, width: '20%' })
-
-
-  class viewRowDetailSkipLogic.SkipLogicCriterionBuilderView extends viewRowDetailSkipLogic.Base
+  class viewRowDetailSkipLogic.SkipLogicCriterionBuilderView extends $viewWidgets.Base
     events:
       "click .skiplogic__deletecriterion": "deleteCriterion"
       "click .skiplogic__addcriterion": "addCriterion"
@@ -130,34 +46,22 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
     markChangedDelimSelector: (evt) ->
       @criterion_delimiter = evt.target.value
 
-  class viewRowDetailSkipLogic.QuestionPicker extends viewRowDetailSkipLogic.Base
+  class viewRowDetailSkipLogic.QuestionPicker extends $viewWidgets.DropDown
     tagName: 'select'
     className: 'skiplogic__rowselect'
+
     render: () ->
-      render_questions = () =>
-        options = '<option value="-1">Select question from list</option>'
-        _.each @questions, (row) ->
-          name = row.cid
-          label = row.getValue("label")
-          options += '<option value="' + name + '">' + label + "</option>"
-        options
-
-      @$el.html render_questions()
-
+      super
       @$el.on 'change', () =>
         @$el.children(':first').prop('disabled', true)
-
       @
 
     attach_to: (target) ->
       target.find('.skiplogic__rowselect').remove()
       super(target)
-      @$el.select2({ minimumResultsForSearch: -1 })
 
-    constructor: (@questions, @survey) ->
-      super()
 
-  class viewRowDetailSkipLogic.OperatorPicker extends viewRowDetailSkipLogic.Base
+  class viewRowDetailSkipLogic.OperatorPicker extends $viewWidgets.Base
     tagName: 'div'
     className: 'skiplogic__expressionselect'
     render: () ->
@@ -179,26 +83,30 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       })
 
       if @value
-        @fill_value @value
+        @val @value
       else
         @value = @$el.select2('val')
 
-      @$el.on 'select2-close', () => @set_style()
+      @$el.on 'select2-close', () => @_set_style()
 
-    fill_value: (@value) ->
-      @$el.select2 'val', value
-      @set_style()
+    val: (value) ->
+      if value?
+        @$el.select2 'val', value
+        @_set_style()
+        @value = value
+      else
+        return @$el.val()
 
-    set_style: () -> #violates LSP
-      @$el.toggleClass 'skiplogic__expressionselect--no-response-value', +@value == 1 || +@value == -1
-      absolute_value = if @value >= 0 then +@value else -@value
+    _set_style: () -> #violates LSP
+      @$el.toggleClass 'skiplogic__expressionselect--no-response-value', +@$el.val() in [-1, 1]
+      absolute_value = if @$el.val() >= 0 then +@$el.val() else -@$el.val()
       if absolute_value == 0
         return
 
       operator = _.find @operators, (operator) ->
         operator.id == absolute_value
 
-      abbreviated_label = operator['abbreviated_' + (if +@value < 0 then 'negated_' else '') + 'label']
+      abbreviated_label = operator['abbreviated_' + (if +@$el.val() < 0 then 'negated_' else '') + 'label']
       chosen_element = @$el.parents('.skiplogic__criterion').find('.select2-container.skiplogic__expressionselect .select2-chosen')
       chosen_element.text(abbreviated_label)
 
@@ -206,20 +114,13 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       super()
 
 
-  class viewRowDetailSkipLogic.SkipLogicEmptyResponse extends viewRowDetailSkipLogic.Base
+  class viewRowDetailSkipLogic.SkipLogicEmptyResponse extends $viewWidgets.EmptyView
     className: 'skiplogic__responseval'
-    fill_value: (value) ->
-
     attach_to: (target) ->
       target.find('.skiplogic__responseval').remove()
       super(target)
 
-    bind_event: () ->
-      return
-
-    val: () -> null
-
-  class viewRowDetailSkipLogic.SkipLogicTextResponse extends viewRowDetailSkipLogic.TextBox
+  class viewRowDetailSkipLogic.SkipLogicTextResponse extends $viewWidgets.TextBox
     attach_to: (target) ->
       target.find('.skiplogic__responseval').remove()
       super
@@ -227,7 +128,6 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
     bind_event: (handler) ->
       @$el.on 'blur', handler
 
-    val: () => @$el.val()
     constructor: (text) ->
       super(text, "skiplogic__responseval", "response value")
 
@@ -236,8 +136,8 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       super
       @setElement('<div class="skiplogic__responseval-wrapper">' + @$el + '<div></div></div>')
       @$error_message = @$('div')
-      @model.bind('validated:invalid', @show_invalid_view)
-      @model.bind('validated:valid', @clear_invalid_view)
+      @model.bind 'validated:invalid', @show_invalid_view
+      @model.bind 'validated:valid', @clear_invalid_view
       @$input = @$el.find('input')
       @
     show_invalid_view: (model, errors) =>
@@ -248,20 +148,19 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
     clear_invalid_view: (model, errors) =>
       @$el.removeClass('textbox--invalid')
       @$error_message.html('')
-    fill_value: (value) ->
-      @$input.val(value)
 
     bind_event: (handler) ->
       @$input.on 'blur', handler
 
-    val: () =>
-      @$input.val()
+    val: (value) =>
+      if value?
+        @$input.val(value)
+      else
+        @$input.val()
 
-  class viewRowDetailSkipLogic.SkipLogicDropDownResponse extends viewRowDetailSkipLogic.DropDown
+  class viewRowDetailSkipLogic.SkipLogicDropDownResponse extends $viewWidgets.DropDown
     tagName: 'select'
     className: 'skiplogic__responseval'
-
-    val: () => @$el.val()
 
     attach_to: (target) ->
       target.find('.skiplogic__responseval').remove()
@@ -277,7 +176,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
         value: response.get('name')
       )
 
-  class viewRowDetailSkipLogic.SkipLogicCriterion extends viewRowDetailSkipLogic.Base
+  class viewRowDetailSkipLogic.SkipLogicCriterion extends $viewWidgets.Base
     tagName: 'div'
     className: 'skiplogic__criterion'
     render: () ->
@@ -357,7 +256,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       new viewRowDetailSkipLogic.OperatorPicker operators
     create_response_value_view: (type, responses) ->
       switch type
-        when 'empty' then new viewRowDetailSkipLogic.EmptyView()
+        when 'empty' then new viewRowDetailSkipLogic.SkipLogicEmptyResponse()
         when 'text' then new viewRowDetailSkipLogic.SkipLogicTextResponse
         when 'dropdown' then new viewRowDetailSkipLogic.SkipLogicDropDownResponse responses
         when 'integer', 'decimal' then new viewRowDetailSkipLogic.SkipLogicTextResponse
@@ -367,13 +266,13 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
     create_criterion_builder_view: () ->
       return new viewRowDetailSkipLogic.SkipLogicCriterionBuilderView()
     create_textarea: (text, className) ->
-      return new viewRowDetailSkipLogic.TextArea text, className
+      return new $viewWidgets.TextArea text, className
     create_button: (text, className) ->
-      return new viewRowDetailSkipLogic.Button text, className
+      return new $viewWidgets.Button text, className
     create_textbox: (text, className='', placeholder='') ->
-      return new viewRowDetailSkipLogic.TextBox(text, className, placeholder)
+      return new $viewWidgets.TextBox text, className, placeholder
     create_label: (text, className) ->
-      return new viewRowDetailSkipLogic.Label(text, className)
+      return new $viewWidgets.Label text, className
 
 
   viewRowDetailSkipLogic
