@@ -52,7 +52,7 @@ kobo.factory('$restApi', ['$resource', '$timeout', '$cacheFactory', '$rootScope'
                     return data.$promise;
                 }
                 if(nextPage) {
-                    isListing = true
+                    isListing = true;
                     data = pagingApi.get({ nextPage: nextPage}, function () {
                         if (nextPage === 1) {
                             _this.items = data.results;
@@ -67,7 +67,7 @@ kobo.factory('$restApi', ['$resource', '$timeout', '$cacheFactory', '$rootScope'
                         isListing = false;
                     });
                     cache.put('list:' + assetName, data);
-                    return data.$promise
+                    return data.$promise;
                 }
                 return data.$promise;
             }
@@ -92,7 +92,7 @@ kobo.factory('$restApi', ['$resource', '$timeout', '$cacheFactory', '$rootScope'
             remove: function (item) {
 
                 var callback = function () {
-                    var data = cache.remove('list:' + assetName);
+                    cache.remove('list:' + assetName);
 
                     _this.items = _.filter(_this.items, function (item) {
                         return !item.meta.isSelected
@@ -119,17 +119,22 @@ kobo.factory('$restApi', ['$resource', '$timeout', '$cacheFactory', '$rootScope'
             },
             save: function (item) {
                 var data = cache.remove('list:' + assetName),
-                    _this = this;
+                    _this = this,
+                    promise;
                 if (item.id) {
-                    return api.update(item, function () {
+                    promise = api.update(item, function () {
                         opts.updateCallback.apply(_this, arguments);
                         $rootScope.$broadcast('update:' + assetName);
                     }).$promise;
                 } else {
-                    return api.save(item, opts.saveCallback.bind(this)).$promise;
+                    promise = api.save(item, opts.saveCallback.bind(this)).$promise;
                     $rootScope.$broadcast('add:' + assetName);
                 }
                 $rootScope.$broadcast('save:' + assetName);
+                promise.then(function () {
+                    _this.list();
+                });
+                return promise;
             },
             get: function (args) {
                 return api.get(args, function () {
