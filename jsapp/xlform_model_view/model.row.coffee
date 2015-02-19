@@ -50,7 +50,20 @@ define 'cs!xlform/model.row', [
       if @_parent
         @_parent.remove @, opts
         @_parent = null
-      ``
+      ` `
+
+    selectableRows: () ->
+      questions = []
+      limit = false
+
+      non_selectable = ['datetime', 'time', 'note', 'calculate', 'group']
+
+      @getSurvey().forEachRow (question) =>
+        limit = limit || question is @
+        if !limit && question.getValue('type') not in non_selectable
+          questions.push question
+      , includeGroups:true
+      questions
 
     toJSON2: ->
       outObj = {}

@@ -22,7 +22,7 @@ dkobo/koboform/templates/sandbox.html
 dkobo/koboform/templates/sandbox-stub.html
 
 jsapp/components
-jsapp/coverage
+**/coverage
 jsapp/kobo.compiled
 
 .sass-cache/
@@ -32,3 +32,6 @@ dkobo.pyproj
 dkobo.pyproj.user
 dkobo.sln
 dkobo.v12.suo
+
+dkobo/static/js/*.html
+npm-debug.log

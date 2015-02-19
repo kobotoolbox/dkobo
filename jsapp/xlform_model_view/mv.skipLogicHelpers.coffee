@@ -8,25 +8,52 @@ define 'cs!xlform/mv.skipLogicHelpers', [
 
   skipLogicHelpers = {}
 
+  ###----------------------------------------------------------------------------------------------------------###
+  #-- Factories.RowDetail.SkipLogic.coffee
+  ###----------------------------------------------------------------------------------------------------------###
+
   class skipLogicHelpers.SkipLogicHelperFactory
     constructor: (@model_factory, @view_factory, @survey, @current_question, @serialized_criteria) ->
-    create_presenter: (criterion_model, criterion_view, builder) ->
-      return new skipLogicHelpers.SkipLogicPresenter criterion_model, criterion_view, builder
+    create_presenter: (criterion_model, criterion_view) ->
+      return new skipLogicHelpers.SkipLogicPresenter criterion_model, criterion_view, @current_question, @survey, @view_factory
     create_builder: () ->
       return new skipLogicHelpers.SkipLogicBuilder @model_factory, @view_factory, @survey, @current_question, @
     create_context: () ->
       return new skipLogicHelpers.SkipLogicHelperContext @model_factory, @view_factory, @, @serialized_criteria
 
+  ###----------------------------------------------------------------------------------------------------------###
+  #-- Facades.RowDetail.coffee
+  ###----------------------------------------------------------------------------------------------------------###
+
   class skipLogicHelpers.SkipLogicPresentationFacade
     constructor: (@model_factory, @helper_factory, @view_factory) ->
     serialize: () ->
-      @context ?= @helper_factory.create_context()
-      @context.serialize()
+      if !@context?
+        return @helper_factory.serialized_criteria
+      return @context.serialize()
     render: (target) ->
       @context ?= @helper_factory.create_context()
       @context.render target
 
+  ###----------------------------------------------------------------------------------------------------------###
+  #-- Presentation.RowDetail.SkipLogic.Presenter.coffee
+  ###----------------------------------------------------------------------------------------------------------###
+
   class skipLogicHelpers.SkipLogicPresenter
+    constructor: (@model, @view, @current_question, @survey, @view_factory) ->
+      @view.presenter = @
+      if @survey
+        @survey.on 'choice-list-update', (row, key) =>
+          if @destination
+            @render(@destination)
+
+        @survey.on 'row-detail-change', (row, key) =>
+          if @destination
+            if key == 'label'
+              @render(@destination)
+      else
+        console.error "this.survey is not yet available"
+
     change_question: (question_name) ->
       @model.change_question question_name
 
@@ -35,13 +62,11 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       @question.on 'remove', () =>
         @dispatcher.trigger 'remove:question', @
 
-      @builder.operator_type = operator_type = @model.get('operator').get_type()
+      operator_type = @model.get('operator').get_type()
 
-      @view.change_operator @builder.build_operator_view question_type
+      @view.change_operator @view_factory.create_operator_picker question_type
       @view.operator_picker_view.val @model.get('operator').get_value()
       @view.attach_operator()
-
-      @builder.question_type = question_type
 
       @change_response_view question_type, @model.get('operator').get_type()
 
@@ -59,7 +84,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       @finish_changing()
 
     change_response_view: (question_type, operator_type) ->
-      response_view = @builder.build_response_view @model._get_question(), question_type, operator_type
+      response_view = @view_factory.create_response_value_view @model._get_question(), question_type, operator_type
       response_view.model = @model.get 'response_value'
 
       @view.change_response response_view
@@ -68,7 +93,6 @@ define 'cs!xlform/mv.skipLogicHelpers', [
 
     finish_changing: () ->
       @determine_add_new_criterion_visibility()
-      @builder.current_question.get('relevant').set 'value', @serialize_all()
 
     determine_add_new_criterion_visibility: () ->
       $add_new_criterion_button = @$add_new_criterion_button
@@ -81,28 +105,13 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       else
         $add_new_criterion_button.show()
 
-    constructor: (@model, @view, @builder, @dispatcher) ->
-      @view.presenter = @
-      if @builder.survey
-        @builder.survey.on 'choice-list-update', (row, key) =>
-          if @destination
-            @render(@destination)
-
-        @builder.survey.on 'row-detail-change', (row, key) =>
-          if @destination
-            if key == 'label'
-              @render(@destination)
-      else
-        console.error "this.builder.survey is not yet available"
-
-
     render: (@destination) ->
-      @view.question_picker_view = @builder.build_question_view()
+      @view.question_picker_view = @view_factory.create_question_picker @current_question
       @view.render()
       @view.question_picker_view.val @model.get('question_cid')
       @view.operator_picker_view.val @model.get('operator').get_value()
       @view.response_value_view.val @model.get('response_value')?.get('value')
-      @view.attach_to(destination)
+      @view.attach_to destination
 
 
 
@@ -110,6 +119,93 @@ define 'cs!xlform/mv.skipLogicHelpers', [
 
     serialize: () ->
       @model.serialize()
+
+  class skipLogicHelpers.SkipLogicBuilder
+    constructor: (@model_factory, @view_factory, @survey, @current_question, @helper_factory) -> return
+    build_criterion_builder: (serialized_criteria) ->
+      if serialized_criteria == ''
+        return [[@build_empty_criterion()], 'and']
+
+      try
+        parsed = @_parse_skip_logic_criteria serialized_criteria
+      catch e
+        return false
+
+      criteria = _.filter(_.map(parsed.criteria, (criterion) =>
+          @criterion = criterion
+          @build_criterion()
+        )
+      , (item) -> !!item)
+      if criteria.length == 0
+        criteria.push @build_empty_criterion()
+
+      return [criteria, parsed.operator]
+
+    _parse_skip_logic_criteria: (criteria) ->
+      return $skipLogicParser criteria
+
+    build_operator_logic: (question_type) =>
+      return [
+        @build_operator_model(question_type, @_operator_type().symbol[@criterion.operator]),
+        @view_factory.create_operator_picker question_type
+      ]
+
+    build_operator_model: (question_type, symbol) ->
+      operator_type = @_operator_type()
+      return @model_factory.create_operator(
+        (if operator_type.type == 'existence' then 'existence' else question_type.equality_operator_type),
+        symbol,
+        operator_type.id)
+
+    _operator_type: () ->
+      return _.find skipLogicHelpers.operator_types, (op_type) ->
+          @criterion.operator in op_type.parser_name
+
+    build_criterion_logic: (operator_model, operator_picker_view, response_value_view) ->
+      criterion_model = @model_factory.create_criterion_model()
+      criterion_model.set('operator', operator_model)
+
+      criterion_view = @view_factory.create_criterion_view(
+        @view_factory.create_question_picker(@current_question),
+        operator_picker_view,
+        response_value_view
+      )
+      criterion_view.model = criterion_model
+      return @helper_factory.create_presenter criterion_model, criterion_view
+
+    build_criterion: () =>
+      question = @_get_question()
+      if !question
+        return false
+
+      question_type = question.get_type()
+
+      [operator_model, operator_picker_view] = @build_operator_logic question_type
+
+      response_value_view = @view_factory.create_response_value_view question, question_type, @_operator_type()
+
+      presenter = @build_criterion_logic operator_model, operator_picker_view, response_value_view
+      presenter.model.change_question question.cid
+      presenter.model.change_response criterion.response_value
+      response_value_view.model = presenter.model.get 'response_value'
+
+      return presenter
+    _get_question: () ->
+      @survey.findRowByName @criterion.name
+
+    build_empty_criterion: () =>
+      operator_picker_view = @view_factory.create_operator_picker null
+      response_value_view = @view_factory.create_response_value_view null
+
+      return @build_criterion_logic @model_factory.create_operator('empty'), operator_picker_view, response_value_view
+
+    questions: () ->
+      @current_question.selectableRows()
+
+
+  ###----------------------------------------------------------------------------------------------------------###
+  #-- Presentation.RowDetail.SkipLogic.State.coffee
+  ###----------------------------------------------------------------------------------------------------------###
 
   class skipLogicHelpers.SkipLogicHelperContext
     render: (@destination) ->
@@ -178,7 +274,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
         presenter.serialize()
       _.filter(serialized, (crit) -> crit).join(' ' + @view.criterion_delimiter + ' ')
     add_empty: () ->
-      presenter = @builder.build_empty_criterion_logic()
+      presenter = @builder.build_empty_criterion()
       presenter.$add_new_criterion_button = @$add_new_criterion_button
       presenter.serialize_all = _.bind @serialize, @
       presenter.render @destination
@@ -236,134 +332,6 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       @handcode_button = view_factory.create_button '<i>${}</i> Manually enter your skip logic in XLSForm code', 'skiplogic__button skiplogic__select-handcode'
       ###@view = @view_factory.create_skip_logic_picker_view(context)###
     switch_editing_mode: () -> return
-
-  class skipLogicHelpers.SkipLogicBuilder
-    # build_hand_code_criteria: (criteria) ->
-    #   new XLF.SkipLogicHandCodeFacade criteria, @, @view_factory
-    parse_skip_logic_criteria: (criteria) ->
-      return $skipLogicParser criteria
-
-    build_criterion_builder: (serialized_criteria) ->
-      if serialized_criteria == ''
-        return [[@build_empty_criterion_logic()], 'and']
-
-      try
-        parsed = @parse_skip_logic_criteria serialized_criteria
-      catch e
-        return false
-
-      criteria = _.filter(_.map(parsed.criteria, @build_criterion_logic), (item) -> !!item)
-      if criteria.length == 0
-        criteria.push @build_empty_criterion_logic()
-
-      return [criteria, parsed.operator]
-
-    build_operator_logic: (question_type, operator_type, criterion) =>
-      return [
-        @build_operator_model(question_type, operator_type, operator_type.symbol[criterion.operator]),
-        @build_operator_view(question_type)
-      ]
-
-    build_operator_model: (question_type, operator_type, symbol) ->
-      return @model_factory.create_operator(
-        (if operator_type.type == 'existence' then 'existence' else question_type.equality_operator_type),
-        symbol,
-        operator_type.id)
-
-    build_operator_view: (question_type) ->
-      operators = _.filter(skipLogicHelpers.operator_types, (op_type) -> op_type.id in question_type.operators)
-      @view_factory.create_operator_picker operators
-
-    build_question_view: () ->
-      model = new $viewWidgets.DropDownModel()
-      set_options = () =>
-        options = _.map @questions(), (row) ->
-          value: row.cid
-          text: row.getValue("label")
-
-        options.unshift value: -1, text: 'Select question from list'
-        model.set 'options', options
-
-      set_options()
-      @survey.on 'sortablestop', set_options
-
-      @view_factory.create_question_picker model
-
-    build_response_view: (question, question_type, operator_type) ->
-      responses = null
-
-      if question_type.response_type == 'dropdown'
-        responses = question.getList().options
-
-      response_type = if operator_type.response_type? then operator_type.response_type else question_type.response_type
-
-      @view_factory.create_response_value_view(response_type, responses)
-
-    build_criterion_logic: (criterion) =>
-      @operator_type = _.find skipLogicHelpers.operator_types, (op_type) ->
-          criterion.operator in op_type.parser_name
-
-      question = @_get_question criterion
-      if !question
-        return false
-
-      question_type = question.get_type()
-
-      [operator_model, operator_picker_view] = @build_operator_logic question_type, @operator_type, criterion
-
-      criterion_model = @model_factory.create_criterion_model()
-      criterion_model.set('operator', operator_model)
-      criterion_model.change_question question.cid
-
-      question_picker_view = @build_question_view()
-
-      response_value_model = @model_factory.create_response_model question_type.response_type
-      criterion_model.set('response_value', response_value_model)
-      response_value_model.set('value', criterion.response_value)
-
-      response_value_view = @build_response_view question, question_type, @operator_type
-      response_value_view.model = response_value_model
-
-      criterion_view = @view_factory.create_criterion_view question_picker_view, operator_picker_view, response_value_view
-      criterion_view.model = criterion_model
-
-      new skipLogicHelpers.SkipLogicPresenter(criterion_model, criterion_view, @)
-
-    _get_question: (criterion) ->
-      @survey.findRowByName criterion.name
-
-    build_empty_criterion_logic: () =>
-      criterion_model = @model_factory.create_criterion_model()
-      criterion_model.set('operator', @model_factory.create_operator('empty'))
-
-      question_picker_view = @build_question_view()
-
-
-      criterion_view = @view_factory.create_criterion_view(
-        question_picker_view,
-        @view_factory.create_operator_picker([]),
-        @view_factory.create_response_value_view('empty')
-      )
-
-      criterion_view.model = criterion_model
-
-      @helper_factory.create_presenter criterion_model, criterion_view, @
-
-    questions: () ->
-      questions = []
-      limit = false
-
-      non_selectable = ['datetime', 'time', 'note', 'calculate', 'group']
-
-      @survey.forEachRow (question) =>
-        limit = limit || question is @current_question
-        if !limit && question.getValue('type') not in non_selectable
-          questions.push question
-      , includeGroups:true
-      questions
-
-    constructor: (@model_factory, @view_factory, @survey, @current_question, @helper_factory) -> return
-
 
   skipLogicHelpers.question_types =
     default:

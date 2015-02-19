@@ -9,6 +9,9 @@ define 'cs!xlform/view.rowDetail.ValidationLogic', [
       return new viewRowDetailValidationLogic.ValidationLogicCriterionBuilder()
     create_question_picker: () ->
       return new viewRowDetailValidationLogic.ValidationLogicQuestionPicker
+    create_operator_picker: () ->
+      operators = _.filter($skipLogicHelpers.operator_types, (op_type) -> op_type.id != 1 && op_type.id in question_type.operators)
+      return new $skipLogicView.OperatorPicker operators
 
   class viewRowDetailValidationLogic.ValidationLogicCriterionBuilder extends $skipLogicView.SkipLogicCriterionBuilderView
     render: () ->

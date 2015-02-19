@@ -84,8 +84,11 @@ define 'cs!xlform/view.widgets', [
     model: viewWidgets.DropDownModel
     constructor: (@model) ->
       super
+      if !(@model instanceof viewWidgets.DropDownModel)
+        @model = new viewWidgets.DropDownModel()
+        @model.set 'options', model
       @model.on 'change:options', @render.bind(@)
-    render: () ->
+    render: () =>
       options = ''
       _.each @model.get('options'), (option) ->
         options += '<option value="' + option.value + '">' + option.text + '</option>'

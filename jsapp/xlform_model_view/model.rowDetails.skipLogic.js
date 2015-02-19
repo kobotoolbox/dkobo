@@ -14,6 +14,10 @@ var __hasProp = {}.hasOwnProperty,
 
 var rowDetailsSkipLogic = {};
 
+  /**-----------------------------------------------------------------------------------------------------------
+   * Factories.RowDetail.SkipLogic.coffee
+   -----------------------------------------------------------------------------------------------------------**/
+
 rowDetailsSkipLogic.SkipLogicFactory = (function() {
     SkipLogicFactory.prototype.create_operator = function(type, symbol, id) {
         var operator;
@@ -65,13 +69,17 @@ rowDetailsSkipLogic.SkipLogicFactory = (function() {
 
 })();
 
+  /**-----------------------------------------------------------------------------------------------------------
+   * Model.RowDetail.SkipLogic.Criterion.js
+   -----------------------------------------------------------------------------------------------------------**/
+
 rowDetailsSkipLogic.SkipLogicCriterion = (function(_super) {
     __extends(SkipLogicCriterion, _super);
 
     SkipLogicCriterion.prototype.serialize = function() {
         var response_model;
         response_model = this.get('response_value');
-        if ((response_model != null) && (response_model.get('value') != null) && (this.get('operator') != null) && (this.get('question_cid') != null) && response_model.isValid() !== false && this._get_question() !== undefined) {
+        if ((response_model != null)&& response_model.isValid() !== false && (response_model.get('value') != null) && (this.get('operator') != null) && (this.get('question_cid') != null) && this._get_question() !== undefined) {
             this._get_question().finalize();
             return this.get('operator').serialize(this._get_question().get('name').get('value'), response_model.get('value'));
         } else {
@@ -171,6 +179,10 @@ rowDetailsSkipLogic.SkipLogicCriterion = (function(_super) {
 
     return SkipLogicCriterion;
 })(Backbone.Model);
+
+  /**-----------------------------------------------------------------------------------------------------------
+   * Model.RowDetail.SkipLogic.Operators.js
+   -----------------------------------------------------------------------------------------------------------**/
 
 rowDetailsSkipLogic.Operator = (function(_super) {
     __extends(Operator, _super);
@@ -289,6 +301,10 @@ rowDetailsSkipLogic.SelectMultipleSkipLogicOperator = (function(_super) {
     return SelectMultipleSkipLogicOperator;
 
 })(rowDetailsSkipLogic.SkipLogicOperator);
+
+  /**-----------------------------------------------------------------------------------------------------------
+   * Model.RowDetail.SkipLogic.Responses.js
+   -----------------------------------------------------------------------------------------------------------**/
 
 rowDetailsSkipLogic.ResponseModel = (function(_super) {
     __extends(ResponseModel, _super);

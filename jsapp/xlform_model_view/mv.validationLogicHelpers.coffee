@@ -23,28 +23,15 @@ define 'cs!xlform/mv.validationLogicHelpers', [
     _get_question: () ->
       @current_question
 
-    build_empty_criterion_logic: () ->
-      criterion_model = @model_factory.create_criterion_model()
-      criterion_model.set('operator', @model_factory.create_operator('empty'))
-      criterion_model.change_question(@current_question.cid)
-      question_picker_view = @build_question_view()
-      question_type = @current_question.get_type()
-      operator_type = $skipLogicHelpers.operator_types[(if question_type.operators[0] != 1 then question_type.operators[0] else question_type.operators[1])-1]
+    build_empty_criterion: () ->
+      operator_picker_view = @view_factory.create_operator_picker @current_question.get_type()
+      response_value_view = @view_factory.create_response_value_view null
 
-      operator_picker_view = @build_operator_view(question_type)
-      criterion_view = @view_factory.create_criterion_view(
-        question_picker_view,
-        operator_picker_view,
-        @build_response_view @current_question, question_type, operator_type
-      )
+      presenter = @build_criterion_logic @model_factory.create_operator('empty'), operator_picker_view, response_value_view
 
-      criterion_view.model = criterion_model
+      presenter.model.change_question @current_question.cid
 
-      @helper_factory.create_presenter criterion_model, criterion_view, @
-
-    build_operator_view: (question_type) ->
-      operators = _.filter($skipLogicHelpers.operator_types, (op_type) -> op_type.id != 1 && op_type.id in question_type.operators)
-      @view_factory.create_operator_picker operators
+      return presenter
 
     questions: () ->
       [@current_question]
