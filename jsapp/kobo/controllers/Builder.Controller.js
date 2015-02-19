@@ -42,6 +42,7 @@ function BuilderController($scope, $rootScope, $routeParams, $routeTo, $miscUtil
     var surveyDraftApi = $api.surveys;
 
     function saveCallback() {
+        var deferred = $q.defer();
         if (this.validateSurvey()) {
             try {
                 var survey = this.survey.toCSV();
@@ -57,14 +58,25 @@ function BuilderController($scope, $rootScope, $routeParams, $routeTo, $miscUtil
             }).then(function() {
                 $rootScope.deregisterLocationChangeStart && $rootScope.deregisterLocationChangeStart();
                 $(window).unbind('beforeunload');
+                deferred.resolve();
                 $routeTo.forms();
             }, function(response) {
                 $miscUtils.alert('a server error occurred: \n' + response.statusText, 'Error');
+                deferred.reject();
             });
 
+        } else {
+            if (this.survey.errors.length) {
+                var error = 'Validation failed with the following errors:<br/>';
+
+                _.each(this.survey.errors, function (errorMessage) {
+                    error += '<br/> - ' + errorMessage;
+                });
+
+                $miscUtils.alert(error, 'Error');
+                deferred.reject();
+            }
         }
-        var deferred = $q.defer();
-        deferred.resolve();
         return deferred.promise;
     }
 

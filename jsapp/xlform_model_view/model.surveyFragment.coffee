@@ -46,7 +46,22 @@ define 'cs!xlform/model.surveyFragment', [
       passFunctionToMetaModel(@, "on")
       passFunctionToMetaModel(@, "trigger")
       super(a,b)
-    _validate: -> true
+    _validate: ->
+      @clearErrors()
+      isValid = true
+      if !@settings.get('form_id')
+        @addError('form id must not be empty')
+        isValid = false
+
+      if !@settings.get('form_title')
+        @addError('form title must not be empty')
+        isValid = false
+
+      return isValid
+    clearErrors: () ->
+      @errors = []
+    addError: (message) ->
+      @errors.push message
     linkUp: -> @invoke('linkUp')
     forEachRow: (cb, ctx={})->
       _forEachRow.apply(@, [cb, ctx])
