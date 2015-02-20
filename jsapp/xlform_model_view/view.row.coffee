@@ -103,7 +103,11 @@ define 'cs!xlform/view.row', [
       @$('.card__settings').detach()
 
     clone: (event) =>
-      @model.getSurvey().insert_row.call @model._parent._parent, @model, @model._parent.models.indexOf(@model) + 1
+      model = @model
+      if @model.get('type').get('typeId') in ['select_one', 'select_multiple']
+        model = @model.clone()
+
+      @model.getSurvey().insert_row.call model._parent._parent, model, model._parent.models.indexOf(@model) + 1
 
     add_row_to_question_library: (evt) =>
       evt.stopPropagation()

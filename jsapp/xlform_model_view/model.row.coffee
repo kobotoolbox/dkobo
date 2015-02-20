@@ -50,7 +50,7 @@ define 'cs!xlform/model.row', [
       if @_parent
         @_parent.remove @, opts
         @_parent = null
-      ``
+      return
 
     toJSON2: ->
       outObj = {}
@@ -151,6 +151,27 @@ define 'cs!xlform/model.row', [
             clname = $utils.txtid()
             cl.set("name", clname, silent: true)
           @set("value", "#{@get('typeId')} #{clname}")
+
+    clone: ->
+      attributes = {}
+      options =
+        _parent: @_parent
+        add: false
+        merge: false
+        remove: false
+        silent: true
+
+
+      _.each @attributes, (value, key) => attributes[key] = @getValue key
+
+      newRow = new row.Row attributes, options
+
+      newRowType = newRow.get('type')
+      if newRowType.get('typeId') in ['select_one', 'select_multiple']
+        newRowType.set 'list', @getList().clone()
+        newRowType.set 'listName', newRowType.get('list').get 'name'
+
+      return newRow
 
     finalize: ->
       existing_name = @get("name").getValue()
