@@ -1,7 +1,8 @@
 define 'cs!xlform/view.rowDetail.ValidationLogic', [
   'cs!xlform/view.rowDetail.SkipLogic',
-  'cs!xlform/view.widgets'
-], ($skipLogicView, $viewWidgets) ->
+  'cs!xlform/view.widgets',
+  'cs!xlform/mv.skipLogicHelpers'
+], ($skipLogicView, $viewWidgets, $skipLogicHelpers) ->
 
   viewRowDetailValidationLogic = {}
   class viewRowDetailValidationLogic.ValidationLogicViewFactory extends $skipLogicView.SkipLogicViewFactory
@@ -9,7 +10,7 @@ define 'cs!xlform/view.rowDetail.ValidationLogic', [
       return new viewRowDetailValidationLogic.ValidationLogicCriterionBuilder()
     create_question_picker: () ->
       return new viewRowDetailValidationLogic.ValidationLogicQuestionPicker
-    create_operator_picker: () ->
+    create_operator_picker: (question_type) ->
       operators = _.filter($skipLogicHelpers.operator_types, (op_type) -> op_type.id != 1 && op_type.id in question_type.operators)
       return new $skipLogicView.OperatorPicker operators
 

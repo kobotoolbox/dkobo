@@ -81,16 +81,15 @@ define 'cs!xlform/view.widgets', [
 
   class viewWidgets.DropDown extends viewWidgets.Base
     tagName: 'select'
-    model: viewWidgets.DropDownModel
-    constructor: (@model) ->
+    constructor: (@options) ->
       super
-      if !(@model instanceof viewWidgets.DropDownModel)
-        @model = new viewWidgets.DropDownModel()
-        @model.set 'options', model
-      @model.on 'change:options', @render.bind(@)
+      if !(@options instanceof viewWidgets.DropDownModel)
+        @options = new viewWidgets.DropDownModel()
+        @options.set 'options', options
+      @options.on 'change:options', @render.bind(@)
     render: () =>
       options = ''
-      _.each @model.get('options'), (option) ->
+      _.each @options.get('options'), (option) ->
         options += '<option value="' + option.value + '">' + option.text + '</option>'
 
       @$el.html options

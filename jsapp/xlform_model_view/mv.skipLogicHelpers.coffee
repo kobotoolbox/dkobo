@@ -1,9 +1,7 @@
 define 'cs!xlform/mv.skipLogicHelpers', [
-        'xlform/model.skipLogicParser',
-        'cs!xlform/view.widgets'
+        'xlform/model.skipLogicParser'
         ], (
-            $skipLogicParser,
-            $viewWidgets
+            $skipLogicParser
             )->
 
   skipLogicHelpers = {}
@@ -43,7 +41,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
     constructor: (@model, @view, @current_question, @survey, @view_factory) ->
       @view.presenter = @
       if @survey
-        @survey.on 'choice-list-update', (row, key) =>
+        @survey.on 'choice-list-update', () =>
           if @destination
             @render(@destination)
 
@@ -61,8 +59,6 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       question_type = @question.get_type()
       @question.on 'remove', () =>
         @dispatcher.trigger 'remove:question', @
-
-      operator_type = @model.get('operator').get_type()
 
       @view.change_operator @view_factory.create_operator_picker question_type
       @view.operator_picker_view.val @model.get('operator').get_value()
@@ -158,8 +154,8 @@ define 'cs!xlform/mv.skipLogicHelpers', [
         operator_type.id)
 
     _operator_type: () ->
-      return _.find skipLogicHelpers.operator_types, (op_type) ->
-          @criterion.operator in op_type.parser_name
+      return _.find skipLogicHelpers.operator_types, (op_type) =>
+          @criterion?.operator in op_type.parser_name
 
     build_criterion_logic: (operator_model, operator_picker_view, response_value_view) ->
       criterion_model = @model_factory.create_criterion_model()
@@ -186,7 +182,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
 
       presenter = @build_criterion_logic operator_model, operator_picker_view, response_value_view
       presenter.model.change_question question.cid
-      presenter.model.change_response criterion.response_value
+      presenter.model.change_response @criterion.response_value
       response_value_view.model = presenter.model.get 'response_value'
 
       return presenter

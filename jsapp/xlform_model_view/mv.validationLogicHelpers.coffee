@@ -6,8 +6,8 @@ define 'cs!xlform/mv.validationLogicHelpers', [
   validationLogicHelpers = {}
 
   class validationLogicHelpers.ValidationLogicHelperFactory extends $skipLogicHelpers.SkipLogicHelperFactory
-    create_presenter: (criterion_model, criterion_view, builder) ->
-      return new validationLogicHelpers.ValidationLogicPresenter criterion_model, criterion_view, builder
+    create_presenter: (criterion_model, criterion_view) ->
+      return new validationLogicHelpers.ValidationLogicPresenter criterion_model, criterion_view, @current_question, @survey, @view_factory
     create_builder: () ->
       return new validationLogicHelpers.ValidationLogicBuilder @model_factory, @view_factory, @survey, @current_question, @
     create_context: () ->
@@ -17,7 +17,7 @@ define 'cs!xlform/mv.validationLogicHelpers', [
     change_question: () -> return
 
   class validationLogicHelpers.ValidationLogicBuilder extends $skipLogicHelpers.SkipLogicBuilder
-    parse_skip_logic_criteria: (criteria) ->
+    _parse_skip_logic_criteria: (criteria) ->
       return $validationLogicParser criteria
 
     _get_question: () ->
@@ -25,7 +25,8 @@ define 'cs!xlform/mv.validationLogicHelpers', [
 
     build_empty_criterion: () ->
       operator_picker_view = @view_factory.create_operator_picker @current_question.get_type()
-      response_value_view = @view_factory.create_response_value_view null
+
+      response_value_view = @view_factory.create_response_value_view @current_question, @current_question.get_type(), @_operator_type()
 
       presenter = @build_criterion_logic @model_factory.create_operator('empty'), operator_picker_view, response_value_view
 
@@ -35,6 +36,12 @@ define 'cs!xlform/mv.validationLogicHelpers', [
 
     questions: () ->
       [@current_question]
+    _operator_type: () ->
+      operator_type = super
+      if !operator_type?
+        operator_type_id = @current_question.get_type().operators[0]
+        operator_type = $skipLogicHelpers.operator_types[if operator_type_id == 1 then @current_question.get_type().operators[1] else operator_type_id]
+      return operator_type
 
   class validationLogicHelpers.ValidationLogicHelperContext extends $skipLogicHelpers.SkipLogicHelperContext
     use_mode_selector_helper: () ->
@@ -42,6 +49,8 @@ define 'cs!xlform/mv.validationLogicHelpers', [
       @render @destination
     use_hand_code_helper: () ->
       @state = new validationLogicHelpers.ValidationLogicHandCodeHelper(@state.serialize(), @builder, @view_factory, @)
+      if @questionTypeHasNoValidationOperators()
+        @state.button = @view_factory.create_empty()
       @render @destination
       return
     constructor: (@model_factory, @view_factory, @helper_factory, serialized_criteria) ->

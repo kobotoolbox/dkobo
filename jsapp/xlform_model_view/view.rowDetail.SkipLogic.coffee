@@ -38,6 +38,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       """)
 
       delimSelect = @$(".skiplogic__delimselect").val(@criterion_delimiter)
+      delimSelect.children('[value=' + @criterion_delimiter + ']').attr('selected', 'selected')
 
       @
 
@@ -57,12 +58,15 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
     className: 'skiplogic__criterion'
     render: () ->
 
-      @question_picker_view.render()
+      if !@alreadyRendered
+        @question_picker_view.render()
 
-      @$el.append $("""<i class="skiplogic__deletecriterion fa fa-trash-o" data-criterion-id="#{@model.cid}"></i>""")
+        @$el.append $("""<i class="skiplogic__deletecriterion fa fa-trash-o" data-criterion-id="#{@model.cid}"></i>""")
 
       @change_operator @operator_picker_view
       @change_response @response_value_view
+
+      @alreadyRendered = true
 
       @
 
@@ -313,6 +317,8 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       return new $viewWidgets.TextBox text, className, placeholder
     create_label: (text, className) ->
       return new $viewWidgets.Label text, className
+    create_empty: () ->
+      return new $viewWidgets.EmptyView()
 
 
   viewRowDetailSkipLogic
