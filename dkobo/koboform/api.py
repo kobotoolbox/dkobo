@@ -56,6 +56,11 @@ class TagViewset(viewsets.ModelViewSet):
     model = Tag
     serializer_class = TagSerializer
 
+    def get_queryset(self, *args, **kwargs):
+        user = self.request.user
+        ids = user.survey_drafts.all().values_list('id', flat=True)
+        return Tag.objects.filter(taggit_taggeditem_items__object_id__in=ids).distinct()
+
 class LibraryAssetViewset(SurveyAssetViewset):
     exclude_asset_type = True
     serializer_class = DetailSurveyDraftSerializer
