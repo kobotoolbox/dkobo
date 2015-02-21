@@ -420,6 +420,44 @@ section.form-builder.active__sidebar .container {
     }
 }
 
+.questions__sidebar--tags-select {
+    position: relative;
+    margin-top: 10px;
+    margin-left: 5px;
+
+    i.fa {
+        color:#3fa2ee;
+        position: absolute;
+        left: 0px;
+        top: 5px;
+    }
+
+    ul.select2-choices {
+        border:none;
+        border-bottom: 2px dotted #797f83;
+        background:none;
+        width: 232px;
+        margin:0px;
+        margin-left:20px;
+        padding:0px;
+        padding-bottom: 3px;
+    }
+
+    .select2-container-multi.select2-container-active ul.select2-choices {
+        box-shadow: none;
+        border:none;
+        border-bottom: 2px dotted #797f83;
+    }
+
+    .select2-choices .select2-search-field input {
+        margin:0px;
+        font-size: 12px;
+        padding:0px;
+        height: 25px;
+        color: #222;
+    }
+}
+
 // switch icon when button is active for library sidebar
 .btn--utility.active__sidebar {
     background: transparent;

@@ -9,8 +9,9 @@ def kobo_workon(venv_name):
 
 DEPLOYMENTS = {}
 IMPORTED_DEPLOYMENTS = {}
-if os.path.exists('deployments.json'):
-    with open('deployments.json', 'r') as f:
+deployments_file = os.environ.get('DEPLOYMENTS_JSON', 'deployments.json')
+if os.path.exists(deployments_file):
+    with open(deployments_file, 'r') as f:
         IMPORTED_DEPLOYMENTS = json.load(f)
 
 def exit_with_error(message):
@@ -36,34 +37,34 @@ def setup_env(deployment_name):
     check_key_filename(deployment)
 
     env.virtualenv = os.path.join('/home', 'ubuntu', '.virtualenvs',
-                                  env.virtualenv_name, 'bin', 'activate')
+                                  env.kf_virtualenv_name, 'bin', 'activate')
     env.uwsgi_pidfile = os.path.join('/home', 'ubuntu', 'pids',
                                   'kobo-uwsgi-master.pid')
-    env.code_src = os.path.join(env.home, env.project)
-    env.pip_requirements_file = os.path.join(env.code_src,
+    env.kf_path = os.path.join(env.home, env.kf_path)
+    env.pip_requirements_file = os.path.join(env.kf_path,
                                              'requirements.txt')
 
 def deploy(deployment_name, branch='master'):
     setup_env(deployment_name)
-    with cd(env.code_src):
+    with cd(env.kf_path):
         run("git fetch origin")
         run("git checkout origin/%s" % branch)
         run('find . -name "*.pyc" -exec rm -rf {} \;')
         run('find . -type d -empty -delete')
 
-    with kobo_workon(env.virtualenv_name):
+    with kobo_workon(env.kf_virtualenv_name):
         run("pip install -r %s" % env.pip_requirements_file)
 
-    with cd(env.code_src):
+    with cd(env.kf_path):
         run("npm install")
         run("bower install")
         run("grunt build_all")
 
-        with kobo_workon(env.virtualenv_name):
+        with kobo_workon(env.kf_virtualenv_name):
             # run("echo 'from django.contrib.auth.models import User; print User.objects.count()' | python manage.py shell")
             run("python manage.py syncdb --all")
             run("python manage.py migrate")
             run("python manage.py compress")
             run("python manage.py collectstatic --noinput")
 
-    run("uwsgi --reload %s" % env.uwsgi_pidfile)
+    run("sudo service uwsgi reload")

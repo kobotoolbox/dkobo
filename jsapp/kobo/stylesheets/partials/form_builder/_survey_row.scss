@@ -123,9 +123,9 @@ $nested-btn--addrow-height: 24px;
     display: none;
 }
 
-// always display last row's button
-.survey__row:last-child .btn--addrow {
-    display:block !important;
+// display last row's button, but not for groups
+.survey-editor__list > .survey__row:not(.survey__row--group):last-child .btn--addrow {
+    display:block;
 }
 
 // helper class
