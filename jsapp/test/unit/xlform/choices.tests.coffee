@@ -60,3 +60,13 @@ define [
               ]
           }
       ])
+
+    describe 'Choicelist', ->
+      describe 'Clone method', ->
+        it 'Clones itself and all of its options', ->
+          yesnoClone = @yesno.clone()
+          expect(yesnoClone.options.length).toBe 2
+          expect(yesnoClone.options.at(0).get('name')).toBe 'yes'
+          expect(yesnoClone.options.at(1).get('name')).toBe 'no'
+          expect(yesnoClone.cid).not.toEqual @yesno.cid
+          expect(yesnoClone.get('name')).not.toBe @yesno.get('name')

@@ -47,7 +47,12 @@ define 'cs!xlform/model.choices', [
           })
           option.set("name", name)
         names.push name
-      ``
+      return
+
+    clone: () ->
+      json = @toJSON()
+      delete json.name
+      return new choices.ChoiceList(json)
 
     toJSON: ()->
       @finalize()

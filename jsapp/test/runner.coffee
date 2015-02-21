@@ -9,7 +9,7 @@ test_helper =
     questions:
       list: () -> return @items = _.clone test_helper.items, true
       get: sinon.stub()
-      save: sinon.stub()
+      save: sinon.stub().returns then: ()->
       remove: sinon.stub()
       reload: sinon.stub()
     tags:
