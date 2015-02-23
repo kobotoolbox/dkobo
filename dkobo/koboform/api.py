@@ -58,8 +58,19 @@ class TagViewset(viewsets.ModelViewSet):
 
     def get_queryset(self, *args, **kwargs):
         user = self.request.user
-        ids = user.survey_drafts.all().values_list('id', flat=True)
-        return Tag.objects.filter(taggit_taggeditem_items__object_id__in=ids).distinct()
+        if user.is_authenticated():
+            ids = user.survey_drafts.all().values_list('id', flat=True)
+            return Tag.objects.filter(taggit_taggeditem_items__object_id__in=ids).distinct()
+        else:
+            return Tag.objects.none()
+
+    def destroy(self, request, pk):
+        if request.user.is_authenticated():
+            tag = Tag.objects.get(id=pk)
+            items = SurveyDraft.objects.filter(user=request.user, tags__name=tag.name)
+            for item in items:
+                item.tags.remove(tag)
+            return HttpResponse("", status="204")
 
 class LibraryAssetViewset(SurveyAssetViewset):
     exclude_asset_type = True
