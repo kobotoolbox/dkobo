@@ -109,6 +109,10 @@ define 'cs!xlform/model.utils', [
       else
         regex = /\W+/g
       str = str.replace(regex, '_')
+      # possibly a bit specific, but removes an underscore from the end
+      # of the string
+      if str.match(/._$/)
+        str = str.replace(/_$/, '')
 
     if _.isNumber opts.characterLimit
       str = str.slice(0, opts.characterLimit)
