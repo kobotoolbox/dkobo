@@ -162,6 +162,9 @@ skip_logic_parser_tests = ->
       response_value: " hello"
     ]
 
+  it "doesn't parse compounded skip logic", () ->
+    expect(() -> XLF.skipLogicParser('${q1} + ${q2} + ${q3} < 4')).toThrow new Error('criterion not recognized: "${q1} + ${q2} + ${q3} < 4"')
+
 validation_logic_parser_tests = ->
   XLF = validationLogicParser: dkobo_xlform.model.utils.validationLogicParser
   it "parses multiple AND separated clauses", ->
