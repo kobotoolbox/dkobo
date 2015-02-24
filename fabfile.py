@@ -21,8 +21,13 @@ def exit_with_error(message):
 def check_key_filename(deployment_configs):
     if 'key_filename' in deployment_configs and \
        not os.path.exists(deployment_configs['key_filename']):
-        exit_with_error("Cannot find required permissions file: %s" %
-                        deployment_configs['key_filename'])
+        # Maybe the path contains a ~; try expanding that before failing
+        deployment_configs['key_filename'] = os.path.expanduser(
+            deployment_configs['key_filename']
+        )
+        if not os.path.exists(deployment_configs['key_filename']):
+            exit_with_error("Cannot find required permissions file: %s" %
+                            deployment_configs['key_filename'])
 
 def setup_env(deployment_name):
     deployment = DEPLOYMENTS.get(deployment_name, {})
@@ -68,3 +73,4 @@ def deploy(deployment_name, branch='master'):
             run("python manage.py collectstatic --noinput")
 
     run("sudo service uwsgi reload")
+    sudo("service celeryd restart")
