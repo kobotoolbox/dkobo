@@ -232,7 +232,7 @@ rowDetailsSkipLogic.SkipLogicOperator = (function(_super) {
     function SkipLogicOperator(symbol) {
         SkipLogicOperator.__super__.constructor.call(this);
         this.set('symbol', symbol);
-        this.set('is_negated', symbol === '!=');
+        this.set('is_negated', ['!=', '<', '<='].indexOf(symbol) > -1);
     }
 
     return SkipLogicOperator;
