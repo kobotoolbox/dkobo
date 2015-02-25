@@ -224,13 +224,13 @@ define 'cs!xlform/model.survey', [
 
   # Settings (assigned to each $survey.Survey instance)
   class Settings extends $base.BaseModel
-    # validation:
-    #   form_title:
-    #     required: true
-    #     invalidChars: '`'
-    #   form_id:
-    #     required: true
-    #     invalidChars: '`'
+    validation:
+      form_title:
+        required: true
+        invalidChars: '`'
+      form_id:
+        required: true
+        invalidChars: '`'
     defaults:
       form_title: "New form"
       form_id: "new_form"
