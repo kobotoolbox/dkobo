@@ -313,6 +313,8 @@ define 'cs!xlform/view.rowDetail', [
           @$('input[type=text]').val(modelValue)
           @listenForInputChange()
         else if $input.attr('type') == 'checkbox'
+          if @model.get('value') == 'field-list'
+            $input.prop('checked', true)
           $input.on 'change', () =>
             if $input.prop('checked')
               @model.set 'value', 'field-list'
