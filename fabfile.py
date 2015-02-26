@@ -51,7 +51,7 @@ def setup_env(deployment_name):
     env.pip_requirements_file = os.path.join(env.kf_path,
                                              'requirements.txt')
 
-def _deploy(deployment_name, ref):
+def deploy_ref(deployment_name, ref):
     setup_env(deployment_name)
     with cd(env.kf_path):
         run("git fetch origin")
@@ -89,7 +89,7 @@ def _deploy(deployment_name, ref):
 
 
 def deploy(deployment_name, branch='master'):
-    _deploy(deployment_name, 'origin/{}'.format(branch))
+    deploy_ref(deployment_name, 'origin/{}'.format(branch))
 
 
 def deploy_passing(deployment_name, branch='master'):
@@ -99,7 +99,7 @@ def deploy_passing(deployment_name, branch='master'):
     desired_commit = get_last_successfully_built_commit(branch)
     print 'Found passing commit {} for branch {}!'.format(desired_commit,
         branch)
-    _deploy(deployment_name, desired_commit)
+    deploy_ref(deployment_name, desired_commit)
 
 
 def get_last_successfully_built_commit(branch):
