@@ -209,7 +209,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
     constructor: (@criteria, @builder, @view_factory, @context) ->
       @$parent = $('<div>')
       @textarea = @view_factory.create_textarea @criteria, 'skiplogic__handcode-edit'
-      @button = @view_factory.create_button 'x', 'skiplogic-handcode__cancel'
+      @button = @view_factory.create_button '<i class="fa fa-trash-o"></i>', 'skiplogic-handcode__cancel'
 
   class skipLogicHelpers.SkipLogicModeSelectorHelper
     render: ($destination) ->
