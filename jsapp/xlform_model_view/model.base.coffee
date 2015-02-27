@@ -18,14 +18,14 @@ define 'cs!xlform/model.base', [
     invalidChars: (value, attr, customValue)->
       unless $viewUtils.Validator.__validators.invalidChars(value, customValue)
         "#{value} contains invalid characters";
-      unique: (value, attr, customValue, model)->
-        rows = model.getSurvey().rows.pluck(model.key)
-        values = _.map(rows, (rd)-> rd.get('value'))
-        unless $viewUtils.Validator.__validators.unique(value, values)
-          "Question name isn't unique"
-        else
-          ``
-    }
+    unique: (value, attr, customValue, model)->
+      rows = model.getSurvey().rows.pluck(model.key)
+      values = _.map(rows, (rd)-> rd.get('value'))
+      unless $viewUtils.Validator.__validators.unique(value, values)
+        "Question name isn't unique"
+      else
+        ``
+  }
 
   _.extend(Backbone.Model.prototype, validation.mixin);
 
