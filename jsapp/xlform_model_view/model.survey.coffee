@@ -225,13 +225,15 @@ define 'cs!xlform/model.survey', [
 
   # Settings (assigned to each $survey.Survey instance)
   class Settings extends $base.BaseModel
-    validation:
-      form_title:
-        required: true
-        invalidChars: '`'
-      form_id:
-        required: true
-        invalidChars: '`'
+    # !! Verify a fix before uncommenting this validation
+    # !! TP #1655, title validation always fails
+    # validation:
+    #   form_title:
+    #     required: true
+    #     invalidChars: '`'
+    #   form_id:
+    #     required: true
+    #     invalidChars: '`'
     defaults:
       form_title: "New form"
       form_id: "new_form"
