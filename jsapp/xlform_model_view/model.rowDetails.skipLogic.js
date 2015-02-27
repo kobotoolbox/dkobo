@@ -320,7 +320,7 @@ rowDetailsSkipLogic.IntegerResponseModel = (function(_super) {
 
     IntegerResponseModel.prototype.validation = {
         value: {
-            pattern: 'digits',
+            pattern: /^-?\d+$/,
             msg: 'Number must be integer'
         }
     };
