@@ -268,9 +268,14 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       super(target)
 
     bind_event: (handler) ->
-      handle_model_change = () =>
+      handle_model_change = (option) =>
+        current_value = @$el.val()
         @options = @rebuild_options()
         @render()
+        if current_value == option._previousAttributes.name
+          current_value = option.get('name')
+
+        @$el.val current_value
         handler()
         return
 
