@@ -567,7 +567,11 @@ skip_logic_helpers = (dkobo_xlform) ->
     _view_factory = null
     beforeEach () ->
       _model = sinon.stubObject $mRdsl.SkipLogicCriterion
-      _model._get_question.returns sinon.stubObject $model.Row
+      row_stub = sinon.stubObject $model.Row
+      row_stub._isSelectQuestion = () -> false
+
+      _model._get_question.returns row_stub
+
       _model.get.withArgs('operator').returns(sinon.stubObject $mRdsl.Operator)
       _model.get.withArgs('response_value').returns(sinon.stubObject $mRdsl.ResponseModel)
 
@@ -586,7 +590,9 @@ skip_logic_helpers = (dkobo_xlform) ->
       )
 
       _view_factory = sinon.stubObject $vRdsl.SkipLogicViewFactory
-      _view_factory.create_response_value_view.returns(sinon.stubObject $vRdsl.SkipLogicEmptyResponse)
+      response_view_stub = sinon.stubObject $vRdsl.SkipLogicEmptyResponse
+      response_view_stub.$el = trigger: sinon.stub()
+      _view_factory.create_response_value_view.returns(response_view_stub)
 
       _presenter = new $slh.SkipLogicPresenter _model, _view, _builder, null, _view_factory
       _presenter.determine_add_new_criterion_visibility = sinon.spy()
@@ -599,6 +605,7 @@ skip_logic_helpers = (dkobo_xlform) ->
         expect(_model.change_question).toHaveBeenCalledWith 'test'
       it 'attaches the response value model to the view', () ->
         response_view_stub = sinon.stubObject $vRdsl.SkipLogicEmptyResponse
+        response_view_stub.$el = trigger: sinon.stub()
         response_model_stub = sinon.stubObject $mRdsl.ResponseModel
         _model.get.withArgs('response_value').returns response_model_stub
         _view_factory.create_response_value_view.returns response_view_stub
@@ -638,6 +645,7 @@ skip_logic_helpers = (dkobo_xlform) ->
         expect(_model.change_operator).toHaveBeenCalledWith 'test'
       it 'binds the new response model to the response view', () ->
         response_view_stub = sinon.stubObject $vRdsl.SkipLogicEmptyResponse
+        response_view_stub.$el = trigger: sinon.stub()
         response_model_stub = sinon.stubObject $mRdsl.ResponseModel
         _model.get.withArgs('response_value').returns response_model_stub
 
@@ -698,6 +706,9 @@ skip_logic_helpers = (dkobo_xlform) ->
         sinon.stubObject $slh.SkipLogicPresenter
         sinon.stubObject $slh.SkipLogicPresenter
       ]
+
+      for presenter in _presenter_stubs
+        presenter.model = _get_question: sinon.stub()
 
       _facade = new $slh.SkipLogicCriterionBuilderHelper(
         _presenter_stubs

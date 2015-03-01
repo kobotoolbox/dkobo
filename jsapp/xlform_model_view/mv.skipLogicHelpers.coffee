@@ -98,7 +98,17 @@ define 'cs!xlform/mv.skipLogicHelpers', [
 
       @view.change_response response_view
       @view.attach_response()
-      @view.response_value_view.val @model.get('response_value').get('value')
+
+      response_value = response_view.model.get('value')
+
+      question = @model._get_question()
+      if (question._isSelectQuestion())
+        response_value = _.find(question.getList().options.models, (option) ->
+          option.get('name') == response_value).cid
+
+      @view.response_value_view.val response_value
+      response_view.$el.trigger('change')
+
 
     finish_changing: () ->
       @determine_add_new_criterion_visibility()
@@ -115,6 +125,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
         $add_new_criterion_button.show()
 
     render: (@destination) ->
+      @view.question_picker_view.detach()
       @view.question_picker_view = @view_factory.create_question_picker @current_question
       @view.render()
       @view.question_picker_view.val @model.get('question_cid')
@@ -122,7 +133,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       response_value = @model.get('response_value')?.get('value')
 
       question = @model._get_question()
-      if (question._isSelectQuestion())
+      if (question && question._isSelectQuestion())
         response_value = _.find(question.getList().options.models, (option) ->
           option.get('name') == response_value).cid
       @view.response_value_view.val response_value
@@ -303,16 +314,28 @@ define 'cs!xlform/mv.skipLogicHelpers', [
 
       if @presenters.length == 0
         @context.use_mode_selector_helper()
+
     constructor: (@presenters, separator, @builder, @view_factory, @context) ->
       @view = @view_factory.create_criterion_builder_view()
       @view.criterion_delimiter = (separator || 'and').toLowerCase()
       @view.facade = @
 
-      @builder.survey.on 'sortablestop', () =>
+      removeInvalidPresenters = () =>
         questions = builder.questions()
+        presenters_to_be_removed = []
         _.each @presenters, (presenter) =>
-          if !(presenter.model._get_question() in questions)
-            @remove presenter.model.cid
+          if presenter.model._get_question() && !(presenter.model._get_question() in questions)
+            presenters_to_be_removed.push presenter.model.cid
+
+        for presenter in presenters_to_be_removed
+          @remove presenter
+
+        if @presenters.length == 0
+          @context.use_mode_selector_helper()
+
+      @builder.survey.on 'sortablestop', removeInvalidPresenters
+
+      removeInvalidPresenters()
 
     switch_editing_mode: () ->
       @builder.build_hand_code_criteria @serialize()
