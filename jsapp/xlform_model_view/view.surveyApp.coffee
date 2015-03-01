@@ -149,7 +149,7 @@ define 'cs!xlform/view.surveyApp', [
         @$(".on-#{evtCode}").trigger(evtCode, row, key, val, ctxt)
       @$el.on "choice-list-update", (evt, clId) =>
         $(".on-choice-list-update[data-choice-list-cid='#{clId}']").trigger("rebuild-choice-list")
-        @survey.trigger 'choice-list-update'
+        @survey.trigger 'choice-list-update', clId
 
       @$el.on "survey__row-sortablestop", _.bind @surveyRowSortableStop, @
 

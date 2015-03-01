@@ -41,9 +41,19 @@ define 'cs!xlform/mv.skipLogicHelpers', [
     constructor: (@model, @view, @current_question, @survey, @view_factory) ->
       @view.presenter = @
       if @survey
-        @survey.on 'choice-list-update', () =>
-          if @destination
-            @render(@destination)
+        @survey.on 'choice-list-update', (cid) =>
+          question = @model._get_question()
+          if question._isSelectQuestion() && question.getList().cid == cid
+            options = _.map question.getList().options.models, (response) ->
+              text: response.get('label')
+              value: response.cid
+
+            response_picker_model = @view.response_value_view.options
+            current_response_value = @view.response_value_view.val()
+
+            response_picker_model.set 'options', options
+            @view.response_value_view.val(current_response_value)
+            @view.response_value_view.$el.trigger('change')
 
         @survey.on 'row-detail-change', (row, key) =>
           if @destination
@@ -76,6 +86,9 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       @finish_changing()
 
     change_response: (response_text) ->
+      question = @model._get_question()
+      if question._isSelectQuestion()
+        response_text = question.getList().options.get(response_text).get('name')
       @model.change_response response_text
       @finish_changing()
 
@@ -106,7 +119,13 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       @view.render()
       @view.question_picker_view.val @model.get('question_cid')
       @view.operator_picker_view.val @model.get('operator').get_value()
-      @view.response_value_view.val @model.get('response_value')?.get('value')
+      response_value = @model.get('response_value')?.get('value')
+
+      question = @model._get_question()
+      if (question._isSelectQuestion())
+        response_value = _.find(question.getList().options.models, (option) ->
+          option.get('name') == response_value).cid
+      @view.response_value_view.val response_value
       @view.attach_to destination
 
 

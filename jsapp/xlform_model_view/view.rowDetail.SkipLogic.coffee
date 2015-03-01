@@ -58,9 +58,8 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
     className: 'skiplogic__criterion'
     render: () ->
 
+      @question_picker_view.render()
       if !@alreadyRendered
-        @question_picker_view.render()
-
         @$el.append $("""<i class="skiplogic__deletecriterion fa fa-trash-o" data-criterion-id="#{@model.cid}"></i>""")
 
       @change_operator @operator_picker_view
@@ -242,7 +241,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       @$error_message.html('')
 
     bind_event: (handler) ->
-      @$input.on 'blur', handler
+      @$input.on 'change', handler
 
     val: (value) =>
       if value?
@@ -265,7 +264,7 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
     constructor: (@responses) ->
       super(_.map @responses.models, (response) ->
         text: response.get('label')
-        value: response.get('name')
+        value: response.cid
       )
 
   ###----------------------------------------------------------------------------------------------------------###
