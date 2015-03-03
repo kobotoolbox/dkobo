@@ -8,7 +8,7 @@ define 'cs!xlform/csv', ->
     constructor: (param, opts={})->
       if _isString param
         @string = param
-        rows = csv.toArray param
+        rows = csv.toArray @string
         @rows = arrayToObjects rows
         [@columns, @rowArray...] = rows
       else if _isArray param
@@ -158,6 +158,7 @@ define 'cs!xlform/csv', ->
   csv.toArray = (strData) ->
     if csv.settings.removeTrailingNewlines
       strData = removeTrailingNewlines(strData)
+    strData = strData.replace(/\\/g, '\\\\')
     strDelimiter = csv.settings.delimiter
 
     rows = []
