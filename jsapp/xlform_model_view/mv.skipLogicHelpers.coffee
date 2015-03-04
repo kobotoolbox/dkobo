@@ -332,7 +332,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       questions = []
       limit = false
 
-      non_selectable = ['datetime', 'time', 'note', 'calculate', 'group']
+      non_selectable = ['datetime', 'time', 'note', 'group']
 
       @survey.forEachRow (question) =>
         limit = limit || question is @current_question
