@@ -32,9 +32,19 @@ def summarize_survey(csv_survey, type):
     survey = create_survey_from_csv_text(csv_survey)
     if type == 'question':
         question_type = survey.children[0].type
+        label = survey.children[0].label
+        if question_type == 'calculate':
+            label = survey.children[0].calculation
+
+        if isinstance(label, dict):
+            _langs = label.keys()
+            if 'default' in _langs:
+                _langs.remove('default')
+            label = label[_langs[0]]
+
         return {
             'type': 'select_multiple' if question_type == 'select all that apply' else question_type,
-            'label': survey.children[0].calculation if question_type == 'calculate' else survey.children[0].label,
+            'label': label,
             'options': [option.label for option in survey.children[0].children]
         }
     else:
