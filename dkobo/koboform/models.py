@@ -66,13 +66,15 @@ class SurveyDraft(models.Model):
         import pyxform_utils
         return pyxform_utils.convert_csv_to_xls(self.body)
 
-    def save(self, *args, **kwargs):
+    def _summarize(self):
         try:
             self.summary = pyxform_utils.summarize_survey(self.body, self.asset_type)
         except Exception, err:
             self.summary = {'error': str(err)}
-        finally:
-            super(SurveyDraft, self).save(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        self._summarize()
+        super(SurveyDraft, self).save(*args, **kwargs)
 
 class SurveyPreview(models.Model):
     unique_string = models.CharField(max_length=64, null=False, unique=True)
