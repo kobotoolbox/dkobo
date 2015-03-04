@@ -90,11 +90,16 @@ define 'cs!xlform/csv', ->
   csv = (param, opts)->
     if param instanceof Csv then param else new Csv param, opts
 
+  _remove_extra_escape_chars = (ss)->
+    ss.replace(/\\\\/g, '\\')
+
   asCsvCellValue = (cell)->
     if cell is undefined
       ""
     else if ///\W|\w|#{csv.settings.delimiter}///.test cell
-      JSON.stringify("#{cell}")
+      outstr = _remove_extra_escape_chars(cell)
+      outstr = JSON.stringify("" + outstr)
+      _remove_extra_escape_chars outstr
     else
       cell
 
@@ -150,6 +155,9 @@ define 'cs!xlform/csv', ->
 
   removeTrailingNewlines = (str)-> str.replace(/(\n+)$/g, "")
 
+  csv._parse_string = (c)->
+    JSON.parse('"' + c.replace(/\\/g, '\\\\') + '"')
+
   # The `csv.toArray` function, pulled from this [stackoverflow comment](http://stackoverflow.com/questions/1293147/javascript-code-to-parse-csv-data)
   # will parse a delimited string into an array of
   # arrays. The default delimiter is the comma, but this
@@ -158,7 +166,6 @@ define 'cs!xlform/csv', ->
   csv.toArray = (strData) ->
     if csv.settings.removeTrailingNewlines
       strData = removeTrailingNewlines(strData)
-    strData = strData.replace(/\\/g, '\\\\')
     strDelimiter = csv.settings.delimiter
 
     rows = []
@@ -218,7 +225,7 @@ define 'cs!xlform/csv', ->
 
       if arrMatches[2]
         # cell is wrapped in quotes
-        strMatchedValue = JSON.parse('"'+arrMatches[2]+'"')
+        strMatchedValue = csv._parse_string(arrMatches[2])
       else
         # cell is not wrapped in quotes
         strMatchedValue = arrMatches[3]
