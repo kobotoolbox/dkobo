@@ -191,6 +191,7 @@ def import_questions(request):
                              body=_split_survey[0],
                              user=request.user,
                              asset_type='question')
+            sd._sumarize()
             new_survey_drafts.append(sd)
         SurveyDraft.objects.bulk_create(new_survey_drafts)
 
