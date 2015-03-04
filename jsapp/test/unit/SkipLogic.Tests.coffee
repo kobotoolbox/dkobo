@@ -564,9 +564,14 @@ skip_logic_helpers = (dkobo_xlform) ->
     _model = null
     _view = null
     _builder = null
+    _view_factory = null
     beforeEach () ->
       _model = sinon.stubObject $mRdsl.SkipLogicCriterion
-      _model._get_question.returns sinon.stubObject $model.Row
+      row_stub = sinon.stubObject $model.Row
+      row_stub._isSelectQuestion = () -> false
+
+      _model._get_question.returns row_stub
+
       _model.get.withArgs('operator').returns(sinon.stubObject $mRdsl.Operator)
       _model.get.withArgs('response_value').returns(sinon.stubObject $mRdsl.ResponseModel)
 
@@ -578,13 +583,18 @@ skip_logic_helpers = (dkobo_xlform) ->
       _view.attach_response = sinon.spy()
 
       _builder = sinon.stubObject $slh.SkipLogicBuilder
-      _builder.build_response_view.returns(sinon.stubObject $vRdsl.SkipLogicEmptyResponse)
       _builder.current_question =
         get: sinon.stub()
       _builder.current_question.get.returns(
         set: sinon.spy()
       )
-      _presenter = new $slh.SkipLogicPresenter _model, _view, _builder
+
+      _view_factory = sinon.stubObject $vRdsl.SkipLogicViewFactory
+      response_view_stub = sinon.stubObject $vRdsl.SkipLogicEmptyResponse
+      response_view_stub.$el = trigger: sinon.stub()
+      _view_factory.create_response_value_view.returns(response_view_stub)
+
+      _presenter = new $slh.SkipLogicPresenter _model, _view, _builder, null, _view_factory
       _presenter.determine_add_new_criterion_visibility = sinon.spy()
       _presenter.serialize_all = sinon.spy()
 
@@ -595,9 +605,10 @@ skip_logic_helpers = (dkobo_xlform) ->
         expect(_model.change_question).toHaveBeenCalledWith 'test'
       it 'attaches the response value model to the view', () ->
         response_view_stub = sinon.stubObject $vRdsl.SkipLogicEmptyResponse
+        response_view_stub.$el = trigger: sinon.stub()
         response_model_stub = sinon.stubObject $mRdsl.ResponseModel
         _model.get.withArgs('response_value').returns response_model_stub
-        _builder.build_response_view.returns response_view_stub
+        _view_factory.create_response_value_view.returns response_view_stub
 
         _presenter.change_question 'test'
 
@@ -606,7 +617,7 @@ skip_logic_helpers = (dkobo_xlform) ->
         operator_view_stub = sinon.stubObject $vRdsl.OperatorPicker
 
         _model._get_question().get_type.returns 'test type'
-        _builder.build_operator_view.withArgs('test type').returns operator_view_stub
+        _view_factory.create_operator_picker.withArgs('test type').returns operator_view_stub
 
         _presenter.change_question 'test'
         expect(_view.change_operator).toHaveBeenCalledWith operator_view_stub
@@ -614,12 +625,12 @@ skip_logic_helpers = (dkobo_xlform) ->
         _model.get('operator').get_value.returns -1
         _presenter.change_question 'test'
 
-        expect(_view.operator_picker_view.fill_value).toHaveBeenCalledWith -1
+        expect(_view.operator_picker_view.val).toHaveBeenCalledWith -1
       it "fills updated response view's value", () ->
         _model.get('response_value').get.withArgs('value').returns -1
         _presenter.change_question 'test'
 
-        expect(_view.response_value_view.fill_value).toHaveBeenCalledWith -1
+        expect(_view.response_value_view.val).toHaveBeenCalledWith -1
 
     #*********************************************************************
     #**----------------------------------------------------------------***
@@ -634,9 +645,11 @@ skip_logic_helpers = (dkobo_xlform) ->
         expect(_model.change_operator).toHaveBeenCalledWith 'test'
       it 'binds the new response model to the response view', () ->
         response_view_stub = sinon.stubObject $vRdsl.SkipLogicEmptyResponse
+        response_view_stub.$el = trigger: sinon.stub()
         response_model_stub = sinon.stubObject $mRdsl.ResponseModel
         _model.get.withArgs('response_value').returns response_model_stub
-        _builder.build_response_view.returns response_view_stub
+
+        _view_factory.create_response_value_view.returns response_view_stub
 
         _presenter.change_operator 'test'
 
@@ -645,7 +658,7 @@ skip_logic_helpers = (dkobo_xlform) ->
         _model.get('response_value').get.withArgs('value').returns -1
         _presenter.change_question 'test'
 
-        expect(_view.response_value_view.fill_value).toHaveBeenCalledWith -1
+        expect(_view.response_value_view.val).toHaveBeenCalledWith -1
 
     #*********************************************************************
     #**----------------------------------------------------------------***
@@ -680,6 +693,8 @@ skip_logic_helpers = (dkobo_xlform) ->
       _survey = sinon.stubObject $model.Survey
       _parser_stub = null
       _builder = sinon.stubObject($slh.SkipLogicBuilder)
+      _builder.survey =
+        on: sinon.spy()
       _view = sinon.stubObject $vRdsl.SkipLogicCriterionBuilderView
       _delimiter_spy =
         show: sinon.spy()
@@ -691,6 +706,9 @@ skip_logic_helpers = (dkobo_xlform) ->
         sinon.stubObject $slh.SkipLogicPresenter
         sinon.stubObject $slh.SkipLogicPresenter
       ]
+
+      for presenter in _presenter_stubs
+        presenter.model = _get_question: sinon.stub()
 
       _facade = new $slh.SkipLogicCriterionBuilderHelper(
         _presenter_stubs
@@ -750,7 +768,7 @@ skip_logic_helpers = (dkobo_xlform) ->
 
       beforeEach () ->
         _empty_presenter_stub = sinon.stubObject $slh.SkipLogicPresenter
-        _builder.build_empty_criterion_logic.returns _empty_presenter_stub
+        _builder.build_empty_criterion.returns _empty_presenter_stub
         _facade.presenters.push = sinon.spy()
         _facade.determine_criterion_delimiter_visibility = sinon.spy()
         _facade.destination = 'test detination'
@@ -769,6 +787,8 @@ skip_logic_helpers = (dkobo_xlform) ->
       it 'removes presenter with model with passed id', () ->
         _presenter_stubs[0].model = cid: 1
         _presenter_stubs[1].model = cid: 2
+        _presenter_stubs[0].view = $el: remove: sinon.spy()
+        _presenter_stubs[1].view = $el: remove: sinon.spy()
         _facade.remove(1)
 
         expect(_presenter_stubs.length).toBe 1
@@ -866,17 +886,17 @@ skip_logic_helpers = (dkobo_xlform) ->
       _parser_stub = null
       beforeEach () ->
         _builder = initialize_builder()
-        _parser_stub = sinon.stub _builder, 'parse_skip_logic_criteria'
+        _parser_stub = sinon.stub _builder, '_parse_skip_logic_criteria'
 
-        _builder.build_criterion_logic = sinon.stub()
-        _builder.build_criterion_logic.onFirstCall().returns true
-        _builder.build_criterion_logic.onSecondCall().returns 'test'
+        _builder.build_criterion = sinon.stub()
+        _builder.build_criterion.onFirstCall().returns true
+        _builder.build_criterion.onSecondCall().returns 'test'
 
       afterEach () ->
         _parser_stub.restore()
 
       it 'returns empty criterion logic presenter when no criteria are passed', () ->
-        _builder.build_empty_criterion_logic = sinon.stub().returns('test')
+        _builder.build_empty_criterion = sinon.stub().returns('test')
         result = _builder.build_criterion_builder ''
 
         expect(result).toEqual [['test'], 'and']
@@ -900,7 +920,7 @@ skip_logic_helpers = (dkobo_xlform) ->
             false
           ]
 
-        _builder.build_criterion_logic.onThirdCall().returns false
+        _builder.build_criterion.onThirdCall().returns false
 
         result = _builder.build_criterion_builder 'asdf'
 
@@ -921,8 +941,8 @@ skip_logic_helpers = (dkobo_xlform) ->
           criteria: [
             false
           ]
-        _builder.build_empty_criterion_logic = sinon.stub().returns('empty')
-        _builder.build_criterion_logic.onFirstCall().returns false
+        _builder.build_empty_criterion = sinon.stub().returns('empty')
+        _builder.build_criterion.onFirstCall().returns false
 
         result = _builder.build_criterion_builder 'asdf'
 
@@ -943,17 +963,17 @@ skip_logic_helpers = (dkobo_xlform) ->
 
         builder.model_factory.create_operator.withArgs('empty').returns 'empty operator'
 
-        builder.build_question_view = sinon.stub().returns 'question view'
+        builder.view_factory.create_question_picker = sinon.stub().returns 'question view'
 
 
-        builder.view_factory.create_operator_picker.withArgs([]).returns 'operator picker'
-        builder.view_factory.create_response_value_view.withArgs('empty').returns 'response value'
+        builder.view_factory.create_operator_picker.withArgs(null).returns 'operator picker'
+        builder.view_factory.create_response_value_view.withArgs(null).returns 'response value'
 
         builder.view_factory.create_criterion_view.withArgs('question view', 'operator picker', 'response value').returns 'criterion view'
 
-        builder.helper_factory.create_presenter.withArgs(criterion_model, 'criterion view', builder).returns 'empty criterion presenter'
+        builder.helper_factory.create_presenter.withArgs(criterion_model, 'criterion view').returns 'empty criterion presenter'
 
-        result = builder.build_empty_criterion_logic()
+        result = builder.build_empty_criterion()
 
         expect(result).toBe 'empty criterion presenter'
 
