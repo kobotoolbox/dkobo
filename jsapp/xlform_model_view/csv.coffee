@@ -97,8 +97,7 @@ define 'cs!xlform/csv', ->
     if cell is undefined
       ""
     else if ///\W|\w|#{csv.settings.delimiter}///.test cell
-      outstr = _remove_extra_escape_chars(cell)
-      outstr = JSON.stringify("" + outstr)
+      outstr = JSON.stringify("" + cell)
       _remove_extra_escape_chars outstr
     else
       cell
@@ -156,7 +155,7 @@ define 'cs!xlform/csv', ->
   removeTrailingNewlines = (str)-> str.replace(/(\n+)$/g, "")
 
   csv._parse_string = (c)->
-    JSON.parse('"' + c.replace(/\\/g, '\\\\') + '"')
+    JSON.parse('"' + c.replace(/\\/g, '\\\\').replace(/\\\\"/g, '\\"') + '"')
 
   # The `csv.toArray` function, pulled from this [stackoverflow comment](http://stackoverflow.com/questions/1293147/javascript-code-to-parse-csv-data)
   # will parse a delimited string into an array of
