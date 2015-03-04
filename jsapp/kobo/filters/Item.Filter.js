@@ -3,6 +3,9 @@ kobo.filter('itemFilter',[function () {
         if (typeof filter === 'string') {
             var filterValues = filter.split(' ');
             for (var i = 0; i < filterValues.length; i++) {
+                if (!item.toLowerCase) {
+                    return false;
+                }
                 if (item.toLowerCase().indexOf(filterValues[i].toLowerCase()) === -1) {
                     return false;
                 }
