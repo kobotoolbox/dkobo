@@ -77,7 +77,7 @@ define 'cs!xlform/model.utils', [
         # descriptor: used in error messages
         descriptor: "slug"
         lowerCase: true
-        removeNonWordChars: true
+        replaceNonWordCharacters: true
         nonWordCharsExceptions: false
         validXmlTag: false
         underscores: true
@@ -103,12 +103,16 @@ define 'cs!xlform/model.utils', [
     if opts.underscores
       str = str.replace(/\s/g, "_").replace(/[_]+/g, "_")
 
-    if opts.removeNonWordChars
+    if opts.replaceNonWordCharacters
       if opts.nonWordCharsExceptions
         regex = ///\W^[#{opts.nonWordCharsExceptions}]///g
       else
-        regex = /\W/g
-      str = str.replace(regex, '')
+        regex = /\W+/g
+      str = str.replace(regex, '_')
+      # possibly a bit specific, but removes an underscore from the end
+      # of the string
+      if str.match(/._$/)
+        str = str.replace(/_$/, '')
 
     if _.isNumber opts.characterLimit
       str = str.slice(0, opts.characterLimit)

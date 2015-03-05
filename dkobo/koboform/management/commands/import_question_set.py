@@ -37,6 +37,8 @@ class Command(BaseCommand):
         sdrafts = []
         for csvstr in csv_files:
             sdrafts.append(SurveyDraft(user=user, name="imported_question", body=csvstr[0], asset_type="question"))
+        for sdraft in sdrafts:
+            sdraft._summarize()
         if len(sdrafts) > 0:
             SurveyDraft.objects.bulk_create(sdrafts)
         print "Count [after import]:  %d" % user.survey_drafts.count()

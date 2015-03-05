@@ -36,6 +36,12 @@
       <div class="forms__card" ng-repeat="item in items|orderBy:'-date_modified'">
         <div class="forms__card__info">
           <a class="forms__card__title" href="#{{ getHashLink(item) }}">{{ item.name }}</a>
+          <div class="forms__card__description forms__card__description--error" ng-if="!!itemError(item)">
+            <strong>Important Error:</strong> {{itemError(item)}}
+            <a href="http://support.kobotoolbox.org/customer/portal/emails/new">
+              Contact KoBoToolbox Support
+            </a>
+          </div>
           <p class="forms__card__description">{{ item.description || '' }}</p>
           <p class="forms__card__date">
             {{item.date_modified.getMonth()+1}}/{{item.date_modified.getDate()}}/{{item.date_modified.getYear() + 1900}}
@@ -48,7 +54,9 @@
           <div class="forms__kobocat__btn forms__kobocat__btn--publish" ng-click="open()" >Deploy as new survey project <i class="fa fa-external-link-square"></i></div>
         </div>
         <div class="forms__card__buttons">
-          <a class="forms__card__buttons__button blue" href="" ng-click="cloneSurvey(item)"><i class="fa fa-copy"></i></a>
+          <!--
+            <a class="forms__card__buttons__button blue" href="" ng-click="cloneSurvey(item)"><i class="fa fa-copy"></i></a>
+          -->
           <a class="forms__card__buttons__button gray" href="javascript:;" ng-click="toggleDownloadFormDropdown(item)"><i class="fa fa-download"></i></a>
             <div class="forms__download__drop" ng-class="{ 'hidden': ! item.showDownloadDropdown }" outside-click close-method="hideDownloadFormDropdown(item)" is-showing="item.isShowing">
               <a href="{{ getLink(item, 'xls') }}" class="forms__download__button">XLS</a>

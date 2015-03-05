@@ -42,6 +42,7 @@ function BuilderController($scope, $rootScope, $routeParams, $routeTo, $miscUtil
     var surveyDraftApi = $api.surveys;
 
     function saveCallback() {
+        var deferred = $q.defer();
         if (this.validateSurvey()) {
             try {
                 var survey = this.survey.toCSV();
@@ -57,14 +58,25 @@ function BuilderController($scope, $rootScope, $routeParams, $routeTo, $miscUtil
             }).then(function() {
                 $rootScope.deregisterLocationChangeStart && $rootScope.deregisterLocationChangeStart();
                 $(window).unbind('beforeunload');
+                deferred.resolve();
                 $routeTo.forms();
             }, function(response) {
                 $miscUtils.alert('a server error occurred: \n' + response.statusText, 'Error');
+                deferred.reject();
             });
 
+        } else {
+            if (this.survey.errors.length) {
+                var error = 'Validation failed with the following errors:<br/>';
+
+                _.each(this.survey.errors, function (errorMessage) {
+                    error += '<br/> - ' + errorMessage;
+                });
+
+                $miscUtils.alert(error, 'Error');
+                deferred.reject();
+            }
         }
-        var deferred = $q.defer();
-        deferred.resolve();
         return deferred.promise;
     }
 
@@ -81,9 +93,16 @@ function BuilderController($scope, $rootScope, $routeParams, $routeTo, $miscUtil
                 window.importFormWarnings = [];
             }
 
-            $scope.xlfSurvey = dkobo_xlform.model.Survey.load(response.body);
-            // temporarily saving response in __djangoModelDetails
-            $scope.xlfSurvey.__djangoModelDetails = response;
+            try {
+                $scope.xlfSurvey = dkobo_xlform.model.Survey.load(response.body);
+                // temporarily saving response in __djangoModelDetails
+                $scope.xlfSurvey.__djangoModelDetails = response;
+            } catch (e) {
+                window.trackJs && window.trackJs.console.error("Cannot load survey", e.message);
+                $scope.survey_loading = false;
+                $scope.errorMessage = e.message;
+                return;
+            }
             $scope.xlfSurveyApp = dkobo_xlform.view.SurveyApp.create({el: 'section.form-builder', survey: $scope.xlfSurvey, ngScope: $scope, save: saveCallback, warnings: warnings});
             $scope.xlfSurveyApp.render();
         });

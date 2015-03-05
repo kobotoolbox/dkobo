@@ -466,7 +466,8 @@ define 'cs!xlform/view.surveyApp', [
     validateSurvey: ()->
       if !@features.multipleQuestions
         return @survey.rows.length == 1
-      true
+
+      return @survey._validate()
 
     previewCsv: ->
       scsv = @survey.toCSV()
@@ -644,7 +645,7 @@ define 'cs!xlform/view.surveyApp', [
       icon = $(evt.currentTarget).find('i')
       icon.addClass 'fa-spinner fa-spin blue'
       icon.removeClass 'fa-check-circle green'
-      @onSave.apply(@, arguments).then () ->
+      @onSave.apply(@, arguments).finally () ->
         icon.removeClass 'fa-spinner fa-spin blue'
         icon.addClass 'fa-check-circle green'
 

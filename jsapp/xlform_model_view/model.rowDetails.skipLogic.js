@@ -25,6 +25,9 @@ rowDetailsSkipLogic.SkipLogicFactory = (function() {
             case 'text':
                 operator = new rowDetailsSkipLogic.TextOperator(symbol);
                 break;
+            case 'date':
+                operator = new rowDetailsSkipLogic.DateOperator(symbol);
+                break;
             case 'basic':
                 operator = new rowDetailsSkipLogic.SkipLogicOperator(symbol);
                 break;
@@ -266,6 +269,24 @@ rowDetailsSkipLogic.TextOperator = (function(_super) {
 
 })(rowDetailsSkipLogic.SkipLogicOperator);
 
+rowDetailsSkipLogic.DateOperator = (function(_super) {
+    __extends(DateOperator, _super);
+
+    function DateOperator() {
+        return DateOperator.__super__.constructor.apply(this, arguments);
+    }
+
+    DateOperator.prototype.serialize = function(question_name, response_value) {
+        if (response_value.indexOf('date') == -1) {
+            response_value = "date('" + response_value + "')"
+        }
+        return DateOperator.__super__.serialize.call(this, question_name, response_value);
+    };
+
+    return DateOperator;
+
+})(rowDetailsSkipLogic.SkipLogicOperator);
+
 rowDetailsSkipLogic.ExistenceSkipLogicOperator = (function(_super) {
     __extends(ExistenceSkipLogicOperator, _super);
 
@@ -336,7 +357,7 @@ rowDetailsSkipLogic.IntegerResponseModel = (function(_super) {
 
     IntegerResponseModel.prototype.validation = {
         value: {
-            pattern: 'digits',
+            pattern: /^-?\d+$/,
             msg: 'Number must be integer'
         }
     };

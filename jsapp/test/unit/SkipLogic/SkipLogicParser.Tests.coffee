@@ -41,7 +41,7 @@ skip_logic_parser_tests = ->
     expect(XLF.skipLogicParser("${question} = date('1234-12-12')")).toEqual criteria: [
       name: "question"
       operator: "resp_equals"
-      response_value: "date('1234-12-12')"
+      response_value: "1234-12-12"
     ]
 
   it "parses a single equals clause without padding between operands", ->
@@ -161,6 +161,9 @@ skip_logic_parser_tests = ->
       operator: "resp_equals"
       response_value: " hello"
     ]
+
+  it "doesn't parse compounded skip logic", () ->
+    expect(() -> XLF.skipLogicParser('${q1} + ${q2} + ${q3} < 4')).toThrow new Error('criterion not recognized: "${q1} + ${q2} + ${q3} < 4"')
 
 validation_logic_parser_tests = ->
   XLF = validationLogicParser: dkobo_xlform.model.utils.validationLogicParser

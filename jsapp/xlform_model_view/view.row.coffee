@@ -60,7 +60,7 @@ define 'cs!xlform/view.row', [
       @$el.html $viewTemplates.$$render('row.rowErrorView', atts)
       @
     _renderRow: ->
-      @$el.html $viewTemplates.$$render('row.xlfRowView')
+      @$el.html $viewTemplates.$$render('row.xlfRowView', @surveyView)
       @$label = @$('.card__header-title')
       @$card = @$('.card')
       @$header = @$('.card__header')

@@ -56,8 +56,9 @@ define 'cs!xlform/model.survey', [
       @rows.add(row.toJSON(), at: index)
       new_row = @rows.at(index)
       survey = @getSurvey()
-      if rowlist = new_row.getList()
+      if rowlist = row.getList()
         survey.choices.add(options: rowlist.options.toJSON())
+        new_row.get('type').set('list', rowlist)
       name_detail = new_row.get('name')
       name_detail.set 'value', name_detail.deduplicate(survey)
 
@@ -224,13 +225,13 @@ define 'cs!xlform/model.survey', [
 
   # Settings (assigned to each $survey.Survey instance)
   class Settings extends $base.BaseModel
-    # validation:
-    #   form_title:
-    #     required: true
-    #     invalidChars: '`'
-    #   form_id:
-    #     required: true
-    #     invalidChars: '`'
+    validation:
+      form_title:
+        required: true
+        invalidChars: '`'
+      form_id:
+        required: true
+        invalidChars: '`'
     defaults:
       form_title: "New form"
       form_id: "new_form"
