@@ -268,14 +268,31 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
       super(target)
 
     bind_event: (handler) ->
-      super 'change', handler
+      handle_model_change = (option) =>
+        current_value = @$el.val()
+        @options = @rebuild_options()
+        @render()
+        if current_value == option._previousAttributes.name
+          current_value = option.get('name')
 
+        @$el.val current_value
+        handler()
+        return
 
-    constructor: (@responses) ->
-      super(_.map @responses.models, (response) ->
+      for option in @responses.models
+        option.off 'change', null, @
+        option.on 'change', handle_model_change, @
+
+      super 'change', () ->
+        handler.apply @, arguments
+
+    rebuild_options: () ->
+      return _.map @responses.models, (response) ->
         text: response.get('label')
         value: response.get('name')
-      )
+
+    constructor: (@responses) ->
+      super(@rebuild_options())
 
   class viewRowDetailSkipLogic.SkipLogicCriterion extends viewRowDetailSkipLogic.Base
     tagName: 'div'
