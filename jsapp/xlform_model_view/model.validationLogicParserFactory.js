@@ -29,7 +29,7 @@ define('xlform/model.validationLogicParserFactory', ['underscore'], function () 
             };
 
             if (matches[3]) {
-                res.response_value = matches[3];
+                res.response_value = matches[3].replace(/date\('(\d{4}-\d{2}-\d{2})'\)/, '$1');
             }
 
             return res;

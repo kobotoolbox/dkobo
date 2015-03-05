@@ -41,7 +41,7 @@ skip_logic_parser_tests = ->
     expect(XLF.skipLogicParser("${question} = date('1234-12-12')")).toEqual criteria: [
       name: "question"
       operator: "resp_equals"
-      response_value: "date('1234-12-12')"
+      response_value: "1234-12-12"
     ]
 
   it "parses a single equals clause without padding between operands", ->

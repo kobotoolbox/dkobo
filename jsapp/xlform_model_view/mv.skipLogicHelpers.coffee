@@ -392,7 +392,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       name: 'acknowledge'
     date:
       operators: [2, 3, 4]
-      equality_operator_type: 'text'
+      equality_operator_type: 'date'
       response_type: 'text'
       name: 'date'
 
