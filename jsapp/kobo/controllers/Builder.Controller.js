@@ -108,7 +108,7 @@ function BuilderController($scope, $rootScope, $routeParams, $routeTo, $miscUtil
         });
     } else {
         // url points to new survey_draft
-            $scope.xlfSurvey = new dkobo_xlform.model.Survey();
+        $scope.xlfSurvey = new dkobo_xlform.model.Survey();
         $scope.xlfSurveyApp = dkobo_xlform.view.SurveyApp.create({el: 'section.form-builder', survey: $scope.xlfSurvey, ngScope: $scope, save: saveCallback});
         $scope.xlfSurveyApp.render();
     }
