@@ -35,6 +35,17 @@ kobo.directive ('infoList', function ($rootScope, $miscUtils, $location) {
                 return linkTo ? '/' + linkTo + '/' + item.id : '';
             };
 
+            scope.itemError = function (item) {
+                if (!item._summary) {
+                    try {
+                        item._summary = JSON.parse(item.summary);
+                    } catch (e) {
+                        item._summary = {};
+                    }
+                }
+                return item._summary.error
+            };
+
             scope.getLink = function (item, format) {
                 if(!format) {
                     format = "xml";

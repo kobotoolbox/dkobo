@@ -187,6 +187,17 @@
     .forms__card__description {
       margin-bottom: 1.5em;
       margin-top: 0.5em;
+      &.forms__card__description--error {
+        border: 1px solid #faa3a3;
+        background-color: #FFDFDF;
+        margin-right: 42px;
+        padding: 5px;
+        color: #C80909;
+        a {
+          color: #AB0000;
+          text-decoration: underline;
+        }
+      }
     }
     .forms__card__date, .forms__card__question-count {
       margin-bottom: 0em;

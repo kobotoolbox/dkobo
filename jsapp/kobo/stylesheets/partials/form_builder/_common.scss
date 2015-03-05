@@ -49,6 +49,19 @@
 .form-builder, .main, .content {
   height: 100%
 }
+.form-builder__message {
+    margin: 20px auto;
+    padding: 10px;
+}
+.form-builder__message--error {
+    border: 1px solid #faa3a3;
+    background-color: #FFDFDF;
+    color: #C80909;
+    a {
+        color: #AB0000;
+        text-decoration: underline;
+    }
+}
 
 .survey-loading {
   text-align: center;
