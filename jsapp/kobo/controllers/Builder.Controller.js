@@ -93,9 +93,16 @@ function BuilderController($scope, $rootScope, $routeParams, $routeTo, $miscUtil
                 window.importFormWarnings = [];
             }
 
-            $scope.xlfSurvey = dkobo_xlform.model.Survey.load(response.body);
-            // temporarily saving response in __djangoModelDetails
-            $scope.xlfSurvey.__djangoModelDetails = response;
+            try {
+                $scope.xlfSurvey = dkobo_xlform.model.Survey.load(response.body);
+                // temporarily saving response in __djangoModelDetails
+                $scope.xlfSurvey.__djangoModelDetails = response;
+            } catch (e) {
+                window.trackJs && window.trackJs.console.error("Cannot load survey", e.message);
+                $scope.survey_loading = false;
+                $scope.errorMessage = e.message;
+                return;
+            }
             $scope.xlfSurveyApp = dkobo_xlform.view.SurveyApp.create({el: 'section.form-builder', survey: $scope.xlfSurvey, ngScope: $scope, save: saveCallback, warnings: warnings});
             $scope.xlfSurveyApp.render();
         });

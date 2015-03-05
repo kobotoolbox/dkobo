@@ -64,7 +64,9 @@ function FormsController ($scope, $rootScope, $resource, $miscUtils, $api) {
 
     $scope.clone_survey = function (survey) {
         var surveyDraftApi = $api.surveys;
-
+        if (!survey.body) {
+            throw new Error("Cannot clone survey right now.");
+        }
         surveyDraftApi.save({
             body: survey.body,
             description: survey.description,

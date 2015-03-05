@@ -29,6 +29,11 @@ def convert_xls_to_xform(xls_file, warnings=False):
     return xml
 
 def summarize_survey(csv_survey, type):
+    if csv_survey == '':
+        raise ValueError('''
+            This survey draft is corrupted and can no longer be used, likely because of a recent bug in the cloning feature.
+            If you no longer have access to the original, please contact us for help with recovery. Otherwise, please delete this draft.
+            '''.strip())
     survey = create_survey_from_csv_text(csv_survey)
     if type == 'question':
         question_type = survey.children[0].type
