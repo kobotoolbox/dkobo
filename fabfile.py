@@ -93,6 +93,11 @@ def deploy_ref(deployment_name, ref):
 def deploy(deployment_name, branch='master'):
     deploy_ref(deployment_name, 'origin/{}'.format(branch))
 
+def repopulate_summary_field(deployment_name):
+    setup_env(deployment_name)
+    with cd(env.kf_path):
+        with kobo_workon(env.kf_virtualenv_name):
+            run("python manage.py populate_summary_field")
 
 def deploy_passing(deployment_name, branch='master'):
     ''' Deploy the latest code on the given branch that's
