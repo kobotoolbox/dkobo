@@ -5,14 +5,12 @@
 </div>
 <section class="form-builder">
     <div class="form-builder__message form-builder__message--error container" ng-if="!!errorMessage"> 
-        <strong>There was a problem loading the survey:</strong><br>
+        <strong>There was a problem loading your form:</strong><br>
         {{errorMessage}}
         <br>
         <br>
-        If this is a problem, please contact
-        <a href="http://support.kobotoolbox.org/customer/portal/emails/new">
-            KoBoToolbox support
-        </a>.
+        If you need help recovering the form, please contact
+        <a href="http://support.kobotoolbox.org/customer/portal/emails/new" target="_blank">KoBoToolbox support</a>.
     </div>
     <div ng-show="survey_loading" class="survey-loading">
       <div class="container">
