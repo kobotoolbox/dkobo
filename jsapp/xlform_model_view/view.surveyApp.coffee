@@ -576,8 +576,11 @@ define 'cs!xlform/view.surveyApp', [
         rowEl.slideUp 175, "swing", ()=>
           rowEl.remove()
           @survey.rows.remove matchingRow
-          if parent != @ && parent.rows.length == 0
-            parent_view = @__rowViews.get(parent.cid)._deleteGroup()
+          if parent.constructor.kls == "Group" && parent.rows.length == 0
+            parent_view = @__rowViews.get(parent.cid)
+            if !parent_view
+              trackJs?.console.warn("parent view is not defined", matchingRow.get('name').get('value'))
+            parent_view._deleteGroup()
         @set_multioptions_label()
 
     groupSelectedRows: ->
