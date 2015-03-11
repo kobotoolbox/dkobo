@@ -143,7 +143,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       question = @model._get_question()
       if (question && question._isSelectQuestion())
         response_value = _.find(question.getList().options.models, (option) ->
-          option.get('name') == response_value).cid
+          option.get('name') == response_value)?.cid
       @view.response_value_view.val response_value
       @view.attach_to destination
 
@@ -221,8 +221,8 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       presenter = @build_criterion_logic operator_model, operator_picker_view, response_value_view
       presenter.model.change_question question.cid
 
-      response_value = if question._isSelectQuestion() then _.find(question.getList().options.models, (option) => return option.get('name') == @criterion.response_value).cid else @criterion.response_value
-      presenter.model.change_response response_value
+      response_value = if question._isSelectQuestion() then _.find(question.getList().options.models, (option) => return option.get('name') == @criterion.response_value)?.cid else @criterion.response_value
+      presenter.model.change_response response_value || ''
       response_value_view.model = presenter.model.get 'response_value'
       response_value_view.val(response_value)
 
