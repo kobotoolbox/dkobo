@@ -135,7 +135,7 @@ skip_logic_model = (dkobo_xlform)->
     describe 'change question', () ->
       beforeEach () ->
         _criterion.survey = _survey
-        _criterion._get_question = sinon.stub().returns(get_type: sinon.stub().returns(response_type: 'text', operators: [1, 2]))
+        _criterion._get_question = sinon.stub().returns(_isSelectQuestion: sinon.stub().returns(false), get_type: sinon.stub().returns(response_type: 'text', operators: [1, 2]))
         _criterion.change_operator = sinon.spy()
         _criterion.change_response = sinon.spy()
 
@@ -159,7 +159,7 @@ skip_logic_model = (dkobo_xlform)->
         expect(_criterion.change_operator).toHaveBeenCalledWith 1
 
       it 'keeps current operator if in new question type', () ->
-        _criterion._get_question = sinon.stub().withArgs('operator in question type').returns(get_type: () -> {operators: [-1], name: 'test'})
+        _criterion._get_question = sinon.stub().withArgs('operator in question type').returns(_isSelectQuestion: sinon.stub().returns(false), get_type: () -> {operators: [-1], name: 'test'})
         _criterion.change_question('operator in question type')
 
         expect(_criterion.change_operator).not.toHaveBeenCalled()
@@ -178,7 +178,7 @@ skip_logic_model = (dkobo_xlform)->
       it 'changes operator when question type changes', () ->
         get_question_stub = sinon.stub()
         get_question_stub.onCall(0).returns get_type: () -> {response_type: 'text', operators: [1, 2]}
-        get_question_stub.returns get_type: () -> {operators: [-1], name: 'test'}
+        get_question_stub.returns _isSelectQuestion: sinon.stub().returns(false), get_type: () -> {operators: [-1], name: 'test'}
 
         _criterion._get_question = get_question_stub
         _criterion.change_question('test')
@@ -190,9 +190,15 @@ skip_logic_model = (dkobo_xlform)->
     #********************************************************************#
 
     describe 'change operator', () ->
+      question_stub = null
       beforeEach () ->
+        question_stub =
+          get_type: sinon.stub().returns(response_type: 'text', operators: [1, 2], equality_operator_type: 'text')
+          _isSelectQuestion: () -> false
+
         _criterion.factory = create_operator: sinon.stub().withArgs('existence', '=', 1).returns 'test operator'
-        _criterion._get_question = sinon.stub().returns(get_type: sinon.stub().returns(response_type: 'text', operators: [1, 2], equality_operator_type: 'text'))
+        _criterion._get_question = sinon.stub().returns(question_stub)
+
         _criterion.change_response = sinon.spy()
         response_value_getter = sinon.stub()
         response_value_getter.withArgs('type').returns('none')
@@ -253,13 +259,15 @@ skip_logic_model = (dkobo_xlform)->
         response_value_getter = sinon.stub()
         response_value_getter.withArgs('type').returns('none')
         response_value_getter.withArgs('value').returns('test')
+        response_value_getter.withArgs('cid').returns('test')
         response_model.get = response_value_getter
+        response_model.set = sinon.spy()
         _criterion.set 'operator', get_type: () -> {}
         _question_getter = sinon.stub()
 
-        _criterion._get_question = sinon.stub().returns(get_type: sinon.stub().returns(response_type: 'text'), getList: () -> options: models: [{get: sinon.stub().returns('test option')}, {get: sinon.stub().returns('test option 2')}, {get: sinon.stub().returns('test option 3')}])
+        _criterion._get_question = sinon.stub().returns(get_type: sinon.stub().returns(response_type: 'text'), getList: () -> options: models: [{get: sinon.stub().returns('test option'), cid: 'test option'}, {get: sinon.stub().returns('test option 2'), cid: 'test option 2'}, {get: sinon.stub().returns('test option 3'), cid: 'test option 3'}])
 
-        _criterion.factory = create_response_model: sinon.stub().returns set_value: sinon.spy()
+        _criterion.factory = create_response_model: sinon.stub().returns set_value: sinon.spy(), set: sinon.spy(), get: response_value_getter
         _criterion.set 'response_value', response_model
       it 'changes response value', () ->
         _criterion.change_response 'test value'
@@ -284,7 +292,7 @@ skip_logic_model = (dkobo_xlform)->
 
       it 'keeps current value when it is valid option for select question types', () ->
         _criterion.get_correct_type = sinon.stub().returns('dropdown')
-        _criterion.get('response_value').get.withArgs('value').returns('test option 2')
+        _criterion.get('response_value').get.withArgs('cid').returns('test option 2')
 
         _criterion.change_response 'test'
 
@@ -597,6 +605,7 @@ skip_logic_helpers = (dkobo_xlform) ->
       _presenter = new $slh.SkipLogicPresenter _model, _view, _builder, null, _view_factory
       _presenter.determine_add_new_criterion_visibility = sinon.spy()
       _presenter.serialize_all = sinon.spy()
+      _presenter.dispatcher = _.clone Backbone.Events
 
     describe 'change question', () ->
       it 'changes the question in the model', () ->
@@ -695,6 +704,7 @@ skip_logic_helpers = (dkobo_xlform) ->
       _builder = sinon.stubObject($slh.SkipLogicBuilder)
       _builder.survey =
         on: sinon.spy()
+        off: sinon.spy()
       _view = sinon.stubObject $vRdsl.SkipLogicCriterionBuilderView
       _delimiter_spy =
         show: sinon.spy()
@@ -789,6 +799,8 @@ skip_logic_helpers = (dkobo_xlform) ->
         _presenter_stubs[1].model = cid: 2
         _presenter_stubs[0].view = $el: remove: sinon.spy()
         _presenter_stubs[1].view = $el: remove: sinon.spy()
+        _facade.determine_add_new_criterion_visibility = sinon.spy()
+
         _facade.remove(1)
 
         expect(_presenter_stubs.length).toBe 1
@@ -808,7 +820,10 @@ skip_logic_helpers = (dkobo_xlform) ->
 
   describe 'helper context', () ->
     initialize_helper_context = (serialized_criteria) ->
-      return new $slh.SkipLogicHelperContext sinon.stubObject($mRdsl.SkipLogicFactory), sinon.stubObject($vRdsl.SkipLogicViewFactory), sinon.stubObject($slh.SkipLogicBuilder), serialized_criteria
+      helper_factory = sinon.stubObject($slh.SkipLogicHelperFactory)
+      helper_factory.survey =
+        off: sinon.spy()
+      return new $slh.SkipLogicHelperContext sinon.stubObject($mRdsl.SkipLogicFactory), sinon.stubObject($vRdsl.SkipLogicViewFactory), helper_factory, serialized_criteria
     describe 'render', () ->
       it 'calls render on inner state', () ->
         context = initialize_helper_context()

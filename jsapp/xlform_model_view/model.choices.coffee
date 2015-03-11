@@ -11,7 +11,11 @@ define 'cs!xlform/model.choices', [
   class choices.Option extends base.BaseModel
     initialize: -> @unset("list name")
     destroy: ->
+      choicelist = @list()._parent
+      choicelist_cid = choicelist.cid
+      survey = choicelist.collection._parent
       @collection.remove(@)
+      survey.trigger('remove-option', choicelist_cid, @cid)
     list: -> @collection
     toJSON: ()->
       attributes = {}

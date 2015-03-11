@@ -19,11 +19,7 @@ define 'cs!xlform/model.rowDetailMixins', [
   # the attribute in XLF.RowDetailMixin
   SkipLogicDetailMixin =
     getValue: ()->
-      v = @serialize()
-      if v is "undefined"
-        console?.error("Serialized value is returning a string, undefined")
-        v = ""
-      v
+      @serialize()
 
     postInitialize: ()->
       # TODO: get skip logic factories connected
@@ -42,13 +38,11 @@ define 'cs!xlform/model.rowDetailMixins', [
     parse: ()->
 
     linkUp: ->
+      @facade.initialize()
 
   ValidationLogicMixin =
     getValue: () ->
-      v = @serialize()
-      if v is "undefined"
-        v = ""
-      v
+      @serialize()
     postInitialize: () ->
       survey = @getSurvey()
       model_factory = new $modelRowDetailValidationLogic.ValidationLogicModelFactory survey
@@ -65,6 +59,7 @@ define 'cs!xlform/model.rowDetailMixins', [
     parse: ()->
 
     linkUp: ->
+      @facade.initialize()
 
 
 

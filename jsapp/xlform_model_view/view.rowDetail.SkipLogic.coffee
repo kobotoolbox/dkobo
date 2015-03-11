@@ -260,8 +260,15 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
     bind_event: (handler) ->
       super 'change', handler
 
+    render: () ->
+      super
+      handle_model_cid_change = () =>
+        @val(@model.get 'cid')
 
-    constructor: (@responses) ->
+      @model.off 'change:cid', handle_model_cid_change
+      @model.on 'change:cid', handle_model_cid_change
+
+    constructor: (@responses, @model) ->
       super(_.map @responses.models, (response) ->
         text: response.get('label')
         value: response.cid

@@ -25,9 +25,10 @@ define 'cs!xlform/mv.skipLogicHelpers', [
 
   class skipLogicHelpers.SkipLogicPresentationFacade
     constructor: (@model_factory, @helper_factory, @view_factory) ->
+    initialize: () ->
+      @context ?= @helper_factory.create_context()
     serialize: () ->
-      if !@context?
-        return @helper_factory.serialized_criteria
+      @context ?= @helper_factory.create_context()
       return @context.serialize()
     render: (target) ->
       @context ?= @helper_factory.create_context()
@@ -41,24 +42,35 @@ define 'cs!xlform/mv.skipLogicHelpers', [
     constructor: (@model, @view, @current_question, @survey, @view_factory) ->
       @view.presenter = @
       if @survey
-        @survey.on 'choice-list-update', (cid) =>
+        update_choice_list = (cid) =>
           question = @model._get_question()
           if question._isSelectQuestion() && question.getList().cid == cid
-            options = _.map question.getList().options.models, (response) ->
-              text: response.get('label')
-              value: response.cid
 
-            response_picker_model = @view.response_value_view.options
-            current_response_value = @view.response_value_view.val()
+            current_response_value = @model.get('response_value').get('cid')
 
-            response_picker_model.set 'options', options
-            @view.response_value_view.val(current_response_value)
-            @view.response_value_view.$el.trigger('change')
+            if !question.getList().options.get current_response_value
+              @dispatcher.trigger 'remove:presenter', @model.cid
+            else
+              options = _.map question.getList().options.models, (response) ->
+                text: response.get('label')
+                value: response.cid
+
+              response_picker_model = @view.response_value_view.options
+
+              response_picker_model.set 'options', options
+              @view.response_value_view.val(current_response_value)
+              @view.response_value_view.$el.trigger('change')
+              @model.change_response current_response_value
+
+        @survey.on 'choice-list-update', update_choice_list, @
+
+        @survey.on 'remove-option', update_choice_list, @
 
         @survey.on 'row-detail-change', (row, key) =>
           if @destination
             if key == 'label'
               @render(@destination)
+        , @
       else
         console.error "this.survey is not yet available"
 
@@ -68,7 +80,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       @question = @model._get_question()
       question_type = @question.get_type()
       @question.on 'remove', () =>
-        @dispatcher.trigger 'remove:question', @
+        @dispatcher.trigger 'remove:presenter', @model.cid
 
       @view.change_operator @view_factory.create_operator_picker question_type
       @view.operator_picker_view.val @model.get('operator').get_value()
@@ -86,9 +98,6 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       @finish_changing()
 
     change_response: (response_text) ->
-      question = @model._get_question()
-      if question._isSelectQuestion()
-        response_text = question.getList().options.get(response_text).get('name')
       @model.change_response response_text
       @finish_changing()
 
@@ -111,18 +120,17 @@ define 'cs!xlform/mv.skipLogicHelpers', [
 
 
     finish_changing: () ->
-      @determine_add_new_criterion_visibility()
+      @dispatcher.trigger 'changed:model', @
 
-    determine_add_new_criterion_visibility: () ->
-      $add_new_criterion_button = @$add_new_criterion_button
+    is_valid: () ->
       if !@model._get_question()
-        $add_new_criterion_button.hide()
+        return false
       else if @model.get('operator').get_type().id == 1
-        $add_new_criterion_button.show()
+        return true
       else if @model.get('response_value').get('value')  in ['', undefined] || @model.get('response_value').isValid() == false
-        $add_new_criterion_button.hide()
+        return false
       else
-        $add_new_criterion_button.show()
+        return true
 
     render: (@destination) ->
       @view.question_picker_view.detach()
@@ -141,7 +149,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
 
 
 
-      @determine_add_new_criterion_visibility()
+      @dispatcher.trigger 'rendered', @
 
     serialize: () ->
       @model.serialize()
@@ -212,8 +220,11 @@ define 'cs!xlform/mv.skipLogicHelpers', [
 
       presenter = @build_criterion_logic operator_model, operator_picker_view, response_value_view
       presenter.model.change_question question.cid
-      presenter.model.change_response @criterion.response_value
+
+      response_value = if question._isSelectQuestion() then _.find(question.getList().options.models, (option) => return option.get('name') == @criterion.response_value).cid else @criterion.response_value
+      presenter.model.change_response response_value
       response_value_view.model = presenter.model.get 'response_value'
+      response_value_view.val(response_value)
 
       return presenter
     _get_question: () ->
@@ -256,6 +267,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       @render @destination
       return
     use_mode_selector_helper : () ->
+      @helper_factory.survey.off null, null, @state
       @state = new skipLogicHelpers.SkipLogicModeSelectorHelper(@view_factory, @)
       @render @destination
       return
@@ -285,14 +297,8 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       @determine_criterion_delimiter_visibility()
 
       @destination = @view.$('.skiplogic__criterialist')
-      dispatcher = _.clone Backbone.Events
-      dispatcher.on 'remove:question', (presenter) =>
-        @remove presenter.model.cid
-        
+
       _.each @presenters, (presenter) =>
-        presenter.dispatcher = dispatcher
-        presenter.$add_new_criterion_button = @$add_new_criterion_button
-        presenter.serialize_all = _.bind @serialize, @
         presenter.render @destination
 
     serialize: () ->
@@ -301,24 +307,42 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       _.filter(serialized, (crit) -> crit).join(' ' + @view.criterion_delimiter + ' ')
     add_empty: () ->
       presenter = @builder.build_empty_criterion()
-      presenter.$add_new_criterion_button = @$add_new_criterion_button
+      presenter.dispatcher = @dispatcher
       presenter.serialize_all = _.bind @serialize, @
-      presenter.render @destination
       @presenters.push presenter
+      presenter.render @destination
       @determine_criterion_delimiter_visibility()
     remove: (id) ->
       _.each @presenters, (presenter, index) =>
         if presenter? && presenter.model.cid == id
-          presenter = @presenters.splice(index, 1)
-          presenter[0].view.$el.remove()
+          presenter = @presenters.splice(index, 1)[0]
+          presenter.view.$el.remove()
+          @builder.survey.off null, null, presenter
+          @determine_add_new_criterion_visibility()
 
       if @presenters.length == 0
         @context.use_mode_selector_helper()
+
+    determine_add_new_criterion_visibility: () ->
+      if @all_presenters_are_valid()
+        @$add_new_criterion_button.show()
+      else
+        @$add_new_criterion_button.hide()
 
     constructor: (@presenters, separator, @builder, @view_factory, @context) ->
       @view = @view_factory.create_criterion_builder_view()
       @view.criterion_delimiter = (separator || 'and').toLowerCase()
       @view.facade = @
+      @dispatcher = _.clone Backbone.Events
+      @dispatcher.on 'remove:presenter', (cid) =>
+        @remove cid
+
+
+      @dispatcher.on 'changed:model', (presenter) =>
+        @determine_add_new_criterion_visibility()
+
+      @dispatcher.on 'rendered', (presenter) =>
+        @determine_add_new_criterion_visibility()
 
       removeInvalidPresenters = () =>
         questions = builder.questions()
@@ -333,9 +357,16 @@ define 'cs!xlform/mv.skipLogicHelpers', [
         if @presenters.length == 0
           @context.use_mode_selector_helper()
 
-      @builder.survey.on 'sortablestop', removeInvalidPresenters
+      @builder.survey.on 'sortablestop', removeInvalidPresenters, @
 
       removeInvalidPresenters()
+
+      _.each @presenters, (presenter) =>
+        presenter.dispatcher = @dispatcher
+        presenter.serialize_all = _.bind @serialize, @
+
+    all_presenters_are_valid: () ->
+        return !_.find @presenters, (presenter) -> !presenter.is_valid()
 
     switch_editing_mode: () ->
       @builder.build_hand_code_criteria @serialize()
