@@ -172,6 +172,8 @@ define 'cs!xlform/mv.skipLogicHelpers', [
           criteria.push @build_empty_criterion()
 
       catch e
+        trackJs?.console.log("SkipLogic cell: #{serialized_criteria}")
+        trackJs?.console.error("could not parse skip logic. falling back to hand-coded")
         return false
       return [criteria, parsed.operator]
 
