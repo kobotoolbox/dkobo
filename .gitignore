@@ -35,3 +35,6 @@ dkobo.pyproj
 dkobo.pyproj.user
 dkobo.sln
 dkobo.v12.suo
+
+dkobo/static/js/*.html
+npm-debug.log

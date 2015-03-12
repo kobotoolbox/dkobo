@@ -35,7 +35,7 @@ define 'cs!xlform/model.surveyFragment', [
       else
         cb(r)
     @_afterIterator(cb, ctx)  if '_afterIterator' of @
-    ``
+    return
 
   class surveyFragment.SurveyFragment extends $base.BaseCollection
     constructor: (a,b)->
@@ -44,6 +44,7 @@ define 'cs!xlform/model.surveyFragment', [
       passFunctionToMetaModel(@, "set")
       passFunctionToMetaModel(@, "get")
       passFunctionToMetaModel(@, "on")
+      passFunctionToMetaModel(@, "off")
       passFunctionToMetaModel(@, "trigger")
       super(a,b)
     _validate: ->

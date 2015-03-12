@@ -14,6 +14,10 @@ var __hasProp = {}.hasOwnProperty,
 
 var rowDetailsSkipLogic = {};
 
+  /**-----------------------------------------------------------------------------------------------------------
+   * Factories.RowDetail.SkipLogic.coffee
+   -----------------------------------------------------------------------------------------------------------**/
+
 rowDetailsSkipLogic.SkipLogicFactory = (function() {
     SkipLogicFactory.prototype.create_operator = function(type, symbol, id) {
         var operator;
@@ -55,7 +59,7 @@ rowDetailsSkipLogic.SkipLogicFactory = (function() {
                 model = new rowDetailsSkipLogic.DecimalResponseModel;
                 break;
             default:
-                model = new rowDetailsSkipLogic.ResponseModel;
+                model = new rowDetailsSkipLogic.ResponseModel(type);
         }
         return model.set('type', type);
     };
@@ -68,13 +72,17 @@ rowDetailsSkipLogic.SkipLogicFactory = (function() {
 
 })();
 
+  /**-----------------------------------------------------------------------------------------------------------
+   * Model.RowDetail.SkipLogic.Criterion.js
+   -----------------------------------------------------------------------------------------------------------**/
+
 rowDetailsSkipLogic.SkipLogicCriterion = (function(_super) {
     __extends(SkipLogicCriterion, _super);
 
     SkipLogicCriterion.prototype.serialize = function() {
         var response_model;
         response_model = this.get('response_value');
-        if ((response_model != null) && (this.get('operator') != null) && (this.get('question_cid') != null) && response_model.isValid() !== false && this._get_question()) {
+        if ((response_model != null) && (this.get('operator') != null) && (this.get('question_cid') != null) && response_model.isValid() !== false && (response_model.get('value') != null) && this._get_question()) {
             this._get_question().finalize();
             return this.get('operator').serialize(this._get_question().get('name').get('value'), response_model.get('value'));
         } else {
@@ -99,7 +107,7 @@ rowDetailsSkipLogic.SkipLogicCriterion = (function(_super) {
             this.change_operator(this.get('operator').get_value());
         }
         if ((this.get('operator').get_type().response_type == null) && this._get_question().response_type !== ((_ref2 = this.get('response_value')) != null ? _ref2.get_type() : void 0)) {
-            return this.change_response(this.get('response_value').get('value'));
+            return this.change_response((response_model = this.get('response_value')) != null ? (this._get_question()._isSelectQuestion() ? response_model.get('cid'): response_model.get('value')) : '');
         }
     };
 
@@ -121,7 +129,7 @@ rowDetailsSkipLogic.SkipLogicCriterion = (function(_super) {
         operator_model = this.factory.create_operator((type.type === 'equality' ? question_type.equality_operator_type : type.type), symbol, operator);
         this.set('operator', operator_model);
         if ((type.response_type || question_type.response_type) !== ((_ref = this.get('response_value')) != null ? _ref.get('type') : void 0)) {
-            return this.change_response(((_ref1 = this.get('response_value')) != null ? _ref1.get('value') : void 0) || '');
+            return this.change_response(((_ref1 = this.get('response_value')) != null ? (this._get_question()._isSelectQuestion() ? _ref1.get('cid'): _ref1.get('value')) : void 0) || '');
         }
     };
 
@@ -139,27 +147,30 @@ rowDetailsSkipLogic.SkipLogicCriterion = (function(_super) {
     };
 
     SkipLogicCriterion.prototype.change_response = function(value) {
-        var choice_names, choices, current_value, response_model;
+        var choice_cids, choices, current_value, response_model;
         response_model = this.get('response_value');
-        current_value = response_model != null ? response_model.get('value') : void 0;
         if (!response_model || response_model.get('type') !== this.get_correct_type()) {
             response_model = this.factory.create_response_model(this.get_correct_type());
             this.set('response_value', response_model);
         }
         if (this.get_correct_type() === 'dropdown') {
-            choices = this._get_question().getList().options.models;
+            current_value = response_model ? response_model.get('cid') : null;
 
-            this.set_option_names(choices)
+            var choicelist = this._get_question().getList();
+            response_model.set('choicelist', choicelist);
+            choices = choicelist.options.models;
 
-            choice_names = _.map(choices, function(model) {
-                return model.get('name');
+            this.set_option_names(choices);
+
+            choice_cids = _.map(choices, function(model) {
+                return model.cid;
             });
-            if (__indexOf.call(choice_names, value) >= 0) {
+            if (__indexOf.call(choice_cids, value) >= 0) {
                 return response_model.set_value(value);
-            } else if (__indexOf.call(choice_names, current_value) >= 0) {
+            } else if (__indexOf.call(choice_cids, current_value) >= 0) {
                 return response_model.set_value(current_value);
             } else {
-                return response_model.set_value(choices[0].get('name'));
+                return response_model.set_value(choices[0].cid);
             }
         } else {
             return response_model.set_value(value);
@@ -174,6 +185,10 @@ rowDetailsSkipLogic.SkipLogicCriterion = (function(_super) {
 
     return SkipLogicCriterion;
 })(Backbone.Model);
+
+  /**-----------------------------------------------------------------------------------------------------------
+   * Model.RowDetail.SkipLogic.Operators.js
+   -----------------------------------------------------------------------------------------------------------**/
 
 rowDetailsSkipLogic.Operator = (function(_super) {
     __extends(Operator, _super);
@@ -311,11 +326,25 @@ rowDetailsSkipLogic.SelectMultipleSkipLogicOperator = (function(_super) {
 
 })(rowDetailsSkipLogic.SkipLogicOperator);
 
+  /**-----------------------------------------------------------------------------------------------------------
+   * Model.RowDetail.SkipLogic.Responses.js
+   -----------------------------------------------------------------------------------------------------------**/
+
 rowDetailsSkipLogic.ResponseModel = (function(_super) {
     __extends(ResponseModel, _super);
 
-    function ResponseModel() {
-        return ResponseModel.__super__.constructor.apply(this, arguments);
+    function ResponseModel(type) {
+        ResponseModel.__super__.constructor.apply(this, []);
+        if (type === 'dropdown') {
+            this._set_value = this.set_value;
+            this.set_value = function (cid) {
+                var choice = this.get('choicelist').options.get(cid);
+                if (choice) {
+                    this._set_value(choice.get('name'));
+                    this.set('cid', cid);
+                }
+            }
+        }
     }
 
     ResponseModel.prototype.get_type = function() {
