@@ -40,9 +40,9 @@ define 'cs!xlform/view.surveyApp', [
 
       _s = (i)-> JSON.stringify(i)
       if _s(rIds) isnt _s(elIds)
-        console?.error "Order do not match"
-        console?.error _s(rIds)
-        console?.error _s(elIds)
+        trackJs?.console.log _s(rIds)
+        trackJs?.console.log _s(elIds)
+        trackJs?.console.error("Row model does not match view")
         false
       else
         true
@@ -576,8 +576,11 @@ define 'cs!xlform/view.surveyApp', [
         rowEl.slideUp 175, "swing", ()=>
           rowEl.remove()
           @survey.rows.remove matchingRow
-          if parent != @ && parent.rows.length == 0
-            parent_view = @__rowViews.get(parent.cid)._deleteGroup()
+          if parent.constructor.kls == "Group" && parent.rows.length == 0
+            parent_view = @__rowViews.get(parent.cid)
+            if !parent_view
+              trackJs?.console.error("parent view is not defined", matchingRow.get('name').get('value'))
+            parent_view._deleteGroup()
         @set_multioptions_label()
 
     groupSelectedRows: ->
