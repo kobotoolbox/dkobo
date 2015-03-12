@@ -24,3 +24,4 @@ django-taggit
 django-digest==1.13
 # django-digest depends on python-digest but does not install it automatically
 python-digest==1.7
+django-reversion==1.8.4

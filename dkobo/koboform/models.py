@@ -6,7 +6,9 @@ from django.db import models
 from django.contrib.auth.models import User
 from jsonfield import JSONField
 from taggit.managers import TaggableManager
+import reversion
 
+@reversion.register
 class SurveyDraft(models.Model):
     '''
     SurveyDrafts belong to a user and contain the minimal representation of
