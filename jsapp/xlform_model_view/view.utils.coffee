@@ -94,10 +94,12 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
     debugFrameStyle =
       position: "fixed"
       width: "95%"
-      height: "50%"
+      height: "80%"
       bottom: 10
       left: "2.5%"
       overflow: "auto"
+      z-index: 100
+      background-color: "rgba(255,255,255,0.7)"
 
     showFn = (txt)->
       html = txt.split("\n").join("<br>")
