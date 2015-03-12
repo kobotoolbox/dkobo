@@ -67,8 +67,12 @@ def create_survey_draft(request):
 @login_required
 @api_view(['GET', 'PUT', 'DELETE', 'PATCH'])
 def survey_draft_detail(request, pk, format=None):
+    kwargs = {'pk': pk}
+    if not request.user.is_superuser:
+        kwargs['user'] = request.user
+
     try:
-        survey_draft = SurveyDraft.objects.get(pk=pk, user=request.user)
+        survey_draft = SurveyDraft.objects.get(**kwargs)
     except SurveyDraft.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
