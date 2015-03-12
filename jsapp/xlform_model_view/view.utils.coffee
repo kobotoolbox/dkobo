@@ -98,8 +98,8 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
       bottom: 10
       left: "2.5%"
       overflow: "auto"
-      z-index: 100
-      background-color: "rgba(255,255,255,0.7)"
+      zIndex: 100
+      backgroundColor: "rgba(255,255,255,0.7)"
 
     showFn = (txt)->
       html = txt.split("\n").join("<br>")
