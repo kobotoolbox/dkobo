@@ -112,6 +112,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'taggit',
     'django_digest',
+    'reversion',
 )
 
 SOUTH_MIGRATION_MODULES = {
@@ -141,6 +142,7 @@ MARKITUP_FILTER = ('markdown.markdown', {'safe_mode': False})
 LOGIN_REDIRECT_URL = '/'
 
 MIDDLEWARE_CLASSES = (
+    'reversion.middleware.RevisionMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
