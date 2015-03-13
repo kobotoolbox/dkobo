@@ -117,6 +117,7 @@ INSTALLED_APPS = (
 
 SOUTH_MIGRATION_MODULES = {
     'taggit': 'taggit.south_migrations',
+    'reversion': 'reversion.south_migrations',
 }
 
 TEMPLATE_CONTEXT_PROCESSORS = (
