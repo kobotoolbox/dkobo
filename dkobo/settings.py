@@ -123,6 +123,7 @@ SOUTH_MIGRATION_MODULES = {
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'dkobo.hub.context_processors.welcome_message',
+    'dkobo.hub.context_processors.external_service_tokens',
 )
 
 KOBOCAT_URL = os.environ.get('KOBOCAT_URL', False)

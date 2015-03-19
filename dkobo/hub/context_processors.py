@@ -19,3 +19,14 @@ def welcome_message(request):
         return ctx
     else:
         return {}
+
+def external_service_tokens(request):
+    context = {}
+    if settings.TRACKJS_TOKEN:
+        context['trackjs_token'] = settings.TRACKJS_TOKEN
+    if settings.GOOGLE_ANALYTICS_TOKEN:
+        context['google_analytics_token'] = settings.GOOGLE_ANALYTICS_TOKEN
+    if settings.LIVE_RELOAD:
+        context['livereload_address'] = "http://%s:35729/livereload.js" % request.META['HTTP_HOST'].split(':')[0]
+    context['DEBUG'] = settings.DEBUG
+    return context
