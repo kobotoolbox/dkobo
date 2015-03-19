@@ -327,12 +327,14 @@ define 'cs!xlform/mv.skipLogicHelpers', [
 
     determine_add_new_criterion_visibility: () ->
       if @all_presenters_are_valid()
-        if !@$add_new_criterion_button
-          trackJs.console.error("@$add_new_criterion_button is not defined")
-        else
-          @$add_new_criterion_button.show()
+        action = 'show()'
+        @$add_new_criterion_button?.show()
       else
-        @$add_new_criterion_button.hide()
+        action = 'hide()'
+        @$add_new_criterion_button?.hide()
+
+      if !@$add_new_criterion_button
+        trackJs?.console.error("@$add_new_criterion_button is not defined. cannot call #{action} [inside of determine_add_new_criterion_visibility]")
 
     constructor: (@presenters, separator, @builder, @view_factory, @context) ->
       @view = @view_factory.create_criterion_builder_view()
