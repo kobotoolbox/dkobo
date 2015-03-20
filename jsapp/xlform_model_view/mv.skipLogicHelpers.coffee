@@ -214,6 +214,9 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       if !question
         return false
 
+      if !(question in @questions())
+        throw 'question is not selectable'
+
       question_type = question.get_type()
 
       [operator_model, operator_picker_view] = @build_operator_logic question_type
