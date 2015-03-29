@@ -242,7 +242,8 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       return @build_criterion_logic @model_factory.create_operator('empty'), operator_picker_view, response_value_view
 
     questions: () ->
-      @current_question.selectableRows()
+      @selectable = @current_question.selectableRows() || @selectable
+      return @selectable
 
 
   ###----------------------------------------------------------------------------------------------------------###
@@ -355,7 +356,6 @@ define 'cs!xlform/mv.skipLogicHelpers', [
         @determine_add_new_criterion_visibility()
 
       removeInvalidPresenters = () =>
-        builder.current_question.questions = null
         questions = builder.questions()
         presenters_to_be_removed = []
         _.each @presenters, (presenter) =>
