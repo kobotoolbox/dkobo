@@ -53,7 +53,9 @@ define 'cs!xlform/model.row', [
       ` `
 
     selectableRows: () ->
-      questions = []
+      if @questions?
+        return @questions
+      @questions = []
       limit = false
 
       non_selectable = ['datetime', 'time', 'note', 'calculate', 'group']
@@ -61,9 +63,9 @@ define 'cs!xlform/model.row', [
       @getSurvey().forEachRow (question) =>
         limit = limit || question is @
         if !limit && question.getValue('type') not in non_selectable
-          questions.push question
+          @questions.push question
       , includeGroups:true
-      questions
+      @questions
 
     toJSON2: ->
       outObj = {}

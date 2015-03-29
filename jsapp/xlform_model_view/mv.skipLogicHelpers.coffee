@@ -355,6 +355,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
         @determine_add_new_criterion_visibility()
 
       removeInvalidPresenters = () =>
+        builder.current_question.questions = null
         questions = builder.questions()
         presenters_to_be_removed = []
         _.each @presenters, (presenter) =>
