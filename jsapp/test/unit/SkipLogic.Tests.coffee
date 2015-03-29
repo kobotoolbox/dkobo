@@ -705,6 +705,7 @@ skip_logic_helpers = (dkobo_xlform) ->
       _builder.survey =
         on: sinon.spy()
         off: sinon.spy()
+      _builder.current_question = questions: 'test question'
       _view = sinon.stubObject $vRdsl.SkipLogicCriterionBuilderView
       _delimiter_spy =
         show: sinon.spy()
