@@ -85,6 +85,8 @@ define 'cs!xlform/model.base', [
       parent = @_parent
       while parent._parent
         parent = parent._parent
+        if parent == null
+          return null
       parent
 
   class base.RowDetail extends base.BaseModel

@@ -242,7 +242,8 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       return @build_criterion_logic @model_factory.create_operator('empty'), operator_picker_view, response_value_view
 
     questions: () ->
-      @current_question.selectableRows()
+      @selectable = @current_question.selectableRows() || @selectable
+      return @selectable
 
 
   ###----------------------------------------------------------------------------------------------------------###
