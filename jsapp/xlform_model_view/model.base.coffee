@@ -83,10 +83,10 @@ define 'cs!xlform/model.base', [
       @_parent.at(ii+1)
     getSurvey: ->
       parent = @_parent
+      if parent == null
+        return null
       while parent._parent
         parent = parent._parent
-        if parent == null
-          return null
       parent
 
   class base.RowDetail extends base.BaseModel
