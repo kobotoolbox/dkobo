@@ -63,7 +63,7 @@ $nested-btn--addrow-height: 24px;
         left: -40px;
         top: -42px;
         padding: $click-area-btn--addrow-padding-tb 0 0 11px;
-        z-index: 100;
+        // z-index: 1;
     }
     .touch & {
         height: 36px;
