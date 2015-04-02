@@ -43,7 +43,8 @@ kobo.directive ('kobocatFormPublisher', ['$api', '$miscUtils', '$routeTo', funct
 
             scope.show_form_name_exists_message = false;
             scope.get_form_id = function (item) {
-                return JSON.parse(item.summary).form_id;
+//                return JSON.parse(item.summary).form_id;
+                return item.summary.form_id;
             };
             scope.form_name = scope.get_form_id(scope.item);
 
