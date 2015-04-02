@@ -28,9 +28,9 @@ def _is_enabled():
 
 def _kobocat_url(path="/", query_string=False, internal=False):
     if internal:
-        prepped_url = settings.KOBOCAT_INTERNAL_URL
+        prepped_url = "" if isinstance(settings.KOBOCAT_INTERNAL_URL, bool) else settings.KOBOCAT_INTERNAL_URL
     else:
-        prepped_url = settings.KOBOCAT_URL
+        prepped_url = "" if isinstance(settings.KOBOCAT_URL, bool) else settings.KOBOCAT_URL
 
     prepped_url += path
 
