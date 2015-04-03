@@ -132,7 +132,6 @@
   </head>
 
   <body ng-app="dkobo">
-  {%verbatim %}
 
     <section top-level-menu class="top-level-menu" active-tab="activeTab" ng-class="topLevelMenuActive"></section>
     <main class="main" ng-click="closeTopMenu()">
@@ -142,12 +141,18 @@
             <i class="fa fa-bars fa-lg fa-inverse" ng-click="toggleTopMenu($event)"></i>
           </span>
           <h1 class="header-bar__title">
+            {%verbatim %}
             <a href="#/{{icon_link}}">
               <span class="header-bar__title-text">{{ activeTab }}</span>
             </a>
+            {% endverbatim %}
           </h1>
+          {% if sitewide__logo %}
+            {{ sitewide__logo|safe }}
+          {% else %}
             <span class="header-bar__top-logo pull-right" ng-click="toggleBleedingEdge($event)"></span>
             <a href="http://support.kobotoolbox.org/" class="header-bar__support pull-right" target="_blank" title="Visit our self-help pages or ask a support question (opens in new tab)">Support</a>
+          {% endif %}
         </div>
       </header>
 
@@ -155,7 +160,6 @@
       <div class="alert-modal"></div>
     </main>
 
-  {% endverbatim %}
 
   {% if trackjs_token %}
   <script type="text/javascript">
