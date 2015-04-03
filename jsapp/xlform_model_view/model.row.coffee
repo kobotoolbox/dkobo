@@ -7,24 +7,22 @@ define 'cs!xlform/model.row', [
         'cs!xlform/model.utils',
         'cs!xlform/model.surveyDetail',
         'cs!xlform/model.aliases',
-        'cs!xlform/model.rowDetail',
         'cs!xlform/model.choices',
         'cs!xlform/mv.skipLogicHelpers',
         ], (
             _,
-            base,
+            $base,
             $configs,
             $utils,
             $surveyDetail,
             $aliases,
-            $rowDetail,
             $choices,
             $skipLogicHelpers,
             )->
 
   row = {}
 
-  class row.BaseRow extends base.BaseModel
+  class row.BaseRow extends $base.BaseModel
     @kls = "BaseRow"
     constructor: (attributes={}, options={})->
       for key, val of attributes when key is ""
@@ -37,8 +35,8 @@ define 'cs!xlform/model.row', [
     isError: -> false
     convertAttributesToRowDetails: ->
       for key, val of @attributes
-        unless val instanceof $rowDetail.RowDetail
-          @set key, new $rowDetail.RowDetail({key: key, value: val}, {_parent: @}), {silent: true}
+        unless val instanceof $base.RowDetail
+          @set key, $base.createRowDetail({key: key, value: val}, {_parent: @}), {silent: true}
     attributesArray: ()->
       arr = ([k, v] for k, v of @attributes)
       arr.sort (a,b)-> if a[1]._order < b[1]._order then -1 else 1
@@ -75,7 +73,7 @@ define 'cs!xlform/model.row', [
           result = {}
           result[val.get('typeId')] = val.get('listName')
         else
-          result = @getValue(key)
+          result = @getAttributeValue(key, language: 'default')
         unless @hidden
           if _.isBoolean(result)
             outObj[key] = $configs.boolOutputs[if result then "true" else "false"]
@@ -86,7 +84,7 @@ define 'cs!xlform/model.row', [
     toJSON: ->
       outObj = {}
       for [key, val] in @attributesArray()
-        result = @getValue(key)
+        result = @getAttributeValue(key, language: 'default')
         unless @hidden
           if _.isBoolean(result)
             outObj[key] = $configs.boolOutputs[if result then "true" else "false"]
@@ -133,7 +131,7 @@ define 'cs!xlform/model.row', [
       @convertAttributesToRowDetails()
 
       typeDetail = @get("type")
-      tpVal = typeDetail.get("value")
+      tpVal = typeDetail._value()
       processType = (rd, newType, ctxt)=>
         # if value changes, it could be set from an initialization value
         # or it could be changed elsewhere.
@@ -190,13 +188,13 @@ define 'cs!xlform/model.row', [
       return newRow
 
     finalize: ->
-      existing_name = @get("name").getValue()
+      existing_name = @get("name")._value()
       unless existing_name
         names = []
         @getSurvey().forEachRow (r)->
-          name = r.get("name").getValue()
+          name = r.get("name")._value()
           names.push(name)  if name
-        label = @get("label").get("value")
+        label = @get("label")._translation({language: 'default'})
         @get("name").set("value", $utils.sluggifyLabel(label, names))
       @
 
@@ -234,10 +232,7 @@ define 'cs!xlform/model.row', [
         console?.error("Error creating row: [#{options.error}]", obj)
       super(obj, options)
     isError: -> true
-    getValue: (what)->
-      if what of @attributes
-        @attributes[what].get('value')
-      else
-        "[error]"
+    getAttributeValue: (what, opts)->
+      @attributes[what]?._value()
 
   row

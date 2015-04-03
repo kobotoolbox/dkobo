@@ -158,8 +158,9 @@ define 'cs!xlform/model.survey', [
           oRows.push colJson
 
         @forEachRow addRowToORows, includeErrors: true, includeGroupEnds: true
-        for sd in @surveyDetails.models when sd.get("value")
-          addRowToORows(sd)
+        for sd in @surveyDetails.models
+          if '_value' of sd
+            addRowToORows(sd)
 
         columns: oCols
         rowObjects: oRows

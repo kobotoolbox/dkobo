@@ -45,7 +45,7 @@ define 'cs!xlform/view.rowDetail', [
       changing = false
       reflectValueInEl = ()=>
         if !changing
-          val = @model.get('value')
+          val = @model._value()
           if val is true or val in $configs.truthyValues
             $el.prop('checked', true)
       @model.on 'change:value', reflectValueInEl
@@ -76,15 +76,11 @@ define 'cs!xlform/view.rowDetail', [
       reflectValueInEl = (force=false)=>
         # This should never change the model value
         if force || !inTransition
-          modelVal = @model.get('value')
-          if inputType is 'checkbox'
-            if !_.isBoolean(modelVal)
-              modelVal = modelVal in $configs.truthyValues
-            # triggers element change event
-            $el.prop('checked', modelVal)
+          if @model._hasLang()
+            modelVal = @model._translation(language: 'default')
           else
-            # triggers element change event
-            $el.val(modelVal)
+            modelVal = @model._value()
+          $el.val(modelVal)
 
       reflectValueInEl()
       @model.on 'change:value', reflectValueInEl
@@ -133,7 +129,7 @@ define 'cs!xlform/view.rowDetail', [
   viewRowDetail.DetailViewMixins.type =
     html: -> false
     insertInDOM: (rowView)->
-      typeStr = @model.get("typeId")
+      typeStr = @model._value().split(" ")[0]
       if !(@model._parent.constructor.kls is "Group")
         faClass = $icons.get(typeStr).get("faClass")
         rowView.$el.find(".card__header-icon").addClass("fa-#{faClass}")
@@ -143,7 +139,7 @@ define 'cs!xlform/view.rowDetail', [
     html: -> false
     insertInDOM: (rowView)->
       cht = rowView.$label
-      cht.html(@model.get("value")|| new Array(10).join('&nbsp;'))
+      cht.html(@model._translation(language: 'default')) || new Array(10).join('&nbsp;'))
       @
 
   viewRowDetail.DetailViewMixins.hint =
@@ -220,13 +216,10 @@ define 'cs!xlform/view.rowDetail', [
         @model.set 'value', value
         @model.deduplicate @model.getSurvey()
       )
-      update_view = () => @$el.find('input').eq(0).val(@model.get("value") || $modelUtils.sluggifyLabel @model._parent.getValue('label'))
+      update_view = () => @$el.find('input').eq(0).val(@model._value() || $modelUtils.sluggifyLabel @model._parent.getValue('label'))
       update_view()
 
       @model._parent.get('label').on 'change:value', update_view
-  # insertInDom: (rowView)->
-    #   # default behavior...
-    #   rowView.defaultRowDetailParent.append(@el)
 
   viewRowDetail.DetailViewMixins.default =
     html: ->
@@ -235,7 +228,7 @@ define 'cs!xlform/view.rowDetail', [
       label = if @model.key == 'default' then 'Default response' else @model.key.replace(/_/g, ' ')
       viewRowDetail.Templates.textbox @cid, @model.key, label, 'text'
     afterRender: ->
-      @$el.find('input').eq(0).val(@model.get("value"))
+      @$el.find('input').eq(0).val(@model._value())
       @listenForInputChange()
 
   viewRowDetail.DetailViewMixins.calculation =

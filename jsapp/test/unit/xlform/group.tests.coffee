@@ -142,7 +142,7 @@ define [
             names = []
             s.forEachRow (
                     (r)->
-                      name = r.get('name')?.get('value') or _n
+                      name = r.get('name')?._value() or _n
                       names.push name
                   ), includeGroups: true
             names

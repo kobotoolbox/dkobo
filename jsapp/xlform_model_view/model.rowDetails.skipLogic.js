@@ -84,7 +84,7 @@ rowDetailsSkipLogic.SkipLogicCriterion = (function(_super) {
         response_model = this.get('response_value');
         if ((response_model != null) && (this.get('operator') != null) && (this.get('question_cid') != null) && response_model.isValid() !== false && (response_model.get('value') != null) && this._get_question()) {
             this._get_question().finalize();
-            return this.get('operator').serialize(this._get_question().get('name').get('value'), response_model.get('value'));
+            return this.get('operator').serialize(this._get_question().get('name')._value(), response_model._value());
         } else {
             return '';
         }
@@ -107,7 +107,7 @@ rowDetailsSkipLogic.SkipLogicCriterion = (function(_super) {
             this.change_operator(this.get('operator').get_value());
         }
         if ((this.get('operator').get_type().response_type == null) && this._get_question().response_type !== ((_ref2 = this.get('response_value')) != null ? _ref2.get_type() : void 0)) {
-            return this.change_response((response_model = this.get('response_value')) != null ? (this._get_question()._isSelectQuestion() ? response_model.get('cid'): response_model.get('value')) : '');
+            return this.change_response((response_model = this.get('response_value')) != null ? (this._get_question()._isSelectQuestion() ? response_model.get('cid'): response_model._value()) : '');
         }
     };
 
@@ -129,7 +129,7 @@ rowDetailsSkipLogic.SkipLogicCriterion = (function(_super) {
         operator_model = this.factory.create_operator((type.type === 'equality' ? question_type.equality_operator_type : type.type), symbol, operator);
         this.set('operator', operator_model);
         if ((type.response_type || question_type.response_type) !== ((_ref = this.get('response_value')) != null ? _ref.get('type') : void 0)) {
-            return this.change_response(((_ref1 = this.get('response_value')) != null ? (this._get_question()._isSelectQuestion() ? _ref1.get('cid'): _ref1.get('value')) : void 0) || '');
+            return this.change_response(((_ref1 = this.get('response_value')) != null ? (this._get_question()._isSelectQuestion() ? _ref1.get('cid'): _ref1._value()) : void 0) || '');
         }
     };
 

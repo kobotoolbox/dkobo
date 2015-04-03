@@ -147,8 +147,6 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       @view.response_value_view.val response_value
       @view.attach_to destination
 
-
-
       @dispatcher.trigger 'rendered', @
 
     serialize: () ->

@@ -22,7 +22,7 @@ define [
 
     describe '. deserialize parses csv, json, and object', ->
       it 'has deserialize method defined', ->
-        expect(deserialize).toBeDefined()
+        expect($inputDeserializer.deserialize).toBeDefined()
       it 'parses a csv', ->
         oneliner = "survey,,,\n,key1,key2,key3\n,val1,val2,val3\nchoices,,,\n,k4,k5\n,v4,v5"
         $inputDeserializer(oneliner)
@@ -58,40 +58,3 @@ define [
         $inputDeserializer(ss2, context)
         expect(context.error).toBeDefined()
         expect(context.error).toContain('survey sheet')
-
-
-###
-require ['cs!xlform/model.survey', 'cs!fixtures/surveys'], ($survey, $surveyFixtures)->
-  Survey = $survey.Survey
-  pizza_survey = $surveyFixtures.pizza_survey
-
-  ensure_equivalent = (sFixId)->
-    fixt = $surveyFixtures[sFixId]
-    describe "fixtures/surveys.#{sFixId}:", ->
-      it "the fixture exists", ->
-        expect(fixt.csv).toBeDefined()
-        expect(fixt.xlf).toBeDefined()
-        expect(fixt.xlf2).toBeDefined()
-
-      describe "the fixture imports from object", ->
-        beforeEach ->
-          @s1 = Survey.load(fixt.csv)
-          @s2 = Survey.load(fixt.xlf)
-          @s3 = Survey.load(fixt.xlf2)
-
-        it "creates surveys", ->
-          expect(@s1).toBeDefined()
-          expect(@s2).toBeDefined()
-          expect(@s3).toBeDefined()
-
-        it "creates surveys with matching fingerprints", ->
-          fingerprint = (s)->
-            # something that ensures the output is equivalent
-            "#{s.toCSV().length}"
-          expect(fingerprint(@s1)).not.toBe('')
-          expect(fingerprint(@s1)).toEqual(fingerprint(@s2))
-          expect(fingerprint(@s1)).toEqual(fingerprint(@s3))
-          expect(fingerprint(@s2)).toEqual(fingerprint(@s3))
-
-  ensure_equivalent('pizza_survey')
-###

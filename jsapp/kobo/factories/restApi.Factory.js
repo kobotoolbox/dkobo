@@ -93,7 +93,6 @@ kobo.factory('$restApi', ['$resource', '$timeout', '$cacheFactory', '$rootScope'
 
                 var callback = function () {
                     cache.remove('list:' + assetName);
-
                     _this.items = _.filter(_this.items, function (item) {
                         return !item.meta.isSelected
                     });

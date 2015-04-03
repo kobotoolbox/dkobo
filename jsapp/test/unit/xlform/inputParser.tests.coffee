@@ -9,20 +9,162 @@ define [
             )->
 
   describe '" $inputParser', ->
-    beforeEach ->
-      @sampleSurveyObj =
-        survey: [
-          key1: "val1"
-          key2: "val2"
-          key3: "val3"
-        ]
-        choices: [
-          k4: "v4"
-          k5: "v5"
-        ]
-    describe '. loadChoiceLists()"', ->
-      list = new $choices.ChoiceList()
-      $inputParser.loadChoiceLists($surveys.pizza_survey.main().choices, list)
+    describe '. languages "', ->
+      describe 'has working columnParsers', ->
+        ###
+        This tests the internal parsers' ability to verify the correct
+        number of colon-separated arguments and responses
+
+        see model.inputParser's ParseSorter class and sorter methods
+        for more info.
+        ###
+        beforeEach ->
+          _parsers = $inputParser.languages.__parsers
+          @parseSimple =  (c)-> _parsers.simple(c)
+          @parseRegular = (c)-> _parsers.regular(c)
+          @parseMedia =   (c)-> _parsers.media(c)
+
+        describe 'and parses simple columns', ->
+          it 'returns the correct value', ->
+            expect(@parseSimple('columnName')).toEqual(column: 'columnName')
+
+          it 'fails multiple values are provided', ->
+            # 1 value ok. 2 or 3 values, not ok.
+            expect((=> @parseSimple('a1'))).not.toThrow()
+            expect((=> @parseSimple('a1::a2'))).toThrow()
+            expect((=> @parseSimple('a1::a2::a3'))).toThrow()
+
+        describe 'and parses regular columns', ->
+          it 'with one value', ->
+            expect(@parseRegular('columnName')).toEqual(column: 'columnName', language: '')
+          it 'with two values', ->
+            expect(@parseRegular('columnName::lang')).toEqual(column: 'columnName', language: 'lang')
+          it 'fails when three values are passed', ->
+            # 1 or 2 values ok. 3 values, not ok.
+            expect((=> @parseRegular('a1'))).not.toThrow()
+            expect((=> @parseRegular('a1::a2'))).not.toThrow()
+            expect((=> @parseRegular('a1::a2::a3'))).toThrow()
+
+        describe 'and parses media columns', ->
+          it 'with two values', ->
+            expect(@parseMedia('columnName::mtype')).toEqual(column: 'columnName', mediaType: 'mtype', language: '')
+          it 'with three values', ->
+            expect(@parseMedia('columnName::mtype::lang')).toEqual(column: 'columnName', mediaType: 'mtype', language: 'lang')
+          it 'fails with 1 or 4 values', ->
+            # 2 or 3 values ok. 1 or 4 values not ok.
+            expect((=> @parseMedia('a1'))).toThrow()
+            expect((=> @parseMedia('a1::a2'))).not.toThrow()
+            expect((=> @parseMedia('a1::a2::a3'))).not.toThrow()
+            expect((=> @parseMedia('a1::a2::a3::a4'))).toThrow()
+
+      describe 'has a working parse-sorter', ->
+        beforeEach ->
+          @sorter = $inputParser.languages.__createParseSorter({
+              simple:
+                ['name', 'constraint', 'appearance']
+              media:
+                [/^media::.+/, /misc_regex.*/]
+              fallback:
+                'regular'
+            })
+
+        describe 'gives the right column parser', ->
+          beforeEach ->
+            @expectColumnParserId = (colName)=>
+              expect(@sorter._get_handler(colName).fnId)
+          it 'exact string lookup', ->
+            @expectColumnParserId('name').toBe('simple')
+            @expectColumnParserId('constraint').toBe('simple')
+            @expectColumnParserId('appearance').toBe('simple')
+          it 'regex lookup', ->
+            @expectColumnParserId('media::blahblah').toBe('media')
+            @expectColumnParserId('misc_regexblahblah').toBe('media')
+          it 'falls back on default', ->
+            @expectColumnParserId('unknowncolumn').toBe('regular')
+
+      describe 'uses the parseSorter and the columnParsers together', ->
+        beforeEach ->
+          @listLanguages = (s, psOpts)->
+            uniqLangs = []
+            if !psOpts
+              throw new Error("provide psOpts to go to the ParseSorter")
+            sorter = $inputParser.languages.__createParseSorter(psOpts)
+            for own sId, sht of s
+              for row in sht
+                for own col, val of row
+                  sorter._import_column(col)
+              for ll in sorter.langs() when ll not in uniqLangs
+                uniqLangs.push(ll)
+            uniqLangs.sort()
+            uniqLangs
+
+        describe 'interprets parse sort opts properly', ->
+          it 'fails if no fallback is set', ->
+            inp = JSON.parse("""
+                {
+                  "survey": [
+                    {
+                      "invalidkey": "val2"
+                    }
+                  ]
+                }
+              """)
+            expect((=> @listLanguages(inp, fallback: false))).toThrow()
+            expect((=> @listLanguages(inp, fallback: 'simple'))).not.toThrow()
+
+        it 'lists the languages in the document', ->
+          inp = JSON.parse("""
+              {
+                "survey": [
+                  {
+                    "key1": "val1",
+                    "key2::lang1": "val2"
+                  }
+                ],
+                "choices": [
+                  {
+                    "k4::lang2": "v4",
+                    "k5": "v5"
+                  }
+                ]
+              }
+            """)
+          expect(@listLanguages(inp, fallback: "regular")).toEqual(["", "lang1", "lang2"])
+
+        it 'lists all languages in a complex xlsform document', ->
+          inp = JSON.parse("""
+              {
+                "survey": [
+                  {
+                    "type": "text",
+                    "name": "myname",
+                    "label::english": "label en",
+                    "media::x::french": "media fr"
+                  }
+                ],
+                "choices": [
+                  {
+                    "list_name": "yn",
+                    "name": "yes",
+                    "label::dutch": "Ja"
+                  },
+                  {
+                    "list_name": "yn",
+                    "name": "no",
+                    "label::german": "Nien"
+                  }
+                ]
+              }
+            """)
+
+          # using options similar to what will be used on parsing xlsforms
+          langs = @listLanguages inp, {
+            simple: ['list_name', 'type', 'name', 'constraint', 'appearance']
+            media: [/^media::.+/]
+            fallback: 'regular'
+          }
+
+          expect(langs).toEqual(["dutch", "english", "french", "german"])
 
     describe '. parse()"', ->
       it 'parses group hierarchy', ->
@@ -55,85 +197,3 @@ define [
           ])
         expect(results).toEqual([ { type : 'text', name : 'q1' }, { type : 'text', name : 'q2' } ])
 
-    # describe '[.] sortByVisibility "', ->
-    #   it 'method is defined', ->
-    #     expect(false).toBe(true)
-    #     expect($inputParser.sortByVisibility).toBeDefined()
-    #   it 'throws an error if it receives the wrong input', ->
-    #     objInp = ()-> $inputParser.sortByVisibility(@sampleSurveyObj)
-    #     expect(objInp).toThrow()
-    # 
-    #   it 'receives the survey and separates visible fields', ->
-    #     [visib, invisib] = $inputParser.sortByVisibility(@sampleSurveyObj.survey)
-
-#   it 'parses a csv', ->
-#     oneliner = "survey,,,\n,key1,key2,key3\n,val1,val2,val3\nchoices,,,\n,k4,k5\n,v4,v5"
-#     $inputDeserializer(oneliner)
-#     expect(deserialize(oneliner)).toEqual(@sampleSurveyObj)
-#   it 'parses a json string', ->
-#     oneline_json = """{"survey":[{"key1":"val1","key2":"val2","key3":"val3"}],"choices":[{"k4":"v4","k5":"v5"}]}"""
-#     expect(deserialize(oneline_json)).toEqual(@sampleSurveyObj)
-#   it 'parses a js object', ->
-#     expect(deserialize(@sampleSurveyObj)).toEqual(@sampleSurveyObj)
-# 
-# describe '.validateParse notifies validity', ->
-#   beforeEach ->
-#     @validate = (obj, tf=true, expectedError=false)->
-#       ctx = {}
-#       isValid = $inputDeserializer.validateParse(obj, ctx)
-#       expect(ctx).toBeDefined()
-#       expect(isValid).toBe(tf)
-#       expect(ctx.error).toEqual(expectedError)  if expectedError
-# 
-#   it 'valid with just survey sheet', ->
-#     @validate survey: []
-#   describe 'validateParse\'s invalid parameters are caught: ', ->
-#     it '[string]', ->
-#       @validate 'takes only object', false
-#     it '[array]', ->
-#       @validate ['needs to be an object'], false
-# describe ' deserializes and records errors', ->
-#   it ' when input is missing survey sheet', ->
-#     ss2 = 
-#       notSurvey: @sampleSurveyObj.survey
-#       choices: @sampleSurveyObj.choices
-#     context = {}
-#     dump($inputDeserializer(ss2, context))
-#     dump(context)
-# 
-# 
-###
-require ['cs!xlform/model.survey', 'cs!fixtures/surveys'], ($survey, $surveyFixtures)->
-  Survey = $survey.Survey
-  pizza_survey = $surveyFixtures.pizza_survey
-
-  ensure_equivalent = (sFixId)->
-    fixt = $surveyFixtures[sFixId]
-    describe "fixtures/surveys.#{sFixId}:", ->
-      it "the fixture exists", ->
-        expect(fixt.csv).toBeDefined()
-        expect(fixt.xlf).toBeDefined()
-        expect(fixt.xlf2).toBeDefined()
-
-      describe "the fixture imports from object", ->
-        beforeEach ->
-          @s1 = Survey.load(fixt.csv)
-          @s2 = Survey.load(fixt.xlf)
-          @s3 = Survey.load(fixt.xlf2)
-
-        it "creates surveys", ->
-          expect(@s1).toBeDefined()
-          expect(@s2).toBeDefined()
-          expect(@s3).toBeDefined()
-
-        it "creates surveys with matching fingerprints", ->
-          fingerprint = (s)->
-            # something that ensures the output is equivalent
-            "#{s.toCSV().length}"
-          expect(fingerprint(@s1)).not.toBe('')
-          expect(fingerprint(@s1)).toEqual(fingerprint(@s2))
-          expect(fingerprint(@s1)).toEqual(fingerprint(@s3))
-          expect(fingerprint(@s2)).toEqual(fingerprint(@s3))
-
-  ensure_equivalent('pizza_survey')
-###

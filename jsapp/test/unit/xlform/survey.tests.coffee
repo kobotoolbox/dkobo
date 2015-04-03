@@ -158,7 +158,7 @@ define [
         @_load_csv surveys.iterateOver
         @getProp = (propName, arr)->
           (r)->
-            arr.push r.get(propName)?.get('value')
+            arr.push r.get(propName)?._value()
       afterEach -> window.xlfHideWarnings = false
 
       it 'runs normally', ->

@@ -49,12 +49,12 @@ describe "xlform survey model", ->
     dead_simple.insertSurvey(@pizzaSurvey)
 
     expect(dead_simple.rows.length).toBe(3)
-    expect(dead_simple.rows.at(2).getValue("name")).toBe("likes_pizza")
+    expect(dead_simple.rows.at(2).getAttributeValue("name")).toBe("likes_pizza")
 
   it "can import from csv_repr", ->
     expect(@pizzaSurvey.rows.length).toBe(1)
     firstRow = @pizzaSurvey.rows.at(0)
-    expect(firstRow.getValue("name")).toEqual("likes_pizza")
+    expect(firstRow.getAttributeValue("name")).toEqual("likes_pizza")
 
   describe "with simple survey", ->
     beforeEach ->
@@ -85,7 +85,7 @@ describe "xlform survey model", ->
           type: "text"
           }, rowc)
         expect(@pizzaSurvey.rows.length).toBe 2
-        expect(@pizzaSurvey.rows.last().get("label").get("value")).toBe("last row")
+        expect(@pizzaSurvey.rows.last().get("label")._value()).toBe("last row")
 
         @pizzaSurvey.addRowAtIndex({
           name: "firstrow",
@@ -94,7 +94,7 @@ describe "xlform survey model", ->
           }, 0)
 
         expect(@pizzaSurvey.rows.length).toBe 3
-        expect(@pizzaSurvey.rows.first().get("label").get("value")).toBe("first row")
+        expect(@pizzaSurvey.rows.first().get("label")._value()).toBe("first row")
 
         @pizzaSurvey.addRowAtIndex({
           name: "secondrow",
@@ -103,13 +103,13 @@ describe "xlform survey model", ->
           }, 1)
 
         expect(@pizzaSurvey.rows.length).toBe 4
-        expect(@pizzaSurvey.rows.at(1).get("label").get("value")).toBe("second row")
+        expect(@pizzaSurvey.rows.at(1).get("label")._value()).toBe("second row")
 
-        labels = _.map @pizzaSurvey.rows.pluck("label"), (i)-> i.get("value")
+        labels = _.map @pizzaSurvey.rows.pluck("label"), (i)-> i._value()
         expect(labels).toEqual([ 'first row', 'second row', 'Do you like pizza?', 'last row' ])
 
     it "row types changing is trackable", ->
-      expect(@firstRow.getValue("type")).toBe("select_one yes_no")
+      expect(@firstRow.getAttributeValue("type")).toBe("select_one yes_no")
       typeDetail = @firstRow.get("type")
       expect(typeDetail.get("typeId")).toBe("select_one")
       expect(typeDetail.get("list").get("name")).toBe "yes_no"
@@ -185,7 +185,7 @@ describe "xlform survey model", ->
 
       # change row to "text"
       row1.get("type").set("value", "text")
-      expect(row1.get("type").get("value")).toBe("text")
+      expect(row1.get("type")._value()).toBe("text")
 
       # Right now, thinking that we should keep the list around
       # and test to make sure the exported value doesn't have a list

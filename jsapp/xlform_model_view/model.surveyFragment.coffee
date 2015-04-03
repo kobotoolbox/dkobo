@@ -70,8 +70,8 @@ define 'cs!xlform/model.surveyFragment', [
       descriptors = []
       @forEachRow (row) ->
         descriptor =
-          label: row.getValue('label')
-          name: row.getValue('name')
+          label: row.get('label')._value()
+          name: row.get('name')._value()
         descriptors.push(descriptor)
       descriptors
     findRowByCid: (cid, options={})->
@@ -88,10 +88,8 @@ define 'cs!xlform/model.surveyFragment', [
     findRowByName: (name, opts)->
       match = false
       @forEachRow (row)->
-        if (row.getValue("name") || $utils.sluggifyLabel row.getValue('label')) is name
+        if (row.get("name")._value() || $utils.sluggifyLabel row.get('label')._value()) is name
           match = row
-        # maybe implement a way to bust out
-        # of this loop with false response.
         !match
       ,opts
       match
@@ -197,10 +195,10 @@ define 'cs!xlform/model.surveyFragment', [
       row._parent = @rows
       @rows.add(row, at:index)
     _isRepeat: ()->
-      !!(@get("_isRepeat")?.get("value"))
+      !!(@get("_isRepeat")?._value())
 
     autoname: ->
-      name = @getValue('name')
+      name = @getAttributeValue('name')
       if name in [undefined, '']
         slgOpts =
           lowerCase: false
@@ -208,7 +206,7 @@ define 'cs!xlform/model.surveyFragment', [
           lrstrip: true
           incrementorPadding: 3
           validXmlTag: true
-        new_name = $utils.sluggify(@getValue('label'), slgOpts)
+        new_name = $utils.sluggify(@getAttributeValue('label', language: 'default'), slgOpts)
         @setDetail('name', new_name)
 
     finalize: ->
@@ -241,7 +239,10 @@ define 'cs!xlform/model.surveyFragment', [
         out = {}
         for k, val of group.attributes
           if k isnt '_isRepeat'
-            out[k] = val.getValue()
+            if val._hasLang()
+              out[k] = val._translation(language: 'default')
+            else
+              out[k] = val._value()
         out.type = "begin #{group._groupOrRepeatKey()}"
         out
     groupEnd: ->

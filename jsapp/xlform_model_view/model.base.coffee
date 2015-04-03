@@ -58,21 +58,28 @@ define 'cs!xlform/model.base', [
     parse: ->
     linkUp: ->
     finalize: ->
+    get: (what)->
+      super(what)
+    getAttributeValue: (what, opts)->
+      resp = @get(what)
+      if resp
+        if resp._hasLang()
+          resp._translation(opts)
+        else
+          resp = resp._value()
+      else
+        throw new Error("Could not get value")
+
     getValue: (what)->
       if what
-        resp = @get(what)
-        if resp
-          resp = resp.getValue()
-        else
-          throw new Error("Could not get value")
-      else
-        resp = @get("value")
-      resp
+        throw new Error('detail.getValue(att) is deprecated: use detail.getAttributeValue(att)')
+      @_value()
+
     setDetail: (what, value)->
       if value.constructor is base.RowDetail
         @set(what, value)
       else
-        @set(what, new base.RowDetail({key:what, value: value}, {_parent: @}))
+        @set(what, base.createRowDetail({key: what, value: value}, {_parent: @}))
     parentRow: ->
       @_parent._parent
     precedingRow: ->
@@ -89,8 +96,27 @@ define 'cs!xlform/model.base', [
         parent = parent._parent
       parent
 
+  base.createRowDetail = (opts1, opts2)->
+    unless opts1.key
+      throw new Error('base.createRowDetail(params): params needs a key')
+    multilang = 'hint label'.split(' ')
+    nolang = 'name default type required constraint relevant'.split(' ')
+    tmpkeys = ['_isRepeat']
+    key = opts1.key
+
+    if key in multilang
+      new base.TranslatableRowDetail(opts1, opts2)
+    else if key in nolang
+      new base.RowDetail(opts1, opts2)
+    else
+      unless key in tmpkeys
+        log "Key Translatability unkown", key
+      new base.RowDetail(opts1, opts2)
+
   class base.RowDetail extends base.BaseModel
     idAttribute: "name"
+    _hasLang: -> @constructor.hasLanguage
+    @hasLanguage: false
     validation: () =>
       if @key == 'name'
         return value:
@@ -103,6 +129,21 @@ define 'cs!xlform/model.base', [
         return value:
           required: true
       {}
+
+    get: (what)->
+      if what is 'value'
+        errmsg = "use _value() instead of get('value')"
+        console?.error(errmsg)
+        # throw new Error(errmsg)
+        @_value()
+      else
+        super(what)
+
+    _value: ()->
+      return @attributes.value
+
+    _translation: ()->
+      throw new Error('Cannot Translate untranslatable rowDetail')
 
     constructor: ({@key, value}, opts)->
       @_parent = opts._parent
@@ -132,9 +173,9 @@ define 'cs!xlform/model.base', [
       # E.g. undefinedUnlessChanged or definedIffChanged
       if @get("_hideUnlessChanged")
         @hidden = true
-        @_oValue = @get("value")
+        @_oValue = @_value()
         @on "change", ()->
-          @hidden = @get("value") is @_oValue
+          @hidden = @_value() is @_oValue
 
       @on "change:value", (rd, val, ctxt)=>
         @_parent.trigger "change", @key, val, ctxt
@@ -143,5 +184,18 @@ define 'cs!xlform/model.base', [
       if @key is "type"
         @on "change:list", (rd, val, ctxt)=>
           @_parent.trigger "change", @key, val, ctxt
+
+  class base.TranslatableRowDetail extends base.RowDetail
+    @hasLanguage: true
+    _translation: (opts={})->
+      unless opts.language
+        throw new Error('TranslatableRowDetail receives a language as a parameter')
+      # to be replaced with someting that looks up translation
+      @attributes.value
+
+    _value: (opts={})->
+      if !opts.language
+        throw new Error("Language not specified")
+      super()
 
   base
