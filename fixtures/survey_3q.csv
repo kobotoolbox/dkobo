@@ -1,0 +1,10 @@
+"survey",,,,,
+,"name","type","label","hint","required"
+,"q1","text","Question1",,"false"
+,"xx","begin_group",,,
+,"xxy","text","Text"
+,"aa","end_group"
+,"q2","text","Question2",,"false"
+,"qwefasdf","invalid qtype","Invaliddd"
+,"q3","text","Question3",,"false"
+,"q3","text","Question3 x 2",,"false"
