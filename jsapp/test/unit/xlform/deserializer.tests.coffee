@@ -27,9 +27,9 @@ define [
         oneliner = "survey,,,\n,key1,key2,key3\n,val1,val2,val3\nchoices,,,\n,k4,k5\n,v4,v5"
         $inputDeserializer(oneliner)
         expect(deserialize(oneliner)).toEqual(@sampleSurveyObj)
-      it 'parses a json string', ->
-        oneline_json = """{"survey":[{"key1":"val1","key2":"val2","key3":"val3"}],"choices":[{"k4":"v4","k5":"v5"}]}"""
-        expect(deserialize(oneline_json)).toEqual(@sampleSurveyObj)
+      # it 'parses a json string', ->
+      #   oneline_json = """{"survey":[{"key1":"val1","key2":"val2","key3":"val3"}],"choices":[{"k4":"v4","k5":"v5"}]}"""
+      #   expect(deserialize(oneline_json)).toEqual(@sampleSurveyObj)
       it 'parses a js object', ->
         expect(deserialize(@sampleSurveyObj)).toEqual(@sampleSurveyObj)
 

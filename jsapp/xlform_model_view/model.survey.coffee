@@ -37,9 +37,10 @@ define 'cs!xlform/model.survey', [
       @newRowDetails = options.newRowDetails || $configs.newRowDetails
       @defaultsForType = options.defaultsForType || $configs.defaultsForType
       @surveyDetails = new $surveyDetail.SurveyDetails([], _parent: @).loadSchema(options.surveyDetailsSchema || $configs.surveyDetailSchema)
-      passedChoices = options.choices || []
       @choices = new $choices.ChoiceLists([], _parent: @)
-      $inputParser.loadChoiceLists(passedChoices, @choices)
+      @kobo__score_choices = new $choices.ChoiceLists([], _parent: @)
+      $inputParser.loadChoiceLists(options.choices || [], @choices)
+      $inputParser.loadChoiceLists(options['kobo--score-choices'] || [], @kobo__score_choices)
       if options.survey
         for r in options.survey
           if r.type in $configs.surveyDetailSchema.typeList()
@@ -72,19 +73,32 @@ define 'cs!xlform/model.survey', [
         index_incr = index + row_i
         @rows.add(row.toJSON(), at: index_incr)
       ``
+
     toJSON: (stringify=false, spaces=4)->
       obj = {}
-      choices = new $choices.ChoiceLists()
+
+      addlSheets =
+        choices: new $choices.ChoiceLists()
+        'kobo--score-choices': new $choices.ChoiceLists()
+
       obj.survey = do =>
         out = []
         fn = (r)->
           if 'getList' of r and (l = r.getList())
-            choices.add(l)
-          out.push r.toJSON2()
+            addlSheets.choices.add(l)
+
+          if typeof r.export_relevant_values is 'function'
+            r.export_relevant_values(out, addlSheets)
+          else
+            log 'no r.export_relevant_values', r
+            # debugger
+
         @forEachRow fn
         out
-      if choices.length > 0
-        obj.choices = choices.summaryObj(true)
+
+      for shtName, sheet of addlSheets when sheet.length > 0
+        obj[shtName] = sheet.summaryObj(true)
+
       if stringify
         JSON.stringify(obj, null, spaces)
       else
@@ -140,6 +154,11 @@ define 'cs!xlform/model.survey', [
       out = _.filter _.uniq( _.flatten cols), (col) -> col not in exclude
       out.concat.apply(out, add)
 
+    toSsStructure: ()->
+      out = {}
+      for sheet, content of @toCsvJson()
+        out[sheet] = content.rowObjects
+      out
     toCsvJson: ()->
       # build an object that can be easily passed to the "csv" library
       # to generate the XL(S)Form spreadsheet

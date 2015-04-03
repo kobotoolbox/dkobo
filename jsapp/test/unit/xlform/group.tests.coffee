@@ -10,6 +10,38 @@ define [
             $configs
             )->
 
+
+  describe 'score.tests', ->
+    describe 'survey imports scores >', ->
+      beforeEach ->
+        @survey = $survey.Survey.load {
+            survey: [
+              ["type", "name", "label", "kobo--score-choices"],
+              {type: "begin score", name: "koboskore"},
+              ["score", null, "Label", "koboskorechoices"],
+              ["score", "skore_1", "Score 1"],
+              ["score", "skore_2", "Score 2"],
+              {type: "end score"},
+            ],
+            'kobo--score-choices': [
+              ['list name', 'name', 'label'],
+              ['koboskorechoices', 'ok', 'Okay'],
+              ['koboskorechoices', 'not_ok', 'Not okay'],
+            ],
+          }
+
+      it 'can import a simple score group', ->
+        scoreRow = @survey.rows.at(0)
+        expect(scoreRow).toBeDefined()
+
+      it 'scores can be exported', ->
+        output = @survey.toJSON()
+        expect(output.survey.length).toBe(4)
+        expect(output['kobo--score-choices']).toBeDefined()
+        expect(output['kobo--score-choices']['koboskorechoices']).toEqual(
+            [ {name: 'ok', label: 'Okay'}, {name: 'not_ok', label: 'Not okay'} ]
+          )
+
   describe 'group.tests', ->
     _firstGroup = (s)->
       _.first s.rows.filter (r,i)-> r.constructor.name is "Group"
@@ -18,13 +50,15 @@ define [
 
     describe 'survey imports groups >', ->
       beforeEach ->
-        @survey = $survey.Survey.load("""
-        survey,,,
-        ,type,name,label
-        ,begin group,grp1,Group1
-        ,text,g1q1,Group1Question1
-        ,end group,,,
-        """) 
+        @survey = $survey.Survey.load({
+            survey: [
+                ['type',        'name', 'label'],
+                ['begin group', 'grp1', 'Group1'],
+                ['text',        'g1q1', 'Group1Question1'],
+                ['end group'],
+              ]
+          })
+
       it 'can import a simple group', ->
         first_group = _firstGroup(@survey)
         expect(first_group).toBeDefined()
@@ -34,13 +68,14 @@ define [
         expect(@survey.rows.length).toBe(2)
         expect(_lastGroup(@survey).rows.length).toBe(0)
       it 'leaves empty group labels intact', ->
-        survey = $survey.Survey.load("""
-        survey,,,
-        ,type,name,label
-        ,begin group,grp1,
-        ,text,g1q1,Group1Question1
-        ,end group,,,
-        """)
+        survey = $survey.Survey.load({
+            survey: [
+                ['type',        'name', 'label'],
+                ['begin group', 'grp1', null],
+                ['text',        'g1q1', 'Group1Question1'],
+                ['end group'],
+              ]
+          })
 
         first_group = _firstGroup survey
 
@@ -49,26 +84,28 @@ define [
         it 'works with a simple group', ->
           expect(@survey.toCSV().split('\n').length).toBe(8)
         it 'works with a nested group', ->
-          survey = $survey.Survey.load("""
-          survey,,,
-          ,type,name,label
-          ,begin group,grp1,Group1
-          ,text,g1q1,Group1Question1
-          ,begin group,grp2,Group2
-          ,text,g1g2q1,Grp2Question1
-          ,end group,,,
-          ,end group,,,
-          """)
+          survey = $survey.Survey.load({
+              survey: [
+                ['type',        'name', 'label'],
+                ['begin group', 'grp1', 'Group1'],
+                ['text',        'g1q1', 'Grp2Question1'],
+                ['begin group', 'g1g2', 'Group1Question1'],
+                ['text',        'g1g2q1', 'Grp2Question1'],
+                ['end group'],
+                ['end group'],
+              ]
+            })
           expect(survey.toCSV().split('\n').length).toBe(11)
 
     it 'can import repeats', ->
-      survey = $survey.Survey.load("""
-      survey,,,
-      ,type,name,label
-      ,begin repeat,repeat1,Repeat1
-      ,text,q1,Question1
-      ,end repeat,,
-      """)
+      survey = $survey.Survey.load({
+          survey: [
+            ['type',        'name', 'label'],
+            ['begin repeat', 'grp1', 'Group1'],
+            ['text',        'g1q1', 'Group1Question1'],
+            ['end repeat'],
+          ]
+        })
       first_row = survey.rows.first()
       expect(first_row).toBeDefined()
       expect(first_row.constructor.name).toBe("Group")
@@ -85,6 +122,20 @@ define [
         ,type,name,label
         ,begin group,grp1,Group1
         """
+        expectFailure 'unclosed', {
+            survey: [
+              ['type',        'name', 'label'          ],
+              #-----------------------------------------
+              ['begin group', 'grp1', 'Group1'         ],
+              ['text',        'g1q1', 'Group1Question1'],
+            ]
+          }
+        expectFailure 'unclosed', {
+            survey: [
+              ['type',        'name', 'label'],
+              ['begin group', 'grp1', 'Group1'],
+            ]
+          }
       it 'fails with mismatched group and repeat', ->
         expectFailure 'mismatch', """
         survey,,,
@@ -92,6 +143,14 @@ define [
         ,begin group,grp1,Group1
         ,end repeat,,
         """
+        expectFailure 'mismatch', {
+            survey: [
+              ['type'       , 'name', 'label' ],
+              #--------------------------------
+              ['begin group', 'grp1', 'Group1'],
+              ['end repeat'                   ],
+            ]
+          }
       it 'fails with mismatched group and repeat', ->
         expectFailure 'mismatch', """
         survey,,,
@@ -102,15 +161,17 @@ define [
 
     describe 'group creation', ->
       beforeEach ->
-        @survey = $survey.Survey.load("""
-        survey,,,
-        ,type,name,label
-        ,text,q1,Q1
-        ,text,q2,Q2
-        ,text,q3,Q3
-        ,text,q4,Q4
-        ,text,q5,Q5
-        """)
+        @survey = $survey.Survey.load({
+            survey: [
+              ['type', 'name', 'label'],
+              #------------------------
+              ['text', 'q1',   'Q1'   ],
+              ['text', 'q2',   'Q2'   ],
+              ['text', 'q3',   'Q3'   ],
+              ['text', 'q4',   'Q4'   ],
+              ['text', 'q5',   'Q5'   ],
+            ]
+          })
 
       describe 'group naming', ->
         beforeEach ->
@@ -178,15 +239,17 @@ define [
 
     describe 'group manipulation', ->
       beforeEach ->
-        @survey = $survey.Survey.load("""
-        survey,,,
-        ,type,name,label
-        ,text,q1,Q1
-        ,begin group,grp1,Group1
-        ,text,g1q1,G1Q1
-        ,end group,,,
-        ,text,q2,Q2
-        """)
+        @survey = $survey.Survey.load({
+            survey: [
+              ['type'       , 'name', 'label'           ],
+              #------------------------------------------
+              ['text'       , 'q1'  , 'Q1'              ],
+              ['begin group', 'grp1', 'Group1'          ],
+              ['text'       , 'g1q1', 'Group1Question1' ],
+              ['end group'                              ],
+              ['text'       , 'q2'  , 'Q2'              ],
+            ]
+          })
         @g1 = _firstGroup @survey
 
         @getNames = (s)->
@@ -213,16 +276,18 @@ define [
         expect(@getNames(@survey)).toEqual(['q1', 'g1q1', 'q2'])
       describe 'nested group can be split apart', ->
         beforeEach ->
-          @survey = $survey.Survey.load("""
-          survey,,,
-          ,type,name,label
-          ,begin group,grp1,Group1
-          ,begin group,grp2,Group2
-          ,text,q1,Q1
-          ,end group,,,
-          ,end group,,,
-          ,text,q2,Q2
-          """)
+          @survey = $survey.Survey.load({
+              survey: [
+                ['type',        'name', 'label' ],
+                #--------------------------------
+                ['begin group', 'grp1', 'Group1'],
+                ['begin group', 'grp2', 'Group1'],
+                ['text'       , 'q1'  , 'Q1'    ],
+                ['end group'                    ],
+                ['end group'                    ],
+                ['text'       , 'q2'  , 'Q2'    ],
+              ]
+            })
           @g1 = _firstGroup @survey
           @g2 = @g1.rows.at(0)
         it 'is set up', ->

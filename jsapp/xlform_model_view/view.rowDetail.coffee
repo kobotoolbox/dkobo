@@ -135,7 +135,10 @@ define 'cs!xlform/view.rowDetail', [
     insertInDOM: (rowView)->
       typeStr = @model.get("typeId")
       if !(@model._parent.constructor.kls is "Group")
-        faClass = $icons.get(typeStr).get("faClass")
+        faClass = $icons.get(typeStr)?.get("faClass")
+        if !faClass
+          console?.error("could not find icon for type: #{typeStr}")
+          faClass = "fighter-jet"
         rowView.$el.find(".card__header-icon").addClass("fa-#{faClass}")
 
 
@@ -192,7 +195,6 @@ define 'cs!xlform/view.rowDetail', [
       </div>
       """
     afterRender: ->
-      afterRender: ->
       @$el.find(".constraint__editor").html("""
         <div class="skiplogic__main"></div>
         <p class="skiplogic__extras">

@@ -65,6 +65,9 @@ define 'cs!xlform/model.row', [
       , includeGroups:true
       questions
 
+    export_relevant_values: (survey_arr, additionalSheets)->
+      survey_arr.push(@toJSON2())
+
     toJSON2: ->
       outObj = {}
       for [key, val] in @attributesArray()
@@ -90,6 +93,43 @@ define 'cs!xlform/model.row', [
           else
             outObj[key] = result
       outObj
+
+  class ScoreChoiceList
+  class ScoreRows extends Array
+
+  class ScoreMixin
+    constructor: (rr)->
+      @_scoreChoices = new ScoreChoiceList()
+      @_scoreRows = new ScoreRows()
+      extend_to_row = (val, key)-> rr[key] = val
+      _.each @, extend_to_row
+      _.each @constructor.prototype, extend_to_row
+      if rr.attributes.__rows
+        for subrow in rr.attributes.__rows
+          @_scoreRows.push(new row.Row(subrow, _parent: rr))
+        delete rr.attributes.__rows
+
+    get_score_list: ()->
+      kobo_score_id = false
+      @forEachRow (r)=>
+        _r_score_choice_list = r.get('kobo--score-choices')?.getValue()
+        if _r_score_choice_list
+          kobo_score_id =  _r_score_choice_list
+      if kobo_score_id
+        score_list = @getSurvey().kobo__score_choices.get(kobo_score_id)
+      score_list
+
+    export_relevant_values: (survey_arr, additionalSheets)->
+      score_list = @get_score_list()
+      if score_list
+        additionalSheets['kobo--score-choices'].add(score_list)
+      survey_arr.push(@toJSON2())
+      ``
+
+    forEachRow: (cb)->
+      cb(@)
+      for subrow in @_scoreRows
+        cb(subrow)
 
   class row.Row extends row.BaseRow
     @kls = "Row"
@@ -127,7 +167,12 @@ define 'cs!xlform/model.row', [
             newVals[vk] = if ("function" is typeof vv) then vv() else vv
           @set key, newVals
 
+
+      if @attributes.type is 'score'
+        new ScoreMixin(@)
+
       @convertAttributesToRowDetails()
+
 
       typeDetail = @get("type")
       tpVal = typeDetail.get("value")

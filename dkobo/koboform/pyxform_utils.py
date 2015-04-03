@@ -170,12 +170,15 @@ def _add_contents_to_sheet(sheet, contents):
 
 def convert_csv_to_xls(csv_repr):
     dict_repr = xls2json_backends.csv_to_dict(StringIO.StringIO(csv_repr.encode("utf-8")))
+    return convert_dict_to_xls(dict_repr)
+
+def convert_dict_to_xls(ss_dict):
     workbook = xlwt.Workbook()
-    for sheet_name in dict_repr.keys():
+    for sheet_name in ss_dict.keys():
         # pyxform.xls2json_backends adds "_header" items for each sheet.....
         if not re.match(r".*_header$", sheet_name):
             cur_sheet = workbook.add_sheet(sheet_name)
-            _add_contents_to_sheet(cur_sheet, dict_repr[sheet_name])
+            _add_contents_to_sheet(cur_sheet, ss_dict[sheet_name])
     string_io = StringIO.StringIO()
     workbook.save(string_io)
     string_io.seek(0)

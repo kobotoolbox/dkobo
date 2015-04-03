@@ -70,8 +70,6 @@ define 'cs!xlform/model.rowDetailMixins', [
     linkUp: ->
       @facade.initialize()
 
-
-
   rowDetailMixins =
     relevant: SkipLogicDetailMixin
     constraint: ValidationLogicMixin
@@ -79,7 +77,6 @@ define 'cs!xlform/model.rowDetailMixins', [
       postInitialize: ()->
         # When the row's name changes, trigger the row's [finalize] function.
         return
-
     name:
       deduplicate: (survey) ->
         names = []
