@@ -52,7 +52,8 @@ define 'cs!xlform/view.row', [
         @_renderError()
       else
         @_renderRow()
-      @is_expanded = @$card?.hasClass('card--expandedchoices')
+      @$card = @$('.card')
+      @is_expanded = @$card.hasClass('card--expandedchoices')
       @
     _renderError: ->
       @$el.addClass("xlf-row-view-error")

@@ -343,9 +343,19 @@ define 'cs!xlform/view.surveyApp', [
       if !@features.copyToLibrary
         @$el.find('.js-add-to-question-library').hide()
 
+    _render_errorHasOccurred: (error)->
+      @$el.append """
+        <div class="container">
+          <div class="survey--errormessage">
+            An error has occurred: #{error.message}
+          </div>
+        </div>
+        """
+
     render: ()->
-      @$el.addClass("survey-editor--loading")
       @$el.removeClass("content--centered").removeClass("content")
+
+      @$el.addClass("form-builder--loading")
 
       try
         @_render_html()
@@ -356,10 +366,12 @@ define 'cs!xlform/view.surveyApp', [
         @_render_hideConditionallyDisplayedContent()
 
       catch error
-        @$el.addClass("survey-editor--error")
+        @$el.removeClass("form-builder--loading")
+        @$el.addClass("form-builder--error")
+        @_render_errorHasOccurred(error)
         throw error
 
-      @$el.removeClass("survey-editor--loading")
+      @$el.removeClass("form-builder--loading")
       @
 
     set_multioptions_label: () ->

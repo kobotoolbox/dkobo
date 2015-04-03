@@ -86,7 +86,7 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
   viewUtils.cleanStringify = (atts)->
     attArr = []
     for key, val of atts when val isnt ""
-      attArr.push """<span class="atts"><i>#{key}</i>="<em>#{val}</em>"</span>"""
+      attArr.push """<span class="atts"><span class="att">#{key}</span>="<span class="val">#{val}</span>"</span>"""
     attArr.join("&nbsp;")
 
   viewUtils.debugFrame = do ->

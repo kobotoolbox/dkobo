@@ -108,6 +108,39 @@ code input[type="text"] {
     padding-bottom: 36px;
     transition:all .3s;
 }
+.survey-editor {
+}
+
+
+
+.form-builder--loading {
+    .survey-editor__null-top-row {
+        display: none;
+    }
+    // i.form-builder__status-icon
+    .form-builder__status-icon {
+        display: block;
+        position: absolute;
+        left: 50%;
+    }
+}
+.form-builder__status-icon {
+    display: none;
+}
+
+
+.form-builder--error {
+    // some error has prevented the loading of the form
+    background-color: rgba(255, 219, 219, 1);
+
+    .survey-editor__null-top-row {
+        display: none;
+    }
+
+    .survey--errormessage {
+        @extend .survey-editor__message;
+    }
+}
 
 .survey-editor__null-top-row {
     position: relative;

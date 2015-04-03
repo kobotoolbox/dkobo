@@ -96,6 +96,7 @@ define 'cs!xlform/view.surveyApp.templates', [], ()->
           </p>
         </header>
         #{warnings_html}
+        <i class="form-builder__status-icon fa fa-spin fa-spinner blue"></i>
         <div class="survey-editor form-editor-wrap container">
           <ul class="-form-editor survey-editor__list">
             <li class="survey-editor__null-top-row empty">

@@ -29,6 +29,7 @@ define('test/components', [], function(){
             "sinon": "components/sinon/index.js",
             "jasmine-sinon": "components/jasmine-sinon/lib/jasmine-sinon.js",
             "coffee-script": "components/require-cs/coffee-script.js",
+            "globalize": "components/globalize/lib/globalize.js",
             "backbone": "components/backbone/backbone.js",
             "backbone-validation": "components/backbone-validation/dist/backbone-validation-amd.js",
         }
