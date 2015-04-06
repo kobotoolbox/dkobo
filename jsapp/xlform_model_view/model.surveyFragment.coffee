@@ -260,6 +260,8 @@ define 'cs!xlform/model.surveyFragment', [
 
     if type in formSettingsTypes
       $surveyDetail.SurveyDetail
+    else if type is 'score'
+      $row.Row
     else if type in ['group', 'repeat']
       surveyFragment.Group
     else

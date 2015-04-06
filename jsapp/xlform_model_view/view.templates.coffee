@@ -26,6 +26,7 @@ define 'cs!xlform/view.templates', [
   templates['xlfSurveyDetailView']          = surveyDetails_templates.xlfSurveyDetailView
   templates['row.rowErrorView']             = row_templates.rowErrorView
   templates['row.xlfRowView']               = row_templates.xlfRowView
+  templates['row.scoreView']                = row_templates.scoreView
   templates['surveyApp']                    = surveyApp_templates.surveyApp
   templates['xlfRowSelector.line']          = rowSelector_templates.line
   templates['xlfRowSelector.cell']          = rowSelector_templates.cell

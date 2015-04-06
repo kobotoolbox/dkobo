@@ -34,9 +34,7 @@ define 'cs!xlform/view.surveyApp', [
       rIds = []
       gatherId = (r)->
         rIds.push(r.cid)
-        if 'forEachRow' of r
-          r.forEachRow(gatherId, flat: true, includeGroups: true)
-      survey.forEachRow(gatherId, flat: true, includeGroups: true)
+      survey.forEachRow(gatherId, includeGroups: true)
 
       _s = (i)-> JSON.stringify(i)
       if _s(rIds) isnt _s(elIds)
@@ -515,6 +513,8 @@ define 'cs!xlform/view.surveyApp', [
       unless (xlfrv = @__rowViews.get(row.cid))
         if row.constructor.kls is 'Group'
           rv = new $rowView.GroupView(model: row, ngScope: @ngScope, surveyView: @)
+        else if row.get('type').getValue() is 'score'
+          rv = new $rowView.ScoreView(model: row, ngScope: @ngScope, surveyView: @)
         else
           rv = new $rowView.RowView(model: row, ngScope: @ngScope, surveyView: @)
         @__rowViews.set(row.cid, rv)

@@ -92,6 +92,13 @@ define 'cs!xlform/view.icons', [
       grouping: "r4"
       id: "calculate"
     ,
+
+    # r5
+      label: "Score"
+      faClass: "fighter-jet"
+      grouping: "r5"
+      id: "score"
+    ,
     ]
 
   class QtypeIcon extends Backbone.Model

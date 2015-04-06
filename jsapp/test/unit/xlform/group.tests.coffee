@@ -18,9 +18,9 @@ define [
             survey: [
               ["type", "name", "label", "kobo--score-choices"],
               {type: "begin score", name: "koboskore"},
-              ["score", null, "Label", "koboskorechoices"],
-              ["score", "skore_1", "Score 1"],
-              ["score", "skore_2", "Score 2"],
+              ["score__label", null, "Label", "koboskorechoices"],
+              ["score__row", "skore_1", "Score 1"],
+              ["score__row", "skore_2", "Score 2"],
               {type: "end score"},
             ],
             'kobo--score-choices': [

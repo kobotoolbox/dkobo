@@ -171,6 +171,8 @@ define 'cs!xlform/model.configs', ["underscore", 'cs!xlform/model.utils', "backb
       ["calculate", "Calculate"],
       ["select_one", "Select", orOtherOption: true, specifyChoice: true],
       ["score", "Score"],
+      ["score__label", "Score Label"],
+      ["score__row", "Score Row"],
       ["select_multiple", "Multiple choice", orOtherOption: true, specifyChoice: true]
     ]
 

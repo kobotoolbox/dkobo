@@ -93,6 +93,30 @@ define 'cs!xlform/view.row.templates', [], ()->
     #{expandingSpacerHtml}
     """
 
+  scoreView = (s)->
+    """
+    <div class="score__options">
+      <p class="score__options__label--choices">
+        Option labels and values
+      </p>
+      <ul class="score__contents score__contents--choices">
+      </ul>
+      <button class="score__options__button">
+        + Add another option
+      </button>
+
+      <p class="score__options__label--rows">
+        Questions labels and data column names
+      </p>
+      <ul class="score__contents score__contents--rows">
+      </ul>
+      <button class="score__options__button">
+        + Add another rank
+      </button>
+    </div>
+    """
+
+
   selectQuestionExpansion = ->
     """
     <div class="card--selectquestion__expansion row__multioptions js-cancel-sort">
@@ -121,5 +145,6 @@ define 'cs!xlform/view.row.templates', [], ()->
   selectQuestionExpansion: selectQuestionExpansion
   groupView: groupView
   rowErrorView: rowErrorView
+  scoreView: scoreView
   groupSettingsView: groupSettingsView
   rowSettingsView: rowSettingsView

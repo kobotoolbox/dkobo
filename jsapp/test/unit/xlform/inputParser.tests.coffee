@@ -41,7 +41,7 @@ define [
       it 'parses scoring questions', ->
         results = $inputParser.parseArr('survey', [
             {"type": "begin score", "name": "koboskore"},
-            {"type": "score", "label": "Label"},
+            {"type": "score__label", "label": "Label"},
             {"type": "end score"},
           ])
         expect(results).toEqual([
@@ -49,7 +49,7 @@ define [
               type: 'score',
               name: 'koboskore',
               __rows: [
-                {"type": "score", "label": "Label"}
+                {"type": "score__label", "label": "Label"}
               ]
             }
           ])

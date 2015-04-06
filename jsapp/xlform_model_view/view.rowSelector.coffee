@@ -80,7 +80,7 @@ define 'cs!xlform/view.rowSelector', [
       $menu = @line.find(".row__questiontypes__list")
       for mrow in $icons.grouped()
         menurow = $("<div>", class: "questiontypelist__row").appendTo $menu
-        for mitem, i in mrow
+        for mitem, i in mrow when mitem
           menurow.append $viewTemplates.$$render('xlfRowSelector.cell', mitem.attributes)
       @$('.questiontypelist__item').click _.bind(@selectMenuItem, @)
 
