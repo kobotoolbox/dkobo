@@ -40,17 +40,15 @@ define [
           ])
       it 'parses scoring questions', ->
         results = $inputParser.parseArr('survey', [
-            {"type": "begin score", "name": "koboskore"},
-            {"type": "score__label", "label": "Label"},
+            {"type": "begin score", "name": "koboskore", "label": "Label"},
             {"type": "end score"},
           ])
         expect(results).toEqual([
             {
               type: 'score',
               name: 'koboskore',
-              __rows: [
-                {"type": "score__label", "label": "Label"}
-              ]
+              label: 'Label',
+              __rows: []
             }
           ])
 

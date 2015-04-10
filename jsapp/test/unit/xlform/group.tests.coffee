@@ -17,8 +17,7 @@ define [
         @survey = $survey.Survey.load {
             survey: [
               ["type", "name", "label", "kobo--score-choices"],
-              {type: "begin score", name: "koboskore"},
-              ["score__label", null, "Label", "koboskorechoices"],
+              {type: "begin score", name: "koboskore", label: "Label", "kobo--score-choices": "koboskorechoices"},
               ["score__row", "skore_1", "Score 1"],
               ["score__row", "skore_2", "Score 2"],
               {type: "end score"},
@@ -32,11 +31,12 @@ define [
 
       it 'can import a simple score group', ->
         scoreRow = @survey.rows.at(0)
+        expect(scoreRow.get('kobo--score-choices').get('value')).toBeDefined()
         expect(scoreRow).toBeDefined()
 
       it 'scores can be exported', ->
         output = @survey.toJSON()
-        expect(output.survey.length).toBe(4)
+        expect(output.survey.length).toBe(3)
         expect(output['kobo--score-choices']).toBeDefined()
         expect(output['kobo--score-choices']['koboskorechoices']).toEqual(
             [ {name: 'ok', label: 'Okay'}, {name: 'not_ok', label: 'Not okay'} ]
