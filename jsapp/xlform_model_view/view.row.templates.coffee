@@ -115,6 +115,14 @@ define 'cs!xlform/view.row.templates', [], ()->
       </button>
     </div>
     """
+  rankView = ->
+    """
+    <div class="rank__items">
+      <p>
+        Rank view
+      </p>
+    </div>
+    """
 
 
   selectQuestionExpansion = ->
@@ -146,5 +154,6 @@ define 'cs!xlform/view.row.templates', [], ()->
   groupView: groupView
   rowErrorView: rowErrorView
   scoreView: scoreView
+  rankView: rankView
   groupSettingsView: groupSettingsView
   rowSettingsView: rowSettingsView

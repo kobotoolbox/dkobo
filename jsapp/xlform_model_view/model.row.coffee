@@ -94,27 +94,26 @@ define 'cs!xlform/model.row', [
             outObj[key] = result
       outObj
 
-  class ScoreChoiceList
+  class ScoreChoiceList extends Array
   class ScoreRows extends Array
 
   class ScoreMixin
     constructor: (rr)->
-      @_scoreChoices = new ScoreChoiceList()
-      @_scoreRows = new ScoreRows()
+      @_scoreRows = new $choices.ChoiceList()
       extend_to_row = (val, key)-> rr[key] = val
       _.each @, extend_to_row
       _.each @constructor.prototype, extend_to_row
       if rr.attributes.__rows
         for subrow in rr.attributes.__rows
-          @_scoreRows.push(new row.Row(subrow, _parent: rr))
+          @_scoreRows.options.add(subrow)
         delete rr.attributes.__rows
 
+    linkUp: ->
+      score_list_id = @get('kobo--score-choices').get('value')
+      @_scoreChoices = @getSurvey().kobo__score_choices.get(score_list_id)
+
     get_score_list: ()->
-      kobo_score_id = false
-      @forEachRow (r)=>
-        _r_score_choice_list = r.get('kobo--score-choices')?.getValue()
-        if _r_score_choice_list
-          kobo_score_id =  _r_score_choice_list
+      kobo_score_id = @get('kobo--score-choices')
       if kobo_score_id
         score_list = @getSurvey().kobo__score_choices.get(kobo_score_id)
       score_list
