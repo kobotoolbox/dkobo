@@ -40,7 +40,6 @@ define 'cs!xlform/model.survey', [
       @choices = new $choices.ChoiceLists([], _parent: @)
       @kobo__score_choices = new $choices.ChoiceLists([], _parent: @)
       $inputParser.loadChoiceLists(options.choices || [], @choices)
-      $inputParser.loadChoiceLists(options['kobo--score-choices'] || [], @kobo__score_choices)
       if options.survey
         for r in options.survey
           if r.type in $configs.surveyDetailSchema.typeList()
@@ -79,7 +78,6 @@ define 'cs!xlform/model.survey', [
 
       addlSheets =
         choices: new $choices.ChoiceLists()
-        'kobo--score-choices': new $choices.ChoiceLists()
 
       obj.survey = do =>
         out = []
@@ -91,7 +89,6 @@ define 'cs!xlform/model.survey', [
             r.export_relevant_values(out, addlSheets)
           else
             log 'no r.export_relevant_values', r
-            # debugger
 
         @forEachRow fn
         out

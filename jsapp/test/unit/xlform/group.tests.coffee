@@ -22,7 +22,7 @@ define [
               ["score__row", "skore_2", "Score 2"],
               {type: "end score"},
             ],
-            'kobo--score-choices': [
+            'choices': [
               ['list name', 'name', 'label'],
               ['koboskorechoices', 'ok', 'Okay'],
               ['koboskorechoices', 'not_ok', 'Not okay'],
@@ -37,8 +37,8 @@ define [
       it 'scores can be exported', ->
         output = @survey.toJSON()
         expect(output.survey.length).toBe(3)
-        expect(output['kobo--score-choices']).toBeDefined()
-        expect(output['kobo--score-choices']['koboskorechoices']).toEqual(
+        expect(output['choices']).toBeDefined()
+        expect(output['choices']['koboskorechoices']).toEqual(
             [ {name: 'ok', label: 'Okay'}, {name: 'not_ok', label: 'Not okay'} ]
           )
 
