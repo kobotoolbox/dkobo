@@ -47,11 +47,13 @@ define [
       it '[groupable]', ->
         expectSorted($aliases.q.groupable()).toEqual([
           'begin group',
+          'begin rank',
           'begin repeat',
           'begin score',
           'begin_group',
           'begin_repeat',
           'end group',
+          'end rank',
           'end repeat',
           'end score',
           'end_group',

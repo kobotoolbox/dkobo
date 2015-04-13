@@ -18,13 +18,17 @@ define 'cs!xlform/model.aliases', ['underscore'], (_)->
         "begin score",
         "end score",
       ]
+    rank: [
+        "begin rank",
+        "end rank",
+      ]
 
   aliases = (name)-> aliases_dict[name] or [name]
 
   q = {}
   q.groupable = ()->
-    _.flatten [aliases('group'), aliases('repeat'), aliases('score')]
-    
+    _.flatten [aliases('group'), aliases('repeat'), aliases('score'), aliases('rank')]
+
   q.groupsOrRepeats = ()->
     _.flatten [aliases('group'), aliases('repeat')]
 
@@ -41,6 +45,8 @@ define 'cs!xlform/model.aliases', ['underscore'], (_)->
       out = {type: 'repeat'}
     else if type in aliases_dict.score
       out = {type: 'score'}
+    else if type in aliases_dict.rank
+      out = {type: 'rank'}
     if out and out.type
       out.begin = !type.match(/end/)
     out

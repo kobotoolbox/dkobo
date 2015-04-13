@@ -38,7 +38,6 @@ define 'cs!xlform/model.survey', [
       @defaultsForType = options.defaultsForType || $configs.defaultsForType
       @surveyDetails = new $surveyDetail.SurveyDetails([], _parent: @).loadSchema(options.surveyDetailsSchema || $configs.surveyDetailSchema)
       @choices = new $choices.ChoiceLists([], _parent: @)
-      @kobo__score_choices = new $choices.ChoiceLists([], _parent: @)
       $inputParser.loadChoiceLists(options.choices || [], @choices)
       if options.survey
         for r in options.survey
@@ -90,7 +89,7 @@ define 'cs!xlform/model.survey', [
           else
             log 'no r.export_relevant_values', r
 
-        @forEachRow fn
+        @forEachRow fn, includeGroupEnds: true
         out
 
       for shtName, sheet of addlSheets when sheet.length > 0

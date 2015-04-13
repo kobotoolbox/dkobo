@@ -96,48 +96,101 @@ define 'cs!xlform/model.row', [
             outObj[key] = result
       outObj
 
+  class RankRow extends Backbone.Model
+    export_relevant_values: (surv, sheets)->
+      surv.push(@attributes)
+    finalize: ->
+      # this is a good place to run auto-naming methods
+      ``
+
+  class ScoreRankMixin
+    _extendAll: (rr)->
+      extend_to_row = (val, key)=>
+        if _.isFunction(val)
+          rr[key] = (args...)->
+            val.apply(rr, args)
+        else
+          rr[key] = val
+      _.each @, extend_to_row
+      extend_to_row(@forEachRow, 'forEachRow')
+
+      rr._afterIterator = (cb, ctxt)->
+        obj =
+          export_relevant_values: (surv, addl)->
+            surv.push(type: "end #{rr._beginEndKey()}")
+          toJSON: ()->
+            type: "end #{rr._beginEndKey()}"
+        cb(obj)  if ctxt.includeGroupEnds
+        
+      _.each @constructor.prototype, extend_to_row
+      if rr.attributes.__rows
+        for subrow in rr.attributes.__rows
+          @[@_rowAttributeName].add(subrow)
+        delete rr.attributes.__rows
+
+    forEachRow: (cb, ctx)->
+      cb(@)
+      @[@_rowAttributeName].each (subrow)-> cb(subrow)
+      @_afterIterator(cb, ctx)  if '_afterIterator' of @
+
+
+  class RankRows extends Backbone.Collection
+    model: RankRow
+
+  class RankMixin extends ScoreRankMixin
+    constructor: (rr)->
+      @_rankRows = new RankRows()
+      @_rowAttributeName = '_rankRows'
+      @_extendAll(rr)
+
+    _beginEndKey: ->
+      'rank'
+
+    linkUp: ->
+      rank_list_id = @get('kobo--rank-items').get('value')
+      @_rankLevels = @getSurvey().choices.get(rank_list_id)
+
+    export_relevant_values: (survey_arr, additionalSheets)->
+      if @_rankLevels
+        additionalSheets['choices'].add(@_rankLevels)
+      begin_xlsformrow = _.clone(@toJSON2())
+      begin_xlsformrow.type = "begin rank"
+      survey_arr.push(begin_xlsformrow)
+      ``
+
+
   class ScoreChoiceList extends Array
 
   class ScoreRow extends Backbone.Model
+    finalize: ->
+      ``
     export_relevant_values: (surv, sheets)->
       surv.push(@attributes)
 
   class ScoreRows extends Backbone.Collection
     model: ScoreRow
 
-  class ScoreMixin
+  class ScoreMixin extends ScoreRankMixin
     constructor: (rr)->
       @_scoreRows = new ScoreRows()
-      extend_to_row = (val, key)-> rr[key] = val
-      _.each @, extend_to_row
-      _.each @constructor.prototype, extend_to_row
-      if rr.attributes.__rows
-        for subrow in rr.attributes.__rows
-          @_scoreRows.add(subrow)
-        delete rr.attributes.__rows
+      @_rowAttributeName = '_scoreRows'
+      @_extendAll(rr)
+
+    _beginEndKey: ->
+      'score'
 
     linkUp: ->
       score_list_id = @get('kobo--score-choices').get('value')
       @_scoreChoices = @getSurvey().choices.get(score_list_id)
 
-    get_score_list: ()->
-      kobo_score_id = @getValue('kobo--score-choices')
-      if kobo_score_id
-        score_list = @getSurvey().choices.get(kobo_score_id)
-        if !score_list
-          throw new Error("score choices not found: #{kobo_score_id}")
-      score_list
-
     export_relevant_values: (survey_arr, additionalSheets)->
-      score_list = @get_score_list()
+      score_list = @_scoreChoices
       if score_list
         additionalSheets['choices'].add(score_list)
-      survey_arr.push(@toJSON2())
+      output = _.clone(@toJSON2())
+      output.type = "begin score"
+      survey_arr.push(output)
       ``
-
-    forEachRow: (cb)->
-      cb(@)
-      @_scoreRows.each (subrow)-> cb(subrow)
 
   class row.Row extends row.BaseRow
     @kls = "Row"
@@ -178,6 +231,8 @@ define 'cs!xlform/model.row', [
 
       if @attributes.type is 'score'
         new ScoreMixin(@)
+      else if @attributes.type is 'rank'
+        new RankMixin(@)
 
       @convertAttributesToRowDetails()
 

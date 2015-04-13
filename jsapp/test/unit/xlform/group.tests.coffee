@@ -11,6 +11,42 @@ define [
             )->
 
 
+  describe 'rank.tests', ->
+    describe 'survey imports ranks >', ->
+      beforeEach ->
+        @survey = $survey.Survey.load {
+            survey: [
+              ["type", "name", "label", "kobo--rank-items"],
+              {type: "begin rank", name: "koborank", label: "Label", "kobo--rank-items": "needs"},
+              ["rank__level", "rnk1", "Rank Level 1"],
+              ["rank__level", "rnk2", "Rank Level 2"],
+              {type: "end rank"},
+            ],
+            'choices': [
+              ['list name', 'name', 'label'],
+              ['needs', 'food', 'Food'],
+              ['needs', 'water', 'Water'],
+              ['needs', 'shelter', 'Shelter'],
+            ],
+          }
+
+      it 'can import a simple rank group', ->
+        rankRow = @survey.rows.at(0)
+        expect(rankRow.get('kobo--rank-items').get('value')).toBeDefined()
+        expect(rankRow).toBeDefined()
+        expect(rankRow._rankRows.length).toBe(2)
+        expect(rankRow._rankLevels.options.length).toBe(3)
+
+      it 'ranks can be exported', ->
+        output = @survey.toJSON()
+        expect(output.survey.length).toBe(4)
+        expect(output.survey[0].type).toBe('begin rank')
+        expect(output.survey[3].type).toBe('end rank')
+        expect(output['choices']).toBeDefined()
+        expect(output['choices']['needs']).toEqual(
+            [ {name: 'food', label: 'Food'}, {name: 'water', label: 'Water'}, {name: 'shelter', label: 'Shelter'} ]
+          )
+
   describe 'score.tests', ->
     describe 'survey imports scores >', ->
       beforeEach ->
@@ -36,7 +72,8 @@ define [
 
       it 'scores can be exported', ->
         output = @survey.toJSON()
-        expect(output.survey.length).toBe(3)
+        expect(output.survey.length).toBe(4)
+        expect(output.survey[0].type).toBe('begin score')
         expect(output['choices']).toBeDefined()
         expect(output['choices']['koboskorechoices']).toEqual(
             [ {name: 'ok', label: 'Okay'}, {name: 'not_ok', label: 'Not okay'} ]

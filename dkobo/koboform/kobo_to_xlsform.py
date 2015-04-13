@@ -39,13 +39,13 @@ class KoboRankGroup(GroupHandler):
     '''
     Convert KoboRankGroup:
     #survey
-    |     type    | name |    label     | kobo--score-choices |
-    |-------------|------|--------------|---------------------|
-    | begin rank  | rnk  | Top 3 needs? | kobo--rank-items    |
-    | rank__level | n1   | 1st need     |                     |
-    | rank__level | n2   | 2nd need     |                     |
-    | rank__level | n3   | 3rd need     |                     |
-    | end rank    |      |              |                     |
+    |     type    | name |    label     | kobo--rank-items |
+    |-------------|------|--------------|------------------|
+    | begin rank  | rnk  | Top 3 needs? | needs            |
+    | rank__level | n1   | 1st need     |                  |
+    | rank__level | n2   | 2nd need     |                  |
+    | rank__level | n3   | 3rd need     |                  |
+    | end rank    |      |              |                  |
     #choices
     | list name |   name  |  label  |
     |-----------|---------|---------|
