@@ -2,6 +2,7 @@ global = if window? then window else process
 
 define 'cs!xlform/model.row', [
         'underscore',
+        'backbone',
         'cs!xlform/model.base',
         'cs!xlform/model.configs',
         'cs!xlform/model.utils',
@@ -12,6 +13,7 @@ define 'cs!xlform/model.row', [
         'cs!xlform/mv.skipLogicHelpers',
         ], (
             _,
+            Backbone,
             base,
             $configs,
             $utils,
@@ -95,40 +97,47 @@ define 'cs!xlform/model.row', [
       outObj
 
   class ScoreChoiceList extends Array
-  class ScoreRows extends Array
+
+  class ScoreRow extends Backbone.Model
+    export_relevant_values: (surv, sheets)->
+      surv.push(@attributes)
+
+  class ScoreRows extends Backbone.Collection
+    model: ScoreRow
 
   class ScoreMixin
     constructor: (rr)->
-      @_scoreRows = new $choices.ChoiceList()
+      @_scoreRows = new ScoreRows()
       extend_to_row = (val, key)-> rr[key] = val
       _.each @, extend_to_row
       _.each @constructor.prototype, extend_to_row
       if rr.attributes.__rows
         for subrow in rr.attributes.__rows
-          @_scoreRows.options.add(subrow)
+          @_scoreRows.add(subrow)
         delete rr.attributes.__rows
 
     linkUp: ->
       score_list_id = @get('kobo--score-choices').get('value')
-      @_scoreChoices = @getSurvey().kobo__score_choices.get(score_list_id)
+      @_scoreChoices = @getSurvey().choices.get(score_list_id)
 
     get_score_list: ()->
-      kobo_score_id = @get('kobo--score-choices')
+      kobo_score_id = @getValue('kobo--score-choices')
       if kobo_score_id
-        score_list = @getSurvey().kobo__score_choices.get(kobo_score_id)
+        score_list = @getSurvey().choices.get(kobo_score_id)
+        if !score_list
+          throw new Error("score choices not found: #{kobo_score_id}")
       score_list
 
     export_relevant_values: (survey_arr, additionalSheets)->
       score_list = @get_score_list()
       if score_list
-        additionalSheets['kobo--score-choices'].add(score_list)
+        additionalSheets['choices'].add(score_list)
       survey_arr.push(@toJSON2())
       ``
 
     forEachRow: (cb)->
       cb(@)
-      for subrow in @_scoreRows
-        cb(subrow)
+      @_scoreRows.each (subrow)-> cb(subrow)
 
   class row.Row extends row.BaseRow
     @kls = "Row"

@@ -173,7 +173,7 @@ define 'cs!xlform/model.configs', ["underscore", 'cs!xlform/model.utils', "backb
       ["score", "Score"],
       ["score__row", "Score Row"],
       ["rank", "Rank"],
-      ["rank__item", "Rank Item"],
+      ["rank__level", "Rank Level"],
       ["select_multiple", "Multiple choice", orOtherOption: true, specifyChoice: true]
     ]
 
