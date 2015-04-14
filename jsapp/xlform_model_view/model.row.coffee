@@ -121,7 +121,11 @@ define 'cs!xlform/model.row', [
           toJSON: ()->
             type: "end #{rr._beginEndKey()}"
         cb(obj)  if ctxt.includeGroupEnds
-        
+      _toJSON = rr.toJSON
+      rr.toJSON = ()->
+        out = _toJSON.call(rr)
+        out.type = "begin #{rr._beginEndKey()}"
+        out
       _.each @constructor.prototype, extend_to_row
       if rr.attributes.__rows
         for subrow in rr.attributes.__rows
