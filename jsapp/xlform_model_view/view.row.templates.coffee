@@ -94,33 +94,84 @@ define 'cs!xlform/view.row.templates', [], ()->
     """
 
   scoreView = (s)->
-    """
-    <div class="score__options">
-      <p class="score__options__label--choices">
-        Option labels and values
-      </p>
-      <ul class="score__contents score__contents--choices">
-      </ul>
-      <button class="score__options__button">
-        + Add another option
-      </button>
+    cols = []
+    fillers = []
+    scoreModel = s.model
+    for col in scoreModel._scoreChoices.options.models
+      fillers.push """<td class="scorecell__radio"><input type="radio" disabled="disabled"></td>"""
+      cols.push """#{col.get('label')}<br><span class="scorecell__name">##{col.get('name')}</span>"""
 
-      <p class="score__options__label--rows">
-        Questions labels and data column names
-      </p>
-      <ul class="score__contents score__contents--rows">
-      </ul>
-      <button class="score__options__button">
-        + Add another rank
-      </button>
+    thead_html = for col in cols
+      """<th class="scorecell__col">#{col}</th>"""
+    fillers = fillers.join('')
+
+    tbody_html = for row in scoreModel._scoreRows.models
+      row_name = """<span class="scorelabel__name">##{row.get('name')}</span>"""
+      """
+      <tr>
+        <td class="scorelabel">
+          #{row.get('label')}
+          <br>
+          #{row_name}
+        </td>
+        #{fillers}
+      </tr>
+      """
+    table_html = """
+    <table class="score_preview__table">
+      <thead>
+        <th class="scorecell--empty"></th>
+        #{thead_html.join('')}
+      </thead>
+      <tbody>
+        #{tbody_html.join('')}
+      </tbody>
+    </table>
+    """
+    """
+    <div class="score_preview">
+      #{table_html}
     </div>
     """
-  rankView = ->
+  rankView = (s)->
+    rank_levels = s.model._rankLevels.options.models
+    #   # s.model.attributes['kobo--rank-items']
+    # debugger
+    rank_rows = s.model._rankRows.models
+    rank_levels_lis = for item in rank_levels
+      """
+      <li class="rank_items__item">
+        #{item.get('label')}
+        <br>
+        <span class="rank_items__name">##{item.get('name')}</span>
+      </li>
+      """
+    rank_rows_lis = for item in rank_rows
+      """
+      <li class="rank_items__item">
+        #{item.get('label')}
+        <br>
+        <span class="rank_items__name">##{item.get('name')}</span>
+      </li>
+
+      """
+    rank_constraint_message = """
+    Duplicated answers are not allowed
     """
-    <div class="rank__items">
-      <p>
-        Rank view
-      </p>
+    rank_constraint_message_li = """
+      <li class="rank_items__constraint_message">
+        #{rank_constraint_message}
+      </li>
+    """
+    """
+    <div class="rank_preview clearfix">
+      <ol class="rank__rows">
+        #{rank_rows_lis.join('')}
+      </ol>
+      <ul class="rank__levels">
+        #{rank_levels_lis.join('')}
+        #{rank_constraint_message_li}
+      </ul>
     </div>
     """
 

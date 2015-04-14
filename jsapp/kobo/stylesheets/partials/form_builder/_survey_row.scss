@@ -31,6 +31,27 @@
     }
 
 }
+.score_preview, .rank_preview {
+    background-color: #fff;
+    padding: 5px 12px 18px 54px;
+}
+/*table.score_preview__table*/
+.score_preview__table {
+    width: 100%;
+}
+.scorecell__col {
+    text-align: center;
+}
+
+.scorelabel, .scorecell__radio {
+    border-bottom: 1px dotted #ddd;
+    padding: 3px 0;
+}
+tr:last-child {
+    .scorelabel, .scorecell__radio {
+        border-bottom: 0 none;
+    }
+}
 .score__options {
     background-color: #fff;
     padding: 12px 0;
@@ -38,6 +59,46 @@
 .score__contents {
     padding-left: 85px;
 }
+.scorecell__radio {
+    text-align: center;
+}
+.rank__rows {
+    width: 40%;
+}
+.rank__levels {
+    width: 50%;
+}
+.rank__levels, .rank__rows {
+    float: left;
+    background-color: rgba(255,255,255,0.5);
+    padding: 4px 20px 18px 2px;
+    margin: 0;
+}
+.rank_items__constraint_message, .rank_items__item {
+    padding: 5px 8px;
+    margin: 0 0 4px 0;
+    line-height: 12px;
+}
+.rank_items__item {
+    border: 1px solid;
+    border-color: rgb(194, 176, 176) rgb(194, 176, 176) rgb(194, 176, 176) rgb(194, 176, 176);
+    border-radius: 4px;
+}
+.rank_items__constraint_message {
+    font-size: 92%;
+    color: #444;
+    font-style: italic;
+    &:before {
+        content: '✓';
+    }
+}
+
+.scorecell__name, .scorelabel__name, .rank_items__name {
+    font-size: 90%;
+    color: #bbb;
+    font-style: italic;
+}
+
 
 .insort {
     .btn--addrow {

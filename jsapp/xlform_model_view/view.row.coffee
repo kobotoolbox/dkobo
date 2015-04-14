@@ -233,24 +233,15 @@ define 'cs!xlform/view.row', [
       @$('.survey__row__item').eq(0).append(extra_score_contents)
       $rows = @$('.score__contents--rows').eq(0)
       $choices = @$('.score__contents--choices').eq(0)
-      for score_row in @model._scoreRows
-        $el = $.parseHTML("""
-          <li class="score__contents__item">
-            <input type="text" id="#{score_row.cid}__label">
-            <input type="text" id="#{score_row.cid}__name">
-          </li>
-          """)
-        $el.find('input').eq(0).val(score_row.getValue())
-        $choices.append($el)
-      # for score_row in @model._scoreRows
-      #   $rows.append("""
-      #     <li class>
-      #     <input type="text" id="#{score_row.cid}__label">
-      #     <input type="text" id="#{score_row.cid}__name">
-      #     </li>
-      #     """)
 
+  class RankView extends RowView
+    className: "survey__row survey__row--score"
+    _renderRow: (args...)->
+      super(args)
+      extra_score_contents = $viewTemplates.$$render('row.rankView', @)
+      @$('.survey__row__item').eq(0).append(extra_score_contents)
 
   RowView: RowView
   ScoreView: ScoreView
   GroupView: GroupView
+  RankView: RankView
