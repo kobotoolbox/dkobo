@@ -145,7 +145,7 @@ def _dicts_to_lists(arr):
         cols = arr[0]
         arr.remove(arr[0])
     for row in arr:
-        if type(row) is dict:
+        if isinstance(row, dict):
             for col in row.keys():
                 if col not in cols:
                     cols.append(col)
@@ -230,3 +230,8 @@ def convert_dict_to_xls(ss_dict):
     workbook.save(string_io)
     string_io.seek(0)
     return string_io
+
+def convert_csv_to_valid_xlsform_csv(csv_str):
+    ss_struct = convert_csv_to_ss_structure(csv_str)
+    valid_ss_structure = convert_any_kobo_features_to_xlsform_survey_structure(ss_struct)
+    return convert_ss_structure_to_csv(valid_ss_structure)

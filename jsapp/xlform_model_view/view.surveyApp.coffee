@@ -625,7 +625,7 @@ define 'cs!xlform/view.surveyApp', [
         if evt.altKey
           content = @survey.toCSV()
         else
-          content = @survey.toJSON()
+          content = JSON.stringify(@survey.toJSON(), null, 4)
         $viewUtils.debugFrame content.replace(new RegExp(' ', 'g'), '&nbsp;')
         @onEscapeKeydown = $viewUtils.debugFrame.close
       else
