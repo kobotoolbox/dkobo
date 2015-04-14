@@ -45,7 +45,7 @@ def summarize_survey(csv_survey, _type):
 def summarize_survey_structure(ss_structure, _type):
     valid_ss_structure = convert_any_kobo_features_to_xlsform_survey_structure(ss_structure)
     survey = create_survey_from_ss_struct(valid_ss_structure)
-    if type == 'question':
+    if _type == 'question':
         question_type = survey.children[0].type
         label = survey.children[0].label
         if question_type == 'calculate':
