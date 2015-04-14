@@ -126,6 +126,7 @@ define 'cs!xlform/model.row', [
         out = _toJSON.call(rr)
         out.type = "begin #{rr._beginEndKey()}"
         out
+
       _.each @constructor.prototype, extend_to_row
       if rr.attributes.__rows
         for subrow in rr.attributes.__rows
@@ -153,6 +154,7 @@ define 'cs!xlform/model.row', [
     linkUp: ->
       rank_list_id = @get('kobo--rank-items').get('value')
       @_rankLevels = @getSurvey().choices.get(rank_list_id)
+      @getList = => @_rankLevels
 
     export_relevant_values: (survey_arr, additionalSheets)->
       if @_rankLevels
@@ -186,6 +188,7 @@ define 'cs!xlform/model.row', [
     linkUp: ->
       score_list_id = @get('kobo--score-choices').get('value')
       @_scoreChoices = @getSurvey().choices.get(score_list_id)
+      @getList = ()=> @_scoreChoices
 
     export_relevant_values: (survey_arr, additionalSheets)->
       score_list = @_scoreChoices

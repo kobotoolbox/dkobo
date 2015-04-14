@@ -230,7 +230,7 @@ define 'cs!xlform/view.row', [
     _renderRow: (args...)->
       super(args)
       extra_score_contents = $viewTemplates.$$render('row.scoreView', @)
-      @$('.survey__row__item').eq(0).append(extra_score_contents)
+      @$('.card--selectquestion__expansion').eq(0).append(extra_score_contents)
       $rows = @$('.score__contents--rows').eq(0)
       $choices = @$('.score__contents--choices').eq(0)
 
@@ -239,7 +239,7 @@ define 'cs!xlform/view.row', [
     _renderRow: (args...)->
       super(args)
       extra_score_contents = $viewTemplates.$$render('row.rankView', @)
-      @$('.survey__row__item').eq(0).append(extra_score_contents)
+      @$('.card--selectquestion__expansion').eq(0).append(extra_score_contents)
 
   RowView: RowView
   ScoreView: ScoreView

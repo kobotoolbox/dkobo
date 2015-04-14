@@ -622,7 +622,11 @@ define 'cs!xlform/view.surveyApp', [
     previewButtonClick: (evt)->
       if evt.shiftKey #and evt.altKey
         evt.preventDefault()
-        $viewUtils.debugFrame JSON.stringify(@survey.toJSON(), null, 4).replace(new RegExp(' ', 'g'), '&nbsp;')
+        if evt.altKey
+          content = @survey.toCSV()
+        else
+          content = @survey.toJSON()
+        $viewUtils.debugFrame content.replace(new RegExp(' ', 'g'), '&nbsp;')
         @onEscapeKeydown = $viewUtils.debugFrame.close
       else
         $viewUtils.enketoIframe.fromCsv @survey.toCSV(),

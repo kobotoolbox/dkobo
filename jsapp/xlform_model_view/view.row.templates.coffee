@@ -135,8 +135,6 @@ define 'cs!xlform/view.row.templates', [], ()->
     """
   rankView = (s)->
     rank_levels = s.model._rankLevels.options.models
-    #   # s.model.attributes['kobo--rank-items']
-    # debugger
     rank_rows = s.model._rankRows.models
     rank_levels_lis = for item in rank_levels
       """
@@ -155,9 +153,7 @@ define 'cs!xlform/view.row.templates', [], ()->
       </li>
 
       """
-    rank_constraint_message = """
-    Duplicated answers are not allowed
-    """
+    rank_constraint_message = s.model.getValue('kobo--rank-constraint-message')
     rank_constraint_message_li = """
       <li class="rank_items__constraint_message">
         #{rank_constraint_message}

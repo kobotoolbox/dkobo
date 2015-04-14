@@ -2,15 +2,20 @@ from pyxform import xls2json, xls2json_backends, builder, create_survey_from_xls
 import StringIO
 import xlrd
 import xlwt
+import json
 import csv
 import re
 from tempfile import NamedTemporaryFile
+from dkobo.koboform.kobo_to_xlsform import convert_any_kobo_features_to_xlsform_survey_structure
+
+def create_survey_from_ss_struct(ss_struct, default_name='KoBoFormSurvey', default_language=u'default', warnings=None, ):
+    dict_repr = xls2json.workbook_to_json(ss_struct, default_name, default_language, warnings)
+    dict_repr[u'name'] = dict_repr[u'id_string']
+    return builder.create_survey_element_from_dict(dict_repr)
 
 def create_survey_from_csv_text(csv_text, default_name='KoBoFormSurvey', default_language=u'default', warnings=None, ):
     workbook_dict = xls2json_backends.csv_to_dict(StringIO.StringIO(csv_text.encode("utf-8")))
-    dict_repr = xls2json.workbook_to_json(workbook_dict, default_name, default_language, warnings)
-    dict_repr[u'name'] = dict_repr[u'id_string']
-    return builder.create_survey_element_from_dict(dict_repr)
+    return create_survey_from_ss_struct(workbook_dict, default_name, default_language, warnings)
 
 def convert_xls_to_xform(xls_file, warnings=False):
     """
@@ -28,13 +33,18 @@ def convert_xls_to_xform(xls_file, warnings=False):
         xml = survey.to_xml()
     return xml
 
-def summarize_survey(csv_survey, type):
+def summarize_survey(csv_survey, _type):
     if csv_survey == '':
         raise ValueError('''
             This survey draft is corrupted and can no longer be used, likely because of a recent bug in the cloning feature.
             If you no longer have access to the original, please contact us for help with recovery. Otherwise, please delete this draft.
             '''.strip())
-    survey = create_survey_from_csv_text(csv_survey)
+    ss_struct = convert_csv_to_ss_structure(csv_survey)
+    return summarize_survey_structure(ss_struct, _type)
+
+def summarize_survey_structure(ss_structure, _type):
+    valid_ss_structure = convert_any_kobo_features_to_xlsform_survey_structure(ss_structure)
+    survey = create_survey_from_ss_struct(valid_ss_structure)
     if type == 'question':
         question_type = survey.children[0].type
         label = survey.children[0].label
@@ -126,6 +136,33 @@ def convert_xls_to_csv_string(xls_file_object, strip_empty_rows=True):
         ss_structure.append([sheet_name, sheet_contents])
     return convert_ss_structure_to_csv(ss_structure)
 
+
+def _dicts_to_lists(arr):
+    cols = []
+    if len(arr) == 0:
+        return []
+    if type(arr[0]) is list:
+        cols = arr[0]
+        arr.remove(arr[0])
+    for row in arr:
+        if type(row) is dict:
+            for col in row.keys():
+                if col not in cols:
+                    cols.append(col)
+    out = [cols]
+    for row in arr:
+        if type(row) is list:
+            out.append(row)
+        else:
+            _row = dict(row)
+            out_row = []
+            for col in cols:
+                out_row.append(_row.get(col, ''))
+            out.append(out_row)
+    return out
+
+
+
 def convert_ss_structure_to_csv(ss_list):
     """
     Expects a data structure like this:
@@ -148,9 +185,12 @@ def convert_ss_structure_to_csv(ss_list):
     csv_opts = {'quotechar':'"', 'doublequote':False, 'escapechar':'\\',
                 'delimiter':',', 'quoting':csv.QUOTE_ALL}
     writer = csv.writer(csv_out, **csv_opts)
+    if type(ss_list) == dict:
+        ss_list = ss_list.items()
     for sheet_name, sheet_contents in ss_list:
         writer.writerow([sheet_name])
-        for row in sheet_contents:
+        sheet_contents_lists = _dicts_to_lists(sheet_contents)
+        for row in sheet_contents_lists:
             writer.writerow([s.encode("utf-8") for s in ([""] + row)])
     return csv_out.getvalue()
 
@@ -171,6 +211,13 @@ def _add_contents_to_sheet(sheet, contents):
 def convert_csv_to_xls(csv_repr):
     dict_repr = xls2json_backends.csv_to_dict(StringIO.StringIO(csv_repr.encode("utf-8")))
     return convert_dict_to_xls(dict_repr)
+
+def convert_csv_to_ss_structure(csv_repr):
+    dict_repr = dict(xls2json_backends.csv_to_dict(StringIO.StringIO(csv_repr.encode("utf-8"))))
+    for key in dict_repr.keys():
+        if re.match('.*_header$', key):
+            del dict_repr[key]
+    return dict_repr
 
 def convert_dict_to_xls(ss_dict):
     workbook = xlwt.Workbook()
