@@ -41,7 +41,7 @@ define 'cs!xlform/model.rowDetailMixins', [
 
     parse: ()->
 
-    linkUp: ->
+    linkUp: (ctx)->
       @facade.initialize()
 
   ValidationLogicMixin =
@@ -67,7 +67,7 @@ define 'cs!xlform/model.rowDetailMixins', [
 
     parse: ()->
 
-    linkUp: ->
+    linkUp: (ctx)->
       @facade.initialize()
 
   rowDetailMixins =

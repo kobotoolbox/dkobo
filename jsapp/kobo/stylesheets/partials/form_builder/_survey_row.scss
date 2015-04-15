@@ -33,14 +33,28 @@
 }
 .score_preview, .rank_preview {
     background-color: #fff;
+    margin-left: -16px;
 }
 /*table.score_preview__table*/
 .score_preview__table {
     width: 100%;
+    border-collapse: separate;
 }
 .scorecell__col {
+    padding: 0;
+    border: 1px solid #ccc;
+    border-width: 1px 0 0.5px 1px;
     text-align: center;
+    padding: 1px 2px;
+    &:nth-child(2) {
+        border-top-left-radius: 6px;
+    }
+    &:last-child {
+        border-top-right-radius: 6px;
+        border-right-width: 1px;
+    }
 }
+
 
 .scorelabel, .scorecell__radio {
     border-bottom: 1px dotted #ddd;
@@ -60,6 +74,12 @@ tr:last-child {
 }
 .scorecell__radio {
     text-align: center;
+}
+tr:hover .scorecell__radio {
+    background-color: #fafafa;
+}
+tr .scorecell__radio:hover {
+    background-color: #f8f8f8;
 }
 .rank__rows {
     width: 40%;

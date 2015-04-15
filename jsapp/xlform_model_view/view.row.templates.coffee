@@ -23,7 +23,7 @@ define 'cs!xlform/view.row.templates', [], ()->
         </div>
       </section>
     """
-  rowSettingsView = ->
+  rowSettingsView = ()->
     """
       <section class="card__settings  row-extras row-extras--depr">
         <i class="card__settings-close fa fa-times js-toggle-card-settings"></i>
@@ -133,27 +133,24 @@ define 'cs!xlform/view.row.templates', [], ()->
       #{table_html}
     </div>
     """
-  rankView = (s)->
-    rank_levels = s.model._rankLevels.options.models
-    rank_rows = s.model._rankRows.models
-    rank_levels_lis = for item in rank_levels
+  rankView = (s, template_args={})->
+    rank_levels_lis = for item in template_args.rank_levels
       """
       <li class="rank_items__item">
-        #{item.get('label')}
+        #{item.label}
         <br>
-        <span class="rank_items__name">##{item.get('name')}</span>
+        <span class="rank_items__name">##{item.name}</span>
       </li>
       """
-    rank_rows_lis = for item in rank_rows
+    rank_rows_lis = for item in template_args.rank_rows
       """
       <li class="rank_items__item">
-        #{item.get('label')}
+        #{item.label}
         <br>
-        <span class="rank_items__name">##{item.get('name')}</span>
+        <span class="rank_items__name">##{item.name}</span>
       </li>
-
       """
-    rank_constraint_message = s.model.getValue('kobo--rank-constraint-message')
+    rank_constraint_message = template_args.rank_constraint_msg || ''
     rank_constraint_message_li = """
       <li class="rank_items__constraint_message">
         #{rank_constraint_message}

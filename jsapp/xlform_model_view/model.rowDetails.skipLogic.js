@@ -84,7 +84,8 @@ rowDetailsSkipLogic.SkipLogicCriterion = (function(_super) {
         response_model = this.get('response_value');
         if ((response_model != null) && (this.get('operator') != null) && (this.get('question_cid') != null) && response_model.isValid() !== false && (response_model.get('value') != null) && this._get_question()) {
             this._get_question().finalize();
-            return this.get('operator').serialize(this._get_question().get('name').get('value'), response_model.get('value'));
+            var questionName = this._get_question().getValue('name');
+            return this.get('operator').serialize(questionName, response_model.get('value'));
         } else {
             return '';
         }

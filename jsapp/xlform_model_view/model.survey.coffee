@@ -47,7 +47,10 @@ define 'cs!xlform/model.survey', [
             @rows.add r, collection: @rows, silent: true, _parent: @rows
       else
         @surveyDetails.importDefaults()
-      @rows.invoke('linkUp')
+      @context =
+        warnings: []
+        errors: []
+      @rows.invoke('linkUp', @context)
 
     @create: (options={}, addlOpts) ->
       return new Survey(options, addlOpts)

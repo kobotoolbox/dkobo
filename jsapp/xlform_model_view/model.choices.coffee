@@ -71,6 +71,9 @@ define 'cs!xlform/model.choices', [
 
   class choices.ChoiceLists extends base.BaseCollection
     model: choices.ChoiceList
+    create: ->
+      @add(cl = new choices.ChoiceList(name: $modelUtils.txtid()))
+      cl
     summaryObj: (shorter=false)->
       out = {}
       for model in @models

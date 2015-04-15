@@ -225,7 +225,12 @@ define 'cs!xlform/view.row', [
       ,
       transformFunction: (value) -> value
 
-  class ScoreView extends RowView
+  class RankScoreView extends RowView
+    _expandedRender: ->
+      super()
+      @$("li[data-card-settings-tab-id='validation-criteria']").hide()
+
+  class ScoreView extends RankScoreView
     className: "survey__row survey__row--score"
     _renderRow: (args...)->
       super(args)
@@ -234,11 +239,20 @@ define 'cs!xlform/view.row', [
       $rows = @$('.score__contents--rows').eq(0)
       $choices = @$('.score__contents--choices').eq(0)
 
-  class RankView extends RowView
+  class RankView extends RankScoreView
     className: "survey__row survey__row--score"
     _renderRow: (args...)->
       super(args)
-      extra_score_contents = $viewTemplates.$$render('row.rankView', @)
+      template_args = {}
+      template_args.rank_constraint_msg = @model.get('kobo--rank-constraint-message')?.get('value')
+      template_args.rank_levels = for model in @model._rankLevels.options.models
+        label: model.get('label')
+        name: model.get('name')
+      template_args.rank_rows = for model in @model._rankRows.models
+        label: model.get('label')
+        name: model.get('name')
+
+      extra_score_contents = $viewTemplates.$$render('row.rankView', @, template_args)
       @$('.card--selectquestion__expansion').eq(0).append(extra_score_contents)
 
   RowView: RowView

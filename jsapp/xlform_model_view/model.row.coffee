@@ -96,12 +96,17 @@ define 'cs!xlform/model.row', [
             outObj[key] = result
       outObj
 
-  class RankRow extends Backbone.Model
+  class SimpleRow extends Backbone.Model
+    finalize: -> ``
+    getTypeId: -> @get('type')
+    _isSelectQuestion: ()-> false
+    get_type: ->
+      $skipLogicHelpers.question_types[@getTypeId()] || $skipLogicHelpers.question_types['default']
+    getValue: (which)-> @get(which)
+
+  class RankRow extends SimpleRow
     export_relevant_values: (surv, sheets)->
       surv.push(@attributes)
-    finalize: ->
-      # this is a good place to run auto-naming methods
-      ``
 
   class ScoreRankMixin
     _extendAll: (rr)->
@@ -133,6 +138,9 @@ define 'cs!xlform/model.row', [
           @[@_rowAttributeName].add(subrow)
         delete rr.attributes.__rows
 
+    getValue: (which)->
+      @get(which)
+
     forEachRow: (cb, ctx)->
       cb(@)
       @[@_rowAttributeName].each (subrow)-> cb(subrow)
@@ -151,7 +159,7 @@ define 'cs!xlform/model.row', [
     _beginEndKey: ->
       'rank'
 
-    linkUp: ->
+    linkUp: (ctx)->
       rank_list_id = @get('kobo--rank-items').get('value')
       @_rankLevels = @getSurvey().choices.get(rank_list_id)
       @getList = => @_rankLevels
@@ -164,12 +172,9 @@ define 'cs!xlform/model.row', [
       survey_arr.push(begin_xlsformrow)
       ``
 
-
   class ScoreChoiceList extends Array
 
-  class ScoreRow extends Backbone.Model
-    finalize: ->
-      ``
+  class ScoreRow extends SimpleRow
     export_relevant_values: (surv, sheets)->
       surv.push(@attributes)
 
@@ -185,10 +190,20 @@ define 'cs!xlform/model.row', [
     _beginEndKey: ->
       'score'
 
-    linkUp: ->
-      score_list_id = @get('kobo--score-choices').get('value')
-      @_scoreChoices = @getSurvey().choices.get(score_list_id)
+    linkUp: (ctx)->
       @getList = ()=> @_scoreChoices
+      score_list_id_item = @get('kobo--score-choices')
+      if score_list_id_item
+        score_list_id = score_list_id_item.get('value')
+        if score_list_id
+          @_scoreChoices = @getSurvey().choices.get(score_list_id)
+        else
+          ctx.warnings.push "Score choices list not found"
+          @_scoreChoices = @getSurvey().choices.create()
+      else
+        ctx.warnings.push "Score choices list not set"
+        @_scoreChoices = @getSurvey().choices.create()
+      ``
 
     export_relevant_values: (survey_arr, additionalSheets)->
       score_list = @_scoreChoices
@@ -279,7 +294,8 @@ define 'cs!xlform/model.row', [
             clname = $utils.txtid()
             cl.set("name", clname, silent: true)
           @set("value", "#{@get('typeId')} #{clname}")
-
+    getTypeId: ->
+      @get('type').get('typeId')
     clone: ->
       attributes = {}
       options =
@@ -313,7 +329,7 @@ define 'cs!xlform/model.row', [
       @
 
     get_type: ->
-      $skipLogicHelpers.question_types[@get('type').get('typeId')] || $skipLogicHelpers.question_types['default']
+      $skipLogicHelpers.question_types[@getTypeId()] || $skipLogicHelpers.question_types['default']
 
     _isSelectQuestion: ->
       # TODO [ald]: pull this from $aliases
@@ -336,8 +352,8 @@ define 'cs!xlform/model.row', [
     parse: ->
       val.parse()  for key, val of @attributes
 
-    linkUp: ->
-      val.linkUp()  for key, val of @attributes
+    linkUp: (ctx)->
+      val.linkUp(ctx)  for key, val of @attributes
 
   class row.RowError extends row.BaseRow
     constructor: (obj, options)->
