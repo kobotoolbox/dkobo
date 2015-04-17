@@ -126,6 +126,7 @@ define 'cs!xlform/view.rowSelector', [
         options.at = 0
 
       newRow = survey.addRow(rowDetails, options)
+      newRow.linkUp(warnings: [], errors: [])
       @hide()
       @options.surveyView.reset().then () =>
         view = @options.surveyView.getViewForRow(newRow)

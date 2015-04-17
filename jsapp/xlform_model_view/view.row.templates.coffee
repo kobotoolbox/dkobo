@@ -93,26 +93,27 @@ define 'cs!xlform/view.row.templates', [], ()->
     #{expandingSpacerHtml}
     """
 
-  scoreView = (s)->
-    cols = []
+  scoreView = (template_args={})->
     fillers = []
-    scoreModel = s.model
-    for col in scoreModel._scoreChoices.options.models
+    cols = []
+    for col in template_args.score_choices
       fillers.push """<td class="scorecell__radio"><input type="radio" disabled="disabled"></td>"""
-      cols.push """#{col.get('label')}<br><span class="scorecell__name">##{col.get('name')}</span>"""
-
-    thead_html = for col in cols
-      """<th class="scorecell__col">#{col}</th>"""
+      cols.push """
+        <th class="scorecell__col" data-cid="#{col.cid}">
+          <span class="scorecell__label" contenteditable="true">#{col.label}</span><button class="scorecell__delete js-delete-scorecol">&times;</button>
+          <p class="scorecell__name" contenteditable="true" title="Option value">#{col.name or ''}</p>
+        </th>
+        """
+    thead_html = cols.join('')
     fillers = fillers.join('')
-
-    tbody_html = for row in scoreModel._scoreRows.models
-      row_name = """<span class="scorelabel__name">##{row.get('name')}</span>"""
+    tbody_html = for row in template_args.score_rows
       """
-      <tr>
+      <tr data-row-cid="#{row.cid}">
         <td class="scorelabel">
-          #{row.get('label')}
+          <span class="scorelabel__edit" contenteditable="true">#{row.label}</span>
+          <button class="scorerow__delete js-delete-scorerow">&times;</button>
           <br>
-          #{row_name}
+          <span class="scorelabel__name" contenteditable="true" title="Row name">#{row.name or ''}</span>
         </td>
         #{fillers}
       </tr>
@@ -121,11 +122,17 @@ define 'cs!xlform/view.row.templates', [], ()->
     <table class="score_preview__table">
       <thead>
         <th class="scorecell--empty"></th>
-        #{thead_html.join('')}
+        #{thead_html}
+        <th class="scorecell--add"><span>+</span></th>
       </thead>
       <tbody>
         #{tbody_html.join('')}
       </tbody>
+      <tfoot>
+        <tr>
+        <td class="scorerow--add"><button>+</button></td>
+        </tr>
+      </tfoot>
     </table>
     """
     """
@@ -136,33 +143,44 @@ define 'cs!xlform/view.row.templates', [], ()->
   rankView = (s, template_args={})->
     rank_levels_lis = for item in template_args.rank_levels
       """
-      <li class="rank_items__item">
-        #{item.label}
+      <li class="rank_items__level" data-cid="#{item.cid}">
+        <span class="rank_items__level__label">#{item.label}</span><button class="rankcell__delete js-delete-rankcell">&times;</button>
         <br>
-        <span class="rank_items__name">##{item.name}</span>
+        <span class="rank_items__name">#{item.name or ''}</span>
       </li>
       """
     rank_rows_lis = for item in template_args.rank_rows
       """
-      <li class="rank_items__item">
-        #{item.label}
+      <li class="rank_items__item" data-cid="#{item.cid}">
+        <span class="rank_items__item__label">#{item.label}</span><button class="rankcell__delete js-delete-rankcell">&times;</button>
         <br>
-        <span class="rank_items__name">##{item.name}</span>
+        <span class="rank_items__name">#{item.name or ''}</span>
       </li>
       """
     rank_constraint_message = template_args.rank_constraint_msg || ''
-    rank_constraint_message_li = """
-      <li class="rank_items__constraint_message">
-        #{rank_constraint_message}
+    if rank_constraint_message
+      rank_constraint_message_html = """
+      <li class="rank_items__constraint_message">#{rank_constraint_message}</li>
+      """
+    else
+      rank_constraint_message_html = """
+      <li class="rank_items__constraint_message rank_items__constraint_message--prelim">
+        Message to be read if a rank choice is incorrect.
       </li>
+      """
+
+    rank_constraint_message_li = """
+      #{rank_constraint_message_html}
     """
     """
     <div class="rank_preview clearfix">
       <ol class="rank__rows">
         #{rank_rows_lis.join('')}
+        <li class="rank_items__add rank_items__add--item"><button>+</button></li>
       </ol>
       <ul class="rank__levels">
         #{rank_levels_lis.join('')}
+        <li class="rank_items__add rank_items__add--level"><button>+</button></li>
         #{rank_constraint_message_li}
       </ul>
     </div>

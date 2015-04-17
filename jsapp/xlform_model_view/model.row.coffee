@@ -106,7 +106,7 @@ define 'cs!xlform/model.row', [
 
   class RankRow extends SimpleRow
     export_relevant_values: (surv, sheets)->
-      surv.push(@attributes)
+      surv.push @attributes
 
   class ScoreRankMixin
     _extendAll: (rr)->
@@ -130,6 +130,8 @@ define 'cs!xlform/model.row', [
       rr.toJSON = ()->
         out = _toJSON.call(rr)
         out.type = "begin #{rr._beginEndKey()}"
+        if typeof @_additionalJson is 'function'
+          _.extend(out, @_additionalJson())
         out
 
       _.each @constructor.prototype, extend_to_row
@@ -155,13 +157,21 @@ define 'cs!xlform/model.row', [
       @_rankRows = new RankRows()
       @_rowAttributeName = '_rankRows'
       @_extendAll(rr)
+      rankConstraintMessageKey = 'kobo--rank-constraint-message'
+      if !rr.get(rankConstraintMessageKey)
+        rr.set(rankConstraintMessageKey, '')
 
     _beginEndKey: ->
       'rank'
 
     linkUp: (ctx)->
-      rank_list_id = @get('kobo--rank-items').get('value')
-      @_rankLevels = @getSurvey().choices.get(rank_list_id)
+      rank_list_id = @get('kobo--rank-items')?.get('value')
+      if rank_list_id
+        @_rankLevels = @getSurvey().choices.get(rank_list_id)
+      else
+        @_rankLevels = @getSurvey().choices.create()
+      @_additionalJson = =>
+        'kobo--rank-items': @getList().get('name')
       @getList = => @_rankLevels
 
     export_relevant_values: (survey_arr, additionalSheets)->
@@ -175,6 +185,8 @@ define 'cs!xlform/model.row', [
   class ScoreChoiceList extends Array
 
   class ScoreRow extends SimpleRow
+    initialize: ->
+      @set('type', 'score__row')
     export_relevant_values: (surv, sheets)->
       surv.push(@attributes)
 
@@ -192,6 +204,8 @@ define 'cs!xlform/model.row', [
 
     linkUp: (ctx)->
       @getList = ()=> @_scoreChoices
+      @_additionalJson = ()=>
+        'kobo--score-choices': @getList().get('name')
       score_list_id_item = @get('kobo--score-choices')
       if score_list_id_item
         score_list_id = score_list_id_item.get('value')
@@ -199,10 +213,10 @@ define 'cs!xlform/model.row', [
           @_scoreChoices = @getSurvey().choices.get(score_list_id)
         else
           ctx.warnings.push "Score choices list not found"
-          @_scoreChoices = @getSurvey().choices.create()
+          @_scoreChoices = @getSurvey().choices.add({})
       else
         ctx.warnings.push "Score choices list not set"
-        @_scoreChoices = @getSurvey().choices.create()
+        @_scoreChoices = @getSurvey().choices.add(name: $utils.txtid())
       ``
 
     export_relevant_values: (survey_arr, additionalSheets)->
@@ -211,6 +225,7 @@ define 'cs!xlform/model.row', [
         additionalSheets['choices'].add(score_list)
       output = _.clone(@toJSON2())
       output.type = "begin score"
+      output['kobo--score-choices'] = @getList().get('name')
       survey_arr.push(output)
       ``
 
@@ -318,13 +333,13 @@ define 'cs!xlform/model.row', [
       return newRow
 
     finalize: ->
-      existing_name = @get("name").getValue()
+      existing_name = @getValue("name")
       unless existing_name
         names = []
         @getSurvey().forEachRow (r)->
-          name = r.get("name").getValue()
+          name = r.getValue("name")
           names.push(name)  if name
-        label = @get("label").get("value")
+        label = @getValue("label")
         @get("name").set("value", $utils.sluggifyLabel(label, names))
       @
 
@@ -338,7 +353,7 @@ define 'cs!xlform/model.row', [
     getList: ->
       _list = @get('type')?.get('list')
       if (not _list) and @_isSelectQuestion()
-        _list = new $choices.ChoiceList()
+        _list = new $choices.ChoiceList(name: $utils.txtid())
         @setList(_list)
       _list
 

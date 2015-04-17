@@ -40,29 +40,90 @@
     width: 100%;
     border-collapse: separate;
 }
+.rankcell__delete, .scorecell__delete, .scorerow__delete {
+    border: 0 none;
+    background-color: transparent;
+    float: right;
+    color: rgba(181, 15, 15, 0.33);
+    &:hover {
+        color: rgba(181, 15, 15, 1);
+    }
+}
 .scorecell__col {
-    padding: 0;
     border: 1px solid #ccc;
     border-width: 1px 0 0.5px 1px;
     text-align: center;
-    padding: 1px 2px;
+    padding: 0;
     &:nth-child(2) {
         border-top-left-radius: 6px;
     }
-    &:last-child {
+    &:nth-last-child(2) {
         border-top-right-radius: 6px;
         border-right-width: 1px;
     }
 }
+.scorerow--add {
+    button {
+        &:hover {
+            background-color: #d3d3d3;
+        }
+        cursor: pointer;
+        background-color: #f3f3f3;
+        font-weight: bold;
+        display: block;
+        width: 100%;
+        padding: 2px 6px;
+        border: 1px solid #ddd;
+    }
+}
+.scorecell--add {
+    vertical-align: bottom;
+    span {
+        &:hover {
+            background-color: #d3d3d3;
+        }
+        cursor: pointer;
+        background-color: #f3f3f3;
+        font-weight: bold;
+        display: inline-block;
+        padding: 2px 6px;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+        border: 1px solid #ddd;
+        border-width: 1px 1px 1px 0;
+    }
+}
 
 
+$scorebordercolor: #ccc;
+tr:first-child .scorelabel {
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-top-color: $scorebordercolor;
+}
+.scorelabel {
+    border-left-width: 1px;
+    border-left-style: solid;
+    border-left-color: $scorebordercolor;
+    border-right-width: 1px;
+    border-right-style: solid;
+    border-right-color: #ddd;
+}
 .scorelabel, .scorecell__radio {
     border-bottom: 1px dotted #ddd;
-    padding: 3px 0;
+    padding: 4px 6px;
+}
+
+.scorecell__radio:last-child {
+    border-right-width: 1px;
+    border-right-style: solid;
+    border-right-color: $scorebordercolor;
 }
 tr:last-child {
     .scorelabel, .scorecell__radio {
-        border-bottom: 0 none;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
+        border-bottom-color: $scorebordercolor;
     }
 }
 .score__options {
@@ -74,6 +135,9 @@ tr:last-child {
 }
 .scorecell__radio {
     text-align: center;
+    input {
+        opacity: 0.4;
+    }
 }
 tr:hover .scorecell__radio {
     background-color: #fafafa;
@@ -94,12 +158,21 @@ tr .scorecell__radio:hover {
     padding: 4px 20px 18px 2px;
     margin: 0;
 }
-.rank_items__constraint_message, .rank_items__item {
+.rank_items__constraint_message, .rank_items__item, .rank_items__level {
     padding: 5px 8px;
     margin: 0 0 4px 0;
     line-height: 12px;
 }
-.rank_items__item {
+.rank_items__level__label, .rank_items__item__label {
+    div {
+        display: inline;
+    }
+    br {
+        display: none;
+    }
+
+}
+.rank_items__item, .rank_items__level {
     border: 1px solid;
     border-color: rgb(194, 176, 176) rgb(194, 176, 176) rgb(194, 176, 176) rgb(194, 176, 176);
     border-radius: 4px;
@@ -111,12 +184,92 @@ tr .scorecell__radio:hover {
     &:before {
         content: '✓';
     }
+    &.rank_items__constraint_message--prelim {
+        &:before {
+            content: '';
+        }
+        color: #777;
+    }
+    div {
+        display: inline;
+    }
+    br {
+        display: none;
+    }
+}
+.rank_items__add {
+    list-style-type: none;
+    button {
+        display: block;
+        width: 35%;
+        line-height: 10px;
+    }
 }
 
+.scorecell__name {
+    margin: 0 0 -1px 0;
+    background-color: #f1f1f1;
+    color: #868686;
+    line-height: 13px;
+    font-size: 9px;
+    &:before, &:after {
+        content: "\"";
+    }
+}
+
+.scorelabel__name, .rank__rows .rank_items__name {
+    opacity: 0.8;
+    &:before {
+        content: '<';
+    }
+    &:after {
+        content: '>';
+    }
+    &:before, &:after {
+        color: #e4d4d4;
+        line-height: 20px;
+        margin: 0 3px;
+    }
+}
+.scorecell__name, .scorelabel__name {
+    display: block;
+    border-bottom: 1px dotted #ddd;
+    br {
+        display: none;
+    }
+}
+
+.rank_items__name {
+    display: block;
+    br {
+        display: none;
+    }
+    div {
+        display: inline;
+    }
+}
+.rank__levels .rank_items__name {
+    &:before, &:after {
+        content: "\"";
+    }
+}
+.scorerank-beta-warning {
+    color: rgb(193, 128, 128);
+    position: absolute;
+    top: 0;
+    right: 30px;
+    text-align: right;
+    margin: 0;
+    padding: 2px;
+    font-size: 12px;
+}
 .scorecell__name, .scorelabel__name, .rank_items__name {
     font-size: 90%;
     color: #bbb;
-    font-style: italic;
+    &.prelim {
+        font-style: italic;
+        color: #ddd;
+    }
 }
 
 

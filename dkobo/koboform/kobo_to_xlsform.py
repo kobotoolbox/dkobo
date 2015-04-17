@@ -6,6 +6,9 @@ standardized xlsform features.
 Example structures: scoring, ranking
 '''
 import re
+import json
+import random
+import string
 
 class RowHandler(object):
     def handle_row(self, row):
@@ -211,6 +214,47 @@ KOBO_CUSTOM_TYPE_HANDLERS = {
     'begin rank': KoboRankGroup,
 }
 
+def _sluggify_valid_xml(name):
+    return re.sub('\s+', '_', name.lower())
+
+def _increment(name):
+    return name + '_0'
+
+def _rand_id(n):
+    return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(n))
+
+def _autoname_fields(surv_contents, default_language=None):
+    '''
+    if any names are not set, automatically fill them in
+    '''
+    kuid_names = {}
+    for surv_row in surv_contents:
+        if not 'name' in surv_row:
+            if re.search(r'^end ', surv_row['type']):
+                continue
+            if 'label' in surv_row:
+                next_name = _sluggify_valid_xml(surv_row['label'])
+            elif default_language is not None:
+                next_name = _sluggify_valid_xml(surv_row['label::%s' % default_language])
+            else:
+                raise ValueError('Label cannot be translated: %s' % json.dumps(surv_row))
+            surv_row['name'] = next_name
+            while next_name in kuid_names.values():
+                next_name = _increment(next_name)
+            if 'kuid' not in surv_row:
+                surv_row['kuid'] = _rand_id(8)
+            if surv_row['kuid'] in kuid_names:
+                raise Exception("Duplicate kuid: %s" % surv_row['kuid'])
+            kuid_names[surv_row['kuid']] = next_name
+    return surv_contents
+
+
+def _autovalue_choices(surv_choices):
+    for choice in surv_choices:
+        if 'name' not in choice:
+            choice['name'] = choice['label']
+    return surv_choices
+
 def _parse_contents_of_kobo_structures(ss_structure):
     contents = ss_structure['survey']
     features_used = set()
@@ -233,9 +277,20 @@ def _parse_contents_of_kobo_structures(ss_structure):
 def _is_kobo_specific(name):
     return re.search(r'^kobo--', name)
 
-def convert_any_kobo_features_to_xlsform_survey_structure(surv):
-    if 'survey' in surv:
+def convert_any_kobo_features_to_xlsform_survey_structure(surv, **kwargs):
+    opts = {
+        'autoname': True,
+        'autovalue_options': True,
+        'extract_rank_and_score': True,
+    }
+    opts.update(kwargs)
+    if 'survey' in surv and opts['extract_rank_and_score']:
         (surv['survey'], features_used) = _parse_contents_of_kobo_structures(surv)
+
+    if opts['autoname']:
+        surv['survey'] = _autoname_fields(surv['survey'])
+    if 'choices' in surv and opts['autovalue_options']:
+        surv['choices'] = _autovalue_choices(surv.get('choices', []))
     for kobo_custom_sheet_name in filter(_is_kobo_specific, surv.keys()):
         del survy[kobo_custom_sheet_name]
     return surv
