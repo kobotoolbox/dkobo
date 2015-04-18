@@ -7,7 +7,7 @@ define ['cs!xlform/_model'], ($model)->
   utils.pluckNames = (survey, options={})->
     names = []
     survey.forEachRow (r)->
-      names.push r.get('name').get('value')
+      names.push r.getValue('name')
     names
 
   utils.summarizeSurvey = (survey, options={})->

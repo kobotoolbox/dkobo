@@ -34,9 +34,7 @@ define 'cs!xlform/view.surveyApp', [
       rIds = []
       gatherId = (r)->
         rIds.push(r.cid)
-        if 'forEachRow' of r
-          r.forEachRow(gatherId, flat: true, includeGroups: true)
-      survey.forEachRow(gatherId, flat: true, includeGroups: true)
+      survey.forEachRow(gatherId, includeGroups: true)
 
       _s = (i)-> JSON.stringify(i)
       if _s(rIds) isnt _s(elIds)
@@ -515,6 +513,10 @@ define 'cs!xlform/view.surveyApp', [
       unless (xlfrv = @__rowViews.get(row.cid))
         if row.constructor.kls is 'Group'
           rv = new $rowView.GroupView(model: row, ngScope: @ngScope, surveyView: @)
+        else if row.get('type').getValue() is 'score'
+          rv = new $rowView.ScoreView(model: row, ngScope: @ngScope, surveyView: @)
+        else if row.get('type').getValue() is 'rank'
+          rv = new $rowView.RankView(model: row, ngScope: @ngScope, surveyView: @)
         else
           rv = new $rowView.RowView(model: row, ngScope: @ngScope, surveyView: @)
         @__rowViews.set(row.cid, rv)
@@ -620,7 +622,11 @@ define 'cs!xlform/view.surveyApp', [
     previewButtonClick: (evt)->
       if evt.shiftKey #and evt.altKey
         evt.preventDefault()
-        $viewUtils.debugFrame @survey.toCSV().replace(new RegExp(' ', 'g'), '&nbsp;')
+        if evt.altKey
+          content = @survey.toCSV()
+        else
+          content = JSON.stringify(@survey.toJSON(), null, 4)
+        $viewUtils.debugFrame content.replace(new RegExp(' ', 'g'), '&nbsp;')
         @onEscapeKeydown = $viewUtils.debugFrame.close
       else
         $viewUtils.enketoIframe.fromCsv @survey.toCSV(),

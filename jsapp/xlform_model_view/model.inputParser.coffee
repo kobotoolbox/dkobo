@@ -42,7 +42,7 @@ define [
       grpStack[_l-1]
 
     for item in sArr
-      _groupAtts = $aliases.q.testGroupOrRepeat(item.type)
+      _groupAtts = $aliases.q.testGroupable(item.type)
       if _groupAtts
         if _groupAtts.begin
           _pushGrp(_groupAtts.type, item)
@@ -52,7 +52,7 @@ define [
         _curGrp().push(item)
 
     if grpStack.length isnt 1
-      throw new Error("unclosed group/repeat")
+      throw new Error("unclosed groupable set")
 
     _curGrp().export().__rows
 

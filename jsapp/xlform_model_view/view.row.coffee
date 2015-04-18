@@ -64,6 +64,7 @@ define 'cs!xlform/view.row', [
       @$label = @$('.card__header-title')
       @$card = @$('.card')
       @$header = @$('.card__header')
+      context = {warnings: []}
       if 'getList' of @model and (cl = @model.getList())
         @$card.addClass('card--selectquestion card--expandedchoices')
         @is_expanded = true
@@ -225,5 +226,184 @@ define 'cs!xlform/view.row', [
       ,
       transformFunction: (value) -> value
 
+  class RankScoreView extends RowView
+    _expandedRender: ->
+      super()
+      @$("li[data-card-settings-tab-id='validation-criteria']").hide()
+
+  class ScoreView extends RankScoreView
+    className: "survey__row survey__row--score"
+    _renderRow: (args...)->
+      super(args)
+      beta_elem = $('<p>', {
+              class: 'scorerank-beta-warning'
+              text: 'Note: Rank and Score question types are currently in beta.'
+              })
+      while @model._scoreChoices.options.length < 2
+        @model._scoreChoices.options.add(label: 'Option')
+      score_choices = for sc in @model._scoreChoices.options.models
+        label: sc.get('label')
+        name: sc.get('name')
+        cid: sc.cid
+      if @model._scoreRows.length < 1
+        @model._scoreRows.add
+          label: 'Enter your question'
+          name: ''
+
+      score_rows = for sr in @model._scoreRows.models
+        label: sr.get('label')
+        name: sr.get('name')
+        cid: sr.cid
+
+      template_args = {
+        score_rows: score_rows
+        score_choices: score_choices
+      }
+
+      extra_score_contents = $viewTemplates.$$render('row.scoreView', template_args)
+      @$('.card--selectquestion__expansion').eq(0).append(extra_score_contents)
+      $rows = @$('.score__contents--rows').eq(0)
+      $choices = @$('.score__contents--choices').eq(0)
+
+      $el = @$el
+      offOn = (evtName, selector, callback)->
+        $el.off(evtName).on(evtName, selector, callback)
+
+      get_row = (cid)=> @model._scoreRows.get(cid)
+      get_choice = (cid)=> @model._scoreChoices.options.get(cid)
+      offOn 'click.deletescorerow', '.js-delete-scorerow', (evt)=>
+        $et = $(evt.target)
+        row_cid = $et.closest('tr').eq(0).data('row-cid')
+        @model._scoreRows.remove(get_row(row_cid))
+        @already_rendered = false
+        @render()
+      offOn 'click.deletescorecol', '.js-delete-scorecol', (evt)=>
+        log 'here'
+        $et = $(evt.target)
+        @model._scoreChoices.options.remove(get_choice($et.closest('th').data('cid')))
+        @already_rendered = false
+        @render()
+
+      offOn 'input.editscorelabel', '.scorelabel__edit', (evt)->
+        $et = $(evt.target)
+        row_cid = $et.closest('tr').eq(0).data('row-cid')
+        get_row(row_cid).set('label', $et.text())
+
+      offOn 'input.namechange', '.scorelabel__name', (evt)=>
+        $et = $(evt.target)
+        row_cid = $et.closest('tr').eq(0).data('row-cid')
+        get_row(row_cid).set('name', $et.text())
+
+      offOn 'input.choicechange', '.scorecell__label', (evt)=>
+        $et = $(evt.target)
+        get_choice($et.closest('th').data('cid')).set('label', $et.text())
+
+      offOn 'input.optvalchance', '.scorecell__name', (evt)=>
+        $et = $(evt.target)
+        get_choice($et.closest('th').eq(0).data('cid')).set('name', $et.text())
+
+      offOn 'blur.choicechange', '.scorecell__label', (evt)=>
+        @render()
+
+      offOn 'click.addchoice', '.scorecell--add', (evt)=>
+        @already_rendered = false
+        @model._scoreChoices.options.add([label: 'Option'])
+        @render()
+
+      offOn 'click.addrow', '.scorerow--add', (evt)=>
+        @already_rendered = false
+        @model._scoreRows.add([label: 'Enter your question'])
+        @render()
+
+  class RankView extends RankScoreView
+    className: "survey__row survey__row--score"
+    _renderRow: (args...)->
+      super(args)
+      beta_elem = $('<p>', {
+                    class: 'scorerank-beta-warning'
+                    text: 'Note: Rank and Score question types are currently in beta.'
+                    })
+      @$el.append(beta_elem)
+      template_args = {}
+      template_args.rank_constraint_msg = @model.get('kobo--rank-constraint-message')?.get('value')
+
+      while @model._rankLevels.options.length < 2
+        @model._rankLevels.options.add
+          label: "Item to be ranked"
+          name: ''
+
+      rank_levels = for model in @model._rankLevels.options.models
+        label: model.get('label')
+        name: model.get('name')
+        cid: model.cid
+      template_args.rank_levels = rank_levels
+
+      while @model._rankRows.length < 1
+        @model._rankRows.add
+          label: '1st choice'
+          name: ''
+      rank_rows = for model in @model._rankRows.models
+        label: model.get('label')
+        name: model.get('name')
+        cid: model.cid
+      template_args.rank_rows = rank_rows
+      extra_score_contents = $viewTemplates.$$render('row.rankView', @, template_args)
+      @$('.card--selectquestion__expansion').eq(0).append(extra_score_contents)
+      @editRanks()
+    editRanks: ->
+      @$([
+          '.rank_items__item__label',
+          '.rank_items__level__label',
+          '.rank_items__constraint_message',
+          '.rank_items__name',
+        ].join(',')).attr('contenteditable', 'true')
+      $el = @$el
+      offOn = (evtName, selector, callback)->
+        $el.off(evtName).on(evtName, selector, callback)
+
+      get_item = (evt)=>
+        parli = $(evt.target).parents('li').eq(0)
+        cid = parli.eq(0).data('cid')
+        if parli.hasClass('rank_items__level')
+          @model._rankLevels.options.get(cid)
+        else
+          @model._rankRows.get(cid)
+
+      offOn 'click.deleterankcell', '.js-delete-rankcell', (evt)=>
+        if $(evt.target).parents('.rank__rows').length is 0
+          collection = @model._rankLevels.options
+        else
+          collection = @model._rankRows
+        item = get_item(evt)
+        collection.remove(item)
+        @already_rendered = false
+        @render()
+
+      offOn 'input.ranklabelchange1', '.rank_items__item__label', (evt)->
+        get_item(evt).set('label', evt.target.textContent)
+      offOn 'input.ranklabelchange2', '.rank_items__level__label', (evt)->
+        get_item(evt).set('label', evt.target.textContent)
+      offOn 'input.ranklabelchange3', '.rank_items__name', (evt)->
+        get_item(evt).set('name', evt.target.textContent)
+
+      offOn 'focus', '.rank_items__constraint_message--prelim', (evt)->
+        $(evt.target).removeClass('rank_items__constraint_message--prelim').empty()
+      offOn 'input.ranklabelchange4', '.rank_items__constraint_message', (evt)=>
+        rnkKey = 'kobo--rank-constraint-message'
+        @model.get(rnkKey).set('value', evt.target.textContent)
+      offOn 'click.addrow', '.rank_items__add', (evt)=>
+        if $(evt.target).parents('.rank__rows').length is 0
+          # add a level
+          @model._rankLevels.options.add({label: 'Item', name: ''})
+        else
+          chz = "1st 2nd 3rd".split(' ')
+          # Please don't go up to 21
+          ch = if (@model._rankRows.length + 1 > chz.length) then "#{@model._rankRows.length + 1}th" else chz[@model._rankRows.length]
+          @model._rankRows.add({label: "#{ch} choice", name: ''})
+        @already_rendered = false
+        @render()
+
   RowView: RowView
+  ScoreView: ScoreView
   GroupView: GroupView
+  RankView: RankView

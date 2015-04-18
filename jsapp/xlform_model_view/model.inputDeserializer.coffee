@@ -15,7 +15,8 @@ define 'cs!xlform/model.inputDeserializer', [
             )->
   inputDeserializer = (inp, ctx={})->
     r = deserialize inp, ctx
-    validateParse(r, ctx)  if not ctx.error and ctx.validate
+    if not ctx.error and ctx.validate
+      validateParse(r, ctx)
     r
 
   # [inputDeserializer.deserialize] parses csv string, json string,
@@ -33,15 +34,31 @@ define 'cs!xlform/model.inputDeserializer', [
 
       out
 
+    _parse_sheets = (repr)->
+      # If a sheet has a first-row which is an array, that array will be treated as column
+      # headers and any subsequent array-rows will be matched up
+      for shtName, sheet of repr
+        if _.isArray(sheet) and sheet.length > 0 and _.isArray(sheet[0])
+          out_sheet = []
+          [cols, contents...] = sheet
+          for row in contents
+            if _.isArray(row)
+              new_row = {}
+              for col, i in cols
+                if i < row.length and row[i] not in [undefined, null]
+                  new_row[col] = row[i]
+              out_sheet.push(new_row)
+            else
+              out_sheet.push(row)
+          repr[shtName] = out_sheet
+      repr
+
     # returns: function
     (repr, ctx={})->
       if _.isString(repr)
-        if repr.length > 0 and repr.match(/^\s*{.*}\s*$/)
-          JSON.parse repr
-        else
-          _csv_to_params repr
+        _csv_to_params repr
       else if _.isObject repr
-        repr
+        _parse_sheets repr
       else
         ``
 

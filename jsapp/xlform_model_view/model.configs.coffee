@@ -170,6 +170,10 @@ define 'cs!xlform/model.configs', ["underscore", 'cs!xlform/model.utils', "backb
       ["video", "Video", isMedia: true], # Can use phone camera to record video
       ["calculate", "Calculate"],
       ["select_one", "Select", orOtherOption: true, specifyChoice: true],
+      ["score", "Score"],
+      ["score__row", "Score Row"],
+      ["rank", "Rank"],
+      ["rank__level", "Rank Level"],
       ["select_multiple", "Multiple choice", orOtherOption: true, specifyChoice: true]
     ]
 

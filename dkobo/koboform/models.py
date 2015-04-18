@@ -28,7 +28,8 @@ class SurveyDraft(models.Model):
     @property
     def _pyxform_survey(self):
         import pyxform_utils
-        survey = pyxform_utils.create_survey_from_csv_text(self.body)
+        valid_csv_body = pyxform_utils.convert_csv_to_valid_xlsform_csv(self.body)
+        survey = pyxform_utils.create_survey_from_csv_text(valid_csv_body)
         survey.title = self.name
         return survey
 

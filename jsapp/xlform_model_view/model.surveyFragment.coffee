@@ -63,7 +63,7 @@ define 'cs!xlform/model.surveyFragment', [
       @errors = []
     addError: (message) ->
       @errors.push message
-    linkUp: -> @invoke('linkUp')
+    linkUp: (ctx)-> @invoke('linkUp', ctx)
     forEachRow: (cb, ctx={})->
       _forEachRow.apply(@, [cb, ctx])
     getRowDescriptors: () ->
@@ -260,6 +260,8 @@ define 'cs!xlform/model.surveyFragment', [
 
     if type in formSettingsTypes
       $surveyDetail.SurveyDetail
+    else if type is 'score'
+      $row.Row
     else if type in ['group', 'repeat']
       surveyFragment.Group
     else

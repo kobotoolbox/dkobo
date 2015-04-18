@@ -43,6 +43,24 @@ define [
           'group',
           'repeat',
           ])
+
+      it '[groupable]', ->
+        expectSorted($aliases.q.groupable()).toEqual([
+          'begin group',
+          'begin rank',
+          'begin repeat',
+          'begin score',
+          'begin_group',
+          'begin_repeat',
+          'end group',
+          'end rank',
+          'end repeat',
+          'end score',
+          'end_group',
+          'end_repeat',
+          'group',
+          'repeat',
+          ])
       it '[availableSheetNames]', ->
         expectSorted($aliases.q.requiredSheetNameList()).toEqual([
           'survey',
@@ -50,17 +68,17 @@ define [
       it '[hidden_types]', ->
         expect($aliases.q.hiddenTypes()).toContain('imei')
       describe 'q.testGroupOrRepeat', ->
-        expectGroupOrRepeatParse = (s)->
-          expect($aliases.q.testGroupOrRepeat(s))
+        expectGroupableParse = (s)->
+          expect($aliases.q.testGroupable(s))
         it 'parses group properly', ->
-          expectGroupOrRepeatParse('group').toEqual({type: 'group', begin: true})
-          expectGroupOrRepeatParse('begin group').toEqual({type: 'group', begin: true})
-          expectGroupOrRepeatParse('begin_group').toEqual({type: 'group', begin: true})
-          expectGroupOrRepeatParse('end group').toEqual({type: 'group', begin: false})
-          expectGroupOrRepeatParse('end_group').toEqual({type: 'group', begin: false})
+          expectGroupableParse('group').toEqual({type: 'group', begin: true})
+          expectGroupableParse('begin group').toEqual({type: 'group', begin: true})
+          expectGroupableParse('begin_group').toEqual({type: 'group', begin: true})
+          expectGroupableParse('end group').toEqual({type: 'group', begin: false})
+          expectGroupableParse('end_group').toEqual({type: 'group', begin: false})
         it 'parses repeat properly', ->
-          expectGroupOrRepeatParse('repeat').toEqual({type: 'repeat', begin: true})
-          expectGroupOrRepeatParse('begin repeat').toEqual({type: 'repeat', begin: true})
-          expectGroupOrRepeatParse('begin_repeat').toEqual({type: 'repeat', begin: true})
-          expectGroupOrRepeatParse('end repeat').toEqual({type: 'repeat', begin: false})
-          expectGroupOrRepeatParse('end_repeat').toEqual({type: 'repeat', begin: false})
+          expectGroupableParse('repeat').toEqual({type: 'repeat', begin: true})
+          expectGroupableParse('begin repeat').toEqual({type: 'repeat', begin: true})
+          expectGroupableParse('begin_repeat').toEqual({type: 'repeat', begin: true})
+          expectGroupableParse('end repeat').toEqual({type: 'repeat', begin: false})
+          expectGroupableParse('end_repeat').toEqual({type: 'repeat', begin: false})

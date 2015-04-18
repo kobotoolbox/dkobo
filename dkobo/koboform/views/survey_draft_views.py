@@ -13,7 +13,9 @@ from rest_framework.authtoken.models import Token
 
 from dkobo.koboform.models import SurveyDraft
 from dkobo.koboform.serializers import ListSurveyDraftSerializer, DetailSurveyDraftSerializer
+from dkobo.koboform.kobo_to_xlsform import convert_any_kobo_features_to_xlsform_survey_structure
 from dkobo.koboform import pyxform_utils, kobocat_integration, xlform
+
 
 def export_form(request, id):
     survey_draft = SurveyDraft.objects.get(pk=id)
@@ -156,6 +158,7 @@ def import_survey_draft(request):
                 _csv = posted_file.read()
             else:
                 raise Exception("Content-type not recognized: '%s'" % posted_file.content_type)
+
             new_survey_draft = SurveyDraft.objects.create(**{
                 u'body': _csv,
                 u'name': posted_file.name,
@@ -216,14 +219,25 @@ def publish_survey_draft(request, pk, format=None):
     except SurveyDraft.DoesNotExist:
         return Response({'error': 'SurveyDraft not found'}, status=status.HTTP_404_NOT_FOUND)
 
+    # convert csv to ss_struct
+    ss_struct = pyxform_utils.convert_csv_to_ss_structure(survey_draft.body)
     form_id_string = request.DATA.get('id_string', False)
-    survey_draft._set_form_id_string(form_id_string, title=request.DATA.get('title', False))
 
+    # set the form_id based on the payload
+    if 'settings' not in ss_struct:
+        ss_struct['settings'] = []
+    if len(ss_struct['settings']) == 0:
+        ss_struct['settings'].append({})
+    ss_struct['settings'][0]['form_id'] = form_id_string
+
+    # convert kobo-specific data structures into valid xlsform (e.g. score, rank)
+    xlsform_ss_struct = convert_any_kobo_features_to_xlsform_survey_structure(ss_struct)
+    valid_xlsform_csv_repr = pyxform_utils.convert_ss_structure_to_csv(xlsform_ss_struct)
     _set_necessary_permissions(request.user)
     (token, is_new) = Token.objects.get_or_create(user=request.user)
     headers = {u'Authorization':'Token ' + token.key}
 
-    payload = {u'text_xls_form': survey_draft.body}
+    payload = {u'text_xls_form': valid_xlsform_csv_repr}
     try:
         url = kobocat_integration._kobocat_url('/api/v1/forms', internal=True)
         response = requests.post(url, headers=headers, data=payload)

@@ -56,7 +56,7 @@ define 'cs!xlform/model.base', [
         delete arg._parent
       super(arg, opts)
     parse: ->
-    linkUp: ->
+    linkUp: (ctx)->
     finalize: ->
     getValue: (what)->
       if what

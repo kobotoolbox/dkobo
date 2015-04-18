@@ -23,7 +23,7 @@ define 'cs!xlform/view.row.templates', [], ()->
         </div>
       </section>
     """
-  rowSettingsView = ->
+  rowSettingsView = ()->
     """
       <section class="card__settings  row-extras row-extras--depr">
         <i class="card__settings-close fa fa-times js-toggle-card-settings"></i>
@@ -93,6 +93,100 @@ define 'cs!xlform/view.row.templates', [], ()->
     #{expandingSpacerHtml}
     """
 
+  scoreView = (template_args={})->
+    fillers = []
+    cols = []
+    for col in template_args.score_choices
+      fillers.push """<td class="scorecell__radio"><input type="radio" disabled="disabled"></td>"""
+      cols.push """
+        <th class="scorecell__col" data-cid="#{col.cid}">
+          <span class="scorecell__label" contenteditable="true">#{col.label}</span><button class="scorecell__delete js-delete-scorecol">&times;</button>
+          <p class="scorecell__name" contenteditable="true" title="Option value">#{col.name or ''}</p>
+        </th>
+        """
+    thead_html = cols.join('')
+    fillers = fillers.join('')
+    tbody_html = for row in template_args.score_rows
+      """
+      <tr data-row-cid="#{row.cid}">
+        <td class="scorelabel">
+          <span class="scorelabel__edit" contenteditable="true">#{row.label}</span>
+          <button class="scorerow__delete js-delete-scorerow">&times;</button>
+          <br>
+          <span class="scorelabel__name" contenteditable="true" title="Row name">#{row.name or ''}</span>
+        </td>
+        #{fillers}
+      </tr>
+      """
+    table_html = """
+    <table class="score_preview__table">
+      <thead>
+        <th class="scorecell--empty"></th>
+        #{thead_html}
+        <th class="scorecell--add"><span>+</span></th>
+      </thead>
+      <tbody>
+        #{tbody_html.join('')}
+      </tbody>
+      <tfoot>
+        <tr>
+        <td class="scorerow--add"><button>+</button></td>
+        </tr>
+      </tfoot>
+    </table>
+    """
+    """
+    <div class="score_preview">
+      #{table_html}
+    </div>
+    """
+  rankView = (s, template_args={})->
+    rank_levels_lis = for item in template_args.rank_levels
+      """
+      <li class="rank_items__level" data-cid="#{item.cid}">
+        <span class="rank_items__level__label">#{item.label}</span><button class="rankcell__delete js-delete-rankcell">&times;</button>
+        <br>
+        <span class="rank_items__name">#{item.name or ''}</span>
+      </li>
+      """
+    rank_rows_lis = for item in template_args.rank_rows
+      """
+      <li class="rank_items__item" data-cid="#{item.cid}">
+        <span class="rank_items__item__label">#{item.label}</span><button class="rankcell__delete js-delete-rankcell">&times;</button>
+        <br>
+        <span class="rank_items__name">#{item.name or ''}</span>
+      </li>
+      """
+    rank_constraint_message = template_args.rank_constraint_msg || ''
+    if rank_constraint_message
+      rank_constraint_message_html = """
+      <li class="rank_items__constraint_message">#{rank_constraint_message}</li>
+      """
+    else
+      rank_constraint_message_html = """
+      <li class="rank_items__constraint_message rank_items__constraint_message--prelim">
+        Message to be read if a rank choice is incorrect.
+      </li>
+      """
+
+    rank_constraint_message_li = """
+      #{rank_constraint_message_html}
+    """
+    """
+    <div class="rank_preview clearfix">
+      <ol class="rank__rows">
+        #{rank_rows_lis.join('')}
+        <li class="rank_items__add rank_items__add--item"><button>+</button></li>
+      </ol>
+      <ul class="rank__levels">
+        #{rank_levels_lis.join('')}
+        <li class="rank_items__add rank_items__add--level"><button>+</button></li>
+        #{rank_constraint_message_li}
+      </ul>
+    </div>
+    """
+
+
   selectQuestionExpansion = ->
     """
     <div class="card--selectquestion__expansion row__multioptions js-cancel-sort">
@@ -121,5 +215,7 @@ define 'cs!xlform/view.row.templates', [], ()->
   selectQuestionExpansion: selectQuestionExpansion
   groupView: groupView
   rowErrorView: rowErrorView
+  scoreView: scoreView
+  rankView: rankView
   groupSettingsView: groupSettingsView
   rowSettingsView: rowSettingsView

@@ -98,6 +98,7 @@ skip_logic_model = (dkobo_xlform)->
       beforeEach () ->
         _criterion._get_question = sinon.stub().returns
           get: sinon.stub().returns(get: sinon.stub().returns 'test question')
+          getValue: (what) -> 'test name'
           finalize: () ->
 
         _criterion.set 'question_cid', 'test question'

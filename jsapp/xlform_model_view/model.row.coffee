@@ -2,6 +2,7 @@ global = if window? then window else process
 
 define 'cs!xlform/model.row', [
         'underscore',
+        'backbone',
         'cs!xlform/model.base',
         'cs!xlform/model.configs',
         'cs!xlform/model.utils',
@@ -12,6 +13,7 @@ define 'cs!xlform/model.row', [
         'cs!xlform/mv.skipLogicHelpers',
         ], (
             _,
+            Backbone,
             base,
             $configs,
             $utils,
@@ -68,6 +70,9 @@ define 'cs!xlform/model.row', [
       , includeGroups:true
       questions
 
+    export_relevant_values: (survey_arr, additionalSheets)->
+      survey_arr.push(@toJSON2())
+
     toJSON2: ->
       outObj = {}
       for [key, val] in @attributesArray()
@@ -93,6 +98,139 @@ define 'cs!xlform/model.row', [
           else
             outObj[key] = result
       outObj
+
+  class SimpleRow extends Backbone.Model
+    finalize: -> ``
+    getTypeId: -> @get('type')
+    _isSelectQuestion: ()-> false
+    get_type: ->
+      $skipLogicHelpers.question_types[@getTypeId()] || $skipLogicHelpers.question_types['default']
+    getValue: (which)-> @get(which)
+
+  class RankRow extends SimpleRow
+    export_relevant_values: (surv, sheets)->
+      surv.push @attributes
+
+  class ScoreRankMixin
+    _extendAll: (rr)->
+      extend_to_row = (val, key)=>
+        if _.isFunction(val)
+          rr[key] = (args...)->
+            val.apply(rr, args)
+        else
+          rr[key] = val
+      _.each @, extend_to_row
+      extend_to_row(@forEachRow, 'forEachRow')
+
+      rr._afterIterator = (cb, ctxt)->
+        obj =
+          export_relevant_values: (surv, addl)->
+            surv.push(type: "end #{rr._beginEndKey()}")
+          toJSON: ()->
+            type: "end #{rr._beginEndKey()}"
+        cb(obj)  if ctxt.includeGroupEnds
+      _toJSON = rr.toJSON
+      rr.toJSON = ()->
+        out = _toJSON.call(rr)
+        out.type = "begin #{rr._beginEndKey()}"
+        if typeof @_additionalJson is 'function'
+          _.extend(out, @_additionalJson())
+        out
+
+      _.each @constructor.prototype, extend_to_row
+      if rr.attributes.__rows
+        for subrow in rr.attributes.__rows
+          @[@_rowAttributeName].add(subrow)
+        delete rr.attributes.__rows
+
+    getValue: (which)->
+      @get(which)
+
+    forEachRow: (cb, ctx)->
+      cb(@)
+      @[@_rowAttributeName].each (subrow)-> cb(subrow)
+      @_afterIterator(cb, ctx)  if '_afterIterator' of @
+
+
+  class RankRows extends Backbone.Collection
+    model: RankRow
+
+  class RankMixin extends ScoreRankMixin
+    constructor: (rr)->
+      @_rankRows = new RankRows()
+      @_rowAttributeName = '_rankRows'
+      @_extendAll(rr)
+      rankConstraintMessageKey = 'kobo--rank-constraint-message'
+      if !rr.get(rankConstraintMessageKey)
+        rr.set(rankConstraintMessageKey, '')
+
+    _beginEndKey: ->
+      'rank'
+
+    linkUp: (ctx)->
+      rank_list_id = @get('kobo--rank-items')?.get('value')
+      if rank_list_id
+        @_rankLevels = @getSurvey().choices.get(rank_list_id)
+      else
+        @_rankLevels = @getSurvey().choices.create()
+      @_additionalJson = =>
+        'kobo--rank-items': @getList().get('name')
+      @getList = => @_rankLevels
+
+    export_relevant_values: (survey_arr, additionalSheets)->
+      if @_rankLevels
+        additionalSheets['choices'].add(@_rankLevels)
+      begin_xlsformrow = _.clone(@toJSON2())
+      begin_xlsformrow.type = "begin rank"
+      survey_arr.push(begin_xlsformrow)
+      ``
+
+  class ScoreChoiceList extends Array
+
+  class ScoreRow extends SimpleRow
+    initialize: ->
+      @set('type', 'score__row')
+    export_relevant_values: (surv, sheets)->
+      surv.push(@attributes)
+
+  class ScoreRows extends Backbone.Collection
+    model: ScoreRow
+
+  class ScoreMixin extends ScoreRankMixin
+    constructor: (rr)->
+      @_scoreRows = new ScoreRows()
+      @_rowAttributeName = '_scoreRows'
+      @_extendAll(rr)
+
+    _beginEndKey: ->
+      'score'
+
+    linkUp: (ctx)->
+      @getList = ()=> @_scoreChoices
+      @_additionalJson = ()=>
+        'kobo--score-choices': @getList().get('name')
+      score_list_id_item = @get('kobo--score-choices')
+      if score_list_id_item
+        score_list_id = score_list_id_item.get('value')
+        if score_list_id
+          @_scoreChoices = @getSurvey().choices.get(score_list_id)
+        else
+          ctx.warnings.push "Score choices list not found"
+          @_scoreChoices = @getSurvey().choices.add({})
+      else
+        ctx.warnings.push "Score choices list not set"
+        @_scoreChoices = @getSurvey().choices.add(name: $utils.txtid())
+      ``
+
+    export_relevant_values: (survey_arr, additionalSheets)->
+      score_list = @_scoreChoices
+      if score_list
+        additionalSheets['choices'].add(score_list)
+      output = _.clone(@toJSON2())
+      output.type = "begin score"
+      output['kobo--score-choices'] = @getList().get('name')
+      survey_arr.push(output)
+      ``
 
   class row.Row extends row.BaseRow
     @kls = "Row"
@@ -130,7 +268,14 @@ define 'cs!xlform/model.row', [
             newVals[vk] = if ("function" is typeof vv) then vv() else vv
           @set key, newVals
 
+
+      if @attributes.type is 'score'
+        new ScoreMixin(@)
+      else if @attributes.type is 'rank'
+        new RankMixin(@)
+
       @convertAttributesToRowDetails()
+
 
       typeDetail = @get("type")
       tpVal = typeDetail.get("value")
@@ -167,7 +312,8 @@ define 'cs!xlform/model.row', [
             clname = $utils.txtid()
             cl.set("name", clname, silent: true)
           @set("value", "#{@get('typeId')} #{clname}")
-
+    getTypeId: ->
+      @get('type').get('typeId')
     clone: ->
       attributes = {}
       options =
@@ -190,18 +336,18 @@ define 'cs!xlform/model.row', [
       return newRow
 
     finalize: ->
-      existing_name = @get("name").getValue()
+      existing_name = @getValue("name")
       unless existing_name
         names = []
         @getSurvey().forEachRow (r)->
-          name = r.get("name").getValue()
+          name = r.getValue("name")
           names.push(name)  if name
-        label = @get("label").get("value")
+        label = @getValue("label")
         @get("name").set("value", $utils.sluggifyLabel(label, names))
       @
 
     get_type: ->
-      $skipLogicHelpers.question_types[@get('type').get('typeId')] || $skipLogicHelpers.question_types['default']
+      $skipLogicHelpers.question_types[@getTypeId()] || $skipLogicHelpers.question_types['default']
 
     _isSelectQuestion: ->
       # TODO [ald]: pull this from $aliases
@@ -210,7 +356,7 @@ define 'cs!xlform/model.row', [
     getList: ->
       _list = @get('type')?.get('list')
       if (not _list) and @_isSelectQuestion()
-        _list = new $choices.ChoiceList()
+        _list = new $choices.ChoiceList(name: $utils.txtid())
         @setList(_list)
       _list
 
@@ -224,8 +370,8 @@ define 'cs!xlform/model.row', [
     parse: ->
       val.parse()  for key, val of @attributes
 
-    linkUp: ->
-      val.linkUp()  for key, val of @attributes
+    linkUp: (ctx)->
+      val.linkUp(ctx)  for key, val of @attributes
 
   class row.RowError extends row.BaseRow
     constructor: (obj, options)->

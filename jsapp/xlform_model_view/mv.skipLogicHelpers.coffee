@@ -413,57 +413,141 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       ###@view = @view_factory.create_skip_logic_picker_view(context)###
     switch_editing_mode: () -> return
 
+  operators =
+    EXISTENCE: 1
+    EQUALITY: 2
+    GREATER_THAN: 3
+    GREATER_THAN_EQ: 4
+  ops =
+    EX: operators.EXISTENCE
+    EQ: operators.EQUALITY
+    GT: operators.GREATER_THAN
+    GE: operators.GREATER_THAN_EQ
+
   skipLogicHelpers.question_types =
     default:
-      operators: [1, 2]
+      operators: [
+        ops.EX #1
+        ops.EQ #2
+      ]
       equality_operator_type: 'text'
       response_type: 'text'
       name: 'default'
     select_one:
-      operators: [2, 1]
+      operators: [
+        ops.EQ #2
+        ops.EX #1
+      ]
       equality_operator_type: 'text'
       response_type: 'dropdown'
       name: 'select_one'
     select_multiple:
-      operators: [2, 1]
+      operators: [
+        ops.EQ #2
+        ops.EX #1
+      ]
       equality_operator_type: 'select_multiple'
       response_type: 'dropdown'
       name: 'select_multiple'
     integer:
-      operators: [3, 1, 2, 4]
+      operators: [
+        ops.GT #3
+        ops.EX #1
+        ops.EQ #2
+        ops.GE #4
+      ]
       equality_operator_type: 'basic'
       response_type: 'integer'
       name: 'integer'
+    rank:
+      operators: [
+        ops.EX #1
+        ops.EQ #2
+      ]
+      equality_operator_type: 'select_multiple'
+      response_type: 'dropdown'
+      name: 'rank'
+    rank__item:
+      operators: [
+        ops.EX #1
+        ops.EQ #2
+      ]
+      equality_operator_type: 'select_multiple'
+      response_type: 'dropdown'
+      name: 'rank_item'
+
+    score:
+      operators: [
+        ops.EX #1
+        ops.EQ #2
+      ]
+      equality_operator_type: 'select_multiple'
+      response_type: 'dropdown'
+      name: 'score'
+    score__row:
+      operators: [
+        ops.EX #1
+        ops.EQ #2
+      ]
+      equality_operator_type: 'select_multiple'
+      response_type: 'dropdown'
+      name: 'score_row'
+
     barcode:
-      operators: [3, 1, 2, 4]
+      operators: [
+        ops.GT #3
+        ops.EX #1
+        ops.EQ #2
+        ops.GE #4
+      ]
       equality_operator_type: 'text'
       response_type: 'text'
       name: 'barcode'
     decimal:
-      operators: [1, 2, 3, 4]
+      operators: [
+        ops.EX #1
+        ops.EQ #2
+        ops.GT #3
+        ops.GE #4
+      ]
       equality_operator_type: 'basic'
       response_type: 'decimal'
       name: 'decimal'
     geopoint:
-      operators: [1]
+      operators: [
+        ops.EX #1
+      ]
       name: 'geopoint'
     image:
-      operators: [1]
+      operators: [
+        ops.EX #1
+      ]
       name: 'image'
     audio:
-      operators: [1]
+      operators: [
+        ops.EX #1
+      ]
       name: 'audio'
     video:
-      operators: [1]
+      operators: [
+        ops.EX #1
+      ]
       name: 'video'
     acknowledge:
-      operators: [1]
+      operators: [
+        ops.EX #1
+      ]
       name: 'acknowledge'
     date:
-      operators: [2, 3, 4]
+      operators: [
+        ops.EQ #2
+        ops.GT #3
+        ops.GE #4
+      ]
       equality_operator_type: 'date'
       response_type: 'text'
       name: 'date'
+
 
   skipLogicHelpers.operator_types = [
     {
