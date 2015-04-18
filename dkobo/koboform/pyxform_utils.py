@@ -234,4 +234,4 @@ def convert_dict_to_xls(ss_dict):
 def convert_csv_to_valid_xlsform_csv(csv_str):
     ss_struct = convert_csv_to_ss_structure(csv_str)
     valid_ss_structure = convert_any_kobo_features_to_xlsform_survey_structure(ss_struct)
-    return convert_ss_structure_to_csv(valid_ss_structure)
+    return unicode(convert_ss_structure_to_csv(valid_ss_structure), 'utf-8')
