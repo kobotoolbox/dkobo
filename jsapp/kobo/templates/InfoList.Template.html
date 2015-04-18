@@ -38,9 +38,9 @@
           <a class="forms__card__title" href="#{{ getHashLink(item) }}">{{ item.name }}</a>
           <div class="forms__card__description forms__card__description--error" ng-if="!!itemError(item)">
             <strong>Important Error:</strong> {{itemError(item)}}
-            <a href="http://support.kobotoolbox.org/customer/portal/emails/new">
-              Contact KoBoToolbox Support
-            </a>
+            <br>
+            &#8230; Confused? &nbsp;
+            <a href="http://support.kobotoolbox.org/customer/portal/emails/new">Contact KoBoToolbox Support</a>.
           </div>
           <p class="forms__card__description">{{ item.description || '' }}</p>
           <p class="forms__card__date">
