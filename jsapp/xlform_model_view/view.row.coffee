@@ -42,9 +42,14 @@ define 'cs!xlform/view.row', [
     # expandRowSelector: ->
     #   new $rowSelector.RowSelector(el: @$el.find(".survey__row__spacer").get(0), ngScope: @ngScope, spawnedFromView: @).expand()
 
-    render: ->
+    render: (opts={})->
+      fixScroll = opts.fixScroll
+
       if @already_rendered
         return
+
+      if fixScroll
+        @$el.height(@$el.height())
 
       @already_rendered = true
 
@@ -53,6 +58,10 @@ define 'cs!xlform/view.row', [
       else
         @_renderRow()
       @is_expanded = @$card?.hasClass('card--expandedchoices')
+
+      if fixScroll
+        @$el.attr('style', '')
+
       @
     _renderError: ->
       @$el.addClass("xlf-row-view-error")
@@ -277,13 +286,13 @@ define 'cs!xlform/view.row', [
         row_cid = $et.closest('tr').eq(0).data('row-cid')
         @model._scoreRows.remove(get_row(row_cid))
         @already_rendered = false
-        @render()
+        @render(fixScroll: true)
       offOn 'click.deletescorecol', '.js-delete-scorecol', (evt)=>
         log 'here'
         $et = $(evt.target)
         @model._scoreChoices.options.remove(get_choice($et.closest('th').data('cid')))
         @already_rendered = false
-        @render()
+        @render(fixScroll: true)
 
       offOn 'input.editscorelabel', '.scorelabel__edit', (evt)->
         $et = $(evt.target)
@@ -309,12 +318,12 @@ define 'cs!xlform/view.row', [
       offOn 'click.addchoice', '.scorecell--add', (evt)=>
         @already_rendered = false
         @model._scoreChoices.options.add([label: 'Option'])
-        @render()
+        @render(fixScroll: true)
 
       offOn 'click.addrow', '.scorerow--add', (evt)=>
         @already_rendered = false
         @model._scoreRows.add([label: 'Enter your question'])
-        @render()
+        @render(fixScroll: true)
 
   class RankView extends RankScoreView
     className: "survey__row survey__row--score"
@@ -378,7 +387,7 @@ define 'cs!xlform/view.row', [
         item = get_item(evt)
         collection.remove(item)
         @already_rendered = false
-        @render()
+        @render(fixScroll: true)
 
       offOn 'input.ranklabelchange1', '.rank_items__item__label', (evt)->
         get_item(evt).set('label', evt.target.textContent)
@@ -402,7 +411,7 @@ define 'cs!xlform/view.row', [
           ch = if (@model._rankRows.length + 1 > chz.length) then "#{@model._rankRows.length + 1}th" else chz[@model._rankRows.length]
           @model._rankRows.add({label: "#{ch} choice", name: ''})
         @already_rendered = false
-        @render()
+        @render(fixScroll: true)
 
   RowView: RowView
   ScoreView: ScoreView
