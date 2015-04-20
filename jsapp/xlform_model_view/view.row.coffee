@@ -262,6 +262,7 @@ define 'cs!xlform/view.row', [
 
       extra_score_contents = $viewTemplates.$$render('row.scoreView', template_args)
       @$('.card--selectquestion__expansion').eq(0).append(extra_score_contents)
+      @$('.card').eq(0).append(beta_elem)
       $rows = @$('.score__contents--rows').eq(0)
       $choices = @$('.score__contents--choices').eq(0)
 
@@ -323,7 +324,6 @@ define 'cs!xlform/view.row', [
                     class: 'scorerank-beta-warning'
                     text: 'Note: Rank and Score question types are currently in beta.'
                     })
-      @$el.append(beta_elem)
       template_args = {}
       template_args.rank_constraint_msg = @model.get('kobo--rank-constraint-message')?.get('value')
 
@@ -348,6 +348,7 @@ define 'cs!xlform/view.row', [
         cid: model.cid
       template_args.rank_rows = rank_rows
       extra_score_contents = $viewTemplates.$$render('row.rankView', @, template_args)
+      @$('.card').append(beta_elem)
       @$('.card--selectquestion__expansion').eq(0).append(extra_score_contents)
       @editRanks()
     editRanks: ->
