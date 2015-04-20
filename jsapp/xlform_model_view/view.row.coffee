@@ -238,6 +238,7 @@ define 'cs!xlform/view.row', [
   class RankScoreView extends RowView
     _expandedRender: ->
       super()
+      @$('.xlf-dv-required').hide()
       @$("li[data-card-settings-tab-id='validation-criteria']").hide()
 
   class ScoreView extends RankScoreView
