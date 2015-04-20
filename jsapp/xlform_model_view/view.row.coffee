@@ -270,7 +270,8 @@ define 'cs!xlform/view.row', [
       }
 
       extra_score_contents = $viewTemplates.$$render('row.scoreView', template_args)
-      @$('.card--selectquestion__expansion').eq(0).append(extra_score_contents)
+      @$('.card--selectquestion__expansion').eq(0).append(extra_score_contents).addClass('js-cancel-select-row')
+
       @$('.card').eq(0).append(beta_elem)
       $rows = @$('.score__contents--rows').eq(0)
       $choices = @$('.score__contents--choices').eq(0)
@@ -358,7 +359,7 @@ define 'cs!xlform/view.row', [
       template_args.rank_rows = rank_rows
       extra_score_contents = $viewTemplates.$$render('row.rankView', @, template_args)
       @$('.card').append(beta_elem)
-      @$('.card--selectquestion__expansion').eq(0).append(extra_score_contents)
+      @$('.card--selectquestion__expansion').eq(0).append(extra_score_contents).addClass('js-cancel-select-row')
       @editRanks()
     editRanks: ->
       @$([
