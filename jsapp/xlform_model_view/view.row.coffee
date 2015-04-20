@@ -42,9 +42,14 @@ define 'cs!xlform/view.row', [
     # expandRowSelector: ->
     #   new $rowSelector.RowSelector(el: @$el.find(".survey__row__spacer").get(0), ngScope: @ngScope, spawnedFromView: @).expand()
 
-    render: ->
+    render: (opts={})->
+      fixScroll = opts.fixScroll
+
       if @already_rendered
         return
+
+      if fixScroll
+        @$el.height(@$el.height())
 
       @already_rendered = true
 
@@ -53,6 +58,10 @@ define 'cs!xlform/view.row', [
       else
         @_renderRow()
       @is_expanded = @$card?.hasClass('card--expandedchoices')
+
+      if fixScroll
+        @$el.attr('style', '')
+
       @
     _renderError: ->
       @$el.addClass("xlf-row-view-error")
@@ -229,6 +238,7 @@ define 'cs!xlform/view.row', [
   class RankScoreView extends RowView
     _expandedRender: ->
       super()
+      @$('.xlf-dv-required').hide()
       @$("li[data-card-settings-tab-id='validation-criteria']").hide()
 
   class ScoreView extends RankScoreView
@@ -261,7 +271,9 @@ define 'cs!xlform/view.row', [
       }
 
       extra_score_contents = $viewTemplates.$$render('row.scoreView', template_args)
-      @$('.card--selectquestion__expansion').eq(0).append(extra_score_contents)
+      @$('.card--selectquestion__expansion').eq(0).append(extra_score_contents).addClass('js-cancel-select-row')
+
+      @$('.card').eq(0).append(beta_elem)
       $rows = @$('.score__contents--rows').eq(0)
       $choices = @$('.score__contents--choices').eq(0)
 
@@ -276,13 +288,13 @@ define 'cs!xlform/view.row', [
         row_cid = $et.closest('tr').eq(0).data('row-cid')
         @model._scoreRows.remove(get_row(row_cid))
         @already_rendered = false
-        @render()
+        @render(fixScroll: true)
       offOn 'click.deletescorecol', '.js-delete-scorecol', (evt)=>
         log 'here'
         $et = $(evt.target)
         @model._scoreChoices.options.remove(get_choice($et.closest('th').data('cid')))
         @already_rendered = false
-        @render()
+        @render(fixScroll: true)
 
       offOn 'input.editscorelabel', '.scorelabel__edit', (evt)->
         $et = $(evt.target)
@@ -308,12 +320,12 @@ define 'cs!xlform/view.row', [
       offOn 'click.addchoice', '.scorecell--add', (evt)=>
         @already_rendered = false
         @model._scoreChoices.options.add([label: 'Option'])
-        @render()
+        @render(fixScroll: true)
 
       offOn 'click.addrow', '.scorerow--add', (evt)=>
         @already_rendered = false
         @model._scoreRows.add([label: 'Enter your question'])
-        @render()
+        @render(fixScroll: true)
 
   class RankView extends RankScoreView
     className: "survey__row survey__row--score"
@@ -323,7 +335,6 @@ define 'cs!xlform/view.row', [
                     class: 'scorerank-beta-warning'
                     text: 'Note: Rank and Score question types are currently in beta.'
                     })
-      @$el.append(beta_elem)
       template_args = {}
       template_args.rank_constraint_msg = @model.get('kobo--rank-constraint-message')?.get('value')
 
@@ -348,7 +359,8 @@ define 'cs!xlform/view.row', [
         cid: model.cid
       template_args.rank_rows = rank_rows
       extra_score_contents = $viewTemplates.$$render('row.rankView', @, template_args)
-      @$('.card--selectquestion__expansion').eq(0).append(extra_score_contents)
+      @$('.card').append(beta_elem)
+      @$('.card--selectquestion__expansion').eq(0).append(extra_score_contents).addClass('js-cancel-select-row')
       @editRanks()
     editRanks: ->
       @$([
@@ -377,7 +389,7 @@ define 'cs!xlform/view.row', [
         item = get_item(evt)
         collection.remove(item)
         @already_rendered = false
-        @render()
+        @render(fixScroll: true)
 
       offOn 'input.ranklabelchange1', '.rank_items__item__label', (evt)->
         get_item(evt).set('label', evt.target.textContent)
@@ -401,7 +413,7 @@ define 'cs!xlform/view.row', [
           ch = if (@model._rankRows.length + 1 > chz.length) then "#{@model._rankRows.length + 1}th" else chz[@model._rankRows.length]
           @model._rankRows.add({label: "#{ch} choice", name: ''})
         @already_rendered = false
-        @render()
+        @render(fixScroll: true)
 
   RowView: RowView
   ScoreView: ScoreView

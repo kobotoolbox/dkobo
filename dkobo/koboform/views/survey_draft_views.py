@@ -148,7 +148,7 @@ def import_survey_draft(request):
         try:
             # create and validate the xform but ignore the results
             warnings = []
-            pyxform_utils.convert_xls_to_xform(posted_file, warnings=warnings)
+            pyxform_utils.validate_kobo_xlsform(posted_file, warnings=warnings)
             output[u'xlsform_valid'] = True
 
             posted_file.seek(0)
