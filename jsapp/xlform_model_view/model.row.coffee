@@ -108,6 +108,8 @@ define 'cs!xlform/model.row', [
     getValue: (which)-> @get(which)
 
   class RankRow extends SimpleRow
+    initialize: ->
+      @set('type', 'rank__level')
     export_relevant_values: (surv, sheets)->
       surv.push @attributes
 
