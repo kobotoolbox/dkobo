@@ -63,6 +63,7 @@ class Converter(TestCase):
         self.assertEqual(surv[2]['required'], 'true')
         self.assertEqual(surv[2]['type'], 'select_one items')
         self.assertTrue('constraint' not in surv[2].keys())
+        self.assertEqual(surv[2].get('constraint_message'), 'Rank Message')
 
         self.assertEqual(surv[3]['appearance'], 'overridden')
 

@@ -57,8 +57,8 @@ class KoboRankGroup(GroupHandler):
     | needs     | shelter | Shelter |
 
     into:
-    #survey 
-    |       type       |    name   |    label     | appearance | reqd |             constraint            |
+    #survey
+    |       type       |    name   |    label     | appearance | reqd |         constraint_message        |
     |------------------|-----------|--------------|------------|------|-----------------------------------|
     | begin group      | rnk       |              | field-list |      |                                   |
     | note             | rnk_label | Top 3 needs? |            |      |                                   |
@@ -115,6 +115,7 @@ class KoboRankGroup(GroupHandler):
         row.update({
             'type': 'select_one %s' % self._rank_itemset,
             'required': 'true',
+            'constraint_message': self._rank_constraint_message,
             'appearance': appearance,
             })
         _constraint = self._generate_constraint(row_name, self._previous_levels)
