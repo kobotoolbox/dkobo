@@ -50,7 +50,11 @@ define 'cs!xlform/model.survey', [
       @context =
         warnings: []
         errors: []
-      @rows.invoke('linkUp', @context)
+      @forEachRow (r)=>
+        if typeof r.linkUp is 'function'
+          r.linkUp(@context)
+        # else
+        #   console.error('Linkup not defined for row: ', r)
 
     @create: (options={}, addlOpts) ->
       return new Survey(options, addlOpts)

@@ -102,6 +102,7 @@ define 'cs!xlform/model.row', [
   class SimpleRow extends Backbone.Model
     finalize: -> ``
     getTypeId: -> @get('type')
+    linkUp: ->
     _isSelectQuestion: ()-> false
     get_type: ->
       $skipLogicHelpers.question_types[@getTypeId()] || $skipLogicHelpers.question_types['default']
