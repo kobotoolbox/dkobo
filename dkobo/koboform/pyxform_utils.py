@@ -242,7 +242,7 @@ def validate_kobo_xlsform(posted_file, warnings=[]):
     valid xlsform rules and then build the xform to ensure the survey passes through
     pyxform's validator.
     '''
-    unvalidated_csv_xlsform = convert_xls_to_csv_string(posted_file)
+    unvalidated_csv_xlsform = unicode(convert_xls_to_csv_string(posted_file), 'utf-8')
     ss_struct = convert_csv_to_ss_structure(unvalidated_csv_xlsform)
     valid_ss_structure = convert_any_kobo_features_to_xlsform_survey_structure(ss_struct)
-    return create_survey_from_ss_struct(valid_ss_structure, warnings=warnings).xml
+    return create_survey_from_ss_struct(valid_ss_structure, warnings=warnings).to_xml()
