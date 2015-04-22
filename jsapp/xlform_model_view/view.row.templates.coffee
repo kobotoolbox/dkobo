@@ -157,17 +157,16 @@ define 'cs!xlform/view.row.templates', [], ()->
         <span class="rank_items__name">#{item.name or ''}</span>
       </li>
       """
-    rank_constraint_message = template_args.rank_constraint_msg || ''
-    if rank_constraint_message
-      rank_constraint_message_html = """
-      <li class="rank_items__constraint_message">#{rank_constraint_message}</li>
-      """
-    else
-      rank_constraint_message_html = """
-      <li class="rank_items__constraint_message rank_items__constraint_message--prelim">
-        Message to be read if a rank choice is incorrect.
-      </li>
-      """
+    rank_constraint_message_html = """
+    <li class="rank_items__constraint_wrap">
+      <p class="rank_items__constraint_explanation">
+        A constraint message to be read in case of error:
+      </p>
+      <p class="rank_items__constraint_message">
+        #{template_args.rank_constraint_msg}
+      </p>
+    </li>
+    """
 
     rank_constraint_message_li = """
       #{rank_constraint_message_html}

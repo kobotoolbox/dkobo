@@ -165,7 +165,7 @@ define 'cs!xlform/model.row', [
       @_extendAll(rr)
       rankConstraintMessageKey = 'kobo--rank-constraint-message'
       if !rr.get(rankConstraintMessageKey)
-        rr.set(rankConstraintMessageKey, '')
+        rr.set(rankConstraintMessageKey, 'Items cannot be selected more than once')
 
     _beginEndKey: ->
       'rank'

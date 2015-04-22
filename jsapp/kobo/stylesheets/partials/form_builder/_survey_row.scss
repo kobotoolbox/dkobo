@@ -158,10 +158,19 @@ tr .scorecell__radio:hover {
     padding: 4px 20px 18px 2px;
     margin: 0;
 }
-.rank_items__constraint_message, .rank_items__item, .rank_items__level {
+
+.rank_items__constraint_wrap, .rank_items__item, .rank_items__level {
     padding: 5px 8px;
     margin: 0 0 4px 0;
     line-height: 12px;
+}
+.rank_items__constraint_message, .rank_items__constraint_explanation {
+    margin: 0;
+}
+.rank_items__constraint_explanation {
+    font-size: 10px;
+    color: #888;
+    text-decoration: underline;
 }
 .rank_items__level__label, .rank_items__item__label {
     div {
@@ -219,12 +228,12 @@ tr .scorecell__radio:hover {
 
 .scorelabel__name, .rank__rows .rank_items__name {
     opacity: 0.8;
-    &:before {
-        content: '<';
-    }
-    &:after {
-        content: '>';
-    }
+    // &:before {
+    //     content: '<';
+    // }
+    // &:after {
+    //     content: '>';
+    // }
     &:before, &:after {
         color: #e4d4d4;
         line-height: 20px;
