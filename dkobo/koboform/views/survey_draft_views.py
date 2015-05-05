@@ -5,6 +5,7 @@ from guardian.shortcuts import assign_perm
 
 from django.http import HttpResponseBadRequest, HttpResponse, HttpResponseRedirect
 from django.conf import settings
+from django.utils.encoding import smart_unicode
 from django.contrib.auth.decorators import login_required
 from rest_framework import status
 from rest_framework.response import Response
@@ -135,7 +136,7 @@ def import_survey_draft(request):
             survey_object = pyxform.survey_from.xform(filelike_obj=posted_file, warnings=warnings)
             _csv = survey_object.to_csv(warnings=warnings, koboform=True).read()
             new_survey_draft = SurveyDraft.objects.create(**{
-                u'body': _csv,
+                u'body': smart_unicode(_csv),
                 u'name': posted_file.name,
                 u'user': request.user
             })
@@ -160,7 +161,7 @@ def import_survey_draft(request):
                 raise Exception("Content-type not recognized: '%s'" % posted_file.content_type)
 
             new_survey_draft = SurveyDraft.objects.create(**{
-                u'body': _csv,
+                u'body': smart_unicode(_csv),
                 u'name': posted_file.name,
                 u'user': request.user
             })
