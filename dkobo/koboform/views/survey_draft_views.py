@@ -142,7 +142,7 @@ def import_survey_draft(request):
             output[u'survey_draft_id'] = new_survey_draft.id
         except Exception, err:
             response_code = 500
-            output[u'error'] = err.message
+            output[u'error'] = err.message or str(err)
         output[u'warnings'] = warnings
     else:
         try:
@@ -167,7 +167,7 @@ def import_survey_draft(request):
             output[u'survey_draft_id'] = new_survey_draft.id
         except Exception, err:
             response_code = 500
-            output[u'error'] = err.message
+            output[u'error'] = err.message or str(err)
     return HttpResponse(json.dumps(output), content_type="application/json", status=response_code)
 
 
