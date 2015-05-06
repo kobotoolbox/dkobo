@@ -225,7 +225,10 @@ KOBO_CUSTOM_TYPE_HANDLERS = {
 }
 
 def _sluggify_valid_xml(name):
-    return re.sub('\s+', '_', name.lower())
+    out = re.sub('\s+', '_', name.lower())
+    if re.match(r'^\d', out):
+        out = '_'+out
+    return out
 
 def _increment(name):
     return name + '_0'
@@ -294,11 +297,13 @@ def convert_any_kobo_features_to_xlsform_survey_structure(surv, **kwargs):
         'extract_rank_and_score': True,
     }
     opts.update(kwargs)
-    if 'survey' in surv and opts['extract_rank_and_score']:
-        (surv['survey'], features_used) = _parse_contents_of_kobo_structures(surv)
 
-    if opts['autoname']:
-        surv['survey'] = _autoname_fields(surv['survey'])
+    if 'survey' in surv:
+        if opts['autoname']:
+            surv['survey'] = _autoname_fields(surv['survey'])
+        if opts['extract_rank_and_score']:
+            (surv['survey'], features_used) = _parse_contents_of_kobo_structures(surv)
+
     if 'choices' in surv and opts['autovalue_options']:
         surv['choices'] = _autovalue_choices(surv.get('choices', []))
     for kobo_custom_sheet_name in filter(_is_kobo_specific, surv.keys()):
