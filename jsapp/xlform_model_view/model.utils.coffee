@@ -118,12 +118,12 @@ define 'cs!xlform/model.utils', [
       str = str.slice(0, opts.characterLimit)
 
     if opts.validXmlTag
-      if str[0].match(/\d/)
+      if str[0].match(/^\d/)
         str = "_" + str
 
     if _.isArray(opts.preventDuplicates)
       str = do ->
-        names_lc = (name.toLowerCase()  for name in opts.preventDuplicates)
+        names_lc = (name.toLowerCase()  for name in opts.preventDuplicates when name)
         attempt_base = str
 
         if attempt_base.length is 0

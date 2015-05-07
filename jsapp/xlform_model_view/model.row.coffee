@@ -132,7 +132,44 @@ define 'cs!xlform/model.row', [
           toJSON: ()->
             type: "end #{rr._beginEndKey()}"
         cb(obj)  if ctxt.includeGroupEnds
+
       _toJSON = rr.toJSON
+
+      rr.clone = ()->
+        attributes = rr.toJSON2()
+
+        options =
+          _parent: rr._parent
+          add: false
+          merge: false
+          remove: false
+          silent: true
+
+        r2 = new row.Row(attributes, options)
+        r2._isCloned = true
+  
+        if rr._rankRows
+          # if rr is a rank question
+          for rankRow in rr._rankRows.models
+            r2._rankRows.add(rankRow.toJSON())
+          r2._rankLevels = rr.getSurvey().choices.add(name: $utils.txtid())
+          for item in rr.getList().options.models
+            r2._rankLevels.options.add(item.toJSON())
+          r2.set('kobo--rank-items', r2._rankLevels.get('name'))
+          @convertAttributesToRowDetails()
+          r2.get('type').set('list', r2._rankLevels)
+        else
+          # if rr is a score question
+          for scoreRow in rr._scoreRows.models
+            r2._scoreRows.add(scoreRow.toJSON())
+          r2._scoreChoices = rr.getSurvey().choices.add(name: $utils.txtid())
+          for item in rr.getList().options.models
+            r2._scoreChoices.options.add(item.toJSON())
+          r2.set('kobo--score-choices', r2._scoreChoices.get('name'))
+          @convertAttributesToRowDetails()
+          r2.get('type').set('list', r2._scoreChoices)
+        r2
+
       rr.toJSON = ()->
         out = _toJSON.call(rr)
         out.type = "begin #{rr._beginEndKey()}"

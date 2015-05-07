@@ -221,30 +221,28 @@ tr .scorecell__radio:hover {
     color: #868686;
     line-height: 13px;
     font-size: 9px;
-    &:before, &:after {
-        content: "\"";
-    }
 }
 
-.scorelabel__name, .rank__rows .rank_items__name {
-    opacity: 0.8;
-    // &:before {
-    //     content: '<';
-    // }
-    // &:after {
-    //     content: '>';
-    // }
-    &:before, &:after {
-        color: #e4d4d4;
-        line-height: 20px;
-        margin: 0 3px;
-    }
-}
 .scorecell__name, .scorelabel__name {
     display: block;
     border-bottom: 1px dotted #ddd;
     br {
         display: none;
+    }
+}
+.scorelabel__name, .rank__rows .rank_items__name {
+    opacity: 0.8;
+
+    &:before, &:after {
+        line-height: 20px;
+        margin: 0 3px;
+    }
+
+}
+.scorelabel__name--automatic, .scorecell__name--automatic {
+    &:before {
+        content: 'AUTOMATIC';
+        font-size: 10px;
     }
 }
 
@@ -257,10 +255,20 @@ tr .scorecell__radio:hover {
         display: inline;
     }
 }
-.rank__levels .rank_items__name {
-    &:before, &:after {
-        content: "\"";
+.rank_items__name--automatic  {
+    &:focus {
+        &:before {
+            content: '';
+        }
     }
+    &:before {
+        content: 'AUTOMATIC';
+    }
+}
+.rank__levels .rank_items__name {
+    // &:before, &:after {
+    //     content: "\"";
+    // }
 }
 .scorerank-beta-warning {
     color: rgb(193, 128, 128);

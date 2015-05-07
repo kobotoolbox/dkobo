@@ -59,7 +59,10 @@ define 'cs!xlform/model.survey', [
     @create: (options={}, addlOpts) ->
       return new Survey(options, addlOpts)
     insert_row: (row, index) ->
-      @rows.add(row.toJSON(), at: index)
+      if row._isCloned
+        @rows.add(row, at: index)
+      else
+        @rows.add(row.toJSON(), at: index)
       new_row = @rows.at(index)
       survey = @getSurvey()
       if rowlist = row.getList()

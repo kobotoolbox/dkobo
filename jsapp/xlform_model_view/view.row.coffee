@@ -3,6 +3,7 @@ define 'cs!xlform/view.row', [
         'jquery',
         'cs!xlform/view.rowSelector',
         'cs!xlform/model.row',
+        'cs!xlform/model.utils',
         'cs!xlform/view.templates',
         'cs!xlform/view.utils',
         'cs!xlform/view.choices',
@@ -12,6 +13,7 @@ define 'cs!xlform/view.row', [
             $,
             $rowSelector,
             $row,
+            $modelUtils,
             $viewTemplates,
             $viewUtils,
             $viewChoices,
@@ -113,11 +115,14 @@ define 'cs!xlform/view.row', [
       @$('.card__settings').detach()
 
     clone: (event) =>
+      parent = @model._parent
       model = @model
       if @model.get('type').get('typeId') in ['select_one', 'select_multiple']
         model = @model.clone()
+      else if @model.get('type').get('typeId') in ['rank', 'score']
+        model = @model.clone()
 
-      @model.getSurvey().insert_row.call model._parent._parent, model, model._parent.models.indexOf(@model) + 1
+      @model.getSurvey().insert_row.call parent._parent, model, parent.models.indexOf(@model) + 1
 
     add_row_to_question_library: (evt) =>
       evt.stopPropagation()
@@ -252,17 +257,28 @@ define 'cs!xlform/view.row', [
       while @model._scoreChoices.options.length < 2
         @model._scoreChoices.options.add(label: 'Option')
       score_choices = for sc in @model._scoreChoices.options.models
+        autoname = ''
+        if sc.get('name') in [undefined, '']
+          autoname = $modelUtils.sluggify(sc.get('label'))
+
         label: sc.get('label')
         name: sc.get('name')
+        autoname: autoname
         cid: sc.cid
+
       if @model._scoreRows.length < 1
         @model._scoreRows.add
           label: 'Enter your question'
           name: ''
 
       score_rows = for sr in @model._scoreRows.models
+        if sr.get('name') in [undefined, '']
+          autoname = $modelUtils.sluggify(sr.get('label'), validXmlTag: true)
+        else
+          autoname = ''
         label: sr.get('label')
         name: sr.get('name')
+        autoname: autoname
         cid: sr.cid
 
       template_args = {
@@ -272,7 +288,6 @@ define 'cs!xlform/view.row', [
 
       extra_score_contents = $viewTemplates.$$render('row.scoreView', template_args)
       @$('.card--selectquestion__expansion').eq(0).append(extra_score_contents).addClass('js-cancel-select-row')
-
       @$('.card').eq(0).append(beta_elem)
       $rows = @$('.score__contents--rows').eq(0)
       $choices = @$('.score__contents--choices').eq(0)
@@ -302,17 +317,50 @@ define 'cs!xlform/view.row', [
         get_row(row_cid).set('label', $et.text())
 
       offOn 'input.namechange', '.scorelabel__name', (evt)=>
-        $et = $(evt.target)
-        row_cid = $et.closest('tr').eq(0).data('row-cid')
-        get_row(row_cid).set('name', $et.text())
+        $ect = $(evt.currentTarget)
+        row_cid = $ect.closest('tr').eq(0).data('row-cid')
+        _inpText = $ect.text()
+        _text = $modelUtils.sluggify(_inpText, validXmlTag: true)
+        get_row(row_cid).set('name', _text)
+
+        if _text is ''
+          $ect.addClass('scorelabel__name--automatic')
+        else
+          $ect.removeClass('scorelabel__name--automatic')
+
+        $ect.off 'blur'
+        $ect.on 'blur', ()->
+          if _inpText isnt _text
+            $ect.text(_text)
+          if _text is ''
+            $ect.addClass('scorelabel__name--automatic')
+            $ect.closest('td').find('.scorelabel__edit').trigger('keyup')
+          else
+            $ect.removeClass('scorelabel__name--automatic')
+
+      offOn 'keyup.namekey', '.scorelabel__edit', (evt)=>
+        $ect = $(evt.currentTarget)
+        $nameWrap = $ect.closest('.scorelabel').find('.scorelabel__name')
+        log $nameWrap
+        $nameWrap.attr('data-automatic-name', $modelUtils.sluggify($ect.text(), validXmlTag: true))
 
       offOn 'input.choicechange', '.scorecell__label', (evt)=>
         $et = $(evt.target)
         get_choice($et.closest('th').data('cid')).set('label', $et.text())
 
-      offOn 'input.optvalchance', '.scorecell__name', (evt)=>
+      offOn 'input.optvalchange', '.scorecell__name', (evt)=>
         $et = $(evt.target)
-        get_choice($et.closest('th').eq(0).data('cid')).set('name', $et.text())
+        _text = $et.text()
+        if _text is ''
+          $et.addClass('scorecell__name--automatic')
+        else
+          $et.removeClass('scorecell__name--automatic')
+        get_choice($et.closest('th').eq(0).data('cid')).set('name', _text)
+
+      offOn 'keyup.optlabelchange', '.scorecell__label', (evt)=>
+        $ect = $(evt.currentTarget)
+        $nameWrap = $ect.closest('.scorecell__col').find('.scorecell__name')
+        $nameWrap.attr('data-automatic-name', $modelUtils.sluggify($ect.text()))
 
       offOn 'blur.choicechange', '.scorecell__label', (evt)=>
         @render()
@@ -338,14 +386,24 @@ define 'cs!xlform/view.row', [
       template_args = {}
       template_args.rank_constraint_msg = @model.get('kobo--rank-constraint-message')?.get('value')
 
-      while @model._rankLevels.options.length < 2
+      min_rank_levels_count = 2
+      if @model._rankRows.length > min_rank_levels_count
+        min_rank_levels_count = @model._rankRows.length
+
+      while @model._rankLevels.options.length < min_rank_levels_count
         @model._rankLevels.options.add
           label: "Item to be ranked"
           name: ''
 
       rank_levels = for model in @model._rankLevels.options.models
-        label: model.get('label')
-        name: model.get('name')
+        _label = model.get('label')
+        _name = model.get('name')
+        _automatic = $modelUtils.sluggify(_label)
+
+        label: _label
+        name: _name
+        automatic: _automatic
+        set_automatic: _name is ''
         cid: model.cid
       template_args.rank_levels = rank_levels
 
@@ -353,9 +411,16 @@ define 'cs!xlform/view.row', [
         @model._rankRows.add
           label: '1st choice'
           name: ''
+
       rank_rows = for model in @model._rankRows.models
-        label: model.get('label')
-        name: model.get('name')
+        _label = model.get('label')
+        _name = model.get('name')
+        _automatic = $modelUtils.sluggify(_label, validXmlTag: true)
+
+        label: _label
+        name: _name
+        automatic: _automatic
+        set_automatic: _name is ''
         cid: model.cid
       template_args.rank_rows = rank_rows
       extra_score_contents = $viewTemplates.$$render('row.rankView', @, template_args)
@@ -392,11 +457,35 @@ define 'cs!xlform/view.row', [
         @render(fixScroll: true)
 
       offOn 'input.ranklabelchange1', '.rank_items__item__label', (evt)->
-        get_item(evt).set('label', evt.target.textContent)
+        $ect = $(evt.currentTarget)
+        _text = $ect.text()
+        _slugtext = $modelUtils.sluggify(_text, validXmlTag: true)
+        $riName = $ect.closest('.rank_items__item').find('.rank_items__name')
+        $riName.attr('data-automatic-name', _slugtext)
+        get_item(evt).set('label', _text)
       offOn 'input.ranklabelchange2', '.rank_items__level__label', (evt)->
-        get_item(evt).set('label', evt.target.textContent)
+        $ect = $(evt.currentTarget)
+        _text = $ect.text()
+        _slugtext = $modelUtils.sluggify(_text)
+        $riName = $ect.closest('.rank_items__level').find('.rank_items__name')
+        $riName.attr('data-automatic-name', _slugtext)
+        get_item(evt).set('label', _text)
       offOn 'input.ranklabelchange3', '.rank_items__name', (evt)->
-        get_item(evt).set('name', evt.target.textContent)
+        $ect = $(evt.currentTarget)
+        _inptext = $ect.text()
+        needs_valid_xml = $ect.parents('.rank_items__item').length > 0
+        _text = $modelUtils.sluggify(_inptext, validXmlTag: needs_valid_xml)
+        $ect.off 'blur'
+        $ect.one 'blur', ->
+          if _text is ''
+            $ect.addClass('rank_items__name--automatic')
+          else
+            if _inptext isnt _text
+              log 'changin'
+              $ect.text(_text)
+            $ect.removeClass('rank_items__name--automatic')
+
+        get_item(evt).set('name', _text)
 
       offOn 'focus', '.rank_items__constraint_message--prelim', (evt)->
         $(evt.target).removeClass('rank_items__constraint_message--prelim').empty()
