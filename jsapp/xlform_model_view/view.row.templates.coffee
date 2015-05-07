@@ -98,22 +98,40 @@ define 'cs!xlform/view.row.templates', [], ()->
     cols = []
     for col in template_args.score_choices
       fillers.push """<td class="scorecell__radio"><input type="radio" disabled="disabled"></td>"""
+      autoname_class = ""
+      autoname_attr = ""
+      if col.autoname
+        autoname_class = "scorecell__name--automatic"
+        autoname_attr = """data-automatic-name="#{col.autoname}" """
+      namecell = """
+        <p class="scorecell__name #{autoname_class}" #{autoname_attr} contenteditable="true" title="Option value">#{col.name or ''}</p>
+      """
       cols.push """
         <th class="scorecell__col" data-cid="#{col.cid}">
           <span class="scorecell__label" contenteditable="true">#{col.label}</span><button class="scorecell__delete js-delete-scorecol">&times;</button>
-          <p class="scorecell__name" contenteditable="true" title="Option value">#{col.name or ''}</p>
+          #{namecell}
         </th>
         """
     thead_html = cols.join('')
     fillers = fillers.join('')
     tbody_html = for row in template_args.score_rows
+      autoname_attr = ""
+      autoname_class = ""
+      if row.autoname
+        autoname_class = "scorelabel__name--automatic"
+        autoname_attr = """data-automatic-name="#{row.autoname}" """
+
+      scorelabel__name = """
+        <span class="scorelabel__name #{autoname_class}" #{autoname_attr} contenteditable="true" title="Row name">#{row.name or ''}</span>
+      """
+
       """
       <tr data-row-cid="#{row.cid}">
         <td class="scorelabel">
           <span class="scorelabel__edit" contenteditable="true">#{row.label}</span>
           <button class="scorerow__delete js-delete-scorerow">&times;</button>
           <br>
-          <span class="scorelabel__name" contenteditable="true" title="Row name">#{row.name or ''}</span>
+          #{scorelabel__name}
         </td>
         #{fillers}
       </tr>
@@ -142,32 +160,41 @@ define 'cs!xlform/view.row.templates', [], ()->
     """
   rankView = (s, template_args={})->
     rank_levels_lis = for item in template_args.rank_levels
+      autoclass = ""
+      autoattr = ""
+      autoattr = """data-automatic-name="#{item.automatic}" """
+      if item.set_automatic
+        autoclass = "rank_items__name--automatic"
       """
       <li class="rank_items__level" data-cid="#{item.cid}">
         <span class="rank_items__level__label">#{item.label}</span><button class="rankcell__delete js-delete-rankcell">&times;</button>
         <br>
-        <span class="rank_items__name">#{item.name or ''}</span>
+        <span class="rank_items__name #{autoclass}" #{autoattr}>#{item.name or ''}</span>
       </li>
       """
     rank_rows_lis = for item in template_args.rank_rows
+      autoclass = ""
+      autoattr = ""
+      autoattr = """data-automatic-name="#{item.automatic}" """
+      if item.set_automatic
+        autoclass = "rank_items__name--automatic"
       """
       <li class="rank_items__item" data-cid="#{item.cid}">
         <span class="rank_items__item__label">#{item.label}</span><button class="rankcell__delete js-delete-rankcell">&times;</button>
         <br>
-        <span class="rank_items__name">#{item.name or ''}</span>
+        <span class="rank_items__name #{autoclass}" #{autoattr}>#{item.name or ''}</span>
       </li>
       """
-    rank_constraint_message = template_args.rank_constraint_msg || ''
-    if rank_constraint_message
-      rank_constraint_message_html = """
-      <li class="rank_items__constraint_message">#{rank_constraint_message}</li>
-      """
-    else
-      rank_constraint_message_html = """
-      <li class="rank_items__constraint_message rank_items__constraint_message--prelim">
-        Message to be read if a rank choice is incorrect.
-      </li>
-      """
+    rank_constraint_message_html = """
+    <li class="rank_items__constraint_wrap">
+      <p class="rank_items__constraint_explanation">
+        A constraint message to be read in case of error:
+      </p>
+      <p class="rank_items__constraint_message">
+        #{template_args.rank_constraint_msg}
+      </p>
+    </li>
+    """
 
     rank_constraint_message_li = """
       #{rank_constraint_message_html}

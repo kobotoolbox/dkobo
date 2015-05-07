@@ -50,12 +50,19 @@ define 'cs!xlform/model.survey', [
       @context =
         warnings: []
         errors: []
-      @rows.invoke('linkUp', @context)
+      @forEachRow (r)=>
+        if typeof r.linkUp is 'function'
+          r.linkUp(@context)
+        # else
+        #   console.error('Linkup not defined for row: ', r)
 
     @create: (options={}, addlOpts) ->
       return new Survey(options, addlOpts)
     insert_row: (row, index) ->
-      @rows.add(row.toJSON(), at: index)
+      if row._isCloned
+        @rows.add(row, at: index)
+      else
+        @rows.add(row.toJSON(), at: index)
       new_row = @rows.at(index)
       survey = @getSurvey()
       if rowlist = row.getList()

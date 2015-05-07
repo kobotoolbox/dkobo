@@ -57,8 +57,8 @@ class KoboRankGroup(GroupHandler):
     | needs     | shelter | Shelter |
 
     into:
-    #survey 
-    |       type       |    name   |    label     | appearance | reqd |             constraint            |
+    #survey
+    |       type       |    name   |    label     | appearance | reqd |         constraint_message        |
     |------------------|-----------|--------------|------------|------|-----------------------------------|
     | begin group      | rnk       |              | field-list |      |                                   |
     | note             | rnk_label | Top 3 needs? |            |      |                                   |
@@ -111,10 +111,16 @@ class KoboRankGroup(GroupHandler):
 
     def add_level(self, row):
         row_name = row['name']
-        row['type'] = 'select_one %s' % self._rank_itemset
-        row['required'] = 'true'
-        row['appearance'] = 'minimal'
-        row['constraint'] = self._generate_constraint(row_name, self._previous_levels)
+        appearance = row.get('appearance') or 'minimal'
+        row.update({
+            'type': 'select_one %s' % self._rank_itemset,
+            'required': 'true',
+            'constraint_message': self._rank_constraint_message,
+            'appearance': appearance,
+            })
+        _constraint = self._generate_constraint(row_name, self._previous_levels)
+        if _constraint:
+            row['constraint'] = _constraint
         self._previous_levels.append(row_name)
         self._rows.append(row)
     def handle_row(self, row):
@@ -125,6 +131,9 @@ class KoboRankGroup(GroupHandler):
             return False
         elif rtype == 'rank__level':
             self.add_level(row)
+        else:
+            raise TypeError("'%s': KoboRank groups can only contain rows with type='rank__level' (or 'end rank')" % row.get('type'))
+
 
 
 class KoboScoreGroup(GroupHandler):
@@ -192,8 +201,9 @@ class KoboScoreGroup(GroupHandler):
         ]
 
     def add_row(self, row):
+        appearance = row.get('appearance') or 'list-nolabel'
         row.update({'type': self._common_type,
-                    'appearance': 'list-nolabel',})
+                    'appearance': appearance,})
         self._rows.append(row)
 
     def handle_row(self, row):
@@ -207,7 +217,7 @@ class KoboScoreGroup(GroupHandler):
             self.add_row(row)
             return self
         else:
-            raise Exception("KoboScore group must be ended before other types are used")
+            raise TypeError("'%s': KoboScore groups can only contain rows with type='score__row' (or 'end score')" % row.get('type'))
 
 KOBO_CUSTOM_TYPE_HANDLERS = {
     'begin score': KoboScoreGroup,
@@ -215,7 +225,10 @@ KOBO_CUSTOM_TYPE_HANDLERS = {
 }
 
 def _sluggify_valid_xml(name):
-    return re.sub('\s+', '_', name.lower())
+    out = re.sub('\s+', '_', name.lower())
+    if re.match(r'^\d', out):
+        out = '_'+out
+    return out
 
 def _increment(name):
     return name + '_0'
@@ -284,11 +297,13 @@ def convert_any_kobo_features_to_xlsform_survey_structure(surv, **kwargs):
         'extract_rank_and_score': True,
     }
     opts.update(kwargs)
-    if 'survey' in surv and opts['extract_rank_and_score']:
-        (surv['survey'], features_used) = _parse_contents_of_kobo_structures(surv)
 
-    if opts['autoname']:
-        surv['survey'] = _autoname_fields(surv['survey'])
+    if 'survey' in surv:
+        if opts['autoname']:
+            surv['survey'] = _autoname_fields(surv['survey'])
+        if opts['extract_rank_and_score']:
+            (surv['survey'], features_used) = _parse_contents_of_kobo_structures(surv)
+
     if 'choices' in surv and opts['autovalue_options']:
         surv['choices'] = _autovalue_choices(surv.get('choices', []))
     for kobo_custom_sheet_name in filter(_is_kobo_specific, surv.keys()):

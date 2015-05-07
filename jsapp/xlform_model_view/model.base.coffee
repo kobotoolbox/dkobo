@@ -61,10 +61,10 @@ define 'cs!xlform/model.base', [
     getValue: (what)->
       if what
         resp = @get(what)
-        if resp
-          resp = resp.getValue()
-        else
+        if resp is undefined
           throw new Error("Could not get value")
+        if resp.getValue
+          resp = resp.getValue()
       else
         resp = @get("value")
       resp

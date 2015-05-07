@@ -4,7 +4,7 @@ from django.shortcuts import HttpResponse
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.forms.models import model_to_dict
 from dkobo.koboform.models import SurveyPreview
-from dkobo.koboform.pyxform_utils import convert_csv_to_valid_xlsform_csv
+from dkobo.koboform.pyxform_utils import convert_csv_to_valid_xlsform_unicode_csv
 
 @csrf_exempt
 def survey_previews(request):
@@ -16,7 +16,7 @@ def survey_previews(request):
 
     try:
         if contents.get(u'body'):
-            valid_csv = convert_csv_to_valid_xlsform_csv(contents.get(u'body'))
+            valid_csv = convert_csv_to_valid_xlsform_unicode_csv(contents.get(u'body'))
             preview = SurveyPreview._get_or_create(csv=valid_csv)
             output_dict.update(model_to_dict(preview))
         else:

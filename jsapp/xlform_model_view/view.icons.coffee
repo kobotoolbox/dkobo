@@ -95,12 +95,14 @@ define 'cs!xlform/view.icons', [
 
     # r5
       label: "Score"
-      faClass: "fighter-jet"
+      # faClass: "server"
+      # will look better but isn't available until FA 4.3
+      faClass: "th"
       grouping: "r5"
       id: "score"
     ,
       label: "Rank"
-      faClass: "plane"
+      faClass: "sort-amount-desc"
       grouping: "r5"
       id: "rank"
     ,

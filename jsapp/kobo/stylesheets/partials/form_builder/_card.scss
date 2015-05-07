@@ -10,6 +10,10 @@
     line-height: 18px;
     margin-bottom: 4px;
     position: relative;
+
+    .bleeding-edge & {
+        margin-bottom: 0;
+    }
     // pseudo-rule used only to increase card hover area to the left of the card
     .no-touch &:before {
         content: " ";
@@ -32,6 +36,12 @@
         background: white;
         cursor: move;
         position: relative;
+
+        .bleeding-edge & {
+            padding-top: 5px;
+            padding-bottom: 5px;
+            border-width: 1px;
+        }
     }
 
     .card__text {
@@ -159,6 +169,12 @@ $cardIndicatorIconWidth: 21px;
     .card--shaded & {
         border:none;
     }
+
+    .bleeding-edge & {
+        width: 169px;
+        right: -181px;
+        background-color: white;
+    }
 }
 
 // ==========================================================================
@@ -251,6 +267,17 @@ $cardIndicatorIconWidth: 21px;
         // @extend %activated-card-button;
         background: none;
         color: white;
+    }
+
+    .bleeding-edge & {
+        position: relative;
+        float: left;
+        width: 30px;
+        display: block;
+        margin: 5px;
+        &.red, &.gray, &.blue, &.gray-green, &.card__buttons__button--copy {
+            top: 0;
+        }
     }
 }
 

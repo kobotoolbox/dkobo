@@ -8,6 +8,11 @@ import re
 from tempfile import NamedTemporaryFile
 from dkobo.koboform.kobo_to_xlsform import convert_any_kobo_features_to_xlsform_survey_structure
 
+def _smart_unicode(maybe_utf):
+    if isinstance(maybe_utf, unicode):
+        return maybe_utf
+    return unicode(maybe_utf, 'utf-8')
+
 def create_survey_from_ss_struct(ss_struct, default_name='KoBoFormSurvey', default_language=u'default', warnings=None, ):
     dict_repr = xls2json.workbook_to_json(ss_struct, default_name, default_language, warnings)
     dict_repr[u'name'] = dict_repr[u'id_string']
@@ -231,7 +236,7 @@ def convert_dict_to_xls(ss_dict):
     string_io.seek(0)
     return string_io
 
-def convert_csv_to_valid_xlsform_csv(csv_str):
+def convert_csv_to_valid_xlsform_unicode_csv(csv_str):
     ss_struct = convert_csv_to_ss_structure(csv_str)
     valid_ss_structure = convert_any_kobo_features_to_xlsform_survey_structure(ss_struct)
     return unicode(convert_ss_structure_to_csv(valid_ss_structure), 'utf-8')
@@ -242,7 +247,7 @@ def validate_kobo_xlsform(posted_file, warnings=[]):
     valid xlsform rules and then build the xform to ensure the survey passes through
     pyxform's validator.
     '''
-    unvalidated_csv_xlsform = convert_xls_to_csv_string(posted_file)
+    unvalidated_csv_xlsform = _smart_unicode(convert_xls_to_csv_string(posted_file))
     ss_struct = convert_csv_to_ss_structure(unvalidated_csv_xlsform)
     valid_ss_structure = convert_any_kobo_features_to_xlsform_survey_structure(ss_struct)
-    return create_survey_from_ss_struct(valid_ss_structure, warnings=warnings).xml
+    return create_survey_from_ss_struct(valid_ss_structure, warnings=warnings).to_xml()
