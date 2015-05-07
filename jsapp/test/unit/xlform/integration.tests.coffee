@@ -38,19 +38,21 @@ define [
         getName = (r)-> names.push r.get('name').get('value')
         @survey.forEachRow(getName, includeGroups: true)
         names
-
+      # @save = ()-> $('.test-div').removeClass('test-div').addClass('saved-test-div')
       @load_group_csv = ()=>
-        @load_csv("""
-          survey,,,
-          ,type,name,label
-          ,text,q1,Question1
-          ,begin group,grp,
-          ,text,g1q1,Group1Question1
-          ,text,g1q2,Group1Question2
-          ,end group,,
-          """)
+        @load_csv(
+          survey: [
+            ['type'        , 'name' , 'label'           ]
+            #--------------------------------------------
+            ['text'        , 'q1'   , 'Question1'       ]
+            ['begin group' , 'grp'                      ]
+            ['text'        , 'g1q1' , 'Group1Question1' ]
+            ['text'        , 'g1q2' , 'Group1Question2' ]
+            ['end group'                                ]
+          ]
+        )
     afterEach ->
-      $('.test-div').remove()
+      # $('.test-div').remove()
 
     describe 'represents required checkbox properly', ->
       beforeEach ->
@@ -197,6 +199,36 @@ define [
         @expectRowDefinedValues(@survey.rows.last()).toEqual(expectedLastRow)
 
         ``
+    describe 'ranking and scoring questions', ->
+      beforeEach ->
+        @create_rank_survey = ()=>
+          @load_csv(
+            survey: [
+              ['type'       , 'name', 'label'           , 'kobo--rank-items'],
+              #--------------------------------------------------------------
+              ['text'       , 'tx1' , 'text question1'  ]
+              ['begin rank' , 'rnk' , 'Rank these items', 'item-choices']
+              ['rank__level', 'n1'  , 'First choice'    ]
+              ['rank__level', 'n2'  , 'Second choice'   ]
+              ['end rank'                               ]
+              ['text'       , 'tx2' , 'text question2'  ]
+            ]
+            choices: [
+              ['list name'    , 'name', 'label' ]
+              ['item-choices' , 'i1'  , 'Item 1']
+              ['item-choices' , 'i2'  , 'Item 2']
+              ['item-choices' , 'i3'  , 'Item 3']
+              ['item-choices' , 'i4'  , 'Item 4']
+            ]
+          )
+      it 'can have a ranking q', ->
+        @create_rank_survey()
+      # it 'can edit settings of a ranking q', ->
+      #   @create_rank_survey()
+      #   last_row = @div.find('.survey-editor__list').children('.survey__row').eq(-1)
+      #   last_row.find('.card__buttons').find('.card__buttons__button[data-button-name=settings]').click()
+      #   sl_tab = last_row.find('.card__settings__tabs').find('[data-card-settings-tab-id=skip-logic]')
+      #   last_row.find('.skiplogic__button.skiplogic__select-builder').click()
 
     describe 'grouping selected rows', ->
       beforeEach ->

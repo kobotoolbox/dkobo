@@ -37,15 +37,55 @@ define [
         expect(rankRow._rankRows.length).toBe(2)
         expect(rankRow._rankLevels.options.length).toBe(3)
 
-      it 'ranks can be exported', ->
-        output = @survey.toJSON()
-        expect(output.survey.length).toBe(4)
-        expect(output.survey[0].type).toBe('begin rank')
-        expect(output.survey[3].type).toBe('end rank')
-        expect(output['choices']).toBeDefined()
-        expect(output['choices']['needs']).toEqual(
-            [ {name: 'food', label: 'Food'}, {name: 'water', label: 'Water'}, {name: 'shelter', label: 'Shelter'} ]
-          )
+      describe 'clone a rank group', ->
+        beforeEach ->
+          @rankRow = @survey.rows.at(0)
+          expect(@rankRow.get('kobo--rank-items').get('value')).toBeDefined()
+          @clonedRow = @rankRow.clone()
+          @survey._insertRowInPlace(@clonedRow, previous: @rankRow)
+
+        it 'has the correct structure', ->
+          expect(@survey.rows.length).toBe(2)
+          expect(@survey.choices.length).toBe(2)
+          _n = 0
+          @survey.forEachRow (r) -> _n++
+          expect(_n).toBe(6)
+
+        it 'exports to csv', ->
+          pkg = @survey.toCsvJson()
+          [r1, r2, r3, r_end,
+            cr1, cr2, cr3, cr_end] = pkg.survey.rowObjects
+          expect(r1.label).toEqual(cr1.label)
+          expect(r1['kobo--rank-items']).not.toEqual(cr1['kobo--rank-items'])
+          expect(r_end.type).toEqual('end rank')
+          expect(cr_end.type).toEqual('end rank')
+          expect(_.pluck(pkg.choices.rowObjects, 'name')).toEqual([
+              "food", "water", "shelter",
+              "food", "water", "shelter",
+            ])
+
+        it 'exports to json', ->
+          pkg = @survey.toJSON()
+          [r1, r2, r3, r_end,
+            cr1, cr2, cr3, cr_end] = pkg.survey
+          expect(r1.label).toEqual(cr1.label)
+          expect(r1['kobo--rank-items']).not.toEqual(cr1['kobo--rank-items'])
+          expect(r_end.type).toEqual('end rank')
+          expect(cr_end.type).toEqual('end rank')
+          # each choice in pkg.choices comes in this format:
+          #   list_name: [
+          #     {name: 'name', label: 'label'}
+          #   ]
+
+          # test the flattened names look right
+          expect(_.chain(pkg.choices)
+                    .values()
+                    .flatten()
+                    .pluck('name')
+                    .value()).toEqual([
+                      "food", "water", "shelter",
+                      "food", "water", "shelter",
+                    ])
 
   describe 'score.tests', ->
     describe 'survey imports scores >', ->
