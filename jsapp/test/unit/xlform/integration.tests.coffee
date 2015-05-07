@@ -38,7 +38,6 @@ define [
         getName = (r)-> names.push r.get('name').get('value')
         @survey.forEachRow(getName, includeGroups: true)
         names
-      # @save = ()-> $('.test-div').removeClass('test-div').addClass('saved-test-div')
       @load_group_csv = ()=>
         @load_csv(
           survey: [
@@ -52,7 +51,7 @@ define [
           ]
         )
     afterEach ->
-      # $('.test-div').remove()
+      $('.test-div').remove()
 
     describe 'represents required checkbox properly', ->
       beforeEach ->
