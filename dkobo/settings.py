@@ -106,7 +106,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'compressor',
     'gunicorn',
-    'south',
     'rest_framework',
     'rest_framework.authtoken',
     'django_extensions',
@@ -115,9 +114,17 @@ INSTALLED_APPS = (
     'reversion',
 )
 
+try:
+    from django.db import migrations
+except ImportError:
+    # Native migrations unavailable; use South instead
+    INSTALLED_APPS += ('south',)
+
 SOUTH_MIGRATION_MODULES = {
     'taggit': 'taggit.south_migrations',
     'reversion': 'reversion.south_migrations',
+    'dkobo.koboform': 'dkobo.koboform.south_migrations',
+    'dkobo.hub': 'dkobo.hub.south_migrations',
 }
 
 TEMPLATE_CONTEXT_PROCESSORS = (
