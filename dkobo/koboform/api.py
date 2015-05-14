@@ -1,5 +1,4 @@
 from rest_framework import viewsets
-from rest_framework.decorators import action
 from django.core.exceptions import PermissionDenied
 from rest_framework.response import Response
 from models import SurveyDraft, SurveyPreview
@@ -46,11 +45,6 @@ class SurveyAssetViewset(viewsets.ModelViewSet):
         queryset = SurveyDraft.objects.filter(user=user)
         survey_draft = get_object_or_404(queryset, pk=pk)
         return Response(DetailSurveyDraftSerializer(survey_draft).data)
-
-    @action(methods=['DELETE'])
-    def delete_survey_draft(self, request, pk=None):
-        draft = self.get_object()
-        draft.delete()
 
 class TagViewset(viewsets.ModelViewSet):
     model = Tag

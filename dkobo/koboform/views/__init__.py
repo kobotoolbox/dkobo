@@ -22,7 +22,7 @@ def csv_to_xform(request):
 
     survey = utils.create_survey_from_csv_text(csv_data)
     response = HttpResponse(survey.to_xml(),
-                            mimetype='application/force-download')
+                            content_type='application/force-download')
     response['Content-Disposition'] = 'attachment; filename=%s.xml' % (survey.id_string)
 
     return response
