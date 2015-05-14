@@ -41,6 +41,13 @@ function BuilderController($scope, $rootScope, $routeParams, $routeTo, $miscUtil
     // jshint validthis: true
     var surveyDraftApi = $api.surveys;
 
+    function leaveFormBuilder(_def) {
+        $rootScope.deregisterLocationChangeStart && $rootScope.deregisterLocationChangeStart();
+        $(window).unbind('beforeunload');
+        _def && _def.resolve()
+        $routeTo.forms();
+    }
+
     function saveCallback() {
         var deferred = $q.defer();
         if (this.validateSurvey()) {
@@ -56,10 +63,7 @@ function BuilderController($scope, $rootScope, $routeParams, $routeTo, $miscUtil
                 description: this.survey.get('description'),
                 name: this.survey.settings.get('form_title')
             }).then(function() {
-                $rootScope.deregisterLocationChangeStart && $rootScope.deregisterLocationChangeStart();
-                $(window).unbind('beforeunload');
                 deferred.resolve();
-                $routeTo.forms();
             }, function(response) {
                 $miscUtils.alert('a server error occurred: \n' + response.statusText, 'Error');
                 deferred.reject();
@@ -103,13 +107,13 @@ function BuilderController($scope, $rootScope, $routeParams, $routeTo, $miscUtil
                 $scope.errorMessage = e.message;
                 return;
             }
-            $scope.xlfSurveyApp = dkobo_xlform.view.SurveyApp.create({el: 'section.form-builder', survey: $scope.xlfSurvey, ngScope: $scope, save: saveCallback, warnings: warnings});
+            $scope.xlfSurveyApp = dkobo_xlform.view.SurveyApp.create({el: 'section.form-builder', survey: $scope.xlfSurvey, ngScope: $scope, save: saveCallback, warnings: warnings, leave: leaveFormBuilder});
             $scope.xlfSurveyApp.render();
         });
     } else {
         // url points to new survey_draft
         $scope.xlfSurvey = new dkobo_xlform.model.Survey();
-        $scope.xlfSurveyApp = dkobo_xlform.view.SurveyApp.create({el: 'section.form-builder', survey: $scope.xlfSurvey, ngScope: $scope, save: saveCallback});
+        $scope.xlfSurveyApp = dkobo_xlform.view.SurveyApp.create({el: 'section.form-builder', survey: $scope.xlfSurvey, ngScope: $scope, save: saveCallback, leave: leaveFormBuilder});
         $scope.xlfSurveyApp.render();
     }
 

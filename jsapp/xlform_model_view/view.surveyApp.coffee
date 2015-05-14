@@ -52,13 +52,15 @@ define 'cs!xlform/view.surveyApp', [
     features: {}
     events:
       "click .js-delete-row": "clickRemoveRow"
+      "click .js-close": "clickCloseSurvey",
+      "click .js-save": "clickSaveSurvey",
       "click .js-delete-group": "clickDeleteGroup"
       "click .js-add-to-question-library": "clickAddRowToQuestionLibrary"
       "click .js-clone-question": "clickCloneQuestion"
       "click #xlf-preview": "previewButtonClick"
       "click #csv-preview": "previewCsv"
       "click #xlf-download": "downloadButtonClick"
-      "click #save": "saveButtonClick"
+      "click #save-quit": "saveQuitButtonClick"
       "click #publish": "publishButtonClick"
       "click #settings": "toggleSurveySettings"
       "update-sort": "updateSort"
@@ -153,6 +155,7 @@ define 'cs!xlform/view.surveyApp', [
 
       @onPublish = options.publish || $.noop
       @onSave = options.save || $.noop
+      @onLeave = options.leave || $.noop
       @onPreview = options.preview || $.noop
 
       @expand_all_multioptions = () -> @$('.survey__row:not(.survey__row--deleted) .card--expandedchoices:visible').length > 0
@@ -554,6 +557,53 @@ define 'cs!xlform/view.surveyApp', [
     clickCloneQuestion: (evt)->
       @_getViewForTarget(evt).clone()
 
+    clickSaveSurvey: (evt)->
+      evt.preventDefault()
+      $saveButton = @$(evt.currentTarget)
+      $saveIcon = $saveButton.find('i').eq(0)
+      original_class = $saveIcon.attr('class')
+      $saveIcon.attr('class', 'fa-spinner fa-spin blue')
+
+      _def = @onSave.apply(@, arguments)
+
+      success = ()=>
+        $saveIcon.attr('class', original_class)
+      fail = () =>
+        alert('The survey save appears to have failed.')
+
+      _def.then(success, fail)
+
+    clickCloseSurvey: (evt)->
+      evt.preventDefault()
+      $xButton = @$(evt.currentTarget)
+      $icon = $xButton.find('i').eq(0)
+      original_class = $icon.attr('class')
+
+      # a real multi-choice box will go here. in the meantime this is useful for testing the rest
+      # of the functionality
+      resp = prompt('3 options: [a] Save and Leave, [b] Leave and delete changes, [c] do nothing')
+
+      if resp and typeof resp.toLowerCase isnt 'undefined'
+        resp = resp.toLowerCase()
+      else
+        resp = 'not a not b'
+
+      if resp is 'a'
+        $icon.attr('class', 'fa-spinner fa-spin blue')
+        success = () =>
+          @onLeave()
+          $icon.attr('class', original_class)
+        fail = () =>
+          $icon.attr('class', 'fa fa-fighter-jet fa-spin -error-onsave')
+          alert('The survey save appears to have failed.')
+
+        _def = @onSave.apply(@, [evt])
+        _def.then(success, fail)
+      else if resp is 'b'
+        @onLeave()
+      else
+        $icon.attr('class', original_class)
+
     clickRemoveRow: (evt)->
       evt.preventDefault()
       if confirm("Are you sure you want to delete this question? This action cannot be undone.")
@@ -649,14 +699,20 @@ define 'cs!xlform/view.surveyApp', [
       surveyCsv = @survey.toCSV()
       if surveyCsv
         evt.target.href = "data:text/csv;charset=utf-8,#{encodeURIComponent(@survey.toCSV())}"
-    saveButtonClick: (evt)->
+    saveQuitButtonClick: (evt)->
       # Save = store CSV in local storage.
       icon = $(evt.currentTarget).find('i')
       icon.addClass 'fa-spinner fa-spin blue'
       icon.removeClass 'fa-check-circle green'
-      @onSave.apply(@, arguments).finally () ->
+      success = ()=>
         icon.removeClass 'fa-spinner fa-spin blue'
         icon.addClass 'fa-check-circle green'
+        @onLeave.apply(@, arguments)
+      fail = ()=>
+        icon.removeClass 'fa-spinner fa-spin blue'
+        icon.addClass 'fa-check-circle red'
+
+      @onSave.apply(@, [evt]).then(success, fail)
 
     publishButtonClick: (evt)->
       # Publish = trigger publish action (ie. post to formhub)
