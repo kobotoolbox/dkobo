@@ -1,27 +1,44 @@
-Django==1.6
-django-compressor==1.4
+# Required by dkobo and kpi; versions moved up to match kpi
+Django==1.7.4
+django-extensions==1.5.0
+djangorestframework==3.1.1
+django-reversion==1.8.5
+django-taggit==0.12.3
 django-toolbelt==0.0.1
+gunicorn==19.2.1
+jsonfield==1.0.3
+requests==2.5.1
+-e git+https://github.com/kobotoolbox/pyxform.git@23aa5ca45682db673045ae24d12239b4862c4642#egg=pyxform
+
+# Only required by dkobo
+django-compressor==1.4
 hamlpy==0.82.2
-South==0.8.4
-gunicorn==18.0
 BeautifulSoup==3.2.1
-django-registration==1.0
-djangorestframework==2.3.10
+# django-registration is abandoned!
+django-registration-redux==1.1
 xlwt==0.7.5
-django-extensions==1.3.3
 manifesto==0.5
-requests==2.3.0
 django-guardian==1.1.1
 django-markdown==0.6.1
 django-markitup==2.2.2
-jsonfield==0.9.20
-django-taggit
-
--e git+https://github.com/kobotoolbox/pyxform.git@9fe1c13d3e94c40354aa657846c4b5ae9a4529ff#egg=pyxform-dev
-# -e git+https://github.com/kobotoolbox/pyxform.git@koboform-stable#egg=pyxform-dev
-
 # match kobocat's version of django-digest
 django-digest==1.13
 # django-digest depends on python-digest but does not install it automatically
 python-digest==1.7
-django-reversion==1.8.4
+
+# Only required by kpi
+argparse==1.2.1
+django-celery==3.1.16
+django-debug-toolbar==1.2.2
+django-mptt==0.6.1
+dj-database-url==0.3.0
+dj-static==0.0.6
+Markdown==2.6
+psycopg2==2.6
+Pygments==2.0.2
+python-dateutil==2.4.1
+shortuuid==0.4.2
+six==1.9.0
+static3==0.5.1
+whitenoise==1.0.6
+wsgiref==0.1.2
