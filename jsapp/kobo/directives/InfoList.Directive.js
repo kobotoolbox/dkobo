@@ -38,7 +38,8 @@ kobo.directive ('infoList', function ($rootScope, $miscUtils, $location) {
             scope.itemError = function (item) {
                 if (!item._summary) {
                     try {
-                        item._summary = JSON.parse(item.summary);
+//                        item._summary = JSON.parse(item.summary);
+                        item._summary = item.summary;
                     } catch (e) {
                         item._summary = {};
                     }
