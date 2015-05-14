@@ -32,6 +32,9 @@ def _kobocat_url(path="/", query_string=False, internal=False):
     else:
         prepped_url = settings.KOBOCAT_URL
 
+    if prepped_url == None:
+        prepped_url = "/kobocat"
+
     prepped_url += path
 
     if query_string:
