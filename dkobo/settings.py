@@ -126,7 +126,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'dkobo.hub.context_processors.external_service_tokens',
 )
 
-KOBOCAT_URL = os.environ.get('KOBOCAT_URL', False)
+KOBOCAT_URL = os.environ.get('KOBOCAT_URL')
 KOBOCAT_INTERNAL_URL = os.environ.get('KOBOCAT_INTERNAL_URL', KOBOCAT_URL)
 
 # The number of surveys to import. -1 is all
@@ -276,7 +276,8 @@ def login_on_activation(sender, user, request, **kwargs):
     login(request,user)
 user_activated.connect(login_on_activation)
 
-EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND')
+if os.environ.get('EMAIL_BACKEND'):
+    EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND')
 
 if os.environ.get('DEFAULT_FROM_EMAIL'):
     DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')

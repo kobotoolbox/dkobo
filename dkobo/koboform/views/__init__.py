@@ -54,4 +54,4 @@ def kobocat_redirect(request, path=''):
         url = kobocat_integration._kobocat_url(path)
         return HttpResponseRedirect(url)
     else:
-        return HttpResponseRedirect("/")
+        raise NotImplementedError("kobocat integration is not enabled. [No settings.KOBOCAT_URL]")
