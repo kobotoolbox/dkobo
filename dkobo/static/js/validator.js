@@ -5,6 +5,7 @@
 $(function () {
     $('input[name=username]').on('change', function () {
         var $this = $(this),
+            // Should match dkobo/koboform/forms.py
             pattern = /^[a-z][a-z0-9_]*$/,
             is_valid = pattern.test($this.val());
 
