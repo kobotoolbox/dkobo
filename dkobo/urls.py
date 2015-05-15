@@ -1,8 +1,10 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from rest_framework import routers
+from registration.backends.default.views import RegistrationView
 # from koboform.views import SurveyDraftViewSet
 from koboform.api import SurveyDraftViewSet, LibraryAssetViewset, TagViewset
+from koboform.forms import RegistrationForm
 
 
 router = routers.DefaultRouter(trailing_slash=False)
@@ -26,6 +28,8 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin.site.urls)),
     url(r'^csv$', 'dkobo.koboform.views.csv_to_xform'),
     url(r'^accounts/logout/', 'django.contrib.auth.views.logout', {'next_page': '/'}),
+    url(r'^accounts/register/$', RegistrationView.as_view(
+        form_class=RegistrationForm), name='registration_register'),
     url(r'^accounts/', include('registration.backends.default.urls')),
     url(r'^account/', include('django.contrib.auth.urls')),
     # fallback on koboform app-specific urls:
