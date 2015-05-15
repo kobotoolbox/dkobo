@@ -3,7 +3,7 @@
 
 from django.test import TestCase
 from dkobo.koboform.kobo_to_xlsform import convert_any_kobo_features_to_xlsform_survey_structure
-
+from dkobo.koboform.kobo_to_xlsform import _sluggify_valid_xml
 
 def convert_survey(surv, choices=[], sheets={}):
     sheets.update({
@@ -49,6 +49,32 @@ items = [
     {'list name': 'items', 'name': 'b', 'label': 'B b b'},
     {'list name': 'items', 'name': 'c', 'label': 'C c c'},
 ]
+
+class K2XSubModules(TestCase):
+    def test_sluggify_valid_xml(self):
+        '''
+        corresponding to tests from the cs model.utils -> sluggifyLabel
+        '''
+        self.cases = [
+            [["asdf jkl"],              "asdf_jkl"],
+            [["2. asdf"],               "_2_asdf"],
+            [[" hello "],               "hello"],
+            [["asdf#123"],              "asdf_123"],
+            # [["asdf", ["asdf"]],        "asdf_001"],
+            # [["2. asdf", ["_2_asdf"]],  "_2_asdf_001"],
+        ]
+        for case in self.cases:
+            [inp, expected] = case
+            self.assertEqual(_sluggify_valid_xml(inp[0]), expected)
+
+    # def test_increment(self):
+    #     self.cases = [
+    #         [["asdf", ["asdf"]],        "asdf_001"],
+    #         [["2. asdf", ["_2_asdf"]],  "_2_asdf_001"],
+    #     ]
+    #     for case in self.cases:
+    #         [inp, expected] = case
+    #         self.assertEqual(_sluggify_valid_xml(inp[0], names=inp[1]), expected)
 
 class Converter(TestCase):
     def test_rank_conversion(self):
