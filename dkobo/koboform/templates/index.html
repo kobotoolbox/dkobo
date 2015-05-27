@@ -33,11 +33,7 @@
 
     <script src="{% static 'kobo.compiled/modernizr.js' %}"></script>
 
-    {% if DEBUG %}
     <script src="{% static 'components/jquery/dist/jquery.js' %}"></script>
-    {% else %}
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    {% endif %}
 
     {% compress js %}
       <script src="{% static 'components/jquery-migrate/jquery-migrate.js' %}"></script>
