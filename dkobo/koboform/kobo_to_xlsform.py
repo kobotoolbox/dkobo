@@ -225,7 +225,7 @@ KOBO_CUSTOM_TYPE_HANDLERS = {
 }
 
 def _sluggify_valid_xml(name):
-    out = re.sub('\s+', '_', name.lower())
+    out = re.sub('\W+', '_', name.strip().lower())
     if re.match(r'^\d', out):
         out = '_'+out
     return out
