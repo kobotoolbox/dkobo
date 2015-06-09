@@ -191,7 +191,10 @@ kobo.factory('$restApi', ['$resource', '$timeout', '$cacheFactory', '$rootScope'
                 }
 
                 function get_props_from_row(item) {
-                    var summary = JSON.parse(item.summary);
+                    var summary = item.summary;
+                    if (_.isString(summary)) {
+                        summary = JSON.parse(summary);
+                    }
                     item.type = summary.type;
                     item.label = summary.label;
                     item.responses = summary.options;
