@@ -252,7 +252,7 @@ define 'cs!xlform/view.row', [
       super(args)
       beta_elem = $('<p>', {
               class: 'scorerank-beta-warning'
-              text: 'Note: Rank and Score question types are currently in beta.'
+              text: 'Note: Rank and Matrix question types are currently in beta.'
               })
       while @model._scoreChoices.options.length < 2
         @model._scoreChoices.options.add(label: 'Option')
