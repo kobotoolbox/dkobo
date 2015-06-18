@@ -381,7 +381,7 @@ define 'cs!xlform/view.row', [
       super(args)
       beta_elem = $('<p>', {
                     class: 'scorerank-beta-warning'
-                    text: 'Note: Rank and Score question types are currently in beta.'
+                    text: 'Note: Rank and Matrix question types are currently in beta.'
                     })
       template_args = {}
       template_args.rank_constraint_msg = @model.get('kobo--rank-constraint-message')?.get('value')
