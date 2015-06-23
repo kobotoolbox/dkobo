@@ -5,7 +5,7 @@
 #### A django project for developing components of the KoBoToolbox, including the new version of KoBoForm
 ------------------------------
 
-### Installation
+### Installation on Ubuntu
 
 1. Clone the project:
 
