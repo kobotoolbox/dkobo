@@ -226,10 +226,12 @@ def publish_survey_draft(request, pk, format=None):
 
     # set the form_id based on the payload
     if 'settings' not in ss_struct:
-        ss_struct['settings'] = []
-    if len(ss_struct['settings']) == 0:
+        ss_struct['settings'] = [{}]
+    elif len(ss_struct['settings']) == 0:
         ss_struct['settings'].append({})
-    ss_struct['settings'][0]['form_id'] = form_id_string
+
+    if form_id_string:
+        ss_struct['settings'][0]['form_id'] = form_id_string
 
     # convert kobo-specific data structures into valid xlsform (e.g. score, rank)
     xlsform_ss_struct = convert_any_kobo_features_to_xlsform_survey_structure(ss_struct)
