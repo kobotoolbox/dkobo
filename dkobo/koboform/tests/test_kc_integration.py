@@ -23,12 +23,12 @@ class PublishSurveyDraftToKoboCatInstall(TestCase):
         self.client = Client()
         self.client.post('/accounts/login/', test_user_credentials)
 
-    def test_publish_survey_draft_client_params(self):
-        def make_body(question_label):
-            return """survey,,,\n,type,name,label\n,text,q1,%s""" % question_label
+    # def test_publish_survey_draft_client_params(self):
+    #     def make_body(question_label):
+    #         return """survey,,,\n,type,name,label\n,text,q1,%s""" % question_label
 
-        self.assertEqual(self.user.survey_drafts.count(), 0)
-        survey_draft = self.user.survey_drafts.create(body=make_body("MyLabel"))
-        (url, params, headers) = kobocat_integration._publish_survey_draft_params(survey_draft, "kobocat__org")
-        self.assertEqual(url, "kobocat__org/api/v1/forms")
-        self.assertEqual(params.keys(), ['text_xls_form'])
+    #     self.assertEqual(self.user.survey_drafts.count(), 0)
+    #     survey_draft = self.user.survey_drafts.create(body=make_body("MyLabel"))
+    #     (url, params, headers) = kobocat_integration._publish_survey_draft_params(survey_draft, "kobocat__org")
+    #     self.assertEqual(url, "kobocat__org/api/v1/forms")
+    #     self.assertEqual(params.keys(), ['text_xls_form'])
