@@ -1,5 +1,6 @@
 import json
 import requests
+import datetime
 import pyxform.survey_from
 from guardian.shortcuts import assign_perm
 
@@ -232,6 +233,12 @@ def publish_survey_draft(request, pk, format=None):
 
     if form_id_string:
         ss_struct['settings'][0]['form_id'] = form_id_string
+    else:
+        existing_form_id_string = ss_struct['settings'][0]['form_id']
+        ss_struct['settings'][0]['form_id'] = "%s_%s" % (
+            existing_form_id_string,
+            datetime.datetime.utcnow().strftime('%Y%m%dT%H%M%S%fZ'),
+            )
 
     # convert kobo-specific data structures into valid xlsform (e.g. score, rank)
     xlsform_ss_struct = convert_any_kobo_features_to_xlsform_survey_structure(ss_struct)
