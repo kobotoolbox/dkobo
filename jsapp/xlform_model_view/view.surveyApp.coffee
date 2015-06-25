@@ -300,10 +300,11 @@ define 'cs!xlform/view.surveyApp', [
       @$settings.form_id.find('input').val(@survey.settings.get('form_id'))
       @$settings.version.find('input').val(@survey.settings.get('version'))
 
-      _style_val = @survey.settings.get('style')
+      _style_val = @survey.settings.get('style') || ""
 
       if @$settings.style.find('select option')
           .filter(((i, opt)-> opt.value is _style_val)).length is 0
+        # user has specified a style other than the available styles
         _inp = $("<input>", {type: 'text'})
         @$settings.style.find('select').replaceWith(_inp)
         _inp.val(_style_val)
