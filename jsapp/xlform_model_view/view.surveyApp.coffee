@@ -295,20 +295,21 @@ define 'cs!xlform/view.surveyApp', [
       @$settings =
         form_id: @$('.form__settings__field--form_id')
         version: @$('.form__settings__field--version')
-        appearance: @$('.form__settings__field--appearance')
+        style: @$('.form__settings__field--style')
 
       @$settings.form_id.find('input').val(@survey.settings.get('form_id'))
       @$settings.version.find('input').val(@survey.settings.get('version'))
 
-      _appearance_val = @survey.settings.get('appearance')
+      _style_val = @survey.settings.get('style') || ""
 
-      if @$settings.appearance.find('select option')
-          .filter(((i, opt)-> opt.value is _appearance_val)).length is 0
+      if @$settings.style.find('select option')
+          .filter(((i, opt)-> opt.value is _style_val)).length is 0
+        # user has specified a style other than the available styles
         _inp = $("<input>", {type: 'text'})
-        @$settings.appearance.find('select').replaceWith(_inp)
-        _inp.val(_appearance_val)
+        @$settings.style.find('select').replaceWith(_inp)
+        _inp.val(_style_val)
       else
-        @$settings.appearance.find('select').val(_appearance_val)
+        @$settings.style.find('select').val(_style_val)
 
       @formEditorEl = @$(".-form-editor")
       @settingsBox = @$(".form__settings-meta__questions")
@@ -341,10 +342,10 @@ define 'cs!xlform/view.surveyApp', [
         $inps.version.change (evt)->
           _settings.set('version', $inps.version.val())
 
-      if @$settings.appearance.length > 0
-        $inps.appearance = @$settings.appearance.find('input,select').eq(0)
-        $inps.appearance.change (evt)->
-          _settings.set('appearance', $inps.appearance.val())
+      if @$settings.style.length > 0
+        $inps.style = @$settings.style.find('input,select').eq(0)
+        $inps.style.change (evt)->
+          _settings.set('style', $inps.style.val())
 
     _render_addSubViews: ->
       meta_view = new $viewUtils.ViewComposer()
