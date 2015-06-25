@@ -48,13 +48,13 @@ define 'cs!xlform/view.surveyApp.templates', [], ()->
                 <input type="text">
               </div>
 
-              <div class="form__settings__field form__settings__field--appearance">
-                <label class="">Appearance (Optional)</label>
-                <span class="poshytip" title="Example: 'field-list'">?</span>
+              <div class="form__settings__field form__settings__field--style form__settings__field--appearance">
+                <label class="">Web form style (Optional)</label>
+                <span class="poshytip" title="This allows using different Enketo styles, e.g. 'theme-grid'">?</span>
                 <p>
                   <select>
                     <option value="">(empty)</option>
-                    <option value="field-list">field-list</option>
+                    <option value="theme-grid">theme-grid</option>
                   </select>
                 </p>
               </div>
