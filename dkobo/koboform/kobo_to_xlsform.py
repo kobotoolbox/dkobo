@@ -9,6 +9,7 @@ import re
 import json
 import random
 import string
+from collections import defaultdict
 
 class RowHandler(object):
     def handle_row(self, row):
