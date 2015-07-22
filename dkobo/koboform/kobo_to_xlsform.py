@@ -251,9 +251,18 @@ def _autoname_fields(surv_contents, default_language=None):
     '''
     if any names are not set, automatically fill them in
     '''
-    kuid_names = {}
+    kuid_names = defaultdict(list)
+    def _get_row_by_kuid(kuid):
+        for row in surv_contents:
+            if row.get('kuid', None) == kuid:
+                return row
+        filter(lambda r: r.get('kuid', None)==kuid, surv_contents)
     for surv_row in surv_contents:
-        if not 'name' in surv_row:
+        if 'kuid' not in surv_row:
+            surv_row['kuid'] = _rand_id(8)
+        if 'name' in surv_row:
+            kuid_names[surv_row['name']].append(surv_row['kuid'])
+        else:
             if re.search(r'^end ', surv_row['type']):
                 continue
             if 'label' in surv_row:
@@ -262,14 +271,13 @@ def _autoname_fields(surv_contents, default_language=None):
                 next_name = _sluggify_valid_xml(surv_row['label::%s' % default_language])
             else:
                 raise ValueError('Label cannot be translated: %s' % json.dumps(surv_row))
+            kuid_names[next_name].append(surv_row['kuid'])
             surv_row['name'] = next_name
-            while next_name in kuid_names.values():
-                next_name = _increment(next_name)
-            if 'kuid' not in surv_row:
-                surv_row['kuid'] = _rand_id(8)
-            if surv_row['kuid'] in kuid_names:
-                raise Exception("Duplicate kuid: %s" % surv_row['kuid'])
-            kuid_names[surv_row['kuid']] = next_name
+    for name, kuids in kuid_names.items():
+        if len(kuids) > 1:
+            for i in range(0, len(kuids)):
+                row = _get_row_by_kuid(kuids[i])
+                row['name'] = '%s_%03d' % (row['name'], i)
     return surv_contents
 
 
@@ -310,10 +318,10 @@ def convert_any_kobo_features_to_xlsform_survey_structure(surv, **kwargs):
     opts.update(kwargs)
 
     if 'survey' in surv:
-        if opts['autoname']:
-            surv['survey'] = _autoname_fields(surv['survey'])
         if opts['extract_rank_and_score']:
             (surv['survey'], features_used) = _parse_contents_of_kobo_structures(surv)
+        if opts['autoname']:
+            surv['survey'] = _autoname_fields(surv['survey'])
 
     if 'choices' in surv and opts['autovalue_options']:
         surv['choices'] = _autovalue_choices(surv.get('choices', []))
