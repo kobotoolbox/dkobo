@@ -53,8 +53,10 @@ define 'cs!xlform/view.surveyApp.templates', [], ()->
                 <span class="poshytip" title="This allows using different Enketo styles, e.g. 'theme-grid'">?</span>
                 <p>
                   <select>
-                    <option value="">(empty)</option>
-                    <option value="theme-grid">theme-grid</option>
+                    <option value="">Default - single page</option>
+                    <option value="theme-grid">Grid theme</option>
+                    <option value="pages">Multiple pages</option>
+                    <option value="theme-grid pages">Multiple pages + Grid theme</option>
                   </select>
                 </p>
               </div>
