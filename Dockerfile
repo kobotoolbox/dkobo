@@ -20,7 +20,7 @@ ADD . /app
 RUN pip install -r requirements.txt
 
 RUN npm install
-RUN npm install -g bower grunt-cli
+RUN npm install -g bower grunt-cli coffee-script
 RUN bower install --allow-root
 RUN grunt build
 RUN gem install foreman
