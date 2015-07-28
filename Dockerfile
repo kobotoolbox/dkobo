@@ -6,10 +6,7 @@ RUN apt-get install -y \
     python2.7-dev \
     libxml2 libxml2-dev libxslt1-dev \
     postgresql-server-dev-9.3 \
-    git
-
-# http://stackoverflow.com/questions/31015392/cant-npm-install-dependencies-when-building-docker-image
-RUN apt-get install -y \
+    git \
     nodejs-legacy npm \
     ruby
 
