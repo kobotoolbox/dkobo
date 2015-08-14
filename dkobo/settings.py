@@ -144,7 +144,7 @@ KOBOCAT_DEFAULT_PERMISSION_CONTENT_TYPES = [
     ('api', 'project'),
     ('api', 'team'),
     ('api', 'organizationprofile'),
-   ('logger', 'note'),
+    ('logger', 'note'),
 ]
 
 # The number of surveys to import. -1 is all
