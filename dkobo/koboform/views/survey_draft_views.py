@@ -1,7 +1,6 @@
 import json
 import requests
 import pyxform.survey_from
-from guardian.shortcuts import assign_perm
 
 from django.http import HttpResponseBadRequest, HttpResponse, HttpResponseRedirect
 from django.conf import settings
@@ -236,7 +235,6 @@ def publish_survey_draft(request, pk, format=None):
     # convert kobo-specific data structures into valid xlsform (e.g. score, rank)
     xlsform_ss_struct = convert_any_kobo_features_to_xlsform_survey_structure(ss_struct)
     valid_xlsform_csv_repr = pyxform_utils.convert_ss_structure_to_csv(xlsform_ss_struct)
-    _set_necessary_permissions(request.user)
     (token, is_new) = Token.objects.get_or_create(user=request.user)
     headers = {u'Authorization':'Token ' + token.key}
 
@@ -260,18 +258,6 @@ def publish_survey_draft(request, pk, format=None):
             })
 
     return Response(resp, status=status_code)
-
-def _set_necessary_permissions(user):
-    """
-    defeats the point of permissions, yes. But might get things working for now until we understand
-    the way kobocat uses permissions.
-    """
-    necessary_perms = {'logger': ['add_datadictionary', 'add_xform', 'change_datadictionary', \
-                                    'change_xform', 'delete_datadictionary', 'delete_xform', \
-                                    'report_xform', 'view_xform',]}
-    for app, perms in necessary_perms.items():
-        for perm in perms:
-            assign_perm('%s.%s' % (app, perm), user)
 
 def published_survey_draft_url(request, pk):
     try:
