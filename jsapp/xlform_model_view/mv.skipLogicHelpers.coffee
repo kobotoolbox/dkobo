@@ -17,7 +17,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
     create_builder: () ->
       return new skipLogicHelpers.SkipLogicBuilder @model_factory, @view_factory, @survey, @current_question, @
     create_context: () ->
-      return new skipLogicHelpers.SkipLogicHelperContext @model_factory, @view_factory, @, @serialized_criteria
+      return new skipLogicHelpers.SkipLogicHelperContext @model_factory, @view_factory, @, @current_question, @serialized_criteria
 
   ###----------------------------------------------------------------------------------------------------------###
   #-- Facades.RowDetail.coffee
@@ -277,7 +277,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
       @state = new skipLogicHelpers.SkipLogicModeSelectorHelper(@view_factory, @)
       @render @destination
       return
-    constructor: (@model_factory, @view_factory, @helper_factory, serialized_criteria) ->
+    constructor: (@model_factory, @view_factory, @helper_factory, @current_question, serialized_criteria) ->
       @state = serialize: () -> return serialized_criteria
       if !serialized_criteria? || serialized_criteria == ''
         serialized_criteria = ''
@@ -341,7 +341,7 @@ define 'cs!xlform/mv.skipLogicHelpers', [
         trackJs?.console.error("@$add_new_criterion_button is not defined. cannot call #{action} [inside of determine_add_new_criterion_visibility]")
 
     constructor: (@presenters, separator, @builder, @view_factory, @context) ->
-      @view = @view_factory.create_criterion_builder_view()
+      @view = @view_factory.create_criterion_builder_view(@context.current_question)
       @view.criterion_delimiter = (separator || 'and').toLowerCase()
       @view.facade = @
       @dispatcher = _.clone Backbone.Events

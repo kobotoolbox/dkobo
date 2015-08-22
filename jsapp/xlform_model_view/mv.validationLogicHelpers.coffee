@@ -11,7 +11,7 @@ define 'cs!xlform/mv.validationLogicHelpers', [
     create_builder: () ->
       return new validationLogicHelpers.ValidationLogicBuilder @model_factory, @view_factory, @survey, @current_question, @
     create_context: () ->
-      return new validationLogicHelpers.ValidationLogicHelperContext @model_factory, @view_factory, @, @serialized_criteria
+      return new validationLogicHelpers.ValidationLogicHelperContext @model_factory, @view_factory, @, @current_question, @serialized_criteria
 
   class validationLogicHelpers.ValidationLogicPresenter extends $skipLogicHelpers.SkipLogicPresenter
     change_question: () -> return
@@ -53,7 +53,7 @@ define 'cs!xlform/mv.validationLogicHelpers', [
         @state.button = @view_factory.create_empty()
       @render @destination
       return
-    constructor: (@model_factory, @view_factory, @helper_factory, serialized_criteria) ->
+    constructor: (@model_factory, @view_factory, @helper_factory, @current_question, serialized_criteria) ->
       @state = serialize: () -> return serialized_criteria
       if @questionTypeHasNoValidationOperators()
         @use_hand_code_helper()
