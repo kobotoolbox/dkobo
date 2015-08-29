@@ -27,6 +27,7 @@ rank_s = [
         'name': 'x',
         COLS['rank-cmessage']: 'Rank Message',
         COLS['rank-items']: 'items',
+        'relevant': 'abcdef',
     },
     {'type': 'rank__level', 'name': 'rl1'},
     {'type': 'rank__level', 'name': 'rl2', 'appearance': 'overridden'},
@@ -38,6 +39,7 @@ score_s = [
         'type': 'begin score',
         'name': 'x',
         COLS['score-choices']: 'items',
+        'relevant': 'ghijkl',
     },
     {'type': 'score__row', 'name': 'rl1'},
     {'type': 'score__row', 'name': 'rl2', 'appearance': 'overridden'},
@@ -83,8 +85,10 @@ class Converter(TestCase):
         self.assertEqual(len(surv), 5)
         self.assertEqual(surv[0]['appearance'], 'field-list')
         self.assertEqual(surv[0]['type'], 'begin group')
+        self.assertEqual(surv[0]['relevant'], 'abcdef')
 
         self.assertEqual(surv[1]['type'], 'note')
+        self.assertEqual(surv[1].get('relevant', None), None)
 
         self.assertEqual(surv[2]['required'], 'true')
         self.assertEqual(surv[2]['type'], 'select_one items')
@@ -102,9 +106,11 @@ class Converter(TestCase):
         self.assertEqual(len(surv), 5)
         self.assertEqual(surv[0]['appearance'], 'field-list')
         self.assertEqual(surv[0]['type'], 'begin group')
+        self.assertEqual(surv[0]['relevant'], 'ghijkl')
 
         self.assertEqual(surv[1]['type'], 'select_one items')
         self.assertEqual(surv[1]['appearance'], 'label')
+        self.assertEqual(surv[1].get('relevant', None), None)
 
         self.assertEqual(surv[2]['appearance'], 'list-nolabel')
         self.assertEqual(surv[2]['type'], 'select_one items')
