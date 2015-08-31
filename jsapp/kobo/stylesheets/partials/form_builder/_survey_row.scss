@@ -29,8 +29,15 @@
             }
         }
     }
-
 }
+
+// a quick fix for the issue regarding adding matrix
+.survey__row--score, .survey__row--rank {
+    .card__buttons__button--add {
+        display: none;
+    }
+}
+
 .score_preview, .rank_preview {
     background-color: #fff;
     margin-left: -16px;

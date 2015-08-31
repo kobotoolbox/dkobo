@@ -376,7 +376,7 @@ define 'cs!xlform/view.row', [
         @render(fixScroll: true)
 
   class RankView extends RankScoreView
-    className: "survey__row survey__row--score"
+    className: "survey__row survey__row--rank"
     _renderRow: (args...)->
       super(args)
       beta_elem = $('<p>', {

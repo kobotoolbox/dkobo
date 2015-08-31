@@ -75,12 +75,21 @@ class KoboRankGroup(GroupHandler):
     '''
     name = 'Kobo rank group'
     description = '''Ask a user to rank a number of things.'''
+
     def begin(self, initial_row):
-        self._name = initial_row.get('name')
+        _name = initial_row.get('name')
         self._previous_levels = []
-        self._initial_row_required = initial_row.get('required', None)
-        if self._initial_row_required:
+
+        begin_group = {'type': 'begin group',
+                        'name': _name,
+                        'appearance': 'field-list'}
+
+        if 'required' in initial_row:
             del initial_row['required']
+        if 'relevant' in initial_row:
+            begin_group['relevant'] = initial_row['relevant']
+            del initial_row['relevant']
+
         initial_row_type = initial_row.get('type')
 
         try:
@@ -94,14 +103,10 @@ class KoboRankGroup(GroupHandler):
                     'kobo--rank-items',
                     'kobo--rank-constraint-message',
                 ))
-        initial_row['name'] = '%s_label' % self._name
-        initial_row['type'] = 'note'
+        initial_row.update({'name': '%s_label' % _name,
+                            'type': 'note'})
         self._rows = [
-            {
-                'type': 'begin group',
-                'name': self._name,
-                'appearance': 'field-list',
-            },
+            begin_group,
             initial_row,
         ]
 
@@ -181,9 +186,19 @@ class KoboScoreGroup(GroupHandler):
 
     def begin(self, initial_row):
         initial_row_type = initial_row.get('type')
-        self._initial_row_required = initial_row.get('required', None)
-        if self._initial_row_required:
+        _name = initial_row.get('name')
+
+        begin_group = {'type': 'begin group',
+                        'name': _name,
+                        'appearance': 'field-list'}
+
+        if 'required' in initial_row:
+            self._initial_row_required = initial_row['required']
             del initial_row['required']
+
+        if 'relevant' in initial_row:
+            begin_group['relevant'] = initial_row['relevant']
+            del initial_row['relevant']
 
         try:
             self._common_type = 'select_one %s' % initial_row['kobo--score-choices']
@@ -193,7 +208,6 @@ class KoboScoreGroup(GroupHandler):
                     initial_row_type,
                     'kobo--score-choices',
                 ))
-        _name = initial_row.get('name')
         initial_row.update({
             'type': self._common_type,
             'name': '%s_header' % _name,
@@ -201,19 +215,17 @@ class KoboScoreGroup(GroupHandler):
             })
 
         self._rows = [
-            {
-                'type': 'begin group',
-                'name': _name,
-                'appearance': 'field-list',
-            },
+            begin_group,
             initial_row,
         ]
 
     def add_row(self, row):
         appearance = row.get('appearance') or 'list-nolabel'
         row.update({'type': self._common_type,
-                    'appearance': appearance,})
-        if self._initial_row_required:
+                    'appearance': appearance,
+                    })
+        if hasattr(self, '_initial_row_required') and \
+                self._initial_row_required:
             row.update({'required': 'true'})
         self._rows.append(row)
 
@@ -223,7 +235,7 @@ class KoboScoreGroup(GroupHandler):
                     'type': 'end group',
                 })
             self.finish()
-            return False 
+            return False
         elif row.get('type') == 'score__row':
             self.add_row(row)
             return self
