@@ -37,7 +37,7 @@ def export_form(request, id):
     else:
         return HttpResponseBadRequest(
             "Format not supported: '%s'. Supported formats are [xml,xls,csv]." % file_format)
-    response = HttpResponse(contents, mimetype=mimetype)
+    response = HttpResponse(contents, content_type=mimetype)
     response['Content-Disposition'] = 'attachment; filename=%s.%s' % (survey_draft.id_string,
                                                                       file_format)
     # response['Content-Length'] = content_length
