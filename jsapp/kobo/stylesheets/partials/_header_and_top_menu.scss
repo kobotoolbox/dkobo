@@ -23,7 +23,7 @@
         .header-bar__title-text { color: white; }
     }
     .header-bar__support {
-      margin-right: 30px;
+      margin-right: 15px;
       color: white;
       &:hover {
         color: #1e8fde;
@@ -43,6 +43,16 @@
         background-size: 120px 27px;
         background-repeat: none;
         width: 120px;
+        height: 27px;
+        margin-top: 5px;
+        margin-right: 15px;
+    }
+
+    .header-bar__top-logo-myo {
+        background: url(/static/kobo/images/myo-small.png);
+        background-size: 65px 27px;
+        background-repeat: none;
+        width: 65px;
         height: 27px;
         margin-top: 5px;
         margin-right: 6px;

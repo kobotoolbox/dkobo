@@ -16,13 +16,14 @@
         margin-top: 40px;
         position: relative;
         max-width: 380px;
-        background: rgba(0,0,0,0.65);
+        // background: rgba(0,0,0,0.65);
+        background: rgba(255,255,255,0.35);
         padding: 20px;
     }
 
     .registration--logo {
-        margin-left: 10%;
-        margin-right: 10%;
+        margin-left: 2%;
+        margin-right: 2%;
         text-align: center;
         margin-bottom: 20px;
         max-width: 100%;
@@ -148,10 +149,10 @@
                 text-align: justify;                
             }
         }
-        .registration--logo img {
-            width: 225px;
-            height: 51px;
-        }
+        // .registration--logo img {
+        //     width: 225px;
+        //     height: 51px;
+        // }
     }
 
     .registration .registration__kc-domain {
