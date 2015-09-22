@@ -126,6 +126,10 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'dkobo.hub.context_processors.external_service_tokens',
 )
 
+DEMO_USERNAME='myworld'
+DEMO_SURVEY_OWNER='myworldadmin'
+DEMO_SURVEY_NAME='DEFAULT'
+
 KOBOCAT_URL = os.environ.get('KOBOCAT_URL')
 KOBOCAT_INTERNAL_URL = os.environ.get('KOBOCAT_INTERNAL_URL', KOBOCAT_URL)
 

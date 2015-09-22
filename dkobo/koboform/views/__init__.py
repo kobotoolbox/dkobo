@@ -9,6 +9,7 @@ from django.conf import settings
 from dkobo.koboform import utils
 from dkobo.koboform import pyxform_utils
 from dkobo.koboform import kobocat_integration
+from dkobo.koboform.models import SurveyDraft
 
 from sandbox import jasmine_spec, sandbox
 from survey_draft_views import ListSurveyDraftSerializer, DetailSurveyDraftSerializer, \
@@ -38,10 +39,18 @@ def spa(request):
         u'enketoPreviewUri': settings.ENKETO_PREVIEW_URI,
         }
     if request.user.is_authenticated():
-        context['user_details'] = json.dumps({u'name': request.user.email,
+        user_details = {u'name': request.user.email,
                         u'gravatar': utils.gravatar_url(request.user.email),
                         u'debug': settings.DEBUG,
-                        u'username': request.user.username})
+                        u'username': request.user.username}
+        if request.user.username == settings.DEMO_USERNAME:
+            try:
+                demo_form = SurveyDraft.objects.get(user__username=settings.DEMO_SURVEY_OWNER,
+                                                    name=settings.DEMO_SURVEY_NAME)
+                user_details['default_form_template'] = demo_form.body
+            except Exception as e:
+                user_details['default_form__notloaded'] = e.message
+        context['user_details'] = json.dumps(user_details)
     else:
         context['user_details'] = "{}"
     context['page_kobo_configs'] = json.dumps(page_kobo_configs)
