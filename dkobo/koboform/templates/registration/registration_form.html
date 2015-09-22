@@ -1,10 +1,8 @@
 {% extends "registration.html" %}
 
-{% block content %}
-<div class="registration__bg">
-
+{% block inner_content %}
   <form action="." method="post" class="registration registration--register">
-    <div class="registration--logo"><a href="/"><img src="/static/kobo/images/kobologo.svg"/></a></div>    
+    <div class="registration--logo"><a href="/"><img src="/static/kobo/images/kobologo.svg"/></a></div>
 
     <div class="registration__first-half">
       {% csrf_token%}
@@ -25,18 +23,13 @@
     </div>
     <div style="clear:both;"></div>
   </form>
-
-  <div class="registration__credit"><a href="https://flic.kr/p/9v4mC5" title="Muhkjar refugee camp" target="_blank">Photo</a> by UNAMID / <a href="https://creativecommons.org/licenses/by-nc-nd/2.0/" target="_blank">by-nc-nd</a></div>
-</div>
-
-<script>
-  $(function () {
-    $('form.registration input#id_username').attr('placeholder', 'Username');
-    $('form.registration input#id_email').attr('placeholder', 'Email');
-    $('form.registration input#id_password1').attr('placeholder', 'Password');
-    $('form.registration input#id_password2').attr('placeholder', 'Repeat Password');
-    $('form.registration p label').addClass('hidden');
-  });
-</script>
-
+  <script>
+    $(function () {
+      $('form.registration input#id_username').attr('placeholder', 'Username');
+      $('form.registration input#id_email').attr('placeholder', 'Email');
+      $('form.registration input#id_password1').attr('placeholder', 'Password');
+      $('form.registration input#id_password2').attr('placeholder', 'Repeat Password');
+      $('form.registration p label').addClass('hidden');
+    });
+  </script>
 {% endblock %}
