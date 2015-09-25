@@ -129,7 +129,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 KOBOCAT_URL = os.environ.get('KOBOCAT_URL')
 KOBOCAT_INTERNAL_URL = os.environ.get('KOBOCAT_INTERNAL_URL', KOBOCAT_URL)
 
-KPI_URL = os.environ.get('KPI_URL')
+KPI_URL = os.environ.get('KPI_URL', False)
 
 ''' Since this project handles user creation but shares its database with
 KoBoCAT, we must handle the model-level permission assignment that would've
