@@ -129,6 +129,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 KOBOCAT_URL = os.environ.get('KOBOCAT_URL')
 KOBOCAT_INTERNAL_URL = os.environ.get('KOBOCAT_INTERNAL_URL', KOBOCAT_URL)
 
+KPI_URL = os.environ.get('KPI_URL')
+
 ''' Since this project handles user creation but shares its database with
 KoBoCAT, we must handle the model-level permission assignment that would've
 been done by KoBoCAT's post_save signal handler. Here we record the content
@@ -169,6 +171,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'dkobo.koboform.middleware.OtherFormBuilderRedirectMiddleware',
 )
 
 ROOT_URLCONF = 'dkobo.urls'
