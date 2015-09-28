@@ -171,7 +171,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'dkobo.koboform.middleware.OtherFormBuilderRedirectMiddleware',
+    'dkobo.hub.middleware.OtherFormBuilderRedirectMiddleware',
 )
 
 ROOT_URLCONF = 'dkobo.urls'
