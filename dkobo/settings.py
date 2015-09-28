@@ -215,6 +215,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# DKOBO_URL should be set in the environment when running in a subdirectory
+DKOBO_URL = os.environ.get('DKOBO_URL', False)
+if DKOBO_URL:
+    STATIC_URL = DKOBO_URL + STATIC_URL
+
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
