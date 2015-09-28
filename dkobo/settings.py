@@ -219,6 +219,8 @@ STATIC_URL = '/static/'
 DKOBO_URL = os.environ.get('DKOBO_URL', False)
 if DKOBO_URL:
     STATIC_URL = DKOBO_URL + STATIC_URL
+    from django.conf.global_settings import LOGIN_URL
+    LOGIN_URL = DKOBO_URL + LOGIN_URL
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
