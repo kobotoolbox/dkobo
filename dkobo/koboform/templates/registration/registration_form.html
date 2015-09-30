@@ -1,9 +1,8 @@
 {% extends "registration.html" %}
-{% load staticfiles %}
 
 {% block inner_content %}
   <form action="." method="post" class="registration registration--register">
-    <div class="registration--logo"><a href="/"><img src="{% static 'kobo/images/kobologo.svg' %}"/></a></div>
+    {% include 'registration/logo.html' %}
 
     <div class="registration__first-half">
       {% csrf_token%}
