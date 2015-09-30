@@ -25,6 +25,7 @@ dkobo/koboform/templates/sandbox-stub.html
 jsapp/components
 **/coverage
 jsapp/kobo.compiled
+jsapp/kobo/compiled
 
 dkobo/static/js/*.html
 
