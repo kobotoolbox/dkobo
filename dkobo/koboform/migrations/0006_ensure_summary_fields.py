@@ -3,12 +3,12 @@ from south.utils import datetime_utils as datetime
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
-from django.core import management
+from dkobo.koboform.management.commands.populate_summary_field import _populate_summary_field
 
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        management.call_command("populate_summary_field")
+        _populate_summary_field(orm.SurveyDraft)
 
     def backwards(self, orm):
         pass
