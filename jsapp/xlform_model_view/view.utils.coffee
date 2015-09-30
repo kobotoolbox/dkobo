@@ -1,4 +1,6 @@
 define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
+  rootUrl = window._rootUrl
+
   viewUtils = {}
   viewUtils.Validator = Validator
 
@@ -171,14 +173,14 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
       onError = options.onError or (args...)-> console?.error.apply(console, args)
 
       $.ajax
-        url: "#{previewServer}/koboform/survey_preview/"
+        url: "#{previewServer}#{rootUrl}/koboform/survey_preview/"
         method: "POST"
         data: data
         complete: (jqhr, status)=>
           response = jqhr.responseJSON
           if status is "success" and response and response.unique_string
             unique_string = response.unique_string
-            launch("#{previewServer}/koboform/survey_preview/#{unique_string}")
+            launch("#{previewServer}#{rootUrl}/koboform/survey_preview/#{unique_string}")
             options.onSuccess()  if options.onSuccess?
           else if status isnt "success"
             wrap.remove()
@@ -214,3 +216,4 @@ define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
       @views = []
 
   viewUtils
+

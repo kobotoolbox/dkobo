@@ -3,6 +3,7 @@
 'use strict';
 
 kobo.directive ('topLevelMenu', ['$userDetails', '$configuration', function ($userDetails, $configuration) {
+    var rootUrl = window._rootUrl || '';
     return {
         restrict:'A',
         templateUrl: staticFilesUri + 'templates/TopLevelMenu.Template.html',
@@ -29,6 +30,9 @@ kobo.directive ('topLevelMenu', ['$userDetails', '$configuration', function ($us
               url: kobocatUrl,
               name: 'Projects'
             };
+            scope.logout = {
+              url: rootUrl + '/accounts/logout/'
+            };
 
             scope.sections = $configuration.sections();
 
@@ -38,3 +42,4 @@ kobo.directive ('topLevelMenu', ['$userDetails', '$configuration', function ($us
         }
     };
 }]);
+
