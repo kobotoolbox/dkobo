@@ -2,7 +2,7 @@
 from south.utils import datetime_utils as datetime
 from south.db import db
 from south.v2 import SchemaMigration
-from django.db import models, ProgrammingError
+from django.db import models, connection
 
 
 class Migration(SchemaMigration):
@@ -15,27 +15,21 @@ class Migration(SchemaMigration):
             ('preferred_builder', self.gf('django.db.models.fields.CharField')(default='D', max_length=1)),
         ))
         db.send_create_signal(u'hub', ['FormBuilderPreference'])
-        try:
+        # Django >= 1.7 may have never touched this database
+        if u'django_migrations' in connection.introspection.table_names():
             db.execute(
                 "INSERT INTO django_migrations (app, name, applied) " \
                 "VALUES ('hub', '0002_formbuilderpreference', NOW());"
             )
-        except ProgrammingError:
-            # Django >= 1.7 may nave never touched this database
-            pass
-
 
     def backwards(self, orm):
         # Deleting model 'FormBuilderPreference'
         db.delete_table(u'hub_formbuilderpreference')
-        try:
+        if u'django_migrations' in connection.introspection.table_names():
             db.execute(
                 "DELETE FROM django_migrations WHERE app='hub' AND " \
                 "name='0002_formbuilderpreference';"
             )
-        except ProgrammingError:
-            pass
-
 
     models = {
         u'auth.group': {
