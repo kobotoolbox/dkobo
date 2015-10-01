@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from models import SurveyDraft, SurveyPreview
 from serializers import ListSurveyDraftSerializer, DetailSurveyDraftSerializer, TagSerializer
 from django.shortcuts import render_to_response, HttpResponse, get_object_or_404
+from django.contrib.contenttypes.models import ContentType
 from taggit.models import Tag
 from dkobo.koboform import pyxform_utils
 
@@ -55,12 +56,16 @@ class SurveyAssetViewset(viewsets.ModelViewSet):
 class TagViewset(viewsets.ModelViewSet):
     model = Tag
     serializer_class = TagSerializer
+    _survey_draft_content_type = ContentType.objects.get_for_model(SurveyDraft)
 
     def get_queryset(self, *args, **kwargs):
         user = self.request.user
         if user.is_authenticated():
             ids = user.survey_drafts.all().values_list('id', flat=True)
-            return Tag.objects.filter(taggit_taggeditem_items__object_id__in=ids).distinct()
+            return Tag.objects.filter(
+                taggit_taggeditem_items__object_id__in=ids,
+                taggit_taggeditem_items__content_type=self._survey_draft_content_type
+            ).distinct()
         else:
             return Tag.objects.none()
 
