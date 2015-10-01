@@ -316,3 +316,17 @@ if os.environ.get('AWS_ACCESS_KEY_ID'):
     AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
     AWS_SES_REGION_NAME = os.environ.get('AWS_SES_REGION_NAME')
     AWS_SES_REGION_ENDPOINT = os.environ.get('AWS_SES_REGION_ENDPOINT')
+
+''' Sentry configuration '''
+if 'RAVEN_DSN' in os.environ:
+    import raven
+    INSTALLED_APPS = INSTALLED_APPS + (
+        'raven.contrib.django.raven_compat',
+    )
+    RAVEN_CONFIG = {
+        'dsn': os.environ['RAVEN_DSN'],
+    }
+    try:
+        RAVEN_CONFIG['release'] = raven.fetch_git_sha(BASE_DIR)
+    except raven.exceptions.InvalidGitRepository:
+        pass
