@@ -3,6 +3,7 @@
 'use strict';
 
 kobo.directive ('infoList', function ($rootScope, $miscUtils, $location) {
+    var rootUrl = window._rootUrl || '';
     return {
         restrict: 'A',
         templateUrl: staticFilesUri + 'templates/InfoList.Template.html',
@@ -50,7 +51,7 @@ kobo.directive ('infoList', function ($rootScope, $miscUtils, $location) {
                 if(!format) {
                     format = "xml";
                 }
-                return scope.name.toLowerCase() + '/' + item.id + "?format=" + format;
+                return rootUrl + '/assets/' + item.id + "?format=" + format;
             };
 
             scope.toggleAddFormDropdown = function () {
