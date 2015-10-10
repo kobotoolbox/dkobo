@@ -4,7 +4,7 @@ from django.conf import settings
 from dkobo.koboform import kobocat_integration
 
 def welcome_message(request):
-    if request.path == '/accounts/register/':
+    if request.path_info == '/accounts/register/':
         ctx = {}
         try:
             w_message = SitewideMessage.objects.get(slug='welcome_message')
