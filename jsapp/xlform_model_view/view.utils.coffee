@@ -1,5 +1,6 @@
+rootUrl = @_rootUrl
+
 define 'cs!xlform/view.utils', ['xlform/view.utils.validator'], (Validator)->
-  rootUrl = window._rootUrl
 
   viewUtils = {}
   viewUtils.Validator = Validator
