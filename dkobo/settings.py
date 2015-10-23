@@ -173,8 +173,13 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'dkobo.hub.middleware.OtherFormBuilderRedirectMiddleware',
 )
+
+if KPI_URL:
+    MIDDLEWARE_CLASSES = MIDDLEWARE_CLASSES + (
+        'dkobo.hub.middleware.OtherFormBuilderRedirectMiddleware',
+        )
+
 
 ROOT_URLCONF = 'dkobo.urls'
 
