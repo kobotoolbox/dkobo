@@ -26,3 +26,4 @@ django-digest==1.13
 python-digest==1.7
 django-reversion==1.8.4
 raven==5.5.0
+django-ses==0.7.0
