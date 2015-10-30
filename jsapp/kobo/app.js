@@ -71,6 +71,11 @@ kobo.config(function ($routeProvider, $locationProvider, $httpProvider) {
             controller: 'BuilderController'
         });
 
+        $routeProvider.when('/library', {
+            templateUrl: staticFilesUri + 'templates/QuestionLibrary.Template.html',
+            controller: 'AssetsController'
+        });
+
         $routeProvider.when('/library/questions', {
             templateUrl: staticFilesUri + 'templates/QuestionLibrary.Template.html',
             controller: 'AssetsController'

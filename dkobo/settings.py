@@ -129,7 +129,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 KOBOCAT_URL = os.environ.get('KOBOCAT_URL')
 KOBOCAT_INTERNAL_URL = os.environ.get('KOBOCAT_INTERNAL_URL', KOBOCAT_URL)
 
-KPI_URL = os.environ.get('KPI_URL', False)
+# Following the uWSGI mountpoint convention, this should have a leading slash
+# but no trailing slash
+KPI_PREFIX = os.environ.get('KPI_PREFIX', False)
 
 ''' Since this project handles user creation but shares its database with other
 projects, we must handle the model-level permission assignment that would've
@@ -217,12 +219,14 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# DKOBO_URL should be set in the environment when running in a subdirectory
-DKOBO_URL = os.environ.get('DKOBO_URL', False)
-if DKOBO_URL:
-    STATIC_URL = DKOBO_URL + STATIC_URL
+# Following the uWSGI mountpoint convention, this should have a leading slash
+# but no trailing slash
+DKOBO_PREFIX = os.environ.get('DKOBO_PREFIX', False)
+# DKOBO_PREFIX should be set in the environment when running in a subdirectory
+if DKOBO_PREFIX and DKOBO_PREFIX != '/':
+    STATIC_URL = '{}/{}'.format(DKOBO_PREFIX, STATIC_URL)
     from django.conf.global_settings import LOGIN_URL
-    LOGIN_URL = DKOBO_URL + LOGIN_URL
+    LOGIN_URL = '{}/{}'.format(DKOBO_PREFIX, LOGIN_URL)
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
