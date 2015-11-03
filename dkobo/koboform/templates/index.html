@@ -125,6 +125,18 @@
 
     {% endcompress %}
 
+    {% if user_notification %}
+      <script type="text/template" id="user-notification">{{user_notification}}</script>
+      <script type="text/javascript">
+      $(function(){
+        var userNotificationHtml = $('#user-notification').html();
+        $('<div>', {
+          'className': 'user-notification-wrapper'
+        }).html(userNotificationHtml).appendTo('body');
+      });
+      </script>
+    {% endif %}
+
   </head>
 
   <body ng-app="dkobo">
