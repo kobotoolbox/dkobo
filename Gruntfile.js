@@ -59,7 +59,7 @@ module.exports = function(grunt) {
             // },
             livereload: {
               options: { livereload: true },
-              files: ['jsapp/kobo.compiled/*.css', '!jsapp/**/*.verbose.css'],
+              files: ['jsapp/kobo/compiled/*.css', '!jsapp/**/*.verbose.css'],
             },
         },
         karma: {
@@ -91,7 +91,7 @@ module.exports = function(grunt) {
                     exclude: ['coffee-script'],
                     name: 'almond',
                     include: 'build_configs/dkobo_xlform',
-                    out: 'jsapp/kobo.compiled/dkobo_xlform.js',
+                    out: 'jsapp/kobo/compiled/dkobo_xlform.js',
                     paths: {
                         'almond': 'components/almond/almond',
                         'jquery': 'components/jquery/dist/jquery.min',
@@ -119,7 +119,7 @@ module.exports = function(grunt) {
                 files: {
                     // scss does not get rid of duplicate rules and the style_modules has lots
                     // of duplicates so we must use cssmin afterwards.
-                    'jsapp/kobo.compiled/kobo.verbose.css' : 'jsapp/kobo/kobo.scss',
+                    'jsapp/kobo/compiled/kobo.verbose.css' : 'jsapp/kobo/kobo.scss',
                 },
             },
         },
@@ -130,7 +130,7 @@ module.exports = function(grunt) {
                     keepBreaks: true,
                 },
                 files: {
-                    'jsapp/kobo.compiled/kobo.css': ['jsapp/kobo.compiled/kobo.verbose.css'],
+                    'jsapp/kobo/compiled/kobo.css': ['jsapp/kobo/compiled/kobo.verbose.css'],
                 },
             },
             dist: {
@@ -139,7 +139,7 @@ module.exports = function(grunt) {
                     report: ['min', 'gzip'],
                 },
                 files: {
-                    'jsapp/kobo.compiled/kobo.min.css': ['jsapp/kobo.compiled/kobo.css'],
+                    'jsapp/kobo/compiled/kobo.min.css': ['jsapp/kobo/compiled/kobo.css'],
                 },
             },
         },
@@ -149,7 +149,7 @@ module.exports = function(grunt) {
                 // [REQUIRED] Path to the build you're using for development.
                 "devFile" : "jsapp/components/modernizr/modernizr.js",
                 // [REQUIRED] Path to save out the built file.
-                "outputFile" : "jsapp/kobo.compiled/modernizr.js",
+                "outputFile" : "jsapp/kobo/compiled/modernizr.js",
                 // Based on default settings on http://modernizr.com/download/
                 "extra" : {
                     "shiv" : true,

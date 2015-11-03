@@ -129,15 +129,19 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 KOBOCAT_URL = os.environ.get('KOBOCAT_URL')
 KOBOCAT_INTERNAL_URL = os.environ.get('KOBOCAT_INTERNAL_URL', KOBOCAT_URL)
 
-''' Since this project handles user creation but shares its database with
-KoBoCAT, we must handle the model-level permission assignment that would've
-been done by KoBoCAT's post_save signal handler. Here we record the content
-types of the models listed in KC's set_api_permissions_for_user(). Verify that
-this list still matches that function if you experience permission-related
-problems. See
-https://github.com/kobotoolbox/kobocat/blob/master/onadata/libs/utils/user_auth.py.
-'''
-KOBOCAT_DEFAULT_PERMISSION_CONTENT_TYPES = [
+# Following the uWSGI mountpoint convention, this should have a leading slash
+# but no trailing slash
+KPI_PREFIX = os.environ.get('KPI_PREFIX', False)
+
+''' Since this project handles user creation but shares its database with other
+projects, we must handle the model-level permission assignment that would've
+been done by those projects' post_save signal handlers. Here we record the
+content types of the models listed in KC's set_api_permissions_for_user() and
+KPI's grant_default_model_level_perms(). Verify that this list still matches
+those functions if you experience permission-related problems. See
+https://github.com/kobotoolbox/kobocat/blob/master/onadata/libs/utils/user_auth.py
+and https://github.com/kobotoolbox/kpi/blob/master/kpi/model_utils.py.  '''
+EXTERNAL_DEFAULT_PERMISSION_CONTENT_TYPES = [
     #(app_label, model)
     ('main', 'userprofile'),
     ('logger', 'xform'),
@@ -145,6 +149,8 @@ KOBOCAT_DEFAULT_PERMISSION_CONTENT_TYPES = [
     ('api', 'team'),
     ('api', 'organizationprofile'),
     ('logger', 'note'),
+    ('kpi', 'collection'),
+    ('kpi', 'asset'),
 ]
 
 # The number of surveys to import. -1 is all
@@ -169,6 +175,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'dkobo.hub.middleware.OtherFormBuilderRedirectMiddleware',
 )
 
 ROOT_URLCONF = 'dkobo.urls'
@@ -211,6 +218,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Following the uWSGI mountpoint convention, this should have a leading slash
+# but no trailing slash
+DKOBO_PREFIX = os.environ.get('DKOBO_PREFIX', False)
+# DKOBO_PREFIX should be set in the environment when running in a subdirectory
+if DKOBO_PREFIX and DKOBO_PREFIX != '/':
+    STATIC_URL = '{}/{}'.format(DKOBO_PREFIX, STATIC_URL)
+    from django.conf.global_settings import LOGIN_URL
+    LOGIN_URL = '{}/{}'.format(DKOBO_PREFIX, LOGIN_URL)
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')

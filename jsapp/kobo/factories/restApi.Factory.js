@@ -1,10 +1,11 @@
 /* exported restApiFactory */
 /* global dkobo_xlform */
+/* global window */
 'use strict';
 
 
-
 kobo.factory('$restApi', ['$resource', '$timeout', '$cacheFactory', '$rootScope', '$http', function ($resource, $timeout, $cacheFactory, $rootScope, $http) {
+    var apiRootUrl = window._rootUrl + '/api';
     var cache = $cacheFactory('rest api');
 
     function createApi(url, opts) {
@@ -15,7 +16,7 @@ kobo.factory('$restApi', ['$resource', '$timeout', '$cacheFactory', '$rootScope'
         var assetName = /\/api\/(\w+)\/:id/.exec(url)[1];
         if (opts.paged === true) {
             // to get around angular's resource trailing slash idiocy...
-            var pagingApi = $resource('/api/' + assetName + '?page=:nextPage', { id: '@id' }, opts.customMethods);
+            var pagingApi = $resource(apiRootUrl + '/' + assetName + '?page=:nextPage', { id: '@id' }, opts.customMethods);
         }
 
         var api = $resource(url, { id: '@id' }, opts.customMethods);
@@ -110,7 +111,7 @@ kobo.factory('$restApi', ['$resource', '$timeout', '$cacheFactory', '$rootScope'
                     _.each(item, function (item) {
                         ids.push(item.id);
                     });
-                    return $http.post('/api/bulk_delete/' + assetName, ids).success(callback)
+                    return $http.post(apiRootUrl + '/bulk_delete/' + assetName, ids).success(callback)
                 } else {
                     ids = {id: item.id};
                     return api.remove(ids, callback).$promise;
@@ -152,12 +153,12 @@ kobo.factory('$restApi', ['$resource', '$timeout', '$cacheFactory', '$rootScope'
 
     return {
         createSurveyDraftsApi: function () {
-            return createApi('/api/survey_drafts/:id', {
-                customMethods: { publish: { method: 'POST', url: '/api/survey_drafts/:id/publish' } }
+            return createApi(apiRootUrl + '/survey_drafts/:id', {
+                customMethods: { publish: { method: 'POST', url: apiRootUrl + '/survey_drafts/:id/publish' } }
             })
         },
         createQuestionsApi: function ($scope, id) {
-            return createApi('/api/library_assets/:id', {
+            return createApi(apiRootUrl + '/library_assets/:id', {
                 listCallback: function () {
                     initialize_questions(this.items);
                 },
@@ -227,7 +228,7 @@ kobo.factory('$restApi', ['$resource', '$timeout', '$cacheFactory', '$rootScope'
                 });
             }
 
-            return createApi('/api/tags/:id', {
+            return createApi(apiRootUrl + '/tags/:id', {
                 listCallback: function () {
                     initialize_items(this.items);
                 },
@@ -244,3 +245,4 @@ kobo.factory('$restApi', ['$resource', '$timeout', '$cacheFactory', '$rootScope'
         }
     };
 }]);
+

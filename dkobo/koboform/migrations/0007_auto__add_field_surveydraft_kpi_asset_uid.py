@@ -1,17 +1,23 @@
 # -*- coding: utf-8 -*-
 from south.utils import datetime_utils as datetime
 from south.db import db
-from south.v2 import DataMigration
+from south.v2 import SchemaMigration
 from django.db import models
-from dkobo.koboform.management.commands.populate_summary_field import _populate_summary_field
 
-class Migration(DataMigration):
+
+class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        _populate_summary_field(orm.SurveyDraft)
+        # Adding field 'SurveyDraft.kpi_asset_uid'
+        db.add_column(u'koboform_surveydraft', 'kpi_asset_uid',
+                      self.gf('django.db.models.fields.CharField')(default='', max_length=22, blank=True),
+                      keep_default=False)
+
 
     def backwards(self, orm):
-        pass
+        # Deleting field 'SurveyDraft.kpi_asset_uid'
+        db.delete_column(u'koboform_surveydraft', 'kpi_asset_uid')
+
 
     models = {
         u'auth.group': {
@@ -58,6 +64,7 @@ class Migration(DataMigration):
             'date_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             'description': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'kpi_asset_uid': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '22', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'summary': ('jsonfield.fields.JSONField', [], {}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'survey_drafts'", 'to': u"orm['auth.User']"})
@@ -73,4 +80,3 @@ class Migration(DataMigration):
     }
 
     complete_apps = ['koboform']
-    symmetrical = True
