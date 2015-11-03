@@ -129,11 +129,38 @@
       <script type="text/template" id="user-notification">{{user_notification}}</script>
       <script type="text/javascript">
       $(function(){
+        function hidePopup () {
+          $div.fadeOut(500, function(){
+            $div.remove();
+            localStorage.setItem('userPopup', notificationCode);
+          });
+        }
         var userNotificationHtml = $('#user-notification').html();
-        $('<div>', {
-          'className': 'user-notification-wrapper'
-        }).html(userNotificationHtml).appendTo('body');
+        var notificationCode = 'seen-message-of-length-' + userNotificationHtml.length;
+        if (localStorage.getItem('userPopup') !== notificationCode) {
+          var $div = $('<div>')
+                        .addClass('notification')
+                        .html(userNotificationHtml)
+                        .append(
+                          $('<button>', {'class': 'notification__closebutton',
+                                          html: '&times;'})
+                            .click(hidePopup)
+                        )
+                        .appendTo('body');
+        }
       });
+      </script>
+      <style type="text/css">
+      .notification {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+      }
+      </style>
+    {% else %}
+      <script type="text/javascript">
+        window.localStorage && localStorage.removeItem('userPopup');
       </script>
     {% endif %}
 
