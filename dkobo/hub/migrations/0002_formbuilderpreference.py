@@ -1,17 +1,35 @@
 # -*- coding: utf-8 -*-
 from south.utils import datetime_utils as datetime
 from south.db import db
-from south.v2 import DataMigration
-from django.db import models
-from dkobo.koboform.management.commands.populate_summary_field import _populate_summary_field
+from south.v2 import SchemaMigration
+from django.db import models, connection
 
-class Migration(DataMigration):
+
+class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        _populate_summary_field(orm.SurveyDraft)
+        # Adding model 'FormBuilderPreference'
+        db.create_table(u'hub_formbuilderpreference', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('user', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True)),
+            ('preferred_builder', self.gf('django.db.models.fields.CharField')(default='D', max_length=1)),
+        ))
+        db.send_create_signal(u'hub', ['FormBuilderPreference'])
+        # Django >= 1.7 may have never touched this database
+        if u'django_migrations' in connection.introspection.table_names():
+            db.execute(
+                "INSERT INTO django_migrations (app, name, applied) " \
+                "VALUES ('hub', '0002_formbuilderpreference', NOW());"
+            )
 
     def backwards(self, orm):
-        pass
+        # Deleting model 'FormBuilderPreference'
+        db.delete_table(u'hub_formbuilderpreference')
+        if u'django_migrations' in connection.introspection.table_names():
+            db.execute(
+                "DELETE FROM django_migrations WHERE app='hub' AND " \
+                "name='0002_formbuilderpreference';"
+            )
 
     models = {
         u'auth.group': {
@@ -50,27 +68,19 @@ class Migration(DataMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
-        u'koboform.surveydraft': {
-            'Meta': {'object_name': 'SurveyDraft'},
-            'asset_type': ('django.db.models.fields.CharField', [], {'max_length': '32', 'null': 'True'}),
-            'body': ('django.db.models.fields.TextField', [], {}),
-            'date_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'date_modified': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'description': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True'}),
+        u'hub.formbuilderpreference': {
+            'Meta': {'object_name': 'FormBuilderPreference'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'summary': ('jsonfield.fields.JSONField', [], {}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'survey_drafts'", 'to': u"orm['auth.User']"})
+            'preferred_builder': ('django.db.models.fields.CharField', [], {'default': "'D'", 'max_length': '1'}),
+            'user': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['auth.User']", 'unique': 'True'})
         },
-        u'koboform.surveypreview': {
-            'Meta': {'object_name': 'SurveyPreview'},
-            'csv': ('django.db.models.fields.TextField', [], {}),
-            'date_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+        u'hub.sitewidemessage': {
+            'Meta': {'object_name': 'SitewideMessage'},
+            u'_body_rendered': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'body': ('markitup.fields.MarkupField', [], {u'no_rendered_field': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'unique_string': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '64'}),
-            'xml': ('django.db.models.fields.TextField', [], {})
+            'slug': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         }
     }
 
-    complete_apps = ['koboform']
-    symmetrical = True
+    complete_apps = ['hub']

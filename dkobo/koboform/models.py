@@ -8,6 +8,8 @@ from jsonfield import JSONField
 from taggit.managers import TaggableManager
 import reversion
 
+ASSET_UID_LENGTH = 22
+
 @reversion.register
 class SurveyDraft(models.Model):
     '''
@@ -23,6 +25,8 @@ class SurveyDraft(models.Model):
     summary = JSONField()
     asset_type = models.CharField(max_length=32, null=True)
     tags = TaggableManager()
+    kpi_asset_uid = models.CharField(
+        max_length=ASSET_UID_LENGTH, default='', blank=True)
 
 
     @property
