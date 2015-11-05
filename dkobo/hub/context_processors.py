@@ -4,24 +4,17 @@ from django.conf import settings
 from dkobo.koboform import kobocat_integration
 
 def welcome_message(request):
-    if request.path_info == '/accounts/register/':
-        ctx = {}
-        try:
-            w_message = SitewideMessage.objects.get(slug='welcome_message')
-            ctx['welcome_message'] = w_message.body
-        except SitewideMessage.DoesNotExist, e:
-            pass
-
-        if settings.KOBOCAT_URL:
-            ctx['kobocat_url'] = settings.KOBOCAT_URL
-        else:
-            ctx['kobocat_url'] = None
-        return ctx
-    else:
-        return {}
+    messages = {}
+    for msg in SitewideMessage.objects.all():
+        messages[msg.slug] = msg.body
+    return messages
 
 def external_service_tokens(request):
     context = {}
+    if settings.KOBOCAT_URL:
+        context['kobocat_url'] = settings.KOBOCAT_URL
+    else:
+        context['kobocat_url'] = None
     if settings.TRACKJS_TOKEN:
         context['trackjs_token'] = settings.TRACKJS_TOKEN
     if settings.GOOGLE_ANALYTICS_TOKEN:
