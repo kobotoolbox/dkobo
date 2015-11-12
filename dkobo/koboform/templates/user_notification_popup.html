@@ -1,0 +1,64 @@
+{% if user_notification %}
+  <script type="text/template" id="user-notification">{{user_notification}}</script>
+  <script type="text/javascript">
+  $(function(){
+    function hidePopup () {
+      $div.fadeOut(500, function(){
+        $div.remove();
+        localStorage.setItem('userPopup', notificationCode);
+      });
+    }
+    var userNotificationHtml = $('#user-notification').html();
+    var notificationCode = 'seen-message-of-length-' + userNotificationHtml.length;
+    if (localStorage.getItem('userPopup') !== notificationCode) {
+      var $div = $('<div>')
+                    .addClass('notification')
+                    .html(userNotificationHtml)
+                    .append(
+                      $('<button>', {'class': 'notification__closebutton',
+                                      html: '&times;'})
+                        .click(hidePopup)
+                    )
+                    .appendTo('body');
+    }
+  });
+  </script>
+  <style type="text/css">
+  .notification {
+    position: fixed;
+    z-index: 100;
+    background-color: rgba(230, 79, 15, 0.6);
+    color: white;
+    font-size: 14px;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding-right: 50px;
+  }
+  .notification p {
+    margin: 20px;
+  }
+  .notification button.notification__closebutton {
+    border: 0 none;
+    background-color: fuchsia;
+    background-color: transparent;
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    top: 3px;
+    right: 3px;
+    font-size: 30px;
+    color: #fff;
+    opacity: 0.9;
+  }
+  .notification button.notification__closebutton:hover {
+    opacity: 1;
+  }
+  </style>
+{% else %}
+  <script type="text/javascript">
+    window.localStorage && localStorage.removeItem('userPopup');
+  </script>
+{% endif %}
