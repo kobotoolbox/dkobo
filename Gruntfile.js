@@ -143,42 +143,6 @@ module.exports = function(grunt) {
                 },
             },
         },
-        modernizr: {
-
-            dist: {
-                // [REQUIRED] Path to the build you're using for development.
-                "devFile" : "jsapp/components/modernizr/modernizr.js",
-                // [REQUIRED] Path to save out the built file.
-                "outputFile" : "jsapp/kobo/compiled/modernizr.js",
-                // Based on default settings on http://modernizr.com/download/
-                "extra" : {
-                    "shiv" : true,
-                    "printshiv" : false,
-                    "load" : true,
-                    "mq" : false,
-                    "cssclasses" : true
-                },
-                "extensibility" : {
-                    "addtest" : false,
-                    "prefixed" : false,
-                    "teststyles" : false,
-                    "testprops" : false,
-                    "testallprops" : false,
-                    "hasevents" : false,
-                    "prefixes" : false,
-                    "domprefixes" : false
-                },
-                "uglify" : true,
-                // Define any tests you want to implicitly include.
-                "tests" : [
-                   "touch"
-               ],
-                "files" : {
-                    "src": ["jsapp", "!jsapp/components"]
-                },
-            }
-
-        }
     });
 
     grunt.loadNpmTasks('grunt-contrib-watch');
@@ -186,7 +150,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-sass');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
-    grunt.loadNpmTasks("grunt-modernizr");
 
     grunt.registerTask('build', [
         'requirejs:compile_xlform',
@@ -194,7 +157,6 @@ module.exports = function(grunt) {
     ]);
     grunt.registerTask('build_all', [
         'build',
-        'modernizr',
     ]);
     grunt.registerTask('build_css', [
         'sass:dist',
