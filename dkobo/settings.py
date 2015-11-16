@@ -192,7 +192,8 @@ DATABASES = {
     'default': dj_database_url.config(default="sqlite:///%s/db.sqlite3" % BASE_DIR)
 }
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '*').split(' ')
+
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # For GeoDjango heroku buildpack
