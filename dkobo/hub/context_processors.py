@@ -17,6 +17,8 @@ def external_service_tokens(request):
         context['kobocat_url'] = None
     if settings.TRACKJS_TOKEN:
         context['trackjs_token'] = settings.TRACKJS_TOKEN
+    if settings.BETA_TOGGLE_URL:
+        context['beta_toggle_url'] = settings.BETA_TOGGLE_URL
     if settings.GOOGLE_ANALYTICS_TOKEN:
         context['google_analytics_token'] = settings.GOOGLE_ANALYTICS_TOKEN
     if settings.LIVE_RELOAD:

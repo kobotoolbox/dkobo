@@ -38,7 +38,9 @@
     <script src="{% static 'kobo/libs/modernizr.js' %}"></script>
 
     <script src="{% static 'components/jquery/dist/jquery.js' %}"></script>
-
+    {% if beta_toggle_url %}
+      <script type="text/javascript">window.betaToggleUrl="{{beta_toggle_url}}";</script>
+    {% endif %}
     {% compress js %}
       <script src="{% static 'components/jquery-migrate/jquery-migrate.js' %}"></script>
       <script src="{% static 'components/underscore/underscore.js' %}"></script>
