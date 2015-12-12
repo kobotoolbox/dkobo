@@ -311,7 +311,7 @@ def login_on_activation(sender, user, request, **kwargs):
     login(request,user)
 user_activated.connect(login_on_activation)
 
-EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 
+EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND',
     'django.core.mail.backends.filebased.EmailBackend')
 
 if EMAIL_BACKEND == 'django.core.mail.backends.filebased.EmailBackend':
@@ -330,15 +330,21 @@ if os.environ.get('AWS_ACCESS_KEY_ID'):
     AWS_SES_REGION_ENDPOINT = os.environ.get('AWS_SES_REGION_ENDPOINT')
 
 ''' Sentry configuration '''
+# Optional Sentry configuration: if desired, be sure to install Raven and set
+# RAVEN_DSN in the environment
 if 'RAVEN_DSN' in os.environ:
-    import raven
-    INSTALLED_APPS = INSTALLED_APPS + (
-        'raven.contrib.django.raven_compat',
-    )
-    RAVEN_CONFIG = {
-        'dsn': os.environ['RAVEN_DSN'],
-    }
     try:
-        RAVEN_CONFIG['release'] = raven.fetch_git_sha(BASE_DIR)
-    except raven.exceptions.InvalidGitRepository:
-        pass
+        import raven
+    except ImportError:
+        print 'Please install Raven to enable Sentry logging.'
+    else:
+        INSTALLED_APPS = INSTALLED_APPS + (
+            'raven.contrib.django.raven_compat',
+        )
+        RAVEN_CONFIG = {
+            'dsn': os.environ['RAVEN_DSN'],
+        }
+        try:
+            RAVEN_CONFIG['release'] = raven.fetch_git_sha(BASE_DIR)
+        except raven.exceptions.InvalidGitRepository:
+            pass
