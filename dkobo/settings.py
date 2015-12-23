@@ -164,7 +164,7 @@ KOBOFORM_PREVIEW_SERVER = os.environ.get('KOBOFORM_PREVIEW_SERVER', 'http://kf.k
 ENKETO_SERVER = os.environ.get('ENKETO_URL') or os.environ.get('ENKETO_SERVER', 'https://enketo.org')
 ENKETO_VERSION= os.environ.get('ENKETO_VERSION', 'Legacy').lower()
 assert ENKETO_VERSION in ['legacy', 'express']
-ENKETO_PREVIEW_URI = os.environ.get('ENKETO_PREVIEW_URI') or 'webform/preview' if ENKETO_VERSION == 'legacy' else '/preview'
+ENKETO_PREVIEW_URI = 'webform/preview' if ENKETO_VERSION == 'legacy' else '/preview'
 MARKITUP_FILTER = ('markdown.markdown', {'safe_mode': False})
 
 LOGIN_REDIRECT_URL = '/'
