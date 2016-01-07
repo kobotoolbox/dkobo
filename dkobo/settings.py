@@ -23,6 +23,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 DEBUG = (os.environ.get('DJANGO_DEBUG', 'True') == 'True')
 LIVE_RELOAD = (os.environ.get('DJANGO_LIVE_RELOAD', str(DEBUG)) == 'True')
 TRACKJS_TOKEN = os.environ.get('TRACKJS_TOKEN')
+BETA_TOGGLE_URL = os.environ.get('KOBO_BETA_TOGGLE_URL', False)
 GOOGLE_ANALYTICS_TOKEN = os.environ.get('GOOGLE_ANALYTICS_TOKEN')
 
 if not SECRET_KEY and not DEBUG:

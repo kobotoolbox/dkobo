@@ -26,6 +26,7 @@ kobo.directive ('topLevelMenu', ['$userDetails', '$configuration', function ($us
             }
 
             var kobocatUrl = (window.koboConfigs && window.koboConfigs.kobocatServer) || 'http://kobocat.dev.kobotoolbox.org/';
+            scope.betaToggleUrl = 'betaToggleUrl' in window ? window.betaToggleUrl : false;
             scope.kobocatLink = {
               url: kobocatUrl,
               name: 'Projects'
