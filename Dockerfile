@@ -4,9 +4,9 @@ MAINTAINER Serban Teodorescu, teodorescu.serban@gmail.com
 
 COPY docker/run_wsgi /etc/service/wsgi/run
 COPY docker/*.sh docker/koboform.ini /srv/src/
+COPY . /srv/src/koboform/
 
-RUN /etc/my_init.d/00_regen_ssh_host_keys.sh && \
-    chmod +x /etc/service/wsgi/run && \
+RUN chmod +x /etc/service/wsgi/run && \
     chown -R wsgi /srv/src/koboform
 
 USER wsgi
