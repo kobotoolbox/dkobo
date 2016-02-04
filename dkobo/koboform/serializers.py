@@ -18,7 +18,7 @@ class DetailSurveyDraftSerializer(serializers.HyperlinkedModelSerializer):
         return obj.tags.names()
 
 class TagSerializer(serializers.HyperlinkedModelSerializer):
-    count = serializers.SerializerMethodField('get_count')
+    count = serializers.SerializerMethodField()
     label = serializers.CharField(source='name')
     class Meta:
         model = Tag
