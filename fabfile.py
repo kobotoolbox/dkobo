@@ -72,7 +72,8 @@ def deploy_ref(deployment_name, ref):
         run('find . -type d -empty -delete')
 
     with kobo_workon(env.kf_virtualenv_name):
-        run("pip install -r %s" % env.pip_requirements_file)
+        run("pip install --upgrade 'pip>=7.0' pip-tools")
+        run("pip-sync '%s'" % env.pip_requirements_file)
 
     with cd(env.kf_path):
         run("npm install")
