@@ -1,0 +1,27 @@
+-e git+https://github.com/kobotoolbox/pyxform.git@master#egg=pyxform
+
+Django<1.9
+django-compressor
+django-toolbelt
+hamlpy
+gunicorn
+BeautifulSoup
+django-registration-redux
+djangorestframework
+xlwt
+django-extensions
+manifesto
+requests
+django-guardian
+django-markdown
+django-markitup
+jsonfield
+django-taggit
+django-reversion
+raven
+django-ses
+
+# match kobocat's version of django-digest
+django-digest
+# django-digest depends on python-digest but does not install it automatically
+python-digest

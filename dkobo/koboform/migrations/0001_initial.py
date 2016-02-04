@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import models, migrations
+from django.db import migrations, models
 import jsonfield.fields
 import taggit.managers
 from django.conf import settings
@@ -10,7 +10,7 @@ from django.conf import settings
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('taggit', '0001_initial'),
+        ('taggit', '0002_auto_20150616_2121'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
@@ -26,12 +26,10 @@ class Migration(migrations.Migration):
                 ('date_modified', models.DateTimeField(auto_now=True)),
                 ('summary', jsonfield.fields.JSONField()),
                 ('asset_type', models.CharField(max_length=32, null=True)),
+                ('kpi_asset_uid', models.CharField(default=b'', max_length=22, blank=True)),
                 ('tags', taggit.managers.TaggableManager(to='taggit.Tag', through='taggit.TaggedItem', help_text='A comma-separated list of tags.', verbose_name='Tags')),
                 ('user', models.ForeignKey(related_name='survey_drafts', to=settings.AUTH_USER_MODEL)),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='SurveyPreview',
@@ -42,8 +40,5 @@ class Migration(migrations.Migration):
                 ('xml', models.TextField()),
                 ('date_created', models.DateTimeField(auto_now_add=True)),
             ],
-            options={
-            },
-            bases=(models.Model,),
         ),
     ]

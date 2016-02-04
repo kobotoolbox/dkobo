@@ -83,14 +83,14 @@ def survey_draft_detail(request, pk, format=None):
         return Response(serializer.data)
 
     elif request.method == 'PUT':
-        serializer = DetailSurveyDraftSerializer(survey_draft, data=request.DATA)
+        serializer = DetailSurveyDraftSerializer(survey_draft, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'PATCH':
-        for key, value in request.DATA.items():
+        for key, value in request.data.items():
             if key == 'tags':
                 survey_draft.tags.clear()
                 for val in value: survey_draft.tags.add(val)
@@ -221,7 +221,7 @@ def publish_survey_draft(request, pk, format=None):
 
     # convert csv to ss_struct
     ss_struct = pyxform_utils.convert_csv_to_ss_structure(survey_draft.body)
-    form_id_string = request.DATA.get('id_string', False)
+    form_id_string = request.data.get('id_string', False)
 
     # set the form_id based on the payload
     if 'settings' not in ss_struct:
