@@ -15,6 +15,7 @@ django-compressor==2.0
 django-digest==1.13
 django-extensions==1.6.1
 django-guardian==1.4.1
+django-jsonfield==0.9.15
 django-markdown==0.8.4
 django-markitup==2.3.0
 django-registration-redux==1.3
@@ -26,7 +27,6 @@ Django==1.8.9
 djangorestframework==3.3.2
 gunicorn==19.4.5
 hamlpy==0.82.2
-jsonfield==1.0.3
 lxml==2.3.4
 manifesto==0.5
 markdown==2.6.5           # via django-markdown, hamlpy
