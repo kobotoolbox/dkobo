@@ -4,7 +4,7 @@ import json
 import re
 import requests
 
-from fabric.api import local, hosts, cd, env, prefix, run, sudo
+from fabric.api import local, hosts, cd, env, prefix, run, sudo, settings, hide
 
 def kobo_workon(venv_name):
     return prefix('kobo_workon %s' % venv_name)
@@ -84,7 +84,25 @@ def deploy_ref(deployment_name, ref):
             # run("echo 'from django.contrib.auth.models import User; print User.objects.count()' | python manage.py shell")
             run("python manage.py syncdb")
             run("python manage.py migrate")
-            run("python manage.py compress")
+
+            # Figure out whether django-compressor is enabled before trying to
+            # run it. Trying to run it blindly when it's disabled will halt
+            # Fabric with a non-zero exit code
+            with settings(
+                    hide('warnings', 'running', 'stdout'), warn_only=True):
+                result = run(
+                    'echo "import sys; from django.conf import settings; '
+                    'sys.exit(100 if settings.COMPRESS_ENABLED else 99)" | '
+                    'python'
+                )
+            if result.return_code == 100:
+                run("python manage.py compress")
+            elif result.return_code == 99:
+                print 'COMPRESS_ENABLED is False. Skipping compress.'
+            else:
+                raise Exception(
+                    'Failed to read COMPRESS_ENABLED from Django settings.')
+
             run("python manage.py collectstatic --noinput")
 
     run("sudo service uwsgi reload")
