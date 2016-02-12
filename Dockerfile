@@ -15,9 +15,9 @@ RUN cd /srv/src/koboform && \
     npm --no-color install --save-dev
 
 COPY . /srv/src/koboform/
-COPY ./docker/init.sh /etc/my_init.d/00_init.bash
-COPY ./docker/sync_static.sh /etc/my_init.d/01_sync_static.bash
-#COPY ./docker/create_demo_user.sh /etc/my_init.d/02_create_demo_user.bash
+COPY ./docker/init.sh /etc/my_init.d/10_init_dkobo.bash
+COPY ./docker/sync_static.sh /etc/my_init.d/11_sync_static.bash
+#COPY ./docker/create_demo_user.sh /etc/my_init.d/12_create_demo_user.bash
 
 USER root
 
