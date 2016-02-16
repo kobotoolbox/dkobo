@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+source /etc/profile
+
 DEFAULT_KOBO_USER=${DEFAULT_KOBO_USER:-kobo}
 DEFAULT_KOBO_PASS=${DEFAULT_KOBO_PASS:-kobo}
 

@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+source /etc/profile
+
 export PATH=$PATH:./node_modules/.bin
 
 oldpwd=$(pwd)
@@ -11,7 +13,9 @@ mkdir -p /srv/src/koboform/staticfiles
 python manage.py collectstatic --noinput -c -v 0
 grunt build_all
 #npm install yuglify
-python manage.py compress
+if [[ "${DJANGO_DEBUG}" != 'True' ]] && [[ "${COMPRESS_ENABLED}" != 'False' ]]; then
+    python manage.py compress
+fi
 mkdir -p jsapp/CACHE
 cp -R jsapp/components/fontawesome/fonts jsapp/CACHE/fonts
 python manage.py collectstatic --noinput -v 0

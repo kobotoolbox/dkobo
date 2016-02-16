@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+source /etc/profile
+
 echo '`dkobo` initializing...'
 
 export PATH=$PATH:./node_modules/.bin
