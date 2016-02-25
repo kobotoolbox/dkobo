@@ -10,8 +10,8 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
+BASE_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+PROJECT_ROOT= os.path.abspath(os.path.join(BASE_DIR, '..'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -162,9 +162,10 @@ KOBO_SURVEY_PREVIEW_EXPIRATION = os.environ.get('KOBO_SURVEY_PREVIEW_EXPIRATION'
 
 KOBOFORM_PREVIEW_SERVER = os.environ.get('KOBOFORM_PREVIEW_SERVER', 'http://kf.kobotoolbox.org')
 ENKETO_SERVER = os.environ.get('ENKETO_URL') or os.environ.get('ENKETO_SERVER', 'https://enketo.org')
+ENKETO_SERVER= ENKETO_SERVER.rstrip('/') + '/'  # Ensure the URL is terminated with a backslash.
 ENKETO_VERSION= os.environ.get('ENKETO_VERSION', 'Legacy').lower()
 assert ENKETO_VERSION in ['legacy', 'express']
-ENKETO_PREVIEW_URI = os.environ.get('ENKETO_PREVIEW_URI') or 'webform/preview' if ENKETO_VERSION == 'legacy' else '/preview'
+ENKETO_PREVIEW_URI = 'webform/preview' if ENKETO_VERSION == 'legacy' else 'preview'
 MARKITUP_FILTER = ('markdown.markdown', {'safe_mode': False})
 
 LOGIN_REDIRECT_URL = '/'
@@ -201,7 +202,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # For GeoDjango heroku buildpack
 GEOS_LIBRARY_PATH = os.environ.get('GEOS_LIBRARY_PATH')
 GDAL_LIBRARY_PATH = os.environ.get('GDAL_LIBRARY_PATH')
-POSTGIS_VERSION = (2, 0, 3)
+POSTGIS_VERSION = (2, 1, 2)
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
