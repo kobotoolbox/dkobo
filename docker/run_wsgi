@@ -1,0 +1,6 @@
+#!/bin/bash
+set -e
+
+source /etc/profile
+
+exec /usr/local/bin/uwsgi --ini /srv/src/koboform.ini
