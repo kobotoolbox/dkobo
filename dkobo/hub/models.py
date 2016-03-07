@@ -2,11 +2,14 @@ from django.db import models
 from django.conf import settings
 from markitup.fields import MarkupField
 
+
 class SitewideMessage(models.Model):
     slug = models.CharField(max_length=50)
     body = MarkupField()
+
     def __str__(self):
         return self.slug
+
 
 class FormBuilderPreference(models.Model):
     KPI = 'K'
@@ -19,5 +22,5 @@ class FormBuilderPreference(models.Model):
     preferred_builder = models.CharField(
         max_length=1,
         choices=BUILDER_CHOICES,
-        default=DKOBO
+        default=KPI,
     )
