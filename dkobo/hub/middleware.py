@@ -43,5 +43,5 @@ class OtherFormBuilderRedirectMiddleware(object):
             # configured or the user is anonymous
             return
         (preferred_builder, created) = \
-            FormBuilderPreference.get_or_create(user=request.user)
+            FormBuilderPreference.objects.get_or_create(user=request.user)
         return self._redirect_if_necessary(request, preferred_builder)
