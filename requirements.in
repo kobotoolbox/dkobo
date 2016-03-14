@@ -15,7 +15,7 @@ requests
 django-guardian
 django-markdown
 django-markitup
-django-jsonfield
+jsonfield
 django-taggit
 django-reversion
 raven
