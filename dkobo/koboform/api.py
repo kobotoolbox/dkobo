@@ -1,7 +1,7 @@
 from rest_framework import viewsets
-from rest_framework.decorators import action
 from django.core.exceptions import PermissionDenied
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 from models import SurveyDraft, SurveyPreview
 from serializers import ListSurveyDraftSerializer, DetailSurveyDraftSerializer, TagSerializer
 from django.shortcuts import render_to_response, HttpResponse, get_object_or_404
@@ -30,7 +30,7 @@ class SurveyAssetViewset(viewsets.ModelViewSet):
         user = self.request.user
         if user.is_anonymous():
             raise PermissionDenied
-        contents = request.DATA
+        contents = request.data
         tags = contents.get('tags', [])
         if 'tags' in contents:
             del contents['tags']
@@ -47,11 +47,6 @@ class SurveyAssetViewset(viewsets.ModelViewSet):
         queryset = SurveyDraft.objects.filter(user=user)
         survey_draft = get_object_or_404(queryset, pk=pk)
         return Response(DetailSurveyDraftSerializer(survey_draft).data)
-
-    @action(methods=['DELETE'])
-    def delete_survey_draft(self, request, pk=None):
-        draft = self.get_object()
-        draft.delete()
 
 class TagViewset(viewsets.ModelViewSet):
     model = Tag
@@ -80,7 +75,9 @@ class TagViewset(viewsets.ModelViewSet):
 class LibraryAssetViewset(SurveyAssetViewset):
     exclude_asset_type = True
     serializer_class = DetailSurveyDraftSerializer
-    paginate_by = 100
+    class LibraryAssetPagination(PageNumberPagination):
+        page_size = 100
+    pagination_class = LibraryAssetPagination
 
 
 class SurveyDraftViewSet(SurveyAssetViewset):

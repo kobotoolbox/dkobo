@@ -6,7 +6,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from jsonfield import JSONField
 from taggit.managers import TaggableManager
-import reversion
+from reversion import revisions as reversion
 
 ASSET_UID_LENGTH = 22
 
