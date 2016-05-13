@@ -112,6 +112,7 @@ INSTALLED_APPS = (
     'taggit',
     'django_digest',
     'reversion',
+    'markitup',
 )
 
 try:
