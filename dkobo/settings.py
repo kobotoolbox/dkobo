@@ -178,6 +178,9 @@ MARKITUP_FILTER = ('markdown.markdown', {'safe_mode': False})
 
 LOGIN_REDIRECT_URL = '/'
 
+if KPI_PREFIX:
+    LOGIN_URL = "{}/accounts/login/".format(KPI_PREFIX)
+
 MIDDLEWARE_CLASSES = (
     'reversion.middleware.RevisionMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
