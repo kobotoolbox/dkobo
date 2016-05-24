@@ -50,7 +50,7 @@ def delete_related_objects(modeladmin, request, queryset):
 
     # Populate deletable_objects, a data structure of (string representations
     # of) all related objects that will also be deleted.
-    deletable_objects, perms_needed, protected = get_deleted_objects(
+    deletable_objects, model_count, perms_needed, protected = get_deleted_objects(
         first_level_related_objects, opts, request.user,
         modeladmin.admin_site, using
     )
@@ -86,17 +86,20 @@ def delete_related_objects(modeladmin, request, queryset):
     else:
         title = _("Are you sure?")
 
-    context = {
-        "title": title,
-        "objects_name": objects_name,
-        "deletable_objects": [deletable_objects] if deletable_objects else [],
-        'queryset': queryset,
-        "perms_lacking": perms_needed,
-        "protected": protected,
-        "opts": opts,
-        "app_label": app_label,
-        'action_checkbox_name': helpers.ACTION_CHECKBOX_NAME,
-    }
+    context = dict(
+        modeladmin.admin_site.each_context(request),
+        title=title,
+        objects_name=objects_name,
+        deletable_objects=[deletable_objects],
+        model_count=dict(model_count).items(),
+        queryset=queryset,
+        perms_lacking=perms_needed,
+        protected=protected,
+        opts=opts,
+        action_checkbox_name=helpers.ACTION_CHECKBOX_NAME,
+    )
+
+    request.current_app = modeladmin.admin_site.name
 
     # Display the confirmation page
     return TemplateResponse(
