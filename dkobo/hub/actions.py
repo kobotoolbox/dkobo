@@ -2,7 +2,7 @@
 Mostly copied from django/contrib/admin/actions.py
 """
 
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 from django.core.exceptions import PermissionDenied
 from django.contrib import messages
 from django.contrib.admin import helpers
@@ -33,6 +33,7 @@ def delete_related_objects(modeladmin, request, queryset):
     using = router.db_for_write(modeladmin.model)
 
     first_level_related_objects = []
+    first_level_related_objects_by_type = defaultdict(list)
     collector = NestedObjects(using=using)
     collector.collect(queryset)
     for base_object_or_related_list in collector.nested():
@@ -47,13 +48,26 @@ def delete_related_objects(modeladmin, request, queryset):
                 continue
             else:
                 first_level_related_objects.append(obj)
+                first_level_related_objects_by_type[type(obj)].append(obj)
 
-    # Populate deletable_objects, a data structure of (string representations
-    # of) all related objects that will also be deleted.
-    deletable_objects, model_count, perms_needed, protected = get_deleted_objects(
-        first_level_related_objects, opts, request.user,
-        modeladmin.admin_site, using
-    )
+    deletable_objects = []
+    model_count = defaultdict(int)
+    perms_needed = set()
+    protected = []
+    # `get_deleted_objects()` fails when passed a heterogeneous list like
+    # `first_level_related_objects`, so embark on this rigmarole to spoon-feed
+    # it only homogeneous lists
+    for homogeneous_list in first_level_related_objects_by_type.values():
+        # Populate deletable_objects, a data structure of (string
+        # representations of) all related objects that will also be deleted.
+        deletable_objects_, model_count_, perms_needed_, protected_ = get_deleted_objects(
+            homogeneous_list, opts, request.user, modeladmin.admin_site, using)
+        # Combine the results with those from previous homogeneous lists
+        deletable_objects.extend(deletable_objects_)
+        for k, v in model_count_.iteritems():
+            model_count[k] += v
+        perms_needed.update(perms_needed_)
+        protected.extend(protected_)
 
     # The user has already confirmed the deletion.
     # Do the deletion and return a None to display the change list view again.
