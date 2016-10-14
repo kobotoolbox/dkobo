@@ -25,3 +25,8 @@ django-ses
 django-digest
 # django-digest depends on python-digest but does not install it automatically
 python-digest
+
+# These packages allow `requests` to support SNI
+pyopenssl
+ndg-httpsclient
+pyasn1
