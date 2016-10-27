@@ -178,9 +178,6 @@ MARKITUP_FILTER = ('markdown.markdown', {'safe_mode': False})
 
 LOGIN_REDIRECT_URL = '/'
 
-if KPI_PREFIX:
-    LOGIN_URL = "{}/accounts/login/".format(KPI_PREFIX)
-
 MIDDLEWARE_CLASSES = (
     'reversion.middleware.RevisionMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -237,11 +234,16 @@ STATIC_URL = '/static/'
 # Following the uWSGI mountpoint convention, this should have a leading slash
 # but no trailing slash
 DKOBO_PREFIX = os.environ.get('DKOBO_PREFIX', False)
+
 # DKOBO_PREFIX should be set in the environment when running in a subdirectory
 if DKOBO_PREFIX and DKOBO_PREFIX != '/':
     STATIC_URL = '{}/{}'.format(DKOBO_PREFIX, STATIC_URL)
     from django.conf.global_settings import LOGIN_URL
     LOGIN_URL = '{}/{}'.format(DKOBO_PREFIX, LOGIN_URL)
+
+# Refer logins to KPI if it is installed
+if KPI_PREFIX:
+    LOGIN_URL = "{}/accounts/login/".format(KPI_PREFIX)
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
