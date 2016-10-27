@@ -1,4 +1,5 @@
--e git+https://github.com/kobotoolbox/pyxform.git@master#egg=pyxform
+# Custom pyxform
+-e git+https://github.com/kobotoolbox/pyxform.git@6dfff060fc2ad6c575c6a7d953c381d2180e6833#egg=pyxform
 
 Django<1.9
 django-compressor
