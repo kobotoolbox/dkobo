@@ -8,6 +8,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
+from django.conf.global_settings import LOGIN_URL
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
@@ -139,7 +141,11 @@ KOBOCAT_INTERNAL_URL = os.environ.get('KOBOCAT_INTERNAL_URL', KOBOCAT_URL)
 
 # Following the uWSGI mountpoint convention, this should have a leading slash
 # but no trailing slash
-KPI_PREFIX = os.environ.get('KPI_PREFIX', False)
+KPI_PREFIX = os.environ.get('KPI_PREFIX', 'False')
+if KPI_PREFIX.lower() == 'false':
+    KPI_PREFIX = False
+else:
+    KPI_PREFIX = '/' + KPI_PREFIX.strip('/')
 
 ''' Since this project handles user creation but shares its database with other
 projects, we must handle the model-level permission assignment that would've
@@ -233,17 +239,34 @@ STATIC_URL = '/static/'
 
 # Following the uWSGI mountpoint convention, this should have a leading slash
 # but no trailing slash
-DKOBO_PREFIX = os.environ.get('DKOBO_PREFIX', False)
+DKOBO_PREFIX = os.environ.get('DKOBO_PREFIX', 'False')
+if DKOBO_PREFIX.lower() == 'false':
+    DKOBO_PREFIX = False
+else:
+    DKOBO_PREFIX = '/' + DKOBO_PREFIX.strip('/')
 
 # DKOBO_PREFIX should be set in the environment when running in a subdirectory
 if DKOBO_PREFIX and DKOBO_PREFIX != '/':
-    STATIC_URL = '{}/{}'.format(DKOBO_PREFIX, STATIC_URL)
-    from django.conf.global_settings import LOGIN_URL
-    LOGIN_URL = '{}/{}'.format(DKOBO_PREFIX, LOGIN_URL)
+    STATIC_URL = DKOBO_PREFIX + '/' + STATIC_URL.lstrip('/')
+    LOGIN_URL = DKOBO_PREFIX + '/' + LOGIN_URL.lstrip('/')
+    LOGIN_REDIRECT_URL = DKOBO_PREFIX + '/' + LOGIN_REDIRECT_URL.lstrip('/')
 
-# Refer logins to KPI if it is installed
+# Refer logins and registrations to KPI if it is installed
 if KPI_PREFIX:
     LOGIN_URL = "{}/accounts/login/".format(KPI_PREFIX)
+    REGISTRATION_URL = "{}/accounts/register/".format(KPI_PREFIX)
+    REGISTRATION_OPEN = False
+    # If users obtained an activation link while registration was still open,
+    # make sure their preference gets set to KPI when they activate
+    def set_default_form_builder(user):
+        from hub.models import FormBuilderPreference
+        (preferred_builder, created) = \
+            FormBuilderPreference.objects.get_or_create(user=user)
+        preferred_builder.preferred_builder = FormBuilderPreference.KPI
+        preferred_builder.save()
+else:
+    def set_default_form_builder(user):
+        pass
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
@@ -255,7 +278,6 @@ EMAIL_USE_TLS = True
 SITE_ID = os.environ.get('DJANGO_SITE_ID', '1')
 
 ACCOUNT_ACTIVATION_DAYS = 3
-LOGIN_REDIRECT_URL = '/'
 
 LOGGING = {
     'version': 1,
@@ -323,6 +345,7 @@ ANONYMOUS_USER_ID = -1
 from registration.signals import user_activated
 from django.contrib.auth import login
 def login_on_activation(sender, user, request, **kwargs):
+    set_default_form_builder(user)
     user.backend='django.contrib.auth.backends.ModelBackend'
     login(request,user)
 user_activated.connect(login_on_activation)

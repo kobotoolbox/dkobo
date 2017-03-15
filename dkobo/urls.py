@@ -30,6 +30,9 @@ urlpatterns = patterns(
     url(r'^accounts/logout/', 'django.contrib.auth.views.logout', {'next_page': '/'}),
     url(r'^accounts/register/$', RegistrationView.as_view(
         form_class=RegistrationForm), name='registration_register'),
+    url(r'^accounts/register/closed/',
+        'dkobo.koboform.views.registration_disallowed',
+        name='registration_disallowed'),
     url(r'^accounts/', include('registration.backends.default.urls')),
     url(r'^account/', include('django.contrib.auth.urls')),
     # fallback on koboform app-specific urls:
