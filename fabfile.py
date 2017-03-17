@@ -75,13 +75,11 @@ def deploy_ref(deployment_name, ref):
         run("pip install --upgrade 'pip>=7.0' pip-tools")
         run("pip-sync '%s'" % env.pip_requirements_file)
 
-    with cd(env.kf_path):
-        run("npm install")
-        run("bower install")
-        run("grunt build_all")
+        with cd(env.kf_path):
+            run("npm install")
+            run("bower install")
+            run("grunt build_all")
 
-        with kobo_workon(env.kf_virtualenv_name):
-            # run("echo 'from django.contrib.auth.models import User; print User.objects.count()' | python manage.py shell")
             run("python manage.py syncdb")
             run("python manage.py migrate")
 
