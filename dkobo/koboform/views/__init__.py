@@ -1,6 +1,12 @@
 import json
+import logging
 
-from django.shortcuts import render_to_response, HttpResponse, HttpResponseRedirect
+from django.shortcuts import (
+    render_to_response,
+    HttpResponse,
+    HttpResponseRedirect,
+    redirect
+)
 from django.template import RequestContext
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth.decorators import login_required
@@ -55,3 +61,11 @@ def kobocat_redirect(request, path=''):
         return HttpResponseRedirect(url)
     else:
         raise NotImplementedError("kobocat integration is not enabled. [No settings.KOBOCAT_URL]")
+
+def registration_disallowed(request):
+    if getattr(settings, 'REGISTRATION_URL', False):
+        return HttpResponseRedirect(settings.REGISTRATION_URL)
+    else:
+        logging.warning("`REGISTRATION_CLOSED == True` but no "
+                        "`REGISTRATION_URL` configured")
+        return redirect('spa')
