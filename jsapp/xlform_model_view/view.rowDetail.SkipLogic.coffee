@@ -17,15 +17,20 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
   ###----------------------------------------------------------------------------------------------------------###
 
   class viewRowDetailSkipLogic.SkipLogicCriterionBuilderView extends $viewWidgets.Base
+    constructor: (@rowkls = "Row", options = {}) ->
+      super(options)
     events:
       "click .skiplogic__deletecriterion": "deleteCriterion"
       "click .skiplogic__addcriterion": "addCriterion"
       "change .skiplogic__delimselect": "markChangedDelimSelector"
     render: () ->
       tempId = _.uniqueId("skiplogic_expr")
+      message = if @rowkls is "Group" \
+        then "This group will only be displayed if the following conditions apply:" \
+        else "This question will only be displayed if the following conditions apply:"
       @$el.html("""
         <p>
-          This question will only be displayed if the following conditions apply
+          #{message}
         </p>
         <div class="skiplogic__criterialist"></div>
         <p class="skiplogic__addnew">
@@ -313,8 +318,8 @@ define 'cs!xlform/view.rowDetail.SkipLogic', [
         else null
     create_criterion_view: (question_picker_view, operator_picker_view, response_value_view, presenter) ->
       return new viewRowDetailSkipLogic.SkipLogicCriterion question_picker_view, operator_picker_view, response_value_view, presenter
-    create_criterion_builder_view: () ->
-      return new viewRowDetailSkipLogic.SkipLogicCriterionBuilderView()
+    create_criterion_builder_view: (target_question) ->
+      return new viewRowDetailSkipLogic.SkipLogicCriterionBuilderView(target_question.constructor.kls)
     create_textarea: (text, className) ->
       return new $viewWidgets.TextArea text, className
     create_button: (text, className) ->
