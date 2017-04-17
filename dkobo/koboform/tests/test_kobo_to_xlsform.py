@@ -98,7 +98,8 @@ class Converter(TestCase):
         self.assertEqual(surv[3]['appearance'], 'overridden')
 
         self.assertEqual(surv[4]['type'], 'end group')
-        self.assertEqual(len(surv[4].keys()), 1)
+        self.assertIn('kuid', surv[4].keys())
+        self.assertEqual(len(surv[4].keys()), 2)
 
     def test_score_conversion(self):
         result = convert_survey(score_s, items)
@@ -118,4 +119,5 @@ class Converter(TestCase):
         self.assertEqual(surv[3]['appearance'], 'overridden')
 
         self.assertEqual(surv[4]['type'], 'end group')
-        self.assertEqual(len(surv[4].keys()), 1)
+        self.assertIn('kuid', surv[4].keys())
+        self.assertEqual(len(surv[4].keys()), 2)
